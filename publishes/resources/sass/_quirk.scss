@@ -13104,7 +13104,7 @@ fieldset[disabled] .btn-fb.active {
 }
 /***** SIGN IN/UP *****/
 .signwrapper {
-    background-image: url(../administrator/images/bg.jpg);
+    background-image: url(/admin/images/bg.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
@@ -13161,7 +13161,7 @@ fieldset[disabled] .btn-fb.active {
     color: rgba(255, 255, 255, 0.7);
 }
 .sign-overlay {
-    background-image: url(../administrator/images/dot.png);
+    background-image: url(/admin/images/dot.png);
     position: fixed;
     top: 0;
     right: 0;
