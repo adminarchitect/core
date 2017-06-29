@@ -15,7 +15,7 @@ class RouteManager
     protected function isAdminArea(RouteMatched $event)
     {
         if ($action = $event->route->getAction()) {
-            return 'admin' === array_get($action, 'prefix');
+            return config('administrator.prefix') === array_get($action, 'prefix');
         }
 
         return false;

@@ -117,7 +117,7 @@ class Resources
                     $module->linkAttributes(),
                     [
                         'active' => function () use ($module) {
-                            return starts_with(\URL::getRequest()->getPathInfo(), "/admin/{$module}");
+                            return starts_with(\URL::getRequest()->getPathInfo(), "/".config('administrator.prefix')."/{$module}");
                         },
                     ]
                 )

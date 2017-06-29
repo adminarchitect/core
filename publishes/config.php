@@ -3,6 +3,8 @@
 return [
     'version' => '3.3',
 
+    'prefix' => $prefix = 'cms',
+
     'title' => "<b>Admin</b> Architect",
     'abbreviation' => 'AA',
 
@@ -14,9 +16,6 @@ return [
     ],
 
     'paths' => [
-        # assets directory
-        'assets' => 'administrator',
-
         # media storage
         'media' => 'media',
 
@@ -44,7 +43,7 @@ return [
      *
      * @type string
      */
-    'home_page' => 'admin/users',
+    'home_page' => $prefix . '/dashboard',
 
     /**
      * Basic user validation Rule
