@@ -1,0 +1,28 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Dashboard;
+
+use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Traits\Stringify;
+
+class DummyClass extends DashboardPanel
+{
+    use Stringify;
+
+    /**
+     * Widget contents
+     *
+     * @return mixed string|View
+     */
+    public function render()
+    {
+        $class = get_class($this);
+
+        return <<<OUT
+<h3 class="panel-heading">Hello, World!</h3>
+<div class="panel-body">
+    <p class="well">Check me out here [{$class}]</p>
+</div>
+OUT;
+    }
+}

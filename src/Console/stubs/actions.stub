@@ -1,0 +1,22 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Actions;
+
+use Terranet\Administrator\Services\CrudActions;
+
+class DummyClass extends CrudActions
+{
+    public function actions()
+    {
+        return [
+            // CustomAction::class
+        ];
+    }
+
+    public function batchActions()
+    {
+        return array_merge(parent::batchActions(), [
+            // CustomAction::class
+        ]);
+    }
+}

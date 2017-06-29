@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Breadcrumbs;
+
+use Terranet\Administrator\Services\Breadcrumbs;
+
+class DummyClass extends Breadcrumbs
+{
+
+}

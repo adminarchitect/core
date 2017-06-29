@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Savers;
+
+use Terranet\Administrator\Services\Saver;
+
+class DummyClass extends Saver
+{
+    //
+}

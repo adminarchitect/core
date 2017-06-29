@@ -1,0 +1,26 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Actions\Handlers;
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Terranet\Administrator\Traits\Actions\BatchSkeleton;
+use Terranet\Administrator\Traits\Actions\Skeleton;
+
+class DummyClass
+{
+    use Skeleton, BatchSkeleton;
+
+    /**
+     * Perform a batch action.
+     *
+     * @param Eloquent $entity
+     * @param array $collection
+     * @return mixed
+     */
+    public function handle(Eloquent $entity, array $collection = [])
+    {
+        //
+
+        return $entity;
+    }
+}

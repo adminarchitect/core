@@ -1,0 +1,113 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Badges;
+
+use Terranet\Administrator\Badges\Collection;
+use Terranet\Administrator\Contracts\Badge;
+use Terranet\Administrator\Contracts\Sortable;
+
+class DummyClass implements Badge, Sortable
+{
+    /**
+     * Badge icon.
+     *
+     * @return string
+     */
+    public function icon()
+    {
+        return 'fa fa-flag-o';
+    }
+
+    /**
+     * Describing message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return "You have {$this->count()} tasks";
+    }
+
+    /**
+     * Total items count.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return 10;
+    }
+
+    /**
+     * Badge body. Renders collection.
+     *
+     * @return mixed string|\Illuminate\View\View
+     */
+    public function collection()
+    {
+        return (new Collection(
+            $this->fetch(),
+            function ($item) {
+                return [
+                    'message' => $item->message,
+                    'progress' => 20,
+                    'url' => '#'
+                ];
+            }
+        ));
+    }
+
+    /**
+     * Badge items template
+     *
+     * @return mixed
+     */
+    public function template()
+    {
+        return app('scaffold.template')->badge('tasks');
+    }
+
+    /**
+     * Link to full collection.
+     *
+     * @return string
+     */
+    public function linkTo()
+    {
+        return link_to(
+            route('scaffold.index', ['module' => 'tasks']),
+            "Show more"
+        );
+    }
+
+    /**
+     * Get the object order number.
+     *
+     * @return int
+     */
+    public function order()
+    {
+        return 1;
+    }
+
+    /**
+     * Fetch notifications.
+     *
+     * @return mixed
+     */
+    protected function fetch()
+    {
+        return [];
+    }
+
+
+    /**
+     * Badge status.
+     *
+     * @return string
+     */
+    public function status()
+    {
+        return 'label label-success';
+    }
+}

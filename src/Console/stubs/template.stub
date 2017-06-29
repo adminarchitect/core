@@ -1,0 +1,11 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Templates;
+
+use Terranet\Administrator\Contracts\Services\TemplateProvider;
+use Terranet\Administrator\Services\Template;
+
+class DummyClass extends Template implements TemplateProvider
+{
+
+}

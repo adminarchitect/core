@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Finders;
+
+use Terranet\Administrator\Services\Finder;
+
+class DummyClass extends Finder
+{
+    //
+}

@@ -1,0 +1,25 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Actions\Handlers;
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Terranet\Administrator\Traits\Actions\ActionSkeleton;
+use Terranet\Administrator\Traits\Actions\Skeleton;
+
+class DummyClass
+{
+    use Skeleton, ActionSkeleton;
+
+    /**
+     * Update single entity.
+     *
+     * @param Eloquent $entity
+     * @return mixed
+     */
+    public function handle(Eloquent $entity)
+    {
+        //
+
+        return $entity;
+    }
+}
