@@ -25,6 +25,8 @@ class AdminMix {
         this.handleStyles();
 
         this.handleEditors();
+
+        this.Mix.sourceMaps();
     }
 
     handleStyles() {
@@ -34,12 +36,12 @@ class AdminMix {
     }
 
     handleScripts() {
-        this.Mix.js('resources/assets/administrator/js/vendor.js', 'public/admin/vendor.js');
-        this.Mix.js('resources/assets/administrator/js/app.js', 'public/admin/app.js');
+        this.Mix.js(AdminMix.resource('js/vendor.js'), AdminMix.asset('vendor.js'));
+        this.Mix.js(AdminMix.resource('js/app.js'), AdminMix.asset('public/admin/app.js'));
         this.Mix.scripts([
-            'resources/assets/administrator/js/media/{app,helpers,templates}.js',
-            'resources/assets/administrator/js/media/{controllers,services,directives}/**/*.js',
-        ], 'public/admin/media.js');
+            AdminMix.resource('js/media/{app,helpers,templates}.js'),
+            AdminMix.resource('js/media/{controllers,services,directives}/**/*.js'),
+        ], AdminMix.asset('media.js'));
     }
 
     handleAliases() {
