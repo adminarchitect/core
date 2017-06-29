@@ -13,6 +13,6 @@ $pict = asset('/admin/images/admin.png');
             {{ auth('admin')->user()->name }}
             <span class="caret"></span>
         </button>
-        {!! $navigation->render('tools') !!}
+        {!! $navigation->render('tools', '\Terranet\Administrator\Navigation\Presenters\Bootstrap\NavbarPresenter') !!}
     </div>
 </li>
