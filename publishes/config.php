@@ -43,7 +43,7 @@ return [
      *
      * @type string
      */
-    'home_page' => $prefix . '/dashboard',
+    'home_page' => $prefix,
 
     /**
      * Basic user validation Rule
