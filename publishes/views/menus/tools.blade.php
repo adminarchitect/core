@@ -1,6 +1,6 @@
 <?php
 $user = auth('admin')->user();
-$pict = asset('/images/admin.png');
+$pict = asset('/admin/images/admin.png');
 ?>
 <li>
     <div class="btn-group">
