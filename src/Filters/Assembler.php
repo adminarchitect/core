@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Filters;
 
 use function admin\db\scheme;
+use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,6 @@ use Illuminate\Support\Collection;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Form\FormElement;
-use Terranet\Administrator\Schema;
 use Terranet\Translatable\Translatable;
 
 class Assembler
@@ -62,18 +62,81 @@ class Assembler
     /**
      * Apply scope.
      *
-     * @param $scope
-     *
+     * @param Scope $scope
      * @return $this
+     * @throws \Terranet\Administrator\Exception
      */
     public function scope(Scope $scope)
     {
-        if (is_callable($callable = $scope->getQuery())) {
+        $callable = $scope->getQuery();
+
+        if (is_string($callable)) {
+            /**
+             * Adds a Class "ClassName::class" syntax.
+             *
+             * @note In this case Query class should implement Contracts\Module\Queryable interface.
+             * @example: (new Scope('name'))->setQuery(Queryable::class);
+             */
+            if (class_exists($callable)) {
+                $object = app($callable);
+
+                if (!method_exists($object, 'query')) {
+                    throw new \Terranet\Administrator\Exception(
+                        sprintf(
+                            "Query object %s should implement %s interface",
+                            get_class($object),
+                            \Terranet\Administrator\Contracts\Module\Queryable::class
+                        )
+                    );
+                }
+
+                $this->query = $object->query($this->query);
+
+                return $this;
+            }
+
+            /**
+             * Allows "SomeClass@method" syntax.
+             *
+             * @example: (new Scope('name'))->addQuery("User@active")
+             */
+            if (str_contains($callable, '@')) {
+                list($object, $method) = explode("@", $callable);
+
+                $this->query = app($object)->$method($this->query);
+
+                return $this;
+            }
+        }
+
+        /**
+         * Allows adding a \Closure as a query;
+         *
+         * @example: (new Scope('name'))->setQuery(function($query) { return $this->modify(); })
+         */
+        if ($callable instanceof Closure) {
+            $this->query = $callable($this->query);
+
+            return $this;
+        }
+
+        /**
+         * Accepts callable builder
+         *
+         * @example: (new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
+         */
+        if (is_callable($callable)) {
             list($object, $method) = $callable;
+
+            if (is_string($object)) {
+                $object = app($object);
+            }
 
             # @note: We don't use call_user_func_array() here
             # because of missing columns in returned query.
-            $this->query = $object->{"scope{$method}"}($this->query);
+            $this->query = $object->{$method}($this->query);
+
+            return $this;
         }
 
         return $this;
