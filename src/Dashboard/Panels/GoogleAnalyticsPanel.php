@@ -19,14 +19,11 @@ class GoogleAnalyticsPanel extends DashboardPanel
      */
     public function render()
     {
-        if (!$this->dependencyInstalled()) {
-            return $this->abortMessage();
-        }
-
         $period = $this->period();
 
-        $dailyStats = \Analytics::fetchTotalVisitorsAndPageViews($period);
-
+        $dailyStats = $this->dependencyInstalled() && config('analytics.view_id')
+            ? Analytics::fetchTotalVisitorsAndPageViews($period)
+            : $dailyStats = $this->fakeData($period);
 
         $visitors = $dailyStats->sum('visitors');
         $pageViews = $dailyStats->sum('pageViews');
@@ -35,7 +32,7 @@ class GoogleAnalyticsPanel extends DashboardPanel
         $labels = $this->dateLabels($dailyStats);
 
         return view(app('scaffold.template')->dashboard('google_analytics'))->with(compact(
-            'dailyStats', 'labels', 'visitors', 'pageViews', 'maxVisitors'
+            'dailyStats', 'labels', 'visitors', 'pageViews', 'maxVisitors', 'period'
         ));
     }
 
@@ -95,5 +92,26 @@ OUT;
         $period = Period::create($start, $end);
 
         return $period;
+    }
+    
+    /**
+     * Provide fake analytics data for demo purposes.
+     * 
+     * @param $period
+     * @return \Illuminate\Support\Collection
+     */
+    protected function fakeData($period)
+    {
+        $data = collect([]);
+
+        for ($date = Carbon::parse($period->startDate); $date->lte($period->endDate); $date->addDay()) {
+            $data->push([
+                'date' => Carbon::parse($date),
+                'visitors' => rand(100, 1000),
+                'pageViews' => rand(100, 1000),
+            ]);
+        }
+
+        return $data;
     }
 }
