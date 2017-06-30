@@ -2,6 +2,7 @@
 
 namespace DummyRootNamespaceHttp\Terranet\Administrator\Actions\Handlers;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Terranet\Administrator\Traits\Actions\BatchSkeleton;
 use Terranet\Administrator\Traits\Actions\Skeleton;
@@ -14,12 +15,12 @@ class DummyClass
      * Perform a batch action.
      *
      * @param Eloquent $entity
-     * @param array $collection
+     * @param Request $request
      * @return mixed
      */
-    public function handle(Eloquent $entity, array $collection = [])
+    public function handle(Eloquent $entity, Request $request = null)
     {
-        //
+        /*$collection = $request->get('collection');*/
 
         return $entity;
     }
