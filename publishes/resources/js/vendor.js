@@ -4,10 +4,6 @@ window.$ = window.jQuery = require('jquery');
 /* Moment.js */
 window.moment = require('moment');
 
-/* jQueryUI */
-require('jquery-ui/ui/core');
-require('jquery-ui/ui/widgets/sortable');
-
 /* Bootstrap */
 require('bootstrap/js/tab');
 require('bootstrap/js/dropdown');
@@ -21,9 +17,6 @@ require('bootstrap-daterangepicker');
 
 /* jQuery Toggles */
 require('jquery-toggles/toggles');
-
-/* Nested Sortable */
-require('nestedSortable');
 
 require('selectize');
 window.fancybox = require('fancybox')($);
