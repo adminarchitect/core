@@ -3,7 +3,7 @@
 $pattern = '[a-z0-9\_\=]+';
 
 Route::group([
-    'prefix' => config('administrator.prefix'),
+    'prefix' => config('administrator.prefix', 'cms'),
     'namespace' => 'Terranet\Administrator\Controllers',
     'middleware' => ['web'],
 ], function () use ($pattern) {
