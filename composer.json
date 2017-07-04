@@ -33,10 +33,12 @@
             "src/helpers.php"
         ]
     },
-    "laravel": {
-        "providers": [
-            "Terranet\\Administrator\\ServiceProvider"
-        ]
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Terranet\\Administrator\\ServiceProvider"
+            ]
+        }
     },
     "suggest": {
         "adminarchitect/options": "to store and manage settings",
