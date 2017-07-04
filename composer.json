@@ -13,7 +13,7 @@
         "doctrine/dbal": "~2.5",
         "davejamesmiller/laravel-breadcrumbs": "3.0.*",
         "codesleeve/laravel-stapler": "^1.0",
-        "terranet/menus": "2.2.*",
+        "terranet/menus": "^2.2",
         "terranet/php-humanizer": "2.*",
         "creativeorange/gravatar": "~1.0",
         "terranet/presentable": "^1.0",
