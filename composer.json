@@ -33,6 +33,11 @@
             "src/helpers.php"
         ]
     },
+    "laravel": {
+        "providers": [
+            "Terranet\\Administrator\\ServiceProvider"
+        ]
+    },
     "suggest": {
         "adminarchitect/options": "to store and manage settings",
         "adminarchitect/localizer": "to have language detection support by Request Uri, Domain name and Environment",
