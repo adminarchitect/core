@@ -3,10 +3,7 @@
 namespace Terranet\Administrator\Console;
 
 use Artisan;
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Hashing\Hasher;
-use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\ServiceProvider;
 use Terranet\Administrator\Traits\SessionGuardHelper;
 
