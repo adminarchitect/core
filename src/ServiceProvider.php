@@ -31,7 +31,7 @@ class ServiceProvider extends BaseServiceProvider
          */
         $packageRoutes = "{$baseDir}/publishes/routes.php";
         $publishedRoutes = app_path('Http/Terranet/Administrator/routes.php');
-        $this->publishes([$packageRoutes => $publishedRoutes]);
+        $this->publishes([$packageRoutes => $publishedRoutes], 'routes');
 
         if (!$this->app->routesAreCached()) {
             $routesFile = file_exists($publishedRoutes) ? $publishedRoutes : $packageRoutes;
