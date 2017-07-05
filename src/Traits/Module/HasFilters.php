@@ -168,11 +168,10 @@ trait HasFilters
 
         foreach ($reflection->getMethods() as $method) {
             if (preg_match('~^scope(.+)$~i', $method->name, $match)) {
-
                 if ($this->isHiddenScope($name = $match[1])
                     || $this->isDynamicScope($method)
                     || $this->hasHiddenFlag($method->getDocComment())
-                ) {
+                    || 'scopeTranslated' === $match[0]) {
                     continue;
                 }
 
