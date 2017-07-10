@@ -79,7 +79,7 @@ class ScaffoldController extends AdminController
      *
      * @return mixed
      */
-    public function update($page, $id, UpdateRequest $request = null)
+    public function update($page, $id, UpdateRequest $request)
     {
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
@@ -89,7 +89,7 @@ class ScaffoldController extends AdminController
             return redirect()->back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $id)->with('messages', [trans('administrator::messages.update_success')]);
+        return $this->redirectTo($page, $id, $request)->with('messages', [trans('administrator::messages.update_success')]);
     }
 
     /**
@@ -112,7 +112,7 @@ class ScaffoldController extends AdminController
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store($page, UpdateRequest $request = null)
+    public function store($page, UpdateRequest $request)
     {
         $this->authorize('create', $eloquent = app('scaffold.module')->model());
 
@@ -123,7 +123,7 @@ class ScaffoldController extends AdminController
         }
 
 
-        return $this->redirectTo($page, $eloquent->id)->with(
+        return $this->redirectTo($page, $eloquent->id, $request)->with(
             'messages',
             [trans('administrator::messages.create_success')]
         );

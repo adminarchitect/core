@@ -3,7 +3,7 @@
 namespace Terranet\Administrator\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\Middleware\Authenticate;
@@ -57,17 +57,17 @@ abstract class AdminController extends BaseController
         }
     }
 
-    protected function redirectTo($module, $key = null)
+    protected function redirectTo($module, $key = null, Request $request)
     {
-        if ($next = Request::get('back_to')) {
+        if ($next = $request->get('back_to')) {
             return redirect()->to($next);
         }
 
-        if (Request::exists('save')) {
+        if ($request->exists('save')) {
             return redirect(route('scaffold.edit', $this->toMagnetParams(['module' => $module, 'id' => $key])));
         }
 
-        if (Request::exists('save_return')) {
+        if ($request->exists('save_return')) {
             if ($previous = $this->getPreviousUrl()) {
                 $this->forgetPreviousUrl();
 
@@ -117,8 +117,12 @@ abstract class AdminController extends BaseController
      * @param  \Exception $previousException
      * @return \Symfony\Component\HttpKernel\Exception\HttpException
      */
-    protected function createGateUnauthorizedException($ability, $arguments, $message = 'This action is unauthorized.', $previousException = null)
-    {
+    protected function createGateUnauthorizedException(
+        $ability,
+        $arguments,
+        $message = 'This action is unauthorized.',
+        $previousException = null
+    ) {
         $message = sprintf($message . ' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);
