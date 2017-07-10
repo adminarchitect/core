@@ -11,6 +11,8 @@ use Terranet\Administrator\Console\BreadcrumbsMakeCommand;
 use Terranet\Administrator\Console\FinderMakeCommand;
 use Terranet\Administrator\Console\LanguagesMakeCommand;
 use Terranet\Administrator\Console\PanelMakeCommand;
+use Terranet\Administrator\Console\PublishCommand;
+use Terranet\Administrator\Console\PublishCommandCommand;
 use Terranet\Administrator\Console\ResourceMakeCommand;
 use Terranet\Administrator\Console\SaverMakeCommand;
 use Terranet\Administrator\Console\SettingsMakeCommand;
@@ -19,6 +21,7 @@ use Terranet\Administrator\Console\TemplateMakeCommand;
 class ArtisanServiceProvider extends ServiceProvider
 {
     protected $commands = [
+        'AdminPublish' => 'command.administrator.publish',
         'AdminCreate' => 'command.administrator.create',
         'AdminModule' => 'command.administrator.module',
         'AdminActions' => 'command.administrator.actions',
@@ -45,6 +48,13 @@ class ArtisanServiceProvider extends ServiceProvider
         }
 
         $this->commands(array_values($this->commands));
+    }
+
+    protected function registerAdminPublishCommand()
+    {
+        $this->app->singleton('command.administrator.publish', function () {
+            return new PublishCommand;
+        });
     }
 
     protected function registerAdminCreateCommand()
