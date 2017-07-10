@@ -26,12 +26,6 @@ class File extends Element
 
     public function render()
     {
-        $value = $this->value();
-
-        if ($value && !($value instanceof Attachment)) {
-            throw new \Exception("Please attach an Attachment to the {$this->name} field");
-        }
-
         return $this->getOutput() . $this->getInput();
     }
 
