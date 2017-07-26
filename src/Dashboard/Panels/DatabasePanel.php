@@ -24,8 +24,10 @@ class DatabasePanel extends DashboardPanel
      */
     protected function getDatabaseStats()
     {
-        if (connection('mysql'))
+        if (connection('mysql')) {
             return $this->connection()->select($this->connection()->raw("SHOW TABLE STATUS"));
+        }
+
         return collect([]);
     }
 

@@ -27,7 +27,7 @@ class Collection
      */
     public function __construct($items = [], \Closure $transformer)
     {
-        $this->items = BaseCollection::make($items);
+        $this->items = collect($items);
 
         $this->transformer = $transformer;
     }

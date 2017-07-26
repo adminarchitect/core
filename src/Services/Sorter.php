@@ -10,13 +10,13 @@ class Sorter
 
     protected $direction;
 
-    public function __construct(array $sortable = [], $sort_dir = 'desc')
+    public function __construct(array $sortable = [], $sortDir = 'desc')
     {
         $this->sortable = $sortable;
 
         $this->element = $this->input('sort_by', $this->first());
 
-        $this->direction = $this->input('sort_dir', $sort_dir);
+        $this->direction = $this->input('sort_dir', $sortDir);
     }
 
     /**

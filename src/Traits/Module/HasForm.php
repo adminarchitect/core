@@ -7,7 +7,6 @@ use function admin\db\enum_values;
 use function admin\db\scheme;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 use DB;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Column;
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Administrator\Form\FormElement;

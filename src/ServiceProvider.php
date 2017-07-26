@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator;
 
-use App\User;
 use Codesleeve\LaravelStapler\Providers\L5ServiceProvider as StaplerServiceProvider;
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
@@ -11,11 +10,9 @@ use Creativeorange\Gravatar\Facades\Gravatar;
 use Creativeorange\Gravatar\GravatarServiceProvider;
 use DaveJamesMiller\Breadcrumbs\Facade as BreadcrumbsFacade;
 use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Pingpong\Menus\MenuFacade;
 use Pingpong\Menus\MenusServiceProvider;
-use Terranet\Administrator\Middleware\Web;
 use Terranet\Administrator\Providers\ArtisanServiceProvider;
 use Terranet\Administrator\Providers\ContainersServiceProvider;
 use Terranet\Administrator\Providers\EventServiceProvider;
@@ -84,11 +81,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        if (guarded_auth()) {
-            $this->configureAuth();
-        } else {
-            $this->fakeWebMiddleware();
-        }
+        $this->configureAuth();
 
         $dependencies = [
             ArtisanServiceProvider::class,
@@ -134,30 +127,18 @@ class ServiceProvider extends BaseServiceProvider
 
     protected function configureAuth()
     {
-        if (!Config::has('auth.guards.admin')) {
-            Config::set('auth.guards.admin', [
+        if (!config()->has('auth.guards.admin')) {
+            config()->set('auth.guards.admin', [
                 'driver' => 'session',
                 'provider' => 'admins',
             ]);
         }
 
-        if (!Config::has('auth.providers.admins')) {
-            Config::set('auth.providers.admins', [
+        if (!config()->has('auth.providers.admins')) {
+            config()->set('auth.providers.admins', [
                 'driver' => 'eloquent',
-                'model' => config('administrator.auth.model', User::class),
+                'model' => config('administrator.auth.model'),
             ]);
-        }
-    }
-
-    /**
-     * Laravel 5.1 does not come with 'web' middlware group
-     * so for back compatibility with Laravel 5.1 & Laravel 5.2
-     * we add this faked Middleware
-     */
-    protected function fakeWebMiddleware()
-    {
-        if (!app('Illuminate\Contracts\Http\Kernel')->hasMiddleware('web')) {
-            app('router')->middleware('web', Web::class);
         }
     }
 }
