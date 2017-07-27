@@ -31,15 +31,13 @@ class MediaController extends AdminController
      */
     public function __construct(FileStorage $storage)
     {
-        $this->breadcrumbs = app('breadcrumbs');
-        $this->breadcrumbs->setView('administrator::partials.breadcrumbs');
-
         $this->storage = $storage;
+        $this->initBreadcrumbs();
 
         parent::__construct();
 
-        $this->middleware(SanitizePaths::class);
         $this->middleware(ProtectMedia::class);
+        $this->middleware(SanitizePaths::class);
     }
 
     public function index(Request $request)
@@ -48,7 +46,9 @@ class MediaController extends AdminController
             $path = $request->get('path')
         );
 
-        $files = $this->storage->files($directory)->merge($this->storage->directories($directory));
+        $files = $this->storage->files($directory)->merge(
+            $this->storage->directories($directory)
+        );
 
         $data = [
             'files' => $files,
@@ -62,14 +62,20 @@ class MediaController extends AdminController
     public function mkdir(Request $request)
     {
         try {
-            $directory = $this->storage->mkdir($name = $request->get('name'), $request->get('basedir'));
+            $directory = $this->storage->mkdir(
+                $name = $request->get('name'),
+                $request->get('basedir')
+            );
 
             return response()->json([
                 'message' => 'Directory created.',
                 'data' => (new File($directory, $this->storage))->toArray(),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json(
+                ['message' => $e->getMessage()],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 
@@ -149,5 +155,11 @@ class MediaController extends AdminController
         }
 
         return $this->breadcrumbs->render($section);
+    }
+
+    protected function initBreadcrumbs()
+    {
+        $this->breadcrumbs = app('breadcrumbs');
+        $this->breadcrumbs->setView('administrator::partials.breadcrumbs');
     }
 }
