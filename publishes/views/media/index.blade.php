@@ -4,7 +4,7 @@
 @extends($template->layout())
 
 @section('scaffold.js')
-    <script src="{{ mix('admin/media1.js') }}"></script>
+    <script src="{{ mix('admin/media.js') }}"></script>
 @endsection
 
 @section('scaffold.content')

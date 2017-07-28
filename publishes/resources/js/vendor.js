@@ -20,9 +20,3 @@ require('jquery-toggles/toggles');
 
 require('selectize');
 window.fancybox = require('fancybox')($);
-
-require('angular');
-require('angular-cookies');
-require('angular-sanitize');
-require('angular-messages');
-require('angular-file-upload');
