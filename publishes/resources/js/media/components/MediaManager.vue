@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="well well-asset-options">
-            <file-actions :num-selected="selectedCount" @remove="remove()"></file-actions>
+            <file-actions :num-selected="selectedCount" @remove="remove"></file-actions>
         </div>
         <div class="row">
             <div class="col-xs-9">
@@ -11,15 +11,15 @@
             <div class="col-xs-3">
                 <file-info v-if="1 === selectedCount" :file="fileInfo"></file-info>
 
-                <folders-list :collection="folders" @cd="chDir($event)" @remove="remove($event)"></folders-list>
+                <folders-list :collection="folders" @cd="chDir" @remove="remove"></folders-list>
 
                 <drop-zone @upload-complete="uploadComplete"></drop-zone>
             </div>
         </div>
 
-        <make-dir-popup @mkdir="mkDir($event)"></make-dir-popup>
-        <move-popup v-if="selectedCount" :directories="folders" @move="move($event)"></move-popup>
-        <rename-popup v-if="1 === selectedCount" @rename="rename($event)"></rename-popup>
+        <make-dir-popup @mkdir="mkDir"></make-dir-popup>
+        <move-popup v-if="selectedCount" :directories="folders" @move="move"></move-popup>
+        <rename-popup v-if="1 === selectedCount" @rename="rename"></rename-popup>
     </div>
 </template>
 
