@@ -104,7 +104,7 @@ class AdminArchitect {
     }
 
     static handleBatchActions() {
-        function selected() {
+        const selected = () => {
             return $('input[type=checkbox]:checked.collection-item');
         }
 
@@ -200,6 +200,4 @@ class AdminArchitect {
     }
 }
 
-$(function() {
-    new AdminArchitect;
-});
+$(() => new AdminArchitect);
