@@ -7,7 +7,7 @@
                     <input type="text" class="form-control" ng-model="name" ng-value="selection.first().basename"/>
                 </div>
                 @include('administrator::media.partials.modals._footer')
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+            </div>
+        </div>
     </form>
 </div>
