@@ -10,6 +10,6 @@ Follow the [documentation.](http://docs.adminarchitect.com)
 
 ### Donation
 
-If you like our creation and want instant updates, please fill free to [become a pateron](https://www.patreon.com/adminarchitect).
+If you like our creation and want instant updates, please fill free to [become a patron](https://www.patreon.com/adminarchitect).
 
 You can also purchase the Admin Architect at [codecanyon](https://codecanyon.net/item/admin-architect-administration-framework-for-laravel/13528564).
