@@ -89,14 +89,17 @@ OUT;
         $end = Carbon::today();
         $start = Carbon::parse($end)->subMonthNoOverflow();
 
-        $period = Period::create($start, $end);
-
-        return $period;
+        return $this->dependencyInstalled()
+            ? Period::create($start, $end)
+            : (object)[
+                'startDate' => $start,
+                'endDate' => $end
+            ];
     }
-    
+
     /**
      * Provide fake analytics data for demo purposes.
-     * 
+     *
      * @param $period
      * @return \Illuminate\Support\Collection
      */
