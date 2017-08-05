@@ -86,7 +86,6 @@ class Saver implements SaverContract
 
                 $value = $this->handleJsonType($name, $value);
 
-
                 $this->data[$name] = $value;
             }
 

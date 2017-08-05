@@ -74,6 +74,8 @@ class ServiceProvider extends BaseServiceProvider
             ["{$baseDir}/publishes/Navigation.php" => app_path('Http/Terranet/Administrator/Navigation.php')],
             'navigation'
         );
+
+        $this->configureAuth();
     }
 
     /**
@@ -81,8 +83,6 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->configureAuth();
-
         $dependencies = [
             ArtisanServiceProvider::class,
             ContainersServiceProvider::class,

@@ -16,12 +16,7 @@ class SanitizePaths
      */
     public function handle(Request $request, Closure $next)
     {
-        $paths = array_only(
-            $request->all(),
-            ['path', 'basedir', 'directories', 'from', 'to', 'name']
-        );
-
-        if (!empty($paths)) {
+        if (!empty($paths = $this->guardedPaths($request))) {
             $request->merge(
                 array_map([$this, 'sanitizePath'], $paths)
             );
@@ -58,5 +53,17 @@ class SanitizePaths
         }
 
         return implode(DIRECTORY_SEPARATOR, $safe);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function guardedPaths(Request $request)
+    {
+        return array_only(
+            $request->all(),
+            ['path', 'basedir', 'directories', 'from', 'to', 'name']
+        );
     }
 }

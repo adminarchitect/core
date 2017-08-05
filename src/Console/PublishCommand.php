@@ -3,7 +3,11 @@
 namespace Terranet\Administrator\Console;
 
 use Artisan;
+use Codesleeve\LaravelStapler\Providers\L5ServiceProvider;
+use Creativeorange\Gravatar\GravatarServiceProvider;
+use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 use Illuminate\Console\Command;
+use Pingpong\Menus\MenusServiceProvider;
 use Terranet\Administrator\ServiceProvider;
 use Terranet\Administrator\Traits\SessionGuardHelper;
 
@@ -91,5 +95,30 @@ class PublishCommand extends Command
                 $type, $file
             ));
         }
+
+        $this->publishDependencies();
+    }
+
+    protected function publishDependencies()
+    {
+        $this->dependencies()->each(function($provider) {
+            Artisan::call('vendor:publish', [
+                '--provider' => $provider
+            ]);
+            $this->line(sprintf(
+                '<info>%s</info> <comment>[%s]</comment> <info>has been published.</info>',
+                'Package', $provider
+            ));
+        });
+    }
+
+    protected function dependencies()
+    {
+        return collect([
+            L5ServiceProvider::class,
+            BreadcrumbsServiceProvider::class,
+            MenusServiceProvider::class,
+            GravatarServiceProvider::class,
+        ]);
     }
 }

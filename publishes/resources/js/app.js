@@ -34,7 +34,7 @@ class AdminArchitect {
             }
         };
 
-        $('#menuToggle').click(function() {
+        $('#menuToggle').click(() => {
             let $panel = $('.mainpanel');
             let collapsedMargin = $panel.css('margin-left');
             let collapsedLeft = $panel.css('left');
@@ -46,17 +46,19 @@ class AdminArchitect {
             }
         });
 
-        $('.nav-parent > a').on('click', function() {
-            let gran = $(this).closest('.nav');
-            let parent = $(this).parent();
+        $('.nav-parent > a').on('click', ({target}) => {
+            const $target = $(target);
+
+            let gran = $target.closest('.nav');
+            let parent = $target.parent();
             let sub = parent.find('> ul');
 
             if (sub.is(':visible')) {
                 sub.slideUp(200);
                 if (parent.hasClass('nav-active')) { parent.removeClass('nav-active'); }
             } else {
-                $(gran).find('.children').each(function() {
-                    $(this).slideUp();
+                $(gran).find('.children').each((i, e) => {
+                    $(e).slideUp();
                 });
 
                 sub.slideDown(200);
@@ -71,17 +73,17 @@ class AdminArchitect {
 
     static handlePanels() {
         // Close panel
-        $('.panel-remove').click(function() {
-            $(this).closest('.panel').fadeOut(function() {
-                $(this).remove();
+        $('.panel-remove').click(({target}) => {
+            $(target).closest('.panel').fadeOut(({target}) => {
+                $(target).remove();
             });
         });
 
         // Minimize panel
-        $('.panel-minimize').click(function() {
-            let parent = $(this).closest('.panel');
+        $('.panel-minimize').click(({target}) => {
+            const parent = $(target).closest('.panel');
 
-            parent.find('.panel-body').slideToggle(function() {
+            parent.find('.panel-body').slideToggle(() => {
                 let panelHeading = parent.find('.panel-heading');
 
                 if (panelHeading.hasClass('min')) {
@@ -94,30 +96,32 @@ class AdminArchitect {
     }
 
     static handleCollections() {
-        $(document).on('click', '.toggle-collection', function() {
-            let fn = $(this);
+        $(document).on('click', '.toggle-collection', ({target}) => {
+            const fn = $(target);
 
-            $('input[type=checkbox].collection-item').each(function() {
-                $(this).prop('checked', fn.prop('checked'));
+            $('input[type=checkbox].collection-item').each((i, e) => {
+                $(e).prop('checked', fn.prop('checked'));
             });
         });
     }
 
     static handleBatchActions() {
-        function selected() {
+        const selected = () => {
             return $('input[type=checkbox]:checked.collection-item');
-        }
+        };
 
-        $(document).on('click', '.batch-actions a[data-action]', function() {
+        $(document).on('click', '.batch-actions a[data-action]', ({target}) => {
             if (!selected().length) {
                 return false;
             }
 
-            if ((msg = $(this).data('confirmation')) && !window.confirm(msg)) {
+            const $target = $(target);
+
+            if ((msg = $target.data('confirmation')) && !window.confirm(msg)) {
                 return false;
             }
 
-            $('#batch_action').val($(this).data('action'));
+            $('#batch_action').val($target.data('action'));
             $('#collection').submit();
 
             return false;
@@ -200,6 +204,4 @@ class AdminArchitect {
     }
 }
 
-$(function() {
-    new AdminArchitect;
-});
+$(() => new AdminArchitect);
