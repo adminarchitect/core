@@ -20,7 +20,7 @@ class BlankPanel extends DashboardPanel
         <<<OUT
         <div class="panel panel-announcement">
             <div class="panel-heading">
-                <h4 class="panel-title">Welcome to Terranet/Administrator.</h4>
+                <h4 class="panel-title">Welcome to AdminArchitect.</h4>
             </div>
             <div class="panel-body">
                 <p class="mt20">
