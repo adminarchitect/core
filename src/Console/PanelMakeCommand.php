@@ -33,7 +33,7 @@ class PanelMakeCommand extends GeneratorCommand
         parent::fire();
 
         if (!$this->option('no-view')) {
-            $name = class_basename($this->parseName($this->getNameInput()));
+            $name = class_basename($this->qualifyClass($this->getNameInput()));
 
             $view = $this->templatePath($this->getViewName());
 
@@ -128,6 +128,6 @@ OUT;
      */
     protected function getViewName()
     {
-        return snake_case(class_basename($this->parseName($this->getNameInput())));
+        return snake_case(class_basename($this->qualifyClass($this->getNameInput())));
     }
 }
