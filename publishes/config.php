@@ -6,6 +6,7 @@ return [
     'prefix' => $prefix = 'cms',
 
     'title' => "<b>Admin</b> Architect",
+    'welcome' => 'Welcome! Please sign In.',
     'abbreviation' => 'AA',
 
     'auth' => [
