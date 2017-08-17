@@ -19,7 +19,7 @@
     <div class="panel signin">
         <div class="panel-heading">
             <h1>{!! $config->get('title') !!}</h1>
-            <h4 class="panel-title">Welcome! Please signin.</h4>
+            <h4 class="panel-title">{{ $config->get('welcome') }}</h4>
         </div>
         <div class="panel-body">
             @include($template->partials('messages'))
