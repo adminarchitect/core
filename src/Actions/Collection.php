@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Actions;
 
-use Illuminate\Foundation\Auth\User;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
 
