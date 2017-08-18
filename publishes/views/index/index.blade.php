@@ -48,17 +48,19 @@
                     @each($template->index('row'), $items, 'item')
                     </tbody>
 
-                    <tfoot>
-                    <tr>
-                        <th width="10">
-                            <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                <input type="checkbox" class="simple toggle-collection" id="toggle_collection_{{ $key }}"/>
-                            </label>
-                        </th>
-                        @each($template->index('header'), $columns, 'column')
-                        <th class="actions" style="width: 10%; vertical-align: baseline">{{ trans('administrator::module.actions') }}</th>
-                    </tr>
-                    </tfoot>
+                    @if ($items && count($items) > 10)
+                        <tfoot>
+                        <tr>
+                            <th width="10">
+                                <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
+                                    <input type="checkbox" class="simple toggle-collection" id="toggle_collection_{{ $key }}"/>
+                                </label>
+                            </th>
+                            @each($template->index('header'), $columns, 'column')
+                            <th class="actions" style="width: 10%; vertical-align: baseline">{{ trans('administrator::module.actions') }}</th>
+                        </tr>
+                        </tfoot>
+                    @endif
                 </table>
             </form>
             <div class="row">
