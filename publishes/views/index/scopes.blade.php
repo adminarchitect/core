@@ -1,4 +1,4 @@
-@if (count($scopes = $filter->scopes()))
+@if ($scopes = $filter->scopes())
     @foreach($scopes as $scope)
         <a href="{{ $filter->makeScopedUrl($slug = $scope->id()) }}"
            class="btn btn-link{{ ($filter->scope() == $slug ? ' active' : '') }}">

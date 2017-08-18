@@ -14,7 +14,7 @@ $filled = $elements ? $elements->reduce(function ($filled, $element) {
 $hasFilters = ($resetUrl != request()->fullUrl()) && $filled;
 ?>
 
-@if ($filter && count($elements))
+@if ($filter && $elements)
 @section('scaffold.filter')
     <div class="panel">
         <ul class="panel-options">
