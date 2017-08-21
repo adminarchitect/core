@@ -4,6 +4,8 @@ namespace Terranet\Administrator\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Terranet\Administrator\Exception;
@@ -23,20 +25,15 @@ trait LoopsOverRelations
     protected function fetchRelationValue($eloquent, $name, array $relations = [], $format = false)
     {
         $object = clone $eloquent;
-
         while ($relation = array_shift($relations)) {
+            # Treat (Has)Many(ToMany|Through) relations as "count()" subQuery.
+            if ($this->isCountableRelation($relation)) {
+                $relationObject = $object->$name();
+
+                return $relationObject->count();
+            }
+
             $object = call_user_func([$orig = $object, $relation]);
-
-            if ($object instanceof BelongsToMany) {
-                return \DB::table($object->getTable())
-                          ->where($this->getQualifiedForeignKeyName($object), $orig->getKey())
-                          ->pluck($this->getQualifiedRelatedKeyName($object))
-                          ->toArray();
-            }
-
-            if (!($object instanceof HasOne || $object instanceof BelongsTo || $object instanceof MorphOne)) {
-                throw new Exception('Only HasOne and BelongsTo relations supported');
-            }
 
             $object = $object->getResults();
         }
@@ -52,11 +49,15 @@ trait LoopsOverRelations
      */
     protected function getQualifiedForeignKeyName($object)
     {
-        $foreignKey = method_exists($object, 'getQualifiedForeignKeyName')
-            ? $object->getQualifiedForeignKeyName()
-            : $object->getForeignKey();
+        if (method_exists($object, 'getQualifiedForeignKeyName')) {
+            return $object->getQualifiedForeignKeyName();
+        }
 
-        return $foreignKey;
+        if (method_exists($object, 'getQualifiedForeignPivotKeyName')) {
+            return $object->getQualifiedForeignPivotKeyName();
+        }
+
+        return $object->getForeignKey();
     }
 
     /**
@@ -65,8 +66,35 @@ trait LoopsOverRelations
      */
     protected function getQualifiedRelatedKeyName($object)
     {
-        return method_exists($object, 'getQualifiedRelatedKeyName')
-            ? $object->getQualifiedRelatedKeyName()
-            : $object->getOtherKey();
+        if (method_exists($object, 'getQualifiedRelatedKeyName')) {
+            return $object->getQualifiedRelatedKeyName();
+        }
+
+        if (method_exists($object, 'getQualifiedRelatedPivotKeyName')) {
+            return $object->getQualifiedRelatedPivotKeyName();
+        }
+
+        return $object->getOtherKey();
+    }
+
+    /**
+     * @param $eloquent
+     * @param $id
+     * @return bool
+     */
+    protected function hasRelation($eloquent, $id)
+    {
+        return (method_exists($eloquent, $id) && ($relation = $eloquent->$id())) ? $relation : null;
+    }
+
+    /**
+     * @param $relation
+     * @return bool
+     */
+    protected function isCountableRelation($relation)
+    {
+        return (is_a($relation, BelongsToMany::class)
+            || is_a($relation, HasMany::class)
+            || is_a($relation, HasManyThrough::class));
     }
 }

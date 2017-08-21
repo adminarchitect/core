@@ -4,6 +4,9 @@ namespace Terranet\Administrator\Columns;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Terranet\Administrator\Columns\Decorators\CellDecorator;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 use Terranet\Administrator\Traits\LoopsOverRelations;
@@ -110,6 +113,11 @@ class Element extends ElementContainer
     {
         $id = $this->id();
 
+        # Treat (Has)Many(ToMany|Through) relations as "count()" subQuery.
+        if (($relation = $this->hasRelation($eloquent, $id)) && $this->isCountableRelation($relation)) {
+            return $this->fetchRelationValue($eloquent, $id, [$id => $relation], true);
+        }
+
         if ($this->relations) {
             return $this->fetchRelationValue($eloquent, $id, $this->relations, true);
         }
@@ -135,7 +143,7 @@ class Element extends ElementContainer
      */
     public function setStandalone($flag = true)
     {
-        $this->standalone = (bool) $flag;
+        $this->standalone = (bool)$flag;
 
         return $this;
     }
