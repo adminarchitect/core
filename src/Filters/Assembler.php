@@ -198,11 +198,14 @@ class Assembler
     protected function assemblyQuery(FormElement $element)
     {
         $table = $this->model->getTable();
-
         $input = $element->getInput();
         $type = $input->getType();
         $name = $element->id();
         $value = $input->getValue();
+
+        if (empty($value)) {
+            return $this->query;
+        }
 
         $columns = scheme()->columns($table);
 
@@ -247,7 +250,7 @@ class Assembler
 
             case 'boolean':
             case 'number':
-                $query->where("{$table}.{$column}", '=', (int) $value);
+                $query->where("{$table}.{$column}", '=', (int)$value);
                 break;
 
             case 'date':
