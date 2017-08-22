@@ -2,7 +2,7 @@ class AdminArchitect {
     constructor() {
         [
             'SidebarNavigation', 'Panels', 'Collections', 'BatchActions',
-            'DateControls', 'LiveSearch', 'Fancybox'
+            'DateControls', 'LiveSearch', 'Fancybox',
         ].map((method) => {
             AdminArchitect['handle' + method].call();
         });
@@ -10,14 +10,17 @@ class AdminArchitect {
 
     static handleSidebarNavigation() {
         const toggleMenu = (marginLeft, marginMain) => {
-            let emailList = ($(window).width() <= 768 && $(window).width() > 640) ? 320 : 360;
+            let emailList = ($(window).width() <= 768 && $(window).width() >
+                640) ? 320 : 360;
 
             if ($('.mainpanel').css('position') === 'relative') {
                 $('.logopanel, .leftpanel').animate({left: marginLeft}, 'fast');
                 $('.headerbar, .mainpanel').animate({left: marginMain}, 'fast');
 
-                $('.emailcontent, .email-options').animate({left: marginMain}, 'fast');
-                $('.emailpanel').animate({left: marginMain + emailList}, 'fast');
+                $('.emailcontent, .email-options').
+                    animate({left: marginMain}, 'fast');
+                $('.emailpanel').
+                    animate({left: marginMain + emailList}, 'fast');
 
                 let $body = $('body');
                 if ('hidden' === $body.css('overflow')) {
@@ -26,11 +29,15 @@ class AdminArchitect {
                     $body.css({overflow: 'hidden'});
                 }
             } else {
-                $('.logopanel, .leftpanel').animate({marginLeft: marginLeft}, 'fast');
-                $('.headerbar, .mainpanel').animate({marginLeft: marginMain}, 'fast');
+                $('.logopanel, .leftpanel').
+                    animate({marginLeft: marginLeft}, 'fast');
+                $('.headerbar, .mainpanel').
+                    animate({marginLeft: marginMain}, 'fast');
 
-                $('.emailcontent, .email-options').animate({left: marginMain}, 'fast');
-                $('.emailpanel').animate({left: marginMain + emailList}, 'fast');
+                $('.emailcontent, .email-options').
+                    animate({left: marginMain}, 'fast');
+                $('.emailpanel').
+                    animate({left: marginMain + emailList}, 'fast');
             }
         };
 
@@ -55,7 +62,9 @@ class AdminArchitect {
 
             if (sub.is(':visible')) {
                 sub.slideUp(200);
-                if (parent.hasClass('nav-active')) { parent.removeClass('nav-active'); }
+                if (parent.hasClass('nav-active')) {
+                    parent.removeClass('nav-active');
+                }
             } else {
                 $(gran).find('.children').each((i, e) => {
                     $(e).slideUp();
@@ -136,17 +145,31 @@ class AdminArchitect {
         });
 
         $('[data-filter-type="daterange"]').daterangepicker({
-            format: 'YYYY-MM-DD',
+            locale: {
+                format: 'YYYY-MM-DD',
+            },
+            autoUpdateInput: false,
             ranges: {
                 'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Yesterday': [
+                    moment().subtract(1, 'days'),
+                    moment().subtract(1, 'days'),
+                ],
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
                 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'This Month': [
+                    moment().startOf('month'),
+                    moment().endOf('month'),
+                ],
+                'Last Month': [
+                    moment().subtract(1, 'month').startOf('month'),
+                    moment().subtract(1, 'month').endOf('month'),
+                ],
             },
-            startDate: moment().subtract(29, 'days'),
-            endDate: moment(),
+        }).on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        }).on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
     }
 
