@@ -17,10 +17,8 @@ class AdminArchitect {
                 $('.logopanel, .leftpanel').animate({left: marginLeft}, 'fast');
                 $('.headerbar, .mainpanel').animate({left: marginMain}, 'fast');
 
-                $('.emailcontent, .email-options').
-                    animate({left: marginMain}, 'fast');
-                $('.emailpanel').
-                    animate({left: marginMain + emailList}, 'fast');
+                $('.emailcontent, .email-options').animate({left: marginMain}, 'fast');
+                $('.emailpanel').animate({left: marginMain + emailList}, 'fast');
 
                 let $body = $('body');
                 if ('hidden' === $body.css('overflow')) {
@@ -29,15 +27,11 @@ class AdminArchitect {
                     $body.css({overflow: 'hidden'});
                 }
             } else {
-                $('.logopanel, .leftpanel').
-                    animate({marginLeft: marginLeft}, 'fast');
-                $('.headerbar, .mainpanel').
-                    animate({marginLeft: marginMain}, 'fast');
+                $('.logopanel, .leftpanel').animate({marginLeft: marginLeft}, 'fast');
+                $('.headerbar, .mainpanel').animate({marginLeft: marginMain}, 'fast');
 
-                $('.emailcontent, .email-options').
-                    animate({left: marginMain}, 'fast');
-                $('.emailpanel').
-                    animate({left: marginMain + emailList}, 'fast');
+                $('.emailcontent, .email-options').animate({left: marginMain}, 'fast');
+                $('.emailpanel').animate({left: marginMain + emailList}, 'fast');
             }
         };
 
