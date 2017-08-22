@@ -203,7 +203,7 @@ class Assembler
         $name = $element->id();
         $value = $input->getValue();
 
-        if (empty($value)) {
+        if (is_null($value)) {
             return $this->query;
         }
 
