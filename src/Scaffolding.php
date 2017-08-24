@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator;
 
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Services\CrudActions;
@@ -161,7 +162,7 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * @return mixed Eloquent
+     * @return Model
      */
     public function model()
     {

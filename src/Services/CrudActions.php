@@ -9,6 +9,7 @@ use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract
 use Terranet\Administrator\Contracts\Services\Saver;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Requests\UpdateRequest;
+use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\ExportsCollection;
 use Terranet\Rankable\Rankable;
 
@@ -17,7 +18,7 @@ class CrudActions implements CrudActionsContract
     use ExportsCollection;
 
     /**
-     * @var
+     * @var Scaffolding
      */
     protected $module;
 
