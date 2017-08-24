@@ -125,13 +125,14 @@ trait ExportsCollection
 
     public function toPDF(Builder $query)
     {
-        if (!$pdf = app('dompdf.wrapper')) {
+        if (!app()->has('dompdf.wrapper')) {
             throw new Exception(sprintf(
-                "'%s' package required to generate PDFs.",
+                "'%s' package required to generate PDF documents.",
                 'barryvdh/laravel-dompdf'
             ));
         }
 
+        $pdf = app('dompdf.wrapper');
         $html = view('administrator::layouts.exportable', [
             'module' => app('scaffold.module')->url(),
             'time' => new Carbon(),
