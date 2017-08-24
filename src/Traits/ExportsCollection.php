@@ -4,14 +4,18 @@ namespace Terranet\Administrator\Traits;
 
 use DOMDocument;
 use Illuminate\Database\Eloquent\Builder;
-use Response;
 use Terranet\Administrator\Exception;
 
 trait ExportsCollection
 {
-    protected function exportColumns()
+    public function exportableQuery(Builder $query)
     {
-        return ['*'];
+        # Allow executing custom exportable query.
+        if (method_exists($this->module, 'exportableQuery')) {
+            return $this->module->exportableQuery($query);
+        }
+
+        return $query;
     }
 
     /**
@@ -43,7 +47,7 @@ trait ExportsCollection
     {
         file_put_contents(
             $file = $this->getFilename(),
-            json_encode($query->select($this->exportColumns())->get())
+            json_encode($this->exportableQuery($query)->get())
         );
 
         return $this->sendDownloadResponse($file, 'json', ['Content-Type' => 'application/json']);
@@ -60,7 +64,7 @@ trait ExportsCollection
         $dom = new DOMDocument();
         $root = $dom->createElement('root');
 
-        $query->select($this->exportColumns())->chunk(100, function ($collection) use ($dom, $root) {
+        $this->exportableQuery($query)->chunk(100, function ($collection) use ($dom, $root) {
             foreach ($collection as $object) {
                 $item = $dom->createElement('item');
 
@@ -96,7 +100,7 @@ trait ExportsCollection
         );
 
         $headersPrinted = false;
-        $query->select($this->exportColumns())->chunk(100, function ($collection) use ($out, &$headersPrinted) {
+        $this->exportableQuery($query)->chunk(100, function ($collection) use ($out, &$headersPrinted) {
             foreach ($collection as $item) {
                 $data = $this->toScalar($item);
 
@@ -115,7 +119,7 @@ trait ExportsCollection
 
     /**
      * @param $object
-     * @return array|ø
+     * @return array
      */
     protected function toScalar($object)
     {
