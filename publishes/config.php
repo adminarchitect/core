@@ -74,4 +74,9 @@ return [
          */
         'segment' => 2,
     ],
+
+    'export' => [
+        'default' => ['xml', 'csv', 'json'],
+        // 'users' => ['csv', 'pdf'],
+    ],
 ];

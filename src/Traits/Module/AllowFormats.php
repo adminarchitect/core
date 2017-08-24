@@ -20,7 +20,7 @@ trait AllowFormats
     {
         return property_exists($this, 'exportableTo')
             ? $this->exportableTo
-            : ['xml', 'csv', 'json'];
+            : config('administrator.export.' . $this->url(), config('administrator.export.default'));
     }
 
     /**
