@@ -23,7 +23,7 @@ trait LoopsOverRelations
     {
         $object = clone $eloquent;
         while ($relation = array_shift($relations)) {
-            # Treat (Has)Many(ToMany|Through) relations as "count()" subQuery.
+            # Treat (Has)Many(ToMany|Through) listing relations as "count()" subQuery.
             if ($this->isCountableRelation($relation)) {
                 $relationObject = $object->$name();
 
@@ -31,6 +31,14 @@ trait LoopsOverRelations
             }
 
             $object = call_user_func([$orig = $object, $relation]);
+
+            # Treat BelongsToMany form relation as array of values.
+            if ($object instanceof BelongsToMany) {
+                return \DB::table($object->getTable())
+                          ->where($this->getQualifiedForeignKeyName($object), $orig->getKey())
+                          ->pluck($this->getQualifiedRelatedKeyName($object))
+                          ->toArray();
+            }
 
             $object = $object->getResults();
         }
