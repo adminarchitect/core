@@ -12,7 +12,7 @@ $elements = $module->viewColumns($item);
     @foreach($elements as $element)
         @if ($element instanceof \Terranet\Administrator\Form\FormSection)
             <tr>
-                <td colspan="2">{{ $element->title() }}</td>
+                <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
             </tr>
         @else
             @if (! (is_array($value = $element->render($item)) || is_object($value)))
