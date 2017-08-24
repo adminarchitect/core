@@ -63,6 +63,12 @@
                     @endif
                 </table>
             </form>
+            
+            <?php
+                $exportable = method_exists($module, 'formats') ? $module->formats() : [];
+                $paginable  = method_exists($items, 'hasPages') ? $items->hasPages() : false;
+            ?>
+            @if ($exportable || $paginable)
             <div class="row">
                 <div class="col-md-6 mt20">
                     @include($template->index('export'))
@@ -71,6 +77,7 @@
                     @include($template->index('paginator'))
                 </div>
             </div>
+            @endif
         </div>
     </div>
 @endsection
