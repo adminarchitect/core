@@ -6,9 +6,8 @@ use Carbon\Carbon;
 use DOMDocument;
 use Generator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Exception;
-use Terranet\Administrator\Scaffolding;
+use Terranet\Translatable\Translatable;
 
 trait ExportsCollection
 {
@@ -25,7 +24,11 @@ trait ExportsCollection
             return $this->module->exportableQuery($query);
         }
 
-        return $query->select($this->exportableColumns());
+        return $query
+            ->select($this->exportableColumns())
+            ->when($query->getModel() instanceof Translatable, function ($query) {
+                $query->translated();
+            });
     }
 
     /**
@@ -235,6 +238,14 @@ trait ExportsCollection
             ->diff($model->getHidden())
             ->map(function ($column) use ($model) {
                 return "{$model->getTable()}.{$column}";
+            })
+            ->when($model instanceof Translatable, function ($collection) use ($model) {
+                return $collection->merge(
+                    collect($model->getTranslatedAttributes())
+                        ->map(function ($column) use ($model) {
+                            return "tt.{$column}";
+                        })
+                );
             })
             ->all();
     }
