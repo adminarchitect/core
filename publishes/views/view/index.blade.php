@@ -15,7 +15,8 @@
             <ul class="nav nav-tabs nav-line">
                 @foreach($tabs = $widgets->tabs() as $slug => $tabTitle)
                     <li role="presentation">
-                        <a href="#tab_{{ $slug }}" aria-controls="tab_{{ $slug }}" role="tab" data-toggle="tab">{{ $tabTitle }}</a>
+                        <a href="#tab_{{ $slug }}" aria-controls="tab_{{ $slug }}" role="tab"
+                           data-toggle="tab">{{ $tabTitle }}</a>
                     </li>
                 @endforeach
             </ul>
@@ -26,14 +27,14 @@
                         <?php $widgets->setTab($tabTitle); ?>
 
                         @foreach ($widgets->setPlacement('main-top')->filter() as $widget)
-                            <div class="row">
+                            <div class="row mb20">
                                 <div class="col-md-12">
                                     {!! $widget->render() !!}
                                 </div>
                             </div>
                         @endforeach
 
-                        <div class="row">
+                        <div class="row mb20">
                             <?php $sideWidgets = $widgets->setPlacement('sidebar')->filter() ?>
 
                             <div class="col-md-{{ $sideWidgets->count() ? 8 : 12 }}">
@@ -45,7 +46,7 @@
                             @if ($sideWidgets->count())
                                 <div class="col-md-4">
                                     @foreach($sideWidgets as $widget)
-                                        <div class="widget">
+                                        <div class="widget mb20">
                                             {!! $widget->render() !!}
                                         </div>
                                     @endforeach
@@ -54,7 +55,7 @@
                         </div>
 
                         @foreach ($widgets->setPlacement('main-bottom')->filter() as $widget)
-                            <div class="row">
+                            <div class="row mb20">
                                 <div class="col-md-12">
                                     {!! $widget->render() !!}
                                 </div>
