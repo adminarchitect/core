@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use DOMDocument;
 use Generator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Terranet\Administrator\Exception;
 use Terranet\Translatable\Translatable;
 
@@ -17,7 +19,7 @@ trait ExportsCollection
      * @param Builder $query
      * @return Builder
      */
-    public function exportableQuery(Builder $query): Builder
+    protected function exportableQuery(Builder $query): Builder
     {
         # Allow executing custom exportable query.
         if (method_exists($this->module, 'exportableQuery')) {
@@ -25,10 +27,12 @@ trait ExportsCollection
         }
 
         return $query
-            ->select($this->exportableColumns())
             ->when($query->getModel() instanceof Translatable, function ($query) {
                 $query->translated();
-            });
+            })
+            # leave select after joining with translations
+            # table in order to rewrite selected columns
+            ->select($this->exportableColumns());
     }
 
     /**
@@ -235,6 +239,9 @@ trait ExportsCollection
             return $this->module->exportableColumns();
         }
 
+        /**
+         * @var Model $model
+         */
         $model = $this->module->model();
 
         return collect($model->getFillable())
@@ -243,7 +250,7 @@ trait ExportsCollection
             ->map(function ($column) use ($model) {
                 return "{$model->getTable()}.{$column}";
             })
-            ->when($model instanceof Translatable, function ($collection) use ($model) {
+            ->when($model instanceof Translatable, function (Collection $collection) use ($model) {
                 return $collection->merge(
                     collect($model->getTranslatedAttributes())
                         ->map(function ($column) use ($model) {
