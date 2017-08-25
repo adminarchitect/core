@@ -231,6 +231,10 @@ trait ExportsCollection
      */
     protected function exportableColumns(): array
     {
+        if (method_exists($this->module, 'exportableColumns')) {
+            return $this->module->exportableColumns();
+        }
+
         $model = $this->module->model();
 
         return collect($model->getFillable())
