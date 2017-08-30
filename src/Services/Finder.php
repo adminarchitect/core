@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Services;
 
+use Illuminate\Database\Eloquent\Builder;
 use Terranet\Administrator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
@@ -20,6 +21,11 @@ class Finder implements FinderContract
      * @var
      */
     protected $model;
+
+    /**
+     * @var Builder
+     */
+    protected $query;
 
     /**
      * Query assembler.
@@ -49,15 +55,20 @@ class Finder implements FinderContract
      *
      * @return mixed
      */
-    public function getQuery()
+    public function getQuery(): Builder
     {
-        $this->assembler();
+        # prevent duplicated execution
+        if (null === $this->query) {
+            $this->assembler();
 
-        $this->handleFilter();
+            $this->handleFilter();
 
-        $this->handleSortable();
+            $this->handleSortable();
 
-        return $this->assembler()->getQuery();
+            $this->query = $this->assembler()->getQuery();
+        }
+
+        return $this->query;
     }
 
     /**
