@@ -105,7 +105,9 @@ class PanelMakeCommand extends GeneratorCommand
     {
         return <<<OUT
 <div class="panel">
-    <h3 class="panel-heading">{$title}</h3>
+    <div class="panel-heading">
+        <h4 class="panel-title">{$title}</h4>
+    </div>
     <div class="panel-body">
         <p class="well">Check me out here [{$path}]</p>
     </div>
