@@ -26,78 +26,48 @@
 @endsection
 
 @section('scaffold.content')
-    <div class="panel">
-        <div class="panel-body">
-            <form method="post" id="collection" action="{{ route('scaffold.batch', ['page' => $module]) }}">
-                <?=Form::hidden('batch_action', null, ['id' => 'batch_action'])?>
-                <?=Form::token()?>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        @if($hasBatchActions = $actions->batch()->count())
-                            <th width="10">
-                                <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                    <input type="checkbox"
-                                           class="simple toggle-collection"
-                                           id="toggle_collection_{{ $key }}"
-                                    />
-                                </label>
-                            </th>
-                        @endif
-                        @each($template->index('header'), $columns, 'column')
-                        @unless($actions->readonly())
-                            <th class="actions" style="width: 10%; vertical-align: baseline">
-                                {{ trans('administrator::module.actions') }}
-                            </th>
-                        @endunless
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    @foreach($items as $item)
-                        @include($template->index('row'))
-                    @endforeach
-                    </tbody>
-
-                    @if ($items && count($items) > 10)
-                        <tfoot>
-                        <tr>
-                            @if($hasBatchActions)
-                                <th width="10">
-                                    <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                        <input type="checkbox"
-                                               class="simple toggle-collection"
-                                               id="toggle_collection_{{ $key }}"
-                                        />
-                                    </label>
-                                </th>
-                            @endif
-                            @each($template->index('header'), $columns, 'column')
-                            @unless($actions->readonly())
-                                <th class="actions" style="width: 10%; vertical-align: baseline">
-                                    {{ trans('administrator::module.actions') }}
-                                </th>
-                            @endunless
-                        </tr>
-                        </tfoot>
-                    @endif
-                </table>
-            </form>
-
-            <?php
-            $exportable = method_exists($module, 'formats') && $module->formats();
-            $paginable = method_exists($items, 'hasPages') && $items->hasPages();
-            ?>
-            @if ($exportable || $paginable)
-                <div class="row">
-                    <div class="col-md-6 mt20">
-                        @include($template->index('export'))
-                    </div>
-                    <div class="col-md-6 text-right">
-                        @include($template->index('paginator'))
-                    </div>
-                </div>
+    @component('administrator::components.index.index', ['module' => $module, 'items' => $items])
+        @slot('checkboxes')
+            @if($actions->batch()->count())
+                <th width="10">
+                    <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
+                        <input type="checkbox"
+                               class="simple toggle-collection"
+                               id="toggle_collection_{{ $key }}"
+                        />
+                    </label>
+                </th>
             @endif
-        </div>
-    </div>
+        @endslot
+
+        @slot('headers')
+            @each($template->index('header'), $columns, 'column')
+        @endslot
+
+        @slot('actions')
+            @unless($actions->readonly())
+                <th class="actions" style="width: 10%; vertical-align: baseline">
+                    {{ trans('administrator::module.actions') }}
+                </th>
+            @endunless
+        @endslot
+
+        @slot('rows')
+            @foreach($items as $item)
+                @include($template->index('row'))
+            @endforeach
+        @endslot
+
+        @slot('exportable')
+            @if ($exportable = method_exists($module, 'formats') && $module->formats())
+                @include($template->index('export'))
+            @endif
+        @endslot
+
+        @slot('paginator')
+            @if (method_exists($items, 'hasPages') && $items->hasPages())
+                @include($template->index('paginator'))
+            @endif
+        @endslot
+    @endcomponent
 @endsection
