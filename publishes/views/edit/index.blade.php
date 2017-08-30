@@ -16,7 +16,9 @@
             <table class="table table-striped-col">
                 @each($template->edit('row'), $form, 'field')
 
-                @include($template->edit('actions'))
+                @unless($actions->readonly())
+                    @include($template->edit('actions'))
+                @endunless
             </table>
             {!! Form::close() !!}
         </div>

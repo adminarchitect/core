@@ -33,6 +33,13 @@ class ActionsManager implements ActionsManagerContract
      */
     protected $globalActions = null;
 
+    /**
+     * Check if resource is readonly - has no actions.
+     *
+     * @var null|bool
+     */
+    protected $readonly;
+
     public function __construct(CrudActions $service, Module $module)
     {
         $this->service = $service;
@@ -83,14 +90,46 @@ class ActionsManager implements ActionsManagerContract
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param string $method
+     * @param string $action
      * @param $model
      *
      * @return bool
      */
-    public function authorize($method, $model = null)
+    public function authorize($action, $model = null)
     {
-        return $this->service->authorize($method, $model, $this->module);
+        # for most cases it is enough to set
+        # permissions in Resource object.
+        if (method_exists($this->module, 'authorize')) {
+            return $this->module->authorize($action, $model);
+        }
+
+        # Ask Actions Service for action permissions.
+        return $this->service->authorize($action, $model, $this->module);
+    }
+
+    /**
+     * check if resource has no Actions at all.
+     */
+    public function readonly()
+    {
+        if (null === $this->readonly) {
+            # check for <Resource>::hideActions() method.
+            if (method_exists($this->module, 'readonly')) {
+                $this->readonly = $this->module->readonly();
+            }
+
+            # check for <Actions>::readonly() method.
+            elseif (method_exists($this->service, 'readonly')) {
+                $this->readonly = $this->service->readonly();
+            }
+
+            # allow actions if no other policy defined
+            else {
+                $this->readonly = false;
+            }
+        }
+
+        return $this->readonly;
     }
 
     /**
@@ -122,6 +161,6 @@ class ActionsManager implements ActionsManagerContract
         }
 
         // Execute CRUD action
-        return call_user_func_array([$this->service, $method], (array) $arguments);
+        return call_user_func_array([$this->service, $method], (array)$arguments);
     }
 }

@@ -36,16 +36,25 @@
                     <tr>
                         <th width="10">
                             <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                <input type="checkbox" class="simple toggle-collection" id="toggle_collection_{{ $key }}"/>
+                                <input type="checkbox"
+                                       class="simple toggle-collection"
+                                       id="toggle_collection_{{ $key }}"
+                                />
                             </label>
                         </th>
                         @each($template->index('header'), $columns, 'column')
-                        <th class="actions" style="width: 10%; vertical-align: baseline">{{ trans('administrator::module.actions') }}</th>
+                        @unless($actions->readonly())
+                            <th class="actions" style="width: 10%; vertical-align: baseline">
+                                {{ trans('administrator::module.actions') }}
+                            </th>
+                        @endunless
                     </tr>
                     </thead>
 
                     <tbody>
-                    @each($template->index('row'), $items, 'item')
+                    @foreach($items as $item)
+                        @include($template->index('row'))
+                    @endforeach
                     </tbody>
 
                     @if ($items && count($items) > 10)
@@ -53,30 +62,37 @@
                         <tr>
                             <th width="10">
                                 <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                    <input type="checkbox" class="simple toggle-collection" id="toggle_collection_{{ $key }}"/>
+                                    <input type="checkbox"
+                                           class="simple toggle-collection"
+                                           id="toggle_collection_{{ $key }}"
+                                    />
                                 </label>
                             </th>
                             @each($template->index('header'), $columns, 'column')
-                            <th class="actions" style="width: 10%; vertical-align: baseline">{{ trans('administrator::module.actions') }}</th>
+                            @unless($actions->readonly())
+                            <th class="actions" style="width: 10%; vertical-align: baseline">
+                                {{ trans('administrator::module.actions') }}
+                            </th>
+                            @endunless
                         </tr>
                         </tfoot>
                     @endif
                 </table>
             </form>
-            
+
             <?php
-                $exportable = method_exists($module, 'formats') ? $module->formats() : [];
-                $paginable  = method_exists($items, 'hasPages') ? $items->hasPages() : false;
+            $exportable = method_exists($module, 'formats') && $module->formats();
+            $paginable = method_exists($items, 'hasPages') && $items->hasPages();
             ?>
             @if ($exportable || $paginable)
-            <div class="row">
-                <div class="col-md-6 mt20">
-                    @include($template->index('export'))
+                <div class="row">
+                    <div class="col-md-6 mt20">
+                        @include($template->index('export'))
+                    </div>
+                    <div class="col-md-6 text-right">
+                        @include($template->index('paginator'))
+                    </div>
                 </div>
-                <div class="col-md-6 text-right">
-                    @include($template->index('paginator'))
-                </div>
-            </div>
             @endif
         </div>
     </div>

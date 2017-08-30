@@ -1,3 +1,4 @@
+@unless($actions->readonly())
 @section('scaffold.create')
     <div class="btn-group pull-right mt5">
         @if ($actions->authorize('create'))
@@ -8,5 +9,5 @@
             </a>
         @endif
     </div>
-
 @endsection
+@endunless
