@@ -34,14 +34,16 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th width="10">
-                            <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                <input type="checkbox"
-                                       class="simple toggle-collection"
-                                       id="toggle_collection_{{ $key }}"
-                                />
-                            </label>
-                        </th>
+                        @if($hasBatchActions = $actions->batch()->count())
+                            <th width="10">
+                                <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
+                                    <input type="checkbox"
+                                           class="simple toggle-collection"
+                                           id="toggle_collection_{{ $key }}"
+                                    />
+                                </label>
+                            </th>
+                        @endif
                         @each($template->index('header'), $columns, 'column')
                         @unless($actions->readonly())
                             <th class="actions" style="width: 10%; vertical-align: baseline">
@@ -60,19 +62,21 @@
                     @if ($items && count($items) > 10)
                         <tfoot>
                         <tr>
-                            <th width="10">
-                                <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
-                                    <input type="checkbox"
-                                           class="simple toggle-collection"
-                                           id="toggle_collection_{{ $key }}"
-                                    />
-                                </label>
-                            </th>
+                            @if($hasBatchActions)
+                                <th width="10">
+                                    <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
+                                        <input type="checkbox"
+                                               class="simple toggle-collection"
+                                               id="toggle_collection_{{ $key }}"
+                                        />
+                                    </label>
+                                </th>
+                            @endif
                             @each($template->index('header'), $columns, 'column')
                             @unless($actions->readonly())
-                            <th class="actions" style="width: 10%; vertical-align: baseline">
-                                {{ trans('administrator::module.actions') }}
-                            </th>
+                                <th class="actions" style="width: 10%; vertical-align: baseline">
+                                    {{ trans('administrator::module.actions') }}
+                                </th>
                             @endunless
                         </tr>
                         </tfoot>

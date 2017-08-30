@@ -1,14 +1,16 @@
 <tr>
-    <th>
-        <label for="collection_{{$item->id}}">
-            <input type="checkbox"
-                   name="collection[]"
-                   id="collection_{{$item->getKey()}}"
-                   value="{{ $item->getKey() }}"
-                   class="collection-item simple"
-            >
-        </label>
-    </th>
+    @if ($actions->batch()->count())
+        <th>
+            <label for="collection_{{$item->id}}">
+                <input type="checkbox"
+                       name="collection[]"
+                       id="collection_{{$item->getKey()}}"
+                       value="{{ $item->getKey() }}"
+                       class="collection-item simple"
+                >
+            </label>
+        </th>
+    @endif
     @foreach($columns as $column)
         <td>
             @if(!$column->isGroup())
