@@ -28,9 +28,9 @@ class PanelMakeCommand extends GeneratorCommand
      */
     protected $type = 'Dashboard';
 
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         if (!$this->option('no-view')) {
             $name = class_basename($this->qualifyClass($this->getNameInput()));
