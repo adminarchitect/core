@@ -4,8 +4,8 @@ namespace Terranet\Administrator\Form\Collection;
 
 use Closure;
 use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
+use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Exception;
-use Terranet\Administrator\Form\FilterElement;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\InputFactory;
 use Terranet\Administrator\Form\Type\Ckeditor;
@@ -53,7 +53,7 @@ class Mutable extends BaseMutableCollection
 
         # Allow a callable input type.
         if (is_callable($inputType)) {
-            call_user_func_array($inputType, [  $element]);
+            call_user_func_array($inputType, [$element]);
         }
 
         if (is_numeric($position)) {
@@ -102,5 +102,20 @@ class Mutable extends BaseMutableCollection
         if (!in_array($editor, ['ckeditor', 'tinymce', 'medium', 'markdown'])) {
             throw new Exception(sprintf("Unknown editor %s", $editor));
         }
+    }
+
+    /**
+     * Create element object from string.
+     *
+     * @param $element
+     * @return mixed
+     */
+    protected function createElement($element)
+    {
+        if (is_string($element)) {
+            $element = new FormElement($element);
+        }
+
+        return $element;
     }
 }
