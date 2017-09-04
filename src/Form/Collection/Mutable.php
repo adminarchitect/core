@@ -6,6 +6,7 @@ use Closure;
 use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Form\FormElement;
+use Terranet\Administrator\Form\FormSection;
 use Terranet\Administrator\Form\InputFactory;
 use Terranet\Administrator\Form\Type\Ckeditor;
 use Terranet\Administrator\Form\Type\Markdown;
