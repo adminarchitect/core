@@ -21,26 +21,16 @@ class Element extends ElementContainer
     protected $keepOriginalID = false;
 
     /**
-     * Set element template.
+     * Set element display template.
      *
      * @param $template
      * @return $this
      */
-    public function setTemplate($template)
+    public function display($template)
     {
         $this->template = $template;
 
         return $this;
-    }
-
-    /**
-     * Get element template.
-     *
-     * @return mixed
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**
@@ -57,9 +47,9 @@ class Element extends ElementContainer
         }
 
         /**
-         * Handle Renderable decorators.
+         * Handle \Illuminate\Contracts\Support\Renderable (view(<template>)) decorators.
          *
-         * @example: (new CellElement($id))->setDecorator(view('users.comments'));
+         * @example: $element->display(view('users.comments'));
          */
         if ($this->template instanceof Renderable) {
             return $this->template->with([
@@ -71,7 +61,7 @@ class Element extends ElementContainer
         /**
          * Handle instance of CellDecorators.
          *
-         * @example: (new CellElement($id))->setDecorator(new BooleanDecorator);
+         * @example: $element->display(new BooleanDecorator);
          */
         if ($this->template instanceof CellDecorator) {
             $closure = $this->template->getDecorator();
@@ -82,16 +72,16 @@ class Element extends ElementContainer
         /**
          * Handle closure-based decorators.
          *
-         * @example: (new CellElement($id))->setDecorator(function ($row) { return $row->id; });
+         * @example: (new CellElement($id))->setDecorator(function() { return $this->id; });
          */
-        if (is_callable($closure = $this->template)) {
-            return $closure($eloquent);
+        if (($closure = $this->template) instanceof \Closure) {
+            return $closure->call($eloquent, $eloquent);
         }
 
         /**
          * Handle pattern-based decorators.
          *
-         * @example: (new CellElement($id))->setDecorator('<a href="mailto:(:email)">(:email)</a>');
+         * @example: $element->display('<a href="mailto:(:email)">(:email)</a>');
          */
         return preg_replace_callback('~\(\:([a-z0-9\_]+)\)~si', function ($matches) use ($eloquent) {
             $field = $matches[1];
