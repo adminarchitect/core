@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Collection;
 
+use Closure;
 use Illuminate\Support\Collection as BaseCollection;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Exception;
@@ -12,13 +13,18 @@ class Mutable extends BaseCollection
      * Push an item onto the end of the collection.
      *
      * @param  mixed $element
+     * @param Closure|null $callback
      * @return $this
      */
-    public function push($element)
+    public function push($element, Closure $callback = null)
     {
-        parent::push(
-            $this->createElement($element)
-        );
+        $element = $this->createElement($element);
+
+        if ($callback) {
+            $callback($element);
+        }
+
+        parent::push($element);
 
         return $this;
     }
@@ -28,11 +34,16 @@ class Mutable extends BaseCollection
      *
      * @param $element
      * @param $position
+     * @param Closure|null $callback
      * @return $this
      */
-    public function insert($element, $position)
+    public function insert($element, $position, Closure $callback = null)
     {
         $element = $this->createElement($element);
+
+        if ($callback) {
+            $callback($element);
+        }
 
         if (is_string($position)) {
             $this->push($element);
@@ -218,10 +229,10 @@ class Mutable extends BaseCollection
      * Add a new elements group.
      *
      * @param $id
-     * @param \Closure $callback
+     * @param Closure $callback
      * @return $this
      */
-    public function group($id, \Closure $callback)
+    public function group($id, Closure $callback)
     {
         $group = new Group($id);
 
