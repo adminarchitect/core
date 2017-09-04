@@ -3,10 +3,26 @@
 namespace Terranet\Administrator\Collection;
 
 use Illuminate\Support\Collection as BaseCollection;
+use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Exception;
 
 class Mutable extends BaseCollection
 {
+    /**
+     * Push an item onto the end of the collection.
+     *
+     * @param  mixed $element
+     * @return $this
+     */
+    public function push($element)
+    {
+        parent::push(
+            $this->createElement($element)
+        );
+
+        return $this;
+    }
+
     /**
      * Insert an element into collection at specified position.
      *
@@ -54,7 +70,7 @@ class Mutable extends BaseCollection
     public function without($id)
     {
         if (!is_array($id)) {
-            $id = (array) $id;
+            $id = (array)$id;
         }
 
         $items = $this->filter(function ($element) use ($id) {
