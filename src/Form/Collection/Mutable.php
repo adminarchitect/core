@@ -69,6 +69,22 @@ class Mutable extends BaseMutableCollection
         return $this;
     }
 
+    /**
+     * Create a section.
+     *
+     * @param $section
+     * @param null $position
+     * @return $this
+     */
+    public function section($section, $position = null)
+    {
+        if (is_string($section)) {
+            $section = new FormSection($section);
+        }
+
+        return null !== $position ? $this->insert($section, $position) : $this->push($section);
+    }
+
     public function hasEditors($editor)
     {
         $this->validateEditor($editor);
