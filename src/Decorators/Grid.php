@@ -31,7 +31,7 @@ class Grid
     {
         if (is_string($element)) {
             $element = new Element($element);
-            $element->setTemplate(
+            $element->display(
                 $this->getDecorator($element->id())
             );
         }
