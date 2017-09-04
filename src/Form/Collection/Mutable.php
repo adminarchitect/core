@@ -4,7 +4,6 @@ namespace Terranet\Administrator\Form\Collection;
 
 use Closure;
 use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
-use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\InputFactory;
