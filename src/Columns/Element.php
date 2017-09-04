@@ -152,4 +152,16 @@ class Element extends ElementContainer
 
         return $this;
     }
+
+    /**
+     * Remove column from Sortable collection.
+     *
+     * @return $this
+     */
+    public function unSortable()
+    {
+        app('scaffold.module')->removeSortable($this->id());
+
+        return $this;
+    }
 }

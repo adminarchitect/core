@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Traits\Module;
 
 use function admin\db\scheme;
+use Closure;
 
 trait HasSortable
 {
@@ -16,7 +17,7 @@ trait HasSortable
     protected function scaffoldSortable()
     {
         if (null === $this->sortable && $schema = scheme()) {
-            $this->sortable = (array) $this->excludeUnSortable(
+            $this->sortable = (array)$this->excludeUnSortable(
                 $schema->indexedColumns(
                     $this->model()->getTable()
                 )
@@ -43,10 +44,10 @@ trait HasSortable
      * Register a Sortable element.
      *
      * @param $element
-     * @param \Closure|null $callback
+     * @param Closure|null $callback
      * @return $this
      */
-    public function addSortable($element, \Closure $callback = null)
+    public function addSortable($element, Closure $callback = null)
     {
         if (null === $callback) {
             $this->sortable[] = $element;
@@ -55,5 +56,27 @@ trait HasSortable
         }
 
         return $this;
+    }
+
+    /**
+     * Remove an element from Sortable collection.
+     *
+     * @param $element
+     * @return array|null
+     */
+    public function removeSortable($element)
+    {
+        if (array_has($this->sortable, $element)) {
+            return $this->sortable = array_except($this->sortable, $element);
+        }
+
+        if (in_array($element, $this->sortable())) {
+            return $this->sortable = array_except(
+                $this->sortable,
+                array_search($element, $this->sortable)
+            );
+        }
+
+        return $this->sortable;
     }
 }
