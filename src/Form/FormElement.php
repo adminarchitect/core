@@ -6,7 +6,6 @@ use Terranet\Administrator\Contracts\Form\Element as BasicFormElement;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Form\Type\Text;
 use Terranet\Administrator\Form\Type\View;
-use Terranet\Administrator\Traits\Collection\ElementContainer;
 
 /**
  * Since Form builder is based on a Mutable collection
@@ -42,7 +41,7 @@ use Terranet\Administrator\Traits\Collection\ElementContainer;
  * @method static FormElement select(string $name, array $attributes, array $options)
  * @method static FormElement tel(string $name)
  */
-class FormElement extends ElementContainer
+class FormElement extends \Terranet\Administrator\Columns\Element
 {
     /**
      * Get wrapped input object.
