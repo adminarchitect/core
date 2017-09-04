@@ -16,6 +16,8 @@ class Mutable extends BaseCollection
      */
     public function insert($element, $position)
     {
+        $element = $this->createElement($element);
+
         if (is_string($position)) {
             $this->push($element);
 
@@ -306,5 +308,20 @@ class Mutable extends BaseCollection
     protected function notFound($id)
     {
         throw new Exception(sprintf('Element [%s] does not exist.', $id));
+    }
+
+    /**
+     * Create element object from string.
+     *
+     * @param $element
+     * @return mixed
+     */
+    protected function createElement($element)
+    {
+        if (is_string($element)) {
+            $element = new Element($element);
+        }
+
+        return $element;
     }
 }
