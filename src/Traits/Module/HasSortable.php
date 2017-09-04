@@ -6,6 +6,8 @@ use function admin\db\scheme;
 
 trait HasSortable
 {
+    protected $sortable = null;
+
     public function sortable()
     {
         return $this->scaffoldSortable();
@@ -13,13 +15,15 @@ trait HasSortable
 
     protected function scaffoldSortable()
     {
-        if ($schema = scheme()) {
-            $indexedColumns = $schema->indexedColumns($this->model()->getTable());
-
-            return $this->excludeUnSortable($indexedColumns);
+        if (null === $this->sortable && $schema = scheme()) {
+            $this->sortable = (array) $this->excludeUnSortable(
+                $schema->indexedColumns(
+                    $this->model()->getTable()
+                )
+            );
         }
 
-        return [];
+        return $this->sortable;
     }
 
     /**
@@ -28,10 +32,28 @@ trait HasSortable
      */
     protected function excludeUnSortable($indexedColumns)
     {
-        if (property_exists($this, 'unSortable') && ! empty($this->unSortable)) {
+        if (property_exists($this, 'unSortable') && !empty($this->unSortable)) {
             $indexedColumns = array_diff($indexedColumns, $this->unSortable);
         }
 
         return $indexedColumns;
+    }
+
+    /**
+     * Register a Sortable element.
+     *
+     * @param $element
+     * @param \Closure|null $callback
+     * @return $this
+     */
+    public function addSortable($element, \Closure $callback = null)
+    {
+        if (null === $callback) {
+            $this->sortable[] = $element;
+        } else {
+            $this->sortable[$element] = $callback;
+        }
+
+        return $this;
     }
 }

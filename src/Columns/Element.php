@@ -139,4 +139,17 @@ class Element extends ElementContainer
     {
         return false;
     }
+
+    /**
+     * Make column sortable.
+     *
+     * @param \Closure|null $callback
+     * @return $this
+     */
+    public function sortable(\Closure $callback = null)
+    {
+        app('scaffold.module')->addSortable($this->id(), $callback);
+
+        return $this;
+    }
 }

@@ -195,6 +195,10 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.filter', function ($app) {
             if ($module = $app['scaffold.module']) {
+                # in order to register sortable columns,
+                # resolve columns service before finder.
+                $app->make('scaffold.columns');
+
                 $filters = $module instanceof Filtrable ? $module->filters() : null;
                 $scopes = $module instanceof Filtrable ? $module->scopes() : null;
 
