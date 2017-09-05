@@ -48,7 +48,9 @@ trait AllowsNavigation
      */
     public function showIf()
     {
-        return true;
+        return ($guard = $this->guard()) && method_exists($guard, 'showIf')
+            ? $guard->showIf()
+            : true;
     }
 
     /**

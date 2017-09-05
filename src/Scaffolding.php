@@ -76,6 +76,13 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected $includeDateColumns = true;
 
+    /**
+     * Global ACL Manager.
+     *
+     * @var mixed null
+     */
+    protected $guard;
+
     static protected $methods = [];
 
     /**
@@ -87,7 +94,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     public static function addMethod($name, $closure)
     {
-        if (! (new static)->hasMethod($name)) {
+        if (!(new static)->hasMethod($name)) {
             static::$methods[$name] = $closure;
         }
     }
@@ -100,6 +107,23 @@ class Scaffolding implements Module, AutoTranslatable
         }
 
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function guard()
+    {
+        # set the default guard
+        if (null === $this->guard) {
+            $this->guard = config('administrator.acl.manager');
+        }
+
+        if (is_string($this->guard)) {
+            $this->guard = new $this->guard($this);
+        }
+
+        return $this->guard;
     }
 
     /**
@@ -258,7 +282,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     public function magnetParams()
     {
-        return (array) $this->magnetParams;
+        return (array)$this->magnetParams;
     }
 
     /**
