@@ -1,0 +1,4 @@
+- [Homepage](http://adminarchitect.com)
+- [Get Started](/)
+- [Github](https://github.com/adminarchitect/core)
+- [Donate](https://www.patreon.com/adminarchitect)

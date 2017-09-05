@@ -6,7 +6,7 @@ To change the way how it appears in the navigation there is a set of methods pro
 
 #### Resource title
 
-```
+```php
 public function title()
 {
 	return "Articles";
@@ -20,7 +20,7 @@ public function singular()
 
 #### Group resources in sub-menus by returing a common group name
 
-```
+```php
 public function group()
 {
 	return "Content"
@@ -29,7 +29,7 @@ public function group()
 
 #### Define when to show or hide your resource from navigation.
 
-```
+```php
 public function showIf()
 {
 	return auth('admin')->hasRole('manager');
@@ -39,7 +39,7 @@ public function showIf()
 #### Define the order
 *Hint: set `ordering` => true in config/menus.php*
 
-```
+```php
 public function order()
 {
 	return 1;
@@ -78,7 +78,7 @@ public function navigableIn()
 #### Navigation link attributes
 Make navigation beautiful by assigning amazing icons [font-awesome or ion icons available]:
 
-```
+```php
 public function linkAttributes()
 {
     return ['icon' => 'fa fa-circle-o', 'id' => $this->url()];
@@ -99,7 +99,7 @@ To change default navigation structure, checkout `App\Http\Terranet\Administrato
 
 There is a navigation skeleton you might customise for your needs:
 
-```
+```php
 protected function makeSidebar()
 {
 	$this->navigation->create(Navigable::MENU_SIDEBAR, function (MenuBuilder $sidebar) {

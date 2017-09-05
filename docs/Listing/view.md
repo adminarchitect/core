@@ -4,10 +4,10 @@
 
 Every single row in your resource is available for preview out of the box.
 
-In many cases models have a bunch of relationships with other models in the system. So why don't link them altogether and view on the single page?
+In many cases models have a bunch of relationships with other models in the system. 
+So why don't link them altogether and view on the single page?
 
-
-```
+```php
 class User extends Model
 {
 	protected $fillable = ['id', 'name', 'email', '...'];
@@ -45,34 +45,32 @@ class Articles extends Model
 }
 ```
 
-these relations will be automatically rendered at the view User page as widgets.
+these relations will be automatically rendered at the view User page as widgets (_Note the @widget flag in relation docblock_).
 
-sure, you can control the way how they rendered by defining:
+You can control the way how they rendered by defining docblock flags:
 
 * @placement - one of the: model, sidebar, main-top, main-bottom
 * @tab - Admin Architect will create a tab for this widget (can be used in conjunction with @placement flat)
 * @order - arrange widgets by order
 
-
 As a bonus you can add as many Resource-scoped widgets as you like by listing them in Resource class:
 
-```
+```php
+# app\Http\Terranet\Administrator\Modules\Users.php
 public function widgets()
 {
 	$user = app('scaffold.model');
 
-	return array_merge(
-		$this->scaffoldWidgets(),
-		[
-			new UserStats($user)
-		]
-	);
+    # add a UserStats widget
+    return $this->scaffoldWidgets()->push(
+        new UserStats($user)
+    );
 }
 ```
 
 where UserStats is a simple `Widgetable` class:
 
-```
+```php
 class UserStats extends AbstractWidget implements Widgetable
 {
     protected $user;

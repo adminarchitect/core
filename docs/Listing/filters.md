@@ -1,4 +1,4 @@
-## Filters & Scopes
+## Overview
 
 Filtering and listing resources is one of the most important tasks for administering a web application.
 
@@ -12,13 +12,14 @@ Admin Architect provides a set of default tools for you to build a compelling in
 
 Admin Architect provides a simple search implementation, allowing you to search/filter records in your application.
 
-*searchable* - become any indexed @varchar, @boolean, @date or @datetime columns.
+`Searchable` - become any indexed @varchar, @boolean, @date or @datetime columns.
 
 Customize the set of filters, their types and even the way, how they `filter` data as you wish you need.
 
 Let's update the default filters set by declaring new ones in our <Resource> class:
 
-```
+```php
+# app\Http\Terranet\Administrator\Modules\<Resource>.php
 public function filters()
 {
     return $this
@@ -33,15 +34,21 @@ public function filters()
 		FilterElement::select('user_id', [], $this->users())
 	)
 
-	# optionaly for foreign columns we can define a custom query
-	->update('user_id', function ($userId) {
-		$userId
-			->getInput()
+	# optionaly for foreign columns (not existing in database, aggregated or joined, etc...) 
+	# we can define a custom query
+	->update('phone', function ($control) {
+		$control->getInput()
+			# when called, function will receive 2 arguments
+			# 1. original query
+			# 2. requested value
 			->setQuery(function ($query, $value) {
-				return $query->whereIn('user_id', [$value]);
+				# created in Finder::getQuery()
+				return $query 
+						->join('user_profile as p', 'p.user_id', '=', 'users.id')
+						->where('p.phone', $value);
 			});
 
-		return $userId;
+		return $control;
 	});
 }
 
@@ -51,10 +58,10 @@ protected function users()
 }
 ```
 
-Supported filter types are:
-`text`, `select`, `date`, `daterange`, `search`, `number`.
+Supported filter HTML types:
+`text`, `select`, `datalist`, `date`, `daterange`, `search`, `number`.
 
-As you might see, for complex filters that require more control when fetching resources, you are able to define an optional \Closure $query attribute via setQuery() method.
+As you might see, for complex filters that require more control while fetching resources, you are able to define an optional \Closure $query attribute via setQuery() method.
 
 To disable filters for specific resource - remove Filtrable interface from Resource's `implements` section or just return an empty collection:
 
@@ -62,23 +69,23 @@ To disable filters for specific resource - remove Filtrable interface from Resou
 
 ![Scopes](http://docs.adminarchitect.com/docs/images/index/scopes.jpg)
 
-As like as for filters feature, if Resource implements interface `Filtrable` it will parse Resource model for any available scopes.
+As like as for filters feature, if Resource implements interface `Filtrable` it will parse the Eloquent model for any available scopes (having no dynamic arguments).
 
 Use scopes to create sections of mutually exclusive resources for quick navigation and reporting.
 
 This will add a `tab` bar above the index table to quickly filter your collection on pre-defined scopes.
 
-In addition, if your model implements `SoftDeletes` contract some of useful scopes (like `withTrashed`, `onlyTrashed`) will be available too.
+In addition, if your model implements `SoftDeletes` contract, useful scopes like `withTrashed`, `onlyTrashed` will be available too.
 
 To hide a scope just add it to Resource `$hiddenScopes` array:
 
-```
+```php
 protected $hiddenScopes = ['active'];
 ```
 
 If for some reason you don't want to create new Model's scope you are able to define isolated, Resource-related scopes, like so:
 
-```
+```php
 public function scopes()
 {
     return $this->scaffoldScopes()
@@ -95,4 +102,20 @@ public function scopes()
 				})
         );
 }
+```
+
+_Hint: Few different ways to add a scope._
+
+```php
+# Queryable class (should have query() method)
+(new Scope('name'))->setQuery(Queryable::class);
+
+# Class@method syntax
+(new Scope('name'))->setQuery("User@active");
+
+# Standard, Closure style
+(new Scope('name'))->setQuery(function($query) { return $this->modify(); });
+
+# Callable instance
+(new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
 ```

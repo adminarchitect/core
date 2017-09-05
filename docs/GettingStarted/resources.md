@@ -9,7 +9,7 @@ Resources handle Index Screens, Filters & Scopes, Create/Edit forms, Single & Bu
 
 The basic command for creating a resource is:
 
-```
+```bash
 php artisan administrator:resource <name> <model>
 ```
 
@@ -17,9 +17,7 @@ Admin Architect will generate a new resource class in `app/Http/Terranet/Adminis
 
 So your first Users resource might look so:
 
-```
-<?php
-
+```php
 namespace App\Http\Terranet\Administrator\Modules;
 
 use App\User;
@@ -42,5 +40,12 @@ class Users extends Scaffolding implements Navigable, Filtrable, Editable, Valid
 
     protected $model = User::class;
 }
-
 ```
+
+### Interfaces
+ - `Navigable` - makes the resource available in navigation (Sidebar, Tools).
+ - `Filtrable` - generates _Filters_ & _Scopes_ based on Eloquent data.
+ - `Editable` - generates edit/create forms.
+ - `Validable` - enables Laravel validation support.
+ - `Sortable` - provides grid columns sorting methods.
+ - `Exportable` - exports collection to differrent formats: XML, CSV, PDF, etc...

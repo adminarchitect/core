@@ -9,24 +9,25 @@ Note: After installing it make sure that `Terranet\Localizer\ServiceProvider` an
 
 Create languages migration in case you didn't do it before:
 
-```
+```bash
 php artisan languages:table
 ```
 
 Create new languages module (App\Http\Terranet\Administrator\Modules\Settings).
 
-```
+```bash
 php artisan administrator:resource:languages
 ```
 
 Create a new migration for multilingual posts:
 
-```
+```bash
 php artisan make:migration create_posts_table
 ```
 
 Now, update your new created migration to look like:
-```
+
+```php
 class CreatePostsTable extends Migration
 {
     /**
@@ -87,13 +88,13 @@ class CreatePostsTable extends Migration
 
 Apply migrations
 
-```
+```bash
 php artisan migrate
 ```
 
 Now make your Post model `translatable`, by adding  `Terranet\Translatable\Translatable` interface and using `Terranet\Translatable\HasTranslations` trait.
 
-Also define the property called $translatedAttributes to set `translatable` attributes:
+Also define the property called `$translatedAttributes` to set `translatable` attributes:
 
 ```
 class Post extends Model implements Translatable
@@ -110,7 +111,7 @@ class Post extends Model implements Translatable
     }
 }
 
-# your PostTranslation module
+# your PostTranslation model
 class PostTranslation extends Model
 {
     public $timestamps = false;
@@ -121,3 +122,4 @@ Now, our edit form will have a look like this:
 ![Overview](http://docs.adminarchitect.com/docs/images/plugins/multilingual.png)
 
 As you might see, any `translatable` attribute has language switch box.
+Also all `translatable` attributes are available in `columns` grid.

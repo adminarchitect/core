@@ -2,7 +2,6 @@
 
 Admin Architect provides 2 types of actions: Single (applyed to every single element in a collection) and Batch (applyed to a collection of elements).
 
-
 * * *
 
 Example:
@@ -22,13 +21,13 @@ Sometimes you'll need to have access to something more then just CRUD actions.
 
 For instance: maybe you'll wish to activate or lock some users, view project reports, report emails as spam, etc...
 
-Admin Architect Actions gives you ability to create a callback containers which receives as a parameter selected model, at this moment you are free to use the model in the way you need.
+Admin Architect Actions gives you ability to create the action containers which receive as a parameter selected model, at this moment you are free to use the model in the way you need.
 
 To extend default CRUD actions, just create a `Resource Actions Container`:
 
 *Note! We assume that our Resource name is Posts, so we call our Action Container Posts also, overwise we have to set a Posts::$action property to our Action Container class:*
 
-```
+```bash
 php artisan administrator:actions Posts
 ```
 
@@ -41,13 +40,13 @@ Our Actions\Posts has 2 method out of the box:
 
 Now, let's create a new single action:
 
-```
+```bash
 php artisan administrator:action ToggleActiveStatus
 ```
 
 then add this new created action to your Posts action container:
 
-```
+```php 
 class Posts extends CrudActions
 {
     public function actions()
@@ -63,7 +62,7 @@ then you'll see a new action called "Toggle active status" along every single ro
 
 Now, it's time to customize our ToggleActiveStatus::class and add callback handler and authorization logic.
 
-```
+```php
 class ToggleActiveStatus
 {
     use Skeleton, ActionSkeleton;
@@ -103,7 +102,7 @@ class ToggleActiveStatus
 	 */
     public function authorize(User $user, Eloquent $entity)
     {
-        # only super admins or post owners can toggle posts's active status.
+        # let's say: only super admins or post owners can toggle posts's active status.
         return $user->isSuperAdmin() || ($user->id == $entity->user_id);
     }
 }
@@ -117,7 +116,7 @@ The simplest way to determine if a user may perform a given CRUD action is to de
 
 Within our `abilities`, we will determine if the logged in user has the ability to delete, update, view post:
 
-```
+```php
 ### Actons\Posts::class
 
 public function canDelete($user, $entity)
@@ -136,6 +135,31 @@ public function canView($user, $entity)
 }
 ```
 
+#### Global way
+
+To disable CRUD action in a global aspect, there is a tricky way: 
+open your `AppServiceProvider` and add this to `boot()` method:
+
+```php
+# available CRUD actions: canView, canDelete, canUpdate, canCreate
+Scaffolding::addMethod('canView', function () {
+    # let's enable View action for Users module
+    if (in_array(app('scaffold.module')->url(), ['users'])) {
+        return true;
+    }
+
+    # and disable for others
+    return false;
+});
+
+# Ex.: Only Admins and Managers are able to Update some row.
+# @param $user - logged in user
+# @param $eloquent - the model you try to update
+Scaffolding::addMethod('canUpdate', function($user, $eloquent) {
+    return $user->hasRole(['admin', 'manager']);
+});
+```
+
 ### Batch Actions
 
 ![Batch actions](http://docs.adminarchitect.com/docs/images/index/batch_actions.jpg)
@@ -149,9 +173,9 @@ But, You are free to add your batch actions as like other single action, just ru
  php artisan administrator:action --batch ToggleSelected
 ```
 
-Admin Architect will generate a sample Batch Actions class:
+Admin Architect will generate a sample Batch Actions class, which need to be updated to something like:
 
-```
+```php
 class ToggleSelected
 {
     use Skeleton, BatchSkeleton;
@@ -165,13 +189,15 @@ class ToggleSelected
      */
     public function handle(Eloquent $entity, array $collection = [])
     {
-        //
+        User::whereIn($collection->pluck('id'))->update([
+            'active' => \DB::raw('!active')
+        ]);
 
         return $entity;
     }
 }
 ```
 
-As like Single Actions, Batch Actions have the same set of methods to customize it.
+As like Single Actions, Batch Actions have the same set of methods to customize them.
 
 The difference between Single actions and Batch actions is that Batch ::handle() method receives a collection of elements, rather then Single Action receives a single entity.
