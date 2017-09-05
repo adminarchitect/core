@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'version' => '3.3',
-
+    # URL Prefix
     'prefix' => $prefix = 'cms',
 
     'title' => "<b>Admin</b> Architect",
-    'welcome' => 'Welcome! Please sign In.',
     'abbreviation' => 'AA',
+    'welcome' => 'Welcome! Please sign In.',
 
+    # Authentication options
     'auth' => [
         'identity' => 'email',
         'credential' => 'password',
@@ -33,50 +33,48 @@ return [
         'breadcrumbs' => "Http/Terranet/Administrator/Breadcrumbs",
     ],
 
+    # Handle passwords -> Convert plain text to Hash
     'manage_passwords' => true,
 
+    # Enable File Manager
     'file_manager' => false,
 
     'gravatar' => false,
 
-    /**
-     * The menu item that should be used as the default landing page of the administrative section
-     *
-     * @type string
-     */
+    # The menu item that should be used as the default landing page of the administrative section
     'home_page' => $prefix,
 
-    /**
-     * Basic user validation Rule
-     */
+    # Basic user validation Rule
     'permission' => \Terranet\Administrator\Auth\SuperAdminRule::class,
 
-    /**
-     * Navigation Factory
-     */
+    # Navigation Factory
     'menu' => \Terranet\Administrator\Navigation\Factory::class,
 
-    /**
-     * Dashboard Panels Factory
-     */
+    # Dashboard Panels Factory
     'dashboard' => \App\Http\Terranet\Administrator\Dashboard\Factory::class,
 
     'resource' => [
-        /**
-         * The custom way to resolve module name for custom resources
-         * when controller missing Router's $module parameter
-         */
+        # The custom way to resolve module name for custom resources
+        # when controller missing Router's $module parameter
         'resolver' => null,
 
-        /**
-         * Default segment for module name resolver
-         * /admin/pages - admin => 1, pages => 2
-         */
+        # Default segment for module name resolver
+        # /admin/pages - admin => 1, pages => 2
         'segment' => 2,
     ],
 
+    'acl' => [
+        # Global ACL Manager, which used to control CRUD actions
+        # in the global way. Can provide optional methods:
+        # showIf, can(Index|Update|Delete|Create)
+        'manager' => null,
+    ],
+
+    # Exportable formats declaration
     'export' => [
         'default' => ['xml', 'csv', 'json'],
         // 'users' => ['csv', 'pdf'],
     ],
+
+    'version' => '1.3',
 ];
