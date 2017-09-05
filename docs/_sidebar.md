@@ -7,7 +7,7 @@
   - [Grid](Listing/grid.md)
   - [Filtering Collection](Listing/filters.md)
   - [Actions](Listing/actions.md)
-  - [Fetch Grid Items](Listing/finder.md)
+  - [Fetching Grid Items](Listing/finder.md)
   - [Pagination](Listing/pagination.md)
   - [Export Collections](Listing/exportable.md)
   - [Sort Collections](Listing/sortables.md)
