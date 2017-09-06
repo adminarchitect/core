@@ -70,6 +70,13 @@ return [
         'manager' => null,
     ],
 
+    'grid' => [
+        'timestamps' => [
+            'enabled' => false,
+            //'users' => true,
+        ]
+    ],
+
     # Exportable formats declaration
     'export' => [
         'default' => ['xml', 'csv', 'json'],
