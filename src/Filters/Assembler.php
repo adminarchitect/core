@@ -38,6 +38,13 @@ class Assembler
         $this->query->select($this->model->getTable() . '.*');
     }
 
+    public function applyQueryCallback($callback)
+    {
+        $this->query = $callback($this->query);
+
+        return $this;
+    }
+
     /**
      * Apply filters.
      *
@@ -132,11 +139,13 @@ class Assembler
                 $object = app($object);
             }
 
+            # Call Model Scope immediately when detected.
+            #
             # @note: We don't use call_user_func_array() here
             # because of missing columns in returned query.
-            $this->query = $object->{$method}($this->query);
-
-            return $this;
+            $this->query = with(
+                $this->model->is($object) ? $this->query : $object
+            )->{$method}($this->query);
         }
 
         return $this;
