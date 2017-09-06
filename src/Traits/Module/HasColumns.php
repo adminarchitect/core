@@ -60,12 +60,20 @@ trait HasColumns
          */
         $elements = new MutableCollection($fillable);
 
-        if ($this->includeDateColumns && ($dates = $model->getDates())) {
-            $elements = $elements->group('dates', function (Group $group) use ($dates) {
-                $group->merge($dates);
+        if ($this->includeDateColumns && count($dates = $model->getDates())) {
+            # allow setting specific timestamp: created_at
+            if (is_string($this->includeDateColumns)) {
+                $dates = array_intersect($dates, [$this->includeDateColumns]);
 
-                return $group;
-            });
+                $elements = $elements->merge($dates);
+            } else {
+                # add timestamps group
+                $elements->group('dates', function (Group $group) use ($dates) {
+                    $group->merge($dates);
+
+                    return $group;
+                });
+            }
         }
 
         return $elements->build(

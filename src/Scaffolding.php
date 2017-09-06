@@ -74,7 +74,7 @@ class Scaffolding implements Module, AutoTranslatable
      *
      * @var bool
      */
-    protected $includeDateColumns = true;
+    protected $includeDateColumns;
 
     /**
      * Global ACL Manager.
@@ -84,6 +84,13 @@ class Scaffolding implements Module, AutoTranslatable
     protected $guard;
 
     static protected $methods = [];
+
+    public function __construct()
+    {
+        if (null === $this->includeDateColumns) {
+            $this->includeDateColumns = $this->defaultIncludeDateColumnsValue();
+        }
+    }
 
     /**
      * Extend functionality by adding new methods.
@@ -295,5 +302,16 @@ class Scaffolding implements Module, AutoTranslatable
     protected function getQualifiedClassNameOfType($type)
     {
         return app()->getNamespace() . "Http\\Terranet\\Administrator\\{$type}\\" . class_basename($this);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function defaultIncludeDateColumnsValue()
+    {
+        return config(
+            "administrator.grid.timestamps.{$this->url()}",
+            config('administrator.grid.timestamps.enabled')
+        );
     }
 }
