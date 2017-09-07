@@ -56,7 +56,9 @@ abstract class ElementContainer implements AutoTranslatable
             $this->setTitle(trans($key));
         } else {
             $this->setTitle(
-                'id' == $id ? 'ID' : StringHumanizer::humanize(str_replace(['_id'], '', $id))
+                'id' === $id
+                    ? 'ID'
+                    : StringHumanizer::humanize(str_replace(['_id', '-', '_'], ['', ' ', ' '], $id))
             );
         }
     }
