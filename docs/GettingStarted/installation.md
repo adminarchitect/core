@@ -3,7 +3,7 @@
 As you always do, install composer package:
 
 ```bash
-composer require terranet/administrator
+composer require adminarchitect/core
 ```
 
 ### Registering 
