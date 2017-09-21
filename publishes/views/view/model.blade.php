@@ -15,7 +15,7 @@ $elements = $module->viewColumns($item);
                 <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
             </tr>
         @else
-            @if (! (is_array($value = $element->render($item)) || is_object($value)))
+            @if (! (is_array($value = $element->render($item)) || is_object($value)) || $value instanceof \Carbon\Carbon)
                 <tr>
                     <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
                     <td>{!! $value !!}</td>
