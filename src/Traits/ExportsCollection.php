@@ -140,7 +140,11 @@ trait ExportsCollection
         }
 
         $pdf = app('dompdf.wrapper');
-        $html = view('administrator::layouts.exportable', [
+        $view = method_exists($this->module, 'exportableView')
+            ? $this->module->exportableView()
+            : $this->exportableView();
+        
+        $html = view($view, [
             'module' => app('scaffold.module')->url(),
             'time' => new Carbon(),
             'items' => $this->each($query, 100),
@@ -259,5 +263,10 @@ trait ExportsCollection
                 );
             })
             ->all();
+    }
+    
+    protected function exportableView()
+    {
+        return 'administrator::layouts.exportable';
     }
 }
