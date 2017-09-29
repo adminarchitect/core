@@ -2,9 +2,19 @@ class AdminArchitect {
     constructor() {
         [
             'SidebarNavigation', 'Panels', 'Collections', 'BatchActions',
-            'DateControls', 'LiveSearch', 'Fancybox',
+            'DateControls', 'LiveSearch', 'Fancybox', 'Translatable',
         ].map((method) => {
             AdminArchitect['handle' + method].call();
+        });
+    }
+
+    static handleTranslatable() {
+        // When Mui tab is switched it will switch all sibling Mui tabs.
+        $('a[data-toggle="tab"]', '.nav-translatable').on('shown.bs.tab', function(e) {
+            let fn = $(e.target),
+                lc = fn.data('locale');
+
+            fn.closest('form').find('a[data-locale="' + lc + '"]').tab('show');
         });
     }
 
