@@ -20,15 +20,13 @@ class BatchController extends AdminController
     {
         $this->authorize($action = $request->get('batch_action'), $model = app('scaffold.module')->model());
 
-        $this->rememberPreviousPage();
-
         $response = app('scaffold.actions')->exec('batch::' . $action, [$model, $request]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
         }
 
-        return redirect()->to($this->getPreviousUrl())->with(
+        return back()->with(
             'messages',
             [trans('administrator::messages.action_success')]
         );
@@ -45,8 +43,6 @@ class BatchController extends AdminController
     public function export($page, $format)
     {
         $this->authorize('index', app('scaffold.module')->model());
-
-        $this->rememberPreviousPage();
 
         $query = app('scaffold.finder')->getQuery();
 

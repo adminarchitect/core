@@ -47,16 +47,6 @@ abstract class AdminController extends BaseController
         return $response;
     }
 
-    /**
-     * Remember previous page.
-     */
-    public function rememberPreviousPage()
-    {
-        if (URL::current() !== URL::previous()) {
-            session()->put('admin_previous_url', URL::previous());
-        }
-    }
-
     protected function redirectTo($module, $key = null, Request $request)
     {
         if ($next = $request->get('back_to')) {
@@ -67,35 +57,12 @@ abstract class AdminController extends BaseController
             return redirect(route('scaffold.edit', $this->toMagnetParams(['module' => $module, 'id' => $key])));
         }
 
-        if ($request->exists('save_return')) {
-            if ($previous = $this->getPreviousUrl()) {
-                $this->forgetPreviousUrl();
-
-                return redirect()->to($previous);
-            }
-
-            return redirect(route('scaffold.index', $this->toMagnetParams(['module' => $module])));
-        }
-
-        return redirect(route('scaffold.create', $this->toMagnetParams(['module' => $module])));
-    }
-
-    /**
-     * Get previous page.
-     *
-     * @return mixed
-     */
-    protected function getPreviousUrl()
-    {
-        return session('admin_previous_url');
-    }
-
-    /**
-     * Forget previous url.
-     */
-    protected function forgetPreviousUrl()
-    {
-        session()->forget('admin_previous_url');
+        return redirect(
+            route(
+                $request->exists('save_return') ? 'scaffold.index' : 'scaffold.create',
+                $this->toMagnetParams(['module' => $module])
+            )
+        );
     }
 
     /**
@@ -122,7 +89,8 @@ abstract class AdminController extends BaseController
         $arguments,
         $message = 'This action is unauthorized.',
         $previousException = null
-    ) {
+    )
+    {
         $message = sprintf($message . ' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);

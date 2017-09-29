@@ -39,8 +39,6 @@ class ScaffoldController extends AdminController
     {
         $this->authorize('view', $eloquent = app('scaffold.model'));
 
-        $this->rememberPreviousPage();
-
         app('scaffold.widget')->add(
             (new EloquentWidget($eloquent))
                 ->setOrder(0)
@@ -65,8 +63,6 @@ class ScaffoldController extends AdminController
     {
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
-        $this->rememberPreviousPage();
-
         return view(app('scaffold.template')->edit('index'), [
             'item' => $eloquent,
         ]);
@@ -86,7 +82,7 @@ class ScaffoldController extends AdminController
         try {
             app('scaffold.actions')->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
+            return back()->withErrors([$e->getMessage()]);
         }
 
         return $this->redirectTo($page, $id, $request)->with('messages', [trans('administrator::messages.update_success')]);
@@ -119,9 +115,8 @@ class ScaffoldController extends AdminController
         try {
             $eloquent = app('scaffold.actions')->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
+            return back()->withErrors([$e->getMessage()]);
         }
-
 
         return $this->redirectTo($page, $eloquent->id, $request)->with(
             'messages',
@@ -147,7 +142,7 @@ class ScaffoldController extends AdminController
         $message = trans('administrator::messages.remove_success');
 
         if (URL::previous() == route('scaffold.view', ['module' => $module, 'id' => $id])) {
-            return redirect()->to($this->getPreviousUrl())->with('messages', [$message]);
+            return back()->with('messages', [$message]);
         }
 
         return redirect()->to(route('scaffold.index', ['module' => $module]))->with('messages', [$message]);
@@ -168,7 +163,7 @@ class ScaffoldController extends AdminController
 
         app('scaffold.actions')->exec('detachFile', [$eloquent, $attachment]);
 
-        return redirect()->back()->with('messages', [trans('administrator::messages.remove_success')]);
+        return back()->with('messages', [trans('administrator::messages.remove_success')]);
     }
 
     /**
@@ -184,15 +179,13 @@ class ScaffoldController extends AdminController
     {
         $this->authorize($action, $eloquent = app('scaffold.model'));
 
-        $this->rememberPreviousPage();
-
         $response = app('scaffold.actions')->exec('action::' . $action, [$eloquent]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
         }
 
-        return redirect()->to($this->getPreviousUrl())->with(
+        return back()->with(
             'messages',
             [trans('administrator::messages.action_success')]
         );
