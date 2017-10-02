@@ -18,4 +18,6 @@ return [
     'clear_filters' => 'Clear',
     'media'         => 'Media',
     'upload'        => 'Upload',
+    'next'          => 'Next',
+    'previous'      => 'Previous',
 ];
