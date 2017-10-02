@@ -148,9 +148,9 @@ class Element extends ElementContainer
      */
     public function sortable(\Closure $callback = null)
     {
-        app('scaffold.module')->addSortable($this->id(), $callback);
-
-        return $this;
+        return tap($this, function($element) use ($callback) {
+            app('scaffold.module')->addSortable($element->id(), $callback);
+        });
     }
 
     /**
@@ -160,8 +160,8 @@ class Element extends ElementContainer
      */
     public function unSortable()
     {
-        app('scaffold.module')->removeSortable($this->id());
-
-        return $this;
+        return tap($this, function ($element) {
+            app('scaffold.module')->removeSortable($element->id());
+        });
     }
 }
