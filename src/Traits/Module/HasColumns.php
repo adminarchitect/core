@@ -5,7 +5,6 @@ namespace Terranet\Administrator\Traits\Module;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
 use Terranet\Administrator\Collection\Group;
-use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Decorators\Grid as GridDecorator;
 use Terranet\Administrator\Decorators\Grid;
 use Terranet\Administrator\Form\Collection\Mutable;

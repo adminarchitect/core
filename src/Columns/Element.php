@@ -130,7 +130,7 @@ class Element extends ElementContainer
      */
     public function setStandalone($flag = true)
     {
-        $this->standalone = (bool)$flag;
+        $this->standalone = (bool) $flag;
 
         return $this;
     }

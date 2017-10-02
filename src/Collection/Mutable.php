@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Collection;
 use Closure;
 use Illuminate\Support\Collection as BaseCollection;
 use Terranet\Administrator\Columns\Element;
+use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
 
 class Mutable extends BaseCollection
@@ -25,6 +26,25 @@ class Mutable extends BaseCollection
         }
 
         parent::push($element);
+
+        return $this;
+    }
+
+    /**
+     * @param string $collection
+     *
+     * @param Closure|null $callback
+     * @return $this
+     */
+    public function media($collection = 'default', \Closure $callback = null)
+    {
+        $element = new MediaElement($collection);
+
+        if ($callback) {
+            $callback($element);
+        }
+
+        $this->push($element);
 
         return $this;
     }
@@ -81,7 +101,7 @@ class Mutable extends BaseCollection
     public function without($id)
     {
         if (!is_array($id)) {
-            $id = (array)$id;
+            $id = (array) $id;
         }
 
         $items = $this->filter(function ($element) use ($id) {

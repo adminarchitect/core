@@ -10,6 +10,8 @@ require('bootstrap/js/dropdown');
 require('bootstrap/js/modal');
 require('bootstrap/js/collapse');
 require('bootstrap/js/alert');
+require('bootstrap/js/carousel');
+require('bootstrap/js/transition');
 
 /* Date/DateRange pickers */
 require('bootstrap-datepicker');
