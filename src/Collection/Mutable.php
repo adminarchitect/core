@@ -134,11 +134,11 @@ class Mutable extends BaseCollection
     public function update($id, callable $callback)
     {
         if (str_contains($id, ',')) {
-            $elements = array_map('trim', explode(',', $id));
-
-            foreach ($elements as $element) {
-                $this->update($element, $callback);
-            }
+            collect(explode(',', $id))
+                ->map('trim')
+                ->each(function ($element) use ($callback) {
+                    $this->update($element, $callback);
+                });
 
             return $this;
         }
