@@ -99,7 +99,7 @@ class Resources
             $this->validateContainer($module, $navigation)
         );
 
-        $order = 1;
+        $order = $module->order() ?: 1;
 
         if ($group = $module->group()) {
             $navigation = $this->findOrCreateGroup($module, $navigation, $group);
