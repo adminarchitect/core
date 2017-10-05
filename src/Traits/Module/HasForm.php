@@ -45,9 +45,9 @@ trait HasForm
         $editable = new Mutable;
 
         if ($eloquent = $this->model()) {
-            $editable->merge($translatable = $this->scaffoldTranslatable($eloquent))
-                     ->merge($eloquent->getFillable());
-
+            $editable = $editable->merge($translatable = $this->scaffoldTranslatable($eloquent))
+                                 ->merge($eloquent->getFillable());
+            
             return $editable->map(function ($name) use ($eloquent, $translatable) {
                 $formElement = InputFactory::make(
                     $name, $this->inputType($name, $eloquent)
