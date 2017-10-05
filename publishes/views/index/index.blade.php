@@ -72,6 +72,14 @@
                     @include($template->index('paginator'))
                 @endif
             @endslot
+
+            @slot('gridBefore')
+                {!! $module->gridBefore() !!}
+            @endslot
+
+            @slot('gridAfter')
+                {!! $module->gridAfter() !!}
+            @endslot
         @endcomponent
     @else
         @component('administrator::components.index.index', ['module' => $module, 'items' => []])

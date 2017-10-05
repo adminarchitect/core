@@ -3,6 +3,9 @@
         <form method="post" id="collection" action="{{ route('scaffold.batch', ['page' => $module]) }}">
             <?=Form::hidden('batch_action', null, ['id' => 'batch_action'])?>
             <?=Form::token()?>
+
+            {{ $gridBefore or '' }}
+
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -22,6 +25,8 @@
                     </tfoot>
                 @endif
             </table>
+
+            {{ $gridAfter or '' }}
         </form>
 
         @if (trim($exportable ?? null) || trim($paginator ?? null))
