@@ -1,7 +1,7 @@
 <tr>
     @if ($actions->batch()->count())
         <th>
-            <label for="collection_{{$item->id}}">
+            <label for="collection_{{$item->getKey()}}">
                 <input type="checkbox"
                        name="collection[]"
                        id="collection_{{$item->getKey()}}"
