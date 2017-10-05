@@ -13,11 +13,9 @@ class AttachmentDecorator extends CellDecorator
         'height' => 75,
     ];
 
-    public function getDecorator()
+    protected function render($row)
     {
-        return function ($row) {
-            return \admin\output\staplerImage($row->{$this->name}, $this->style, $this->attributes());
-        };
+        return \admin\output\staplerImage($row->{$this->name}, $this->style, $this->attributes());
     }
 
     public function setStyle($style)

@@ -15,18 +15,16 @@ class DatetimeDecorator extends CellDecorator
         return $this;
     }
 
-    public function getDecorator()
+    protected function render($row)
     {
-        return function ($row) {
-            $value = \admin\helpers\eloquent_attribute($row, $this->name);
+        $value = \admin\helpers\eloquent_attribute($row, $this->name);
 
-            if ($value instanceof Carbon
-                && method_exists($value, $method = "to" . str_replace('Type', '', $this->type) . "String")
-            ) {
-                return '<span class="label label-primary">' . $value->$method() . '</span>';
-            }
+        if ($value instanceof Carbon
+            && method_exists($value, $method = "to" . str_replace('Type', '', $this->type) . "String")
+        ) {
+            return '<span class="label label-primary">' . $value->$method() . '</span>';
+        }
 
-            return $value;
-        };
+        return $value;
     }
 }

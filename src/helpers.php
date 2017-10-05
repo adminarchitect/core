@@ -41,6 +41,7 @@ namespace {
 
 namespace admin\db {
 
+    use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
 
@@ -79,7 +80,7 @@ namespace admin\db {
     }
 
     if (!function_exists('table_indexes')) {
-        function table_indexes($model, $withTranslated = true)
+        function table_indexes(Model $model, $withTranslated = true)
         {
             $indexes = scheme()->indexedColumns($model->getTable());
 
@@ -132,6 +133,7 @@ namespace admin\helpers {
 
     use Codesleeve\Stapler\ORM\StaplerableInterface;
     use Coduo\PHPHumanizer\StringHumanizer;
+    use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\Request;
     use Illuminate\Support\Facades\Route;
     use Terranet\Administrator\Contracts\Form\HiddenElement;
@@ -313,7 +315,7 @@ namespace admin\helpers {
     }
 
     if (!function_exists('eloquent_attributes')) {
-        function eloquent_attributes($model)
+        function eloquent_attributes(Model $model)
         {
             $fillable = $model->getFillable();
 
@@ -343,7 +345,7 @@ namespace admin\helpers {
     }
 
     if (!function_exists('eloquent_attribute')) {
-        function eloquent_attribute($object, $key)
+        function eloquent_attribute(Model $object, $key)
         {
             if ($object instanceof StaplerableInterface && array_key_exists($key, $object->getAttachedFiles())) {
                 return \admin\output\staplerImage($object->getAttribute($key));
@@ -360,21 +362,35 @@ namespace admin\helpers {
             return $value;
         }
 
-        function present($object, $key, $value = null)
+        function present(Model $object, $key, $value = null)
         {
             $value = $value ?: $object->getAttribute($key);
 
             if ($object instanceof PresentableInterface) {
-                if (method_exists($object->present(), $adminKey = camel_case("admin_{$key}"))) {
+                if ($adminKey = has_admin_presenter($object, $key)) {
                     return $object->present()->$adminKey($value);
                 }
 
-                if (method_exists($object->present(), $frontKey = camel_case($key))) {
+                if ($frontKey = has_presenter($object, $key)) {
                     return $object->present()->$frontKey($value);
                 }
             }
 
             return $value;
+        }
+
+        function has_admin_presenter(PresentableInterface $object, $key)
+        {
+            return method_exists($object->present(), $adminKey = camel_case("admin_{$key}"))
+                ? $adminKey
+                : null;
+        }
+
+        function has_presenter(PresentableInterface $object, $key)
+        {
+            return method_exists($object->present(), $frontKey = camel_case($key))
+                ? $frontKey
+                : null;
         }
     }
 

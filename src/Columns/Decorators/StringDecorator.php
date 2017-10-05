@@ -4,10 +4,8 @@ namespace Terranet\Administrator\Columns\Decorators;
 
 class StringDecorator extends CellDecorator
 {
-    public function getDecorator()
+    protected function render($row)
     {
-        return function ($row) {
-            return \admin\helpers\eloquent_attribute($row, $this->name);
-        };
+        return \admin\helpers\eloquent_attribute($row, $this->name);
     }
 }

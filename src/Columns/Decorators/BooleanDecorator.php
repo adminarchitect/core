@@ -4,10 +4,8 @@ namespace Terranet\Administrator\Columns\Decorators;
 
 class BooleanDecorator extends CellDecorator
 {
-    public function getDecorator()
+    protected function render($row)
     {
-        return function ($row) {
-            return \admin\output\boolean($row->{$this->name});
-        };
+        return \admin\output\boolean($row->{$this->name});
     }
 }

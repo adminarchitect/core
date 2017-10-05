@@ -8,18 +8,16 @@ class TextDecorator extends CellDecorator
 
     protected $end = '...';
 
-    public function getDecorator()
+    protected function render($row)
     {
-        return function ($row) {
-            return
-                '<span class="text-muted">' .
-                str_limit(
-                    strip_tags(\admin\helpers\eloquent_attribute($row, $this->name)),
-                    $this->limit,
-                    $this->end
-                )
-                . '</span>';
-        };
+        return
+            '<span class="text-muted">' .
+            str_limit(
+                strip_tags(\admin\helpers\eloquent_attribute($row, $this->name)),
+                $this->limit,
+                $this->end
+            )
+            . '</span>';
     }
 
     public function setLimit($limit)
