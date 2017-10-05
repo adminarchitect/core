@@ -134,4 +134,9 @@ class Mutable extends BaseMutableCollection
 
         return $element;
     }
+
+    protected function createMediaElement($collection)
+    {
+        return FormElement::media($collection);
+    }
 }

@@ -164,7 +164,7 @@ abstract class Element implements HtmlElement, Validable, Relationship
         return null;
     }
 
-    protected function getRepository()
+    public function getRepository()
     {
         return app('scaffold.model') ?: app('scaffold.module')->model();
     }

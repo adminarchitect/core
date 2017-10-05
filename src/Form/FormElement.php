@@ -20,6 +20,7 @@ use Terranet\Administrator\Form\Type\View;
  * @method static FormElement search(string $name)
  * @method static FormElement textarea(string $name)
  * @method static FormElement medium(string $name)
+ * @method static FormElement media(string $collection)
  * @method static FormElement tinymce(string $name)
  * @method static FormElement ckeditor(string $name)
  * @method static FormElement boolean(string $name)

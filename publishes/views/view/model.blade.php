@@ -14,11 +14,11 @@ $elements = $module->viewColumns($item);
             <tr>
                 <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
             </tr>
-        @elseif ($element instanceof \Terranet\Administrator\Columns\MediaElement)
+        @elseif (($input = $element->getInput()) instanceof Terranet\Administrator\Form\Type\Media)
             <tr>
                 <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
                 <td>
-                    {!! $element->render($item) !!}
+                    {!! $input->editable(false)->html() !!}
                 </td>
             </tr>
         @else

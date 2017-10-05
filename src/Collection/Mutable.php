@@ -34,17 +34,18 @@ class Mutable extends BaseCollection
      * @param string $collection
      *
      * @param Closure|null $callback
+     * @param null $position
      * @return $this
      */
-    public function media($collection = 'default', \Closure $callback = null)
+    public function media($collection = 'default', Closure $callback = null, $position = null)
     {
-        $element = new MediaElement($collection);
+        $element = $this->createMediaElement($collection);
 
-        if ($callback) {
-            $callback($element);
+        if ($position) {
+            $this->insert($element, $position, $callback);
+        } else {
+            $this->push($element, $callback);
         }
-
-        $this->push($element);
 
         return $this;
     }
@@ -128,10 +129,10 @@ class Mutable extends BaseCollection
      * Update elements behaviour.
      *
      * @param $id
-     * @param callable $callback
+     * @param Closure $callback
      * @return $this
      */
-    public function update($id, callable $callback)
+    public function update($id, Closure $callback)
     {
         if (str_contains($id, ',')) {
             collect(explode(',', $id))
@@ -380,5 +381,18 @@ class Mutable extends BaseCollection
         }
 
         return $element;
+    }
+
+    /**
+     * @param $collection
+     * @return MediaElement
+     */
+    protected function createMediaElement($collection)
+    {
+        if (is_string($collection)) {
+            $collection = new MediaElement($collection);
+        }
+
+        return $collection;
     }
 }

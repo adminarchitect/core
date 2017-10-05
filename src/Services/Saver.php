@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use Terranet\Administrator\Contracts\Services\Saver as SaverContract;
 use Terranet\Administrator\Form\RendersTranslatableElement;
 use Terranet\Administrator\Form\Type\Boolean;
 use Terranet\Administrator\Form\Type\File;
 use Terranet\Administrator\Form\Type\Image;
 use Terranet\Administrator\Form\Type\Key;
+use Terranet\Administrator\Form\Type\Media;
 use Terranet\Administrator\Requests\UpdateRequest;
 use Terranet\Administrator\Traits\LoopsOverRelations;
 
@@ -74,7 +77,7 @@ class Saver implements SaverContract
 
                 $name = $field->getName();
 
-                if ($this->isKey($field) || $this->isTranslatable($field)) {
+                if ($this->isKey($field) || $this->isTranslatable($field) || $this->isMediaFile($field)) {
                     continue;
                 }
 
@@ -111,6 +114,8 @@ class Saver implements SaverContract
             | Save related data, fetched by "relation" from related tables
             */
             $this->saveRelations();
+
+            $this->saveMedia();
 
             Model::reguard();
         });
@@ -200,6 +205,25 @@ class Saver implements SaverContract
         }
     }
 
+    protected function saveMedia()
+    {
+        if ($this->repository instanceof HasMedia || $this->repository instanceof HasMediaConversions) {
+            $media = (array) $this->request['_media_'];
+
+            if (!empty($trash = array_get($media, '_trash_', []))) {
+                $this->repository->media()->whereIn(
+                    'id', $trash
+                )->delete();
+            }
+
+            foreach (array_except($media, '_trash_') as $collection => $objects) {
+                foreach ($objects as $uploadedFile) {
+                    $this->repository->addMedia($uploadedFile)->toMediaCollection($collection);
+                }
+            }
+        }
+    }
+
     /**
      * Remove null values from data
      *
@@ -212,7 +236,7 @@ class Saver implements SaverContract
         $keys = explode('.', $this->getQualifiedRelatedKeyName($relation));
         $key = array_pop($keys);
 
-        return array_filter((array)$values[$key], function ($value) {
+        return array_filter((array) $values[$key], function ($value) {
             return !is_null($value);
         });
     }
@@ -234,11 +258,11 @@ class Saver implements SaverContract
             $relation = $field->getRelation();
 
             # register relation
-            if (! array_has($this->relations, $relation)) {
+            if (!array_has($this->relations, $relation)) {
                 $this->relations[$relation] = [];
             }
 
-            if (! $field->getTranslatable()) {
+            if (!$field->getTranslatable()) {
                 $this->relations[$relation][$name] = $this->input("{$relation}.{$name}");
             }
         }
@@ -330,5 +354,10 @@ class Saver implements SaverContract
     protected function isBoolean($field)
     {
         return ($field instanceof Boolean);
+    }
+
+    protected function isMediaFile($field)
+    {
+        return ($field instanceof Media);
     }
 }
