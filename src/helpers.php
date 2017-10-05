@@ -349,22 +349,29 @@ namespace admin\helpers {
                 return \admin\output\staplerImage($object->getAttribute($key));
             }
 
-            if ($object instanceof PresentableInterface) {
-                if (method_exists($object->present(), $adminKey = camel_case("admin_{$key}"))) {
-                    return $object->present()->$adminKey();
-                }
-
-                if (method_exists($object->present(), $frontKey = camel_case($key))) {
-                    return $object->present()->$frontKey();
-                }
-            }
-
-            $value = $object->getAttribute($key);
+            $value = present($object, $key);
 
             if (is_array($value)) {
                 return !empty($value)
                     ? highlight_string(json_encode($value, JSON_PRETTY_PRINT))
                     : null;
+            }
+
+            return $value;
+        }
+
+        function present($object, $key, $value = null)
+        {
+            $value = $value ?: $object->getAttribute($key);
+
+            if ($object instanceof PresentableInterface) {
+                if (method_exists($object->present(), $adminKey = camel_case("admin_{$key}"))) {
+                    return $object->present()->$adminKey($value);
+                }
+
+                if (method_exists($object->present(), $frontKey = camel_case($key))) {
+                    return $object->present()->$frontKey($value);
+                }
             }
 
             return $value;

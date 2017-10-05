@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits;
 
+use function admin\helpers\present;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -25,9 +26,7 @@ trait LoopsOverRelations
         while ($relation = array_shift($relations)) {
             # Treat (Has)Many(ToMany|Through) listing relations as "count()" subQuery.
             if ($this->isCountableRelation($relation)) {
-                $relationObject = $object->$name();
-
-                return $relationObject->count();
+                return present($object, $name, $object->$name()->count());
             }
 
             $object = call_user_func([$orig = $object, $relation]);
