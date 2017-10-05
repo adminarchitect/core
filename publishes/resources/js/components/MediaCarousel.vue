@@ -6,20 +6,23 @@
         <input v-for="media in pendingRemoval" type="hidden" name="_media_[_trash_][]" :value="media">
 
         <div style="position: relative">
-            <div v-show="editable && !readonly" class="drop-zone__area"
-                 @dragover.prevent=""
-                 @dragleave.prevent="onDragLeave"
-                 @drop.prevent="addToQueue"
+            <div v-if="!readonly && (editable || !media.length)"
+                 class="drop-zone__area"
+                 :class="{'placeholder': (!media.length && !editable)}"
+                 @dragover.stop.prevent.self=""
+                 @dragleave.stop.prevent.self="onDragLeave"
+                 @drop.stop.prevent.self="addToQueue"
+                 @dragenter.stop.prevent.self="onDragEnter"
             >
-                Drop Files Here
+                Drop files here
             </div>
 
             <div :id="'media-' + id"
                  class="carousel slide"
                  data-ride="carousel"
                  :data-interval="interval"
-                 @dragover.prevent=""
-                 @dragenter.prevent="onDragEnter"
+                 @dragover.stop.prevent=""
+                 @dragenter.stop.prevent="onDragEnter"
             >
                 <!-- Indicators -->
                 <ol class="carousel-indicators" v-if="media.length > 1 && hasIndicators">
@@ -33,6 +36,9 @@
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
+                    <div class="item active" v-if="!media.length">
+                        <img src="/images/vendor/fancybox/dist/blank.gif" style="width: 320px; height: 160px;" alt="">
+                    </div>
                     <div v-for="(item, index) in media" class="item" :class="{'active': active === index, 'removed': pending = pendingForRemoval(item)}">
                         <a class="media-carousel__toolbar" v-if="!readonly">
                             <i v-if="!pending" @click.prevent="removeMedia(item)" class="media-carousel__toolbar__action fa fa-trash"></i>
@@ -221,13 +227,18 @@
         background: black;
         color: white;
         font-size: 1.2em;
-        text-align: center;
-        padding-top: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 100%;
         min-height: 100%;
         width: 100%;
         opacity: 0.8;
         z-index: 100;
+    }
+
+    .drop-zone__area.placeholder {
+        opacity: 0.3;
     }
 
     .drop-zone__queue {

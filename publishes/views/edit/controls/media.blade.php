@@ -1,6 +1,6 @@
 <media-carousel
-    style="width: {{ $width }}px;"
     id="{{ $name }}"
+    style="width: {{ $width }}px"
     :has-arrows="{{ $arrows ? 'true' : 'false' }}"
     :has-indicators="{{ $indicators ? 'true' : 'false' }}"
     :readonly="{{ $editable ? 'false' : 'true' }}"
