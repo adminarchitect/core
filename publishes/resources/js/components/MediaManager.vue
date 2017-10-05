@@ -24,29 +24,10 @@
 </template>
 
 <script>
-    import FileActions from './FileActions.vue';
-    import Files from './Files.vue';
-    import Folders from './Folders.vue';
-    import DropZone from './DropZone.vue';
-    import FileInfo from './FileInfo.vue';
-    import MkDirPopup from './popups/MkDir.vue';
-    import MovePopup from './popups/Move.vue';
-    import RenamePopup from './popups/Rename.vue';
     import {mapGetters} from 'vuex';
-    import Api from '../Api';
+    import Api from '../media/Api';
 
     export default {
-        components: {
-            fileActions: FileActions,
-            filesList: Files,
-            foldersList: Folders,
-            dropZone: DropZone,
-            fileInfo: FileInfo,
-            makeDirPopup: MkDirPopup,
-            movePopup: MovePopup,
-            renamePopup: RenamePopup,
-        },
-
         computed: mapGetters({
             selectedCount: 'selection/count',
             files: 'storage/files',

@@ -17,14 +17,7 @@
 </template>
 
 <script>
-    import ModalHeader from '../partials/ModalHeader.vue';
-    import ModalFooter from '../partials/ModalFooter.vue';
-
     export default {
-        components: {
-            'modalHeader': ModalHeader,
-            'modalFooter': ModalFooter,
-        },
         data() {
             return {
                 name: '',

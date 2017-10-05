@@ -18,11 +18,6 @@
 
 <script>
     export default {
-        components: {
-            modalHeader: require('../partials/ModalHeader.vue'),
-            modalFooter: require('../partials/ModalFooter.vue'),
-        },
-
         data() {
             return {name: ''};
         },
