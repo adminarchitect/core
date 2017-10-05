@@ -17,7 +17,9 @@ trait MethodsCollector
         static $methodsCache = null;
 
         if (null === $methodsCache) {
-            $methodsCache = (new ReflectionClass($instance))->getMethods($filter);
+            $methodsCache = $instance
+                ? (new ReflectionClass($instance))->getMethods($filter)
+                : [];
         }
 
         return $methodsCache;

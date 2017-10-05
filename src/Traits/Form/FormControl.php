@@ -157,8 +157,8 @@ trait FormControl
      */
     protected function handleJsonType($value)
     {
-        if ($cast = array_get($this->getRepository()->getCasts(), $this->name)) {
-            if (in_array($cast, ['array', 'json'])) {
+        if (($repo = $this->getRepository())) {
+            if (($cast = array_get($repo->getCasts(), $this->name)) && in_array($cast, ['array', 'json'])) {
                 $value = json_encode($value);
             }
         }
