@@ -16,8 +16,12 @@ trait HasSortable
 
     protected function scaffoldSortable()
     {
+        if (!$this->model) {
+            return [];
+        }
+
         if (null === $this->sortable && $schema = scheme()) {
-            $this->sortable = (array)$this->excludeUnSortable(
+            $this->sortable = (array) $this->excludeUnSortable(
                 $schema->indexedColumns(
                     $this->model()->getTable()
                 )

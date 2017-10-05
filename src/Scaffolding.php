@@ -167,11 +167,7 @@ class Scaffolding implements Module, AutoTranslatable
             return $value;
         }
 
-        if (!$model = $this->model) {
-            throw new \Exception('No resource model defined');
-        }
-
-        return $model;
+        return $this->model;
     }
 
     /**
@@ -199,8 +195,7 @@ class Scaffolding implements Module, AutoTranslatable
     {
         static $model = null;
 
-        if (null === $model) {
-            $class = $this->getModelClass();
+        if (null === $model && ($class = $this->getModelClass())) {
             $model = new $class();
         }
 
@@ -289,7 +284,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     public function magnetParams()
     {
-        return (array)$this->magnetParams;
+        return (array) $this->magnetParams;
     }
 
     /**

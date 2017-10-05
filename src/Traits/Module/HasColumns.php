@@ -38,8 +38,12 @@ trait HasColumns
      * @param $model
      * @return MutableCollection
      */
-    protected function collectColumns(Model $model)
+    protected function collectColumns(Model $model = null)
     {
+        if (!$model) {
+            return new MutableCollection([]);
+        }
+
         $pk = $model->getKeyName();
 
         $fillable = array_merge(

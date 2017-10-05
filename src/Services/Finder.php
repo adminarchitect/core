@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Terranet\Administrator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
@@ -47,7 +48,11 @@ class Finder implements FinderContract
      */
     public function fetchAll()
     {
-        return $this->getQuery()->paginate($this->perPage());
+        if ($query = $this->getQuery()) {
+            return $query->paginate($this->perPage());
+        }
+
+        return new LengthAwarePaginator([], 0, 10, 1);
     }
 
     /**
@@ -55,10 +60,10 @@ class Finder implements FinderContract
      *
      * @return mixed
      */
-    public function getQuery(): Builder
+    public function getQuery()
     {
         # prevent duplicated execution
-        if (null === $this->query) {
+        if (null === $this->query && $this->model) {
             $this->initQuery()
                  ->applyFilters()
                  ->applySorting();

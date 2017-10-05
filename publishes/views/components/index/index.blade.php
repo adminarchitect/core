@@ -6,25 +6,25 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    {{ $checkboxes }} {{ $headers }} {{ $actions }}
+                    {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
                 </tr>
                 </thead>
 
                 <tbody>
-                    {{ $rows }}
+                {{ $rows or '' }}
                 </tbody>
 
                 @if ($items && count($items) > 10)
                     <tfoot>
                     <tr>
-                        {{ $checkboxes }} {{ $headers }} {{ $actions }}
+                        {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
                     </tr>
                     </tfoot>
                 @endif
             </table>
         </form>
 
-        @if (trim($exportable) || trim($paginator))
+        @if (trim($exportable ?? null) || trim($paginator ?? null))
             <div class="row">
                 <div class="col-md-6 mt20">{{ $exportable }}</div>
                 <div class="col-md-6 text-right">{{ $paginator }}</div>

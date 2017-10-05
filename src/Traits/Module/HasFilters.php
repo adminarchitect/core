@@ -75,47 +75,49 @@ trait HasFilters
     {
         $this->filters = new Mutable;
 
-        $columns = table_columns($this->model());
-        $indexes = table_indexes($this->model());
+        if ($model = $this->model()) {
+            $columns = table_columns($model);
+            $indexes = table_indexes($model);
 
-        foreach ($indexes as $column) {
-            $data = $columns[$column];
+            foreach ($indexes as $column) {
+                $data = $columns[$column];
 
-            switch (class_basename($data->getType())) {
-                case 'StringType':
-                    if (connection('mysql') && is_null($data->getLength())) {
-                        if ($values = enum_values($this->model()->getTable(), $column)) {
-                            $filter = $this->filterFactory($column, 'select');
-                            $filter->getInput()->setOptions(['' => '--Any--'] + $values);
+                switch (class_basename($data->getType())) {
+                    case 'StringType':
+                        if (connection('mysql') && is_null($data->getLength())) {
+                            if ($values = enum_values($model->getTable(), $column)) {
+                                $filter = $this->filterFactory($column, 'select');
+                                $filter->getInput()->setOptions(['' => '--Any--'] + $values);
 
-                            $this->addFilter($filter);
-                            break;
+                                $this->addFilter($filter);
+                                break;
+                            }
                         }
-                    }
 
-                    $this->addFilter(
-                        $this->filterFactory($column, 'text')
-                    );
+                        $this->addFilter(
+                            $this->filterFactory($column, 'text')
+                        );
 
-                    break;
+                        break;
 
-                case 'DateTimeType':
-                    $this->addFilter(
-                        $this->filterFactory($column, 'daterange')
-                    );
-                    break;
+                    case 'DateTimeType':
+                        $this->addFilter(
+                            $this->filterFactory($column, 'daterange')
+                        );
+                        break;
 
-                case 'BooleanType':
-                    $this->addFilter(
-                        $this->filterFactory(
-                            $column, 'select', '',
-                            [
-                                '' => '--Any--',
-                                1 => 'Yes',
-                                0 => 'No',
-                            ])
-                    );
-                    break;
+                    case 'BooleanType':
+                        $this->addFilter(
+                            $this->filterFactory(
+                                $column, 'select', '',
+                                [
+                                    '' => '--Any--',
+                                    1 => 'Yes',
+                                    0 => 'No',
+                                ])
+                        );
+                        break;
+                }
             }
         }
 

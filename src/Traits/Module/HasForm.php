@@ -42,47 +42,50 @@ trait HasForm
      */
     protected function scaffoldForm()
     {
-        $eloquent = $this->model();
+        $editable = new Mutable;
 
-        $editable = (new Mutable)
-            ->merge($translatable = $this->scaffoldTranslatable($eloquent))
-            ->merge($eloquent->getFillable());
+        if ($eloquent = $this->model()) {
+            $editable->merge($translatable = $this->scaffoldTranslatable($eloquent))
+                     ->merge($eloquent->getFillable());
 
-        return $editable->map(function ($name) use ($eloquent, $translatable) {
-            $formElement = InputFactory::make(
-                $name, $this->inputType($name, $eloquent)
-            );
-
-            if (in_array($name, $translatable)) {
-                $formElement->setTranslatable(true);
-            }
-
-            # For Enums (Select|Radio) try to extract values from database.
-            if (is_a($formElement, Select::class)
-                && empty($formElement->getOptions())
-                && connection('mysql')
-            ) {
-                $formElement->setOptions(
-                    $values = enum_values($table = $eloquent->getTable(), $name)
+            return $editable->map(function ($name) use ($eloquent, $translatable) {
+                $formElement = InputFactory::make(
+                    $name, $this->inputType($name, $eloquent)
                 );
 
-                # set appropriate styling
-                if (count($values) > 5) {
-                    $formElement->setStyle([
-                        'display' => 'block',
-                    ]);
+                if (in_array($name, $translatable)) {
+                    $formElement->setTranslatable(true);
                 }
 
-                # set default value
-                if ($default = scheme()->columns($table)[$name]->getDefault()) {
-                    $formElement->setValue($default);
+                # For Enums (Select|Radio) try to extract values from database.
+                if (is_a($formElement, Select::class)
+                    && empty($formElement->getOptions())
+                    && connection('mysql')
+                ) {
+                    $formElement->setOptions(
+                        $values = enum_values($table = $eloquent->getTable(), $name)
+                    );
+
+                    # set appropriate styling
+                    if (count($values) > 5) {
+                        $formElement->setStyle([
+                            'display' => 'block',
+                        ]);
+                    }
+
+                    # set default value
+                    if ($default = scheme()->columns($table)[$name]->getDefault()) {
+                        $formElement->setValue($default);
+                    }
                 }
-            }
 
-            $container = new FormElement($name);
+                $container = new FormElement($name);
 
-            return $container->setInput($formElement);
-        });
+                return $container->setInput($formElement);
+            });
+        }
+
+        return $editable;
     }
 
     /**

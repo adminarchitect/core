@@ -32,10 +32,10 @@ class Assembler
      */
     public function __construct($eloquent)
     {
-        $this->model = $eloquent;
-
-        $this->query = $this->model->newQuery();
-        $this->query->select($this->model->getTable() . '.*');
+        if ($this->model = $eloquent) {
+            $this->query = $this->model->newQuery();
+            $this->query->select($this->model->getTable() . '.*');
+        }
     }
 
     public function applyQueryCallback($callback)
@@ -259,7 +259,7 @@ class Assembler
 
             case 'boolean':
             case 'number':
-                $query->where("{$table}.{$column}", '=', (int)$value);
+                $query->where("{$table}.{$column}", '=', (int) $value);
                 break;
 
             case 'date':
