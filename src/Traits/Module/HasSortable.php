@@ -20,7 +20,7 @@ trait HasSortable
             return [];
         }
 
-        if (null === $this->sortable && $schema = scheme()) {
+        if (null === $this->sortable && ($schema = scheme())) {
             $this->sortable = (array) $this->excludeUnSortable(
                 $schema->indexedColumns(
                     $this->model()->getTable()
@@ -53,6 +53,8 @@ trait HasSortable
      */
     public function addSortable($element, Closure $callback = null)
     {
+        $this->scaffoldSortable();
+
         if (null === $callback) {
             $this->sortable[] = $element;
         } else {

@@ -148,8 +148,10 @@ class Element extends ElementContainer
      */
     public function sortable(\Closure $callback = null)
     {
-        return tap($this, function($element) use ($callback) {
-            app('scaffold.module')->addSortable($element->id(), $callback);
+        return tap($this, function ($element) use ($callback) {
+            app('scaffold.module')->addSortable(
+                $element->id(), $callback
+            );
         });
     }
 
