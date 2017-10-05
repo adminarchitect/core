@@ -148,7 +148,7 @@ class CrudActions implements CrudActionsContract
             $module = app('scaffold.module');
         }
 
-        $key = $method . '_' . class_basename($item) . '_' . md5(serialize($item)) . '_' . class_basename($module);
+        $key = $method . '_' . class_basename($item) . '_' . md5(json_encode($item)) . '_' . class_basename($module);
 
         if ('testing' == app()->environment() || !array_key_exists($key, static::$responses)) {
             $response = true;
