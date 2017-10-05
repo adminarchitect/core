@@ -39,7 +39,7 @@
     </div>
 </div>
 
-@section('scaffold.js')
+@push('scaffold.js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
         $(function() {
@@ -83,4 +83,4 @@
             });
         });
     </script>
-@append
+@endpush

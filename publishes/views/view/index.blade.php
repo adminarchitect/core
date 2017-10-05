@@ -68,7 +68,7 @@
     </div>
 @append
 
-@section('scaffold.js')
+@push('scaffold.js')
     <script>
         $(function() {
             var hash, tabs = ['{!! join("', '", array_keys($tabs)) !!}'].map(function(tab) {
@@ -82,4 +82,4 @@
             }
         });
     </script>
-@append
+@endpush

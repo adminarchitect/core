@@ -3,22 +3,19 @@
 
 @extends($template->layout())
 
-@section('scaffold.js')
-    <script src="{{ mix('admin/media.js') }}"></script>
-@endsection
-
-@section('scaffold.content')
+@prepend('scaffold.headjs')
     <script>
         window.mediaFiles = {!! json_encode($files) !!};
         window.XSRF_TOKEN = '{{ csrf_token() }}';
         window.UPLOADER_URL = '{{ route('scaffold.media.upload') }}';
         window.REQUEST_PATH = '{{ request('path', '') }}';
     </script>
+@endprepend
+
+@section('scaffold.content')
     <h4>{{ trans('administrator::media.title') }}</h4>
 
     {!! $breadcrumbs !!}
 
-    <div id="media">
-        <media-manager></media-manager>
-    </div>
+    <media-manager></media-manager>
 @append

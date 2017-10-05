@@ -2,6 +2,7 @@
 @inject('breadcrumbs', 'scaffold.breadcrumbs')
 @inject('module', 'scaffold.module')
 @inject('navigation', 'scaffold.navigation')
+
 <!DOCTYPE html>
 <html lang="en">
 <head ng-app="Architector">
@@ -17,88 +18,85 @@
 
     @include('administrator::partials.styles')
 
-    <!--[if lt IE 9]>
-{{--    <script src="{{ asset('admin/lib/html5shiv/html5shiv.js') }}"></script>--}}
-{{--    <script src="{{ asset('admin/lib/respond/respond.src.js') }}"></script>--}}
-    <![endif]-->
-    @yield('scaffold.css')
+    @stack('scaffold.css')
 
-    @yield('scaffold.headjs')
+    @stack('scaffold.headjs')
 </head>
 <body>
-<header>
-    <div class="headerpanel">
-        <div class="logopanel">
-            <h2>
-                <a href="{{ url(config('administrator.home_page') ?: route('scaffold.dashboard')) }}">{!! $config->get('title') !!}</a>
-            </h2>
+<div id="app">
+    <header>
+        <div class="headerpanel">
+            <div class="logopanel">
+                <h2>
+                    <a href="{{ url(config('administrator.home_page') ?: route('scaffold.dashboard')) }}">{!! $config->get('title') !!}</a>
+                </h2>
+            </div>
+
+            <div class="headerbar">
+                <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+
+                <div class="header-right">
+
+                    <ul class="headermenu">
+                        @include($template->menu('tools'))
+                    </ul>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <div class="headerbar">
-            <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+    <?php
+    $user = auth('admin')->user();
+    $pict = asset('/admin/images/admin.png');
+    ?>
 
-            <div class="header-right">
+    <div class="leftpanel">
+        <div class="leftpanelinner">
+            <div class="media leftpanel-profile">
+                <div class="media-left">
+                    @if (app('scaffold.config')->get('gravatar', true) && Gravatar::exists($user->email))
+                        <img height="48" width="48" src="{{ Gravatar::get($user->email, ['size' => 160, 'fallback' => $pict]) }}" alt="{{ $user->name }}" class="media-object img-circle"/>
+                    @else
+                        <img height="48" width="48" src="{{ $pict }}" class="media-object img-circle" alt="{{ $user->name }}">
+                    @endif
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{ auth('admin')->user()->name }}</h4>
+                    <span>Joined {{ auth('admin')->user()->created_at->diffForHumans() }}</span>
+                </div>
+            </div>
 
-                <ul class="headermenu">
-                    @include($template->menu('tools'))
-                </ul>
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    @include('administrator::menus.sidebar')
+                </div>
             </div>
         </div>
     </div>
-</header>
 
-<?php
-$user = auth('admin')->user();
-$pict = asset('/admin/images/admin.png');
-?>
+    <div class="mainpanel">
+        <div class="contentpanel">
+            @if ($module)
+                @yield('scaffold.create')
 
-<div class="leftpanel">
-    <div class="leftpanelinner">
-        <div class="media leftpanel-profile">
-            <div class="media-left">
-                @if (app('scaffold.config')->get('gravatar', true) && Gravatar::exists($user->email))
-                    <img height="48" width="48" src="{{ Gravatar::get($user->email, ['size' => 160, 'fallback' => $pict]) }}" alt="{{ $user->name }}" class="media-object img-circle"/>
-                @else
-                    <img height="48" width="48" src="{{ $pict }}" class="media-object img-circle" alt="{{ $user->name }}">
+                @if ($breadcrumbs)
+                    <h4>{{ $module->title() }} @yield('total')</h4>
+                    {!! $breadcrumbs->render() !!}
                 @endif
-            </div>
-            <div class="media-body">
-                <h4 class="media-heading">{{ auth('admin')->user()->name }}</h4>
-                <span>Joined {{ auth('admin')->user()->created_at->diffForHumans() }}</span>
-            </div>
-        </div>
-
-        <div class="tab-content">
-            <div class="tab-pane active">
-                @include('administrator::menus.sidebar')
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="mainpanel">
-    <div class="contentpanel">
-        @if ($module)
-            @yield('scaffold.create')
-
-            @if ($breadcrumbs)
-                <h4>{{ $module->title() }} @yield('total')</h4>
-                {!! $breadcrumbs->render() !!}
             @endif
-        @endif
 
-        @include($template->partials('messages'))
+            @include($template->partials('messages'))
 
-        @yield('scaffold.filter')
+            @yield('scaffold.filter')
 
-        @yield('scaffold.batch')
+            @yield('scaffold.batch')
 
-        @yield('scaffold.content')
+            @yield('scaffold.content')
+        </div>
     </div>
 </div>
-
 @include('administrator::partials.scripts')
 
-@yield('scaffold.js')
+@stack('scaffold.js')
 </body>
 </html>

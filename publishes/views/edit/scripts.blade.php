@@ -1,3 +1,3 @@
-@section('scaffold.js')
+@push('scaffold.js')
     @include($template->scripts('editors'))
-@append
+@endpush
