@@ -70,11 +70,19 @@ return [
         'manager' => null,
     ],
 
+    # main layouts
+    'layouts' => [
+        'app' => 'administrator::layouts.app',
+        'dashboard' => 'administrator::layouts.dashboard',
+        'settings' => 'administrator::layouts.settings',
+        'exportable' => 'administrator::layouts.exportable',
+    ],
+
     'grid' => [
         'timestamps' => [
             'enabled' => false,
             //'users' => true,
-        ]
+        ],
     ],
 
     # Exportable formats declaration

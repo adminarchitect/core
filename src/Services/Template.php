@@ -15,7 +15,7 @@ class Template implements TemplateProvider
      */
     public function layout($layout = 'app')
     {
-        return 'administrator::layouts.' . $layout;
+        return config('administrator.layouts.' . $layout);
     }
 
     /**
@@ -58,7 +58,14 @@ class Template implements TemplateProvider
      */
     public function view($partial = 'index')
     {
-        $partials = $this->map('view', ['index', 'widget', 'model', 'create', 'relations.one_to_one', 'relations.one_to_many']);
+        $partials = $this->map('view', [
+            'index',
+            'widget',
+            'model',
+            'create',
+            'relations.one_to_one',
+            'relations.one_to_many',
+        ]);
 
         return (null === $partial ? $partials : $partials[$partial]);
     }

@@ -143,7 +143,7 @@ trait ExportsCollection
         $view = method_exists($this->module, 'exportableView')
             ? $this->module->exportableView()
             : $this->exportableView();
-        
+
         $html = view($view, [
             'module' => app('scaffold.module')->url(),
             'time' => new Carbon(),
@@ -267,6 +267,6 @@ trait ExportsCollection
     
     protected function exportableView()
     {
-        return 'administrator::layouts.exportable';
+        return app('scaffold.template')->layout('exportable');
     }
 }
