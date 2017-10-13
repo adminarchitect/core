@@ -116,8 +116,8 @@ class Resources
                 array_merge(
                     $module->linkAttributes(),
                     [
-                        'active' => function () use ($module) {
-                            return starts_with(\URL::getRequest()->getPathInfo(), "/".config('administrator.prefix')."/{$module}");
+                        'active' => function() use ($module) {
+                            return $this->isActive($module);
                         },
                     ]
                 )
@@ -173,4 +173,22 @@ class Resources
 
         return $sub;
     }
-}
+
+    protected function isActive($module)
+    {
+        static $checked = [];
+        $module = $module->url();
+
+        if (!array_key_exists($module, $checked)) {
+            $urls = array_map(function($url) { return trim($url, '/'); }, [
+                'current' => \URL::getRequest()->getPathInfo(),
+                'create' => route('scaffold.create', ['module' => $module], false),
+                'module' => config('administrator.prefix') . "/{$module}"
+            ]);
+
+            $checked[$module] = starts_with($urls['current'], $urls['module']) && ($urls['current'] !== $urls['create']);
+        }
+        
+        return $checked[$module];
+    }
+ }
