@@ -37,6 +37,7 @@ class Navigation
             $sidebar->route('scaffold.dashboard', trans('administrator::module.dashboard'), [], 1, [
                 'id' => 'dashboard',
                 'icon' => 'fa fa-dashboard',
+                'active' => str_is(request()->route()->getName(), 'scaffold.dashboard'),
             ]);
 
             // Create new users group
