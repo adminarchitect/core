@@ -114,7 +114,10 @@ class MediaController extends AdminController
         try {
             $path = $this->storage->upload($request->allFiles(), $path);
 
-            return response()->json(['file' => $path], Response::HTTP_CREATED);
+            return response()->json([
+                'file' => $path,
+                'location' => $path['url'],
+            ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             return response()->json([], Response::HTTP_FOUND);
         }
