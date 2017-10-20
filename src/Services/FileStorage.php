@@ -30,11 +30,7 @@ class FileStorage
         foreach ($files as $file) {
             $filename = $this->path($directory) . DIRECTORY_SEPARATOR . $file->getClientOriginalName();
 
-            if ($this->filesystem->exists($filename)) {
-                throw new Exception(sprintf('File %s already exists.', $filename));
-            }
-
-            if (move_uploaded_file($file->path(), $filename)) {
+            if ($this->filesystem->exists($filename) || move_uploaded_file($file->path(), $filename)) {
                 return (new File($filename, $this))->toArray();
             }
         }
