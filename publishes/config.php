@@ -73,6 +73,7 @@ return [
     # main layouts
     'layouts' => [
         'app' => 'administrator::layouts.app',
+        'popup' => 'administrator::layouts.popup',
         'dashboard' => 'administrator::layouts.dashboard',
         'settings' => 'administrator::layouts.settings',
         'exportable' => 'administrator::layouts.exportable',
