@@ -5,25 +5,47 @@ require('tinymce/plugins/autolink');
 require('tinymce/plugins/lists');
 require('tinymce/plugins/paste');
 require('tinymce/plugins/link');
-require('tinymce/plugins/image');
+require('./tinymce/plugins/image');
 require('tinymce/plugins/charmap');
 require('tinymce/plugins/print');
 require('tinymce/plugins/preview');
-require('tinymce/plugins/anchor');
 require('tinymce/plugins/searchreplace');
-require('tinymce/plugins/visualblocks');
 require('tinymce/plugins/code');
 require('tinymce/plugins/fullscreen');
-require('tinymce/plugins/insertdatetime');
 require('tinymce/plugins/media');
 require('tinymce/plugins/table');
-require('tinymce/plugins/contextmenu');
 
 tinymce.init({
     selector: 'textarea[data-editor="tinymce"]',
     plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
+        "advlist autolink lists link image charmap print preview",
+        "searchreplace code fullscreen",
+        "media table paste"
     ],
+    image_advtab: true,
+    images_upload_url: '/cms/media/upload',
+    relative_urls: false,
+    height: 300,
+    statusbar: false,
+
+    //menubar: false,
+    //toolbar: 'undo redo' +
+    //' | bold italic underline strikethrough' +
+    //' | alignleft  aligncenter alignright alignjustify' +
+    //' | bullist numlist blockquote outdent indent' +
+    //' | link image imagetools' +
+    //' | removeformat code brbtn',
+    //plugins: [
+    //    'lists autolink link image preview print',
+    //    'fullscreen code paste',
+    //],
+    //setup: (editor) => {
+    //    editor.addButton('brbtn', {
+    //        icon: 'line',
+    //        tooltip: "Insert New Line",
+    //        onclick: function() {
+    //            editor.insertContent('<br />');
+    //        },
+    //    });
+    //},
 });
