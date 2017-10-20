@@ -43,9 +43,9 @@ class File extends SplFileInfo implements Arrayable
     {
         return [
             'path' => $path = trim(str_replace($this->storage->path(), '', $this->getPathname()), DIRECTORY_SEPARATOR),
-            'url' => url($this->storage->basename() . '/' . $path),
-            'createdAt' => Carbon::createFromTimestamp($this->getCTime())->toDayDateTimeString(),
-            'updatedAt' => Carbon::createFromTimestamp($this->getMTime())->toDayDateTimeString(),
+            'url' => $this->fullUrl($path),
+            'createdAt' => $this->createdAt(),
+            'updatedAt' => $this->updatedAt(),
             'size' => $this->getSize(),
             'dirname' => $this->getPathInfo()->getFilename(),
             'basename' => $basename = $this->getBasename(),
@@ -54,7 +54,40 @@ class File extends SplFileInfo implements Arrayable
             'icon' => $this->getIcon(),
             'isDir' => $this->isDir(),
             'isFile' => $this->isFile(),
-            'isImage' => (new MimeType($this))->isImage(),
+            'isImage' => $this->isImage(),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImage()
+    {
+        return (new MimeType($this))->isImage();
+    }
+
+    /**
+     * @param $path
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function fullUrl($path)
+    {
+        return url($this->storage->basename() . '/' . $path);
+    }
+
+    /**
+     * @return string
+     */
+    public function createdAt(): string
+    {
+        return Carbon::createFromTimestamp($this->getCTime())->toDayDateTimeString();
+    }
+
+    /**
+     * @return string
+     */
+    public function updatedAt(): string
+    {
+        return Carbon::createFromTimestamp($this->getMTime())->toDayDateTimeString();
     }
 }
