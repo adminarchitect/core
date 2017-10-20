@@ -58,6 +58,11 @@ Route::group([
                 'uses' => 'MediaController@index',
             ]);
 
+            Route::get('popup', [
+                'as' => 'scaffold.media.popup',
+                'uses' => 'MediaController@popup',
+            ]);
+
             Route::post('/', [
                 'as' => 'scaffold.media.mkdir',
                 'uses' => 'MediaController@mkdir'
