@@ -15,7 +15,7 @@ class Template implements TemplateProvider
      */
     public function layout($layout = 'app')
     {
-        return config('administrator.layouts.' . $layout);
+        return config('administrator.layouts.' . $layout, 'administrator::layouts.' . $layout);
     }
 
     /**
