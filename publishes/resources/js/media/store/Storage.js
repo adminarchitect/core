@@ -63,7 +63,7 @@ const Storage = {
             let directories = (state.files || []).filter(file => file.isDir);
 
             if (window.REQUEST_PATH.length) {
-                directories.push('../');
+                directories = ['../'].concat(directories);
             }
 
             return directories;
