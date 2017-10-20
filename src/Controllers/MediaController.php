@@ -17,12 +17,12 @@ class MediaController extends AdminController
     /**
      * @var Manager
      */
-    private $breadcrumbs;
+    protected $breadcrumbs;
 
     /**
      * @var FileStorage
      */
-    private $storage;
+    protected $storage;
 
     /**
      * MediaController constructor.
@@ -40,20 +40,29 @@ class MediaController extends AdminController
         $this->middleware(SanitizePaths::class);
     }
 
-    public function index(Request $request)
+    public function popup(Request $request)
+    {
+        return $this->index($request, true);
+    }
+
+    public function index(Request $request, $popup = false)
     {
         $directory = $this->storage->path(
             $path = $request->get('path')
         );
 
-        $files = $this->storage->files($directory)->merge(
-            $this->storage->directories($directory)
-        );
+        $files = $this->storage
+            ->files($directory)
+            ->when($popup, function ($files) {
+                return $files->filter->isImage();
+            })
+            ->merge($this->storage->directories($directory));
 
         $data = [
             'files' => $files,
             'path' => $path,
-            'breadcrumbs' => $this->breadcrumbs($directory),
+            'breadcrumbs' => $this->breadcrumbs($directory, $popup),
+            'popup' => $popup,
         ];
 
         return view(app('scaffold.template')->media('index'), $data);
@@ -116,7 +125,7 @@ class MediaController extends AdminController
 
             return response()->json([
                 'file' => $path,
-                'location' => $path['url'],
+                'location' => $path['url'], # duplicate for TinyMCE
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             return response()->json([], Response::HTTP_FOUND);
@@ -132,15 +141,15 @@ class MediaController extends AdminController
         ], Response::HTTP_NO_CONTENT);
     }
 
-    protected function breadcrumbs($directory)
+    protected function breadcrumbs($directory, $popup = false)
     {
         $directory = str_replace($this->storage->path(), '', $directory);
 
         # remove storage path from $directory
         $directory = implode("/", array_slice(explode("/", $directory), 1));
 
-        $this->breadcrumbs->register('index', function (Generator $generator) {
-            $generator->push("Home", route('scaffold.media'));
+        $this->breadcrumbs->register('index', function (Generator $generator) use ($popup) {
+            $generator->push("Home", route('scaffold.media' . ($popup ? '.popup' : '')));
         });
 
         $dirs = $directory ? explode("/", trim($directory, '/')) : [];
