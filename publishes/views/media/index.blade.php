@@ -1,21 +1,18 @@
 @inject('template', 'scaffold.template')
 @inject('config', 'scaffold.config')
 
-@extends($template->layout())
+@extends($template->layout($popup ? 'popup' : 'app'))
 
-@prepend('scaffold.headjs')
-    <script>
-        window.mediaFiles = {!! json_encode($files) !!};
-        window.XSRF_TOKEN = '{{ csrf_token() }}';
-        window.UPLOADER_URL = '{{ route('scaffold.media.upload') }}';
-        window.REQUEST_PATH = '{{ request('path', '') }}';
-    </script>
-@endprepend
+@push('scaffold.headjs')
+    @include('administrator::media.scripts')
+@endpush
 
 @section('scaffold.content')
     <h4>{{ trans('administrator::media.title') }}</h4>
 
     {!! $breadcrumbs !!}
 
-    <media-manager></media-manager>
+    <div id="app">
+        <media-manager></media-manager>
+    </div>
 @append

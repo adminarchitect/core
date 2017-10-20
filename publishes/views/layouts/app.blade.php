@@ -3,11 +3,12 @@
 @inject('module', 'scaffold.module')
 @inject('navigation', 'scaffold.navigation')
 
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head ng-app="Architector">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
         {{ strip_tags($config->get('title')) }}
@@ -17,9 +18,7 @@
     </title>
 
     @include('administrator::partials.styles')
-
     @stack('scaffold.css')
-
     @stack('scaffold.headjs')
 </head>
 <body>
@@ -95,8 +94,8 @@
         </div>
     </div>
 </div>
-@include('administrator::partials.scripts')
 
+@include('administrator::partials.scripts')
 @stack('scaffold.js')
 </body>
 </html>
