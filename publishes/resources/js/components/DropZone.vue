@@ -39,13 +39,15 @@
 <script>
     export default {
         data() {
+            let token = document.head.querySelector('meta[name="csrf-token"]');
+
             return {
                 clip: null,
                 dropZone: null,
                 options: {
                     url: this.uploadUrl(),
                     headers: {
-                        'X-CSRF-TOKEN': window.XSRF_TOKEN,
+                        'X-CSRF-TOKEN': token.content || '',
                     },
                     autoProcessQueue: false,
                     parallelUploads: 5,

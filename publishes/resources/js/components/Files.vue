@@ -6,9 +6,9 @@
 
         <div v-if="collection.length" class="media-list" id="media-library">
             <div class="row filemanager">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="file in collection">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="file in collection" :key="file.basename">
                     <div class="thmb" :class="{'checked': checked(file)}">
-                        <label class="ckbox">
+                        <label class="ckbox" v-if="!modal">
                             <input type="checkbox" v-model="selected" :value="file">
                             <span></span>
                         </label>
@@ -18,10 +18,12 @@
                         </div>
 
                         <div class="thmb-prev text-center image-container">
-                            <div class="image"
-                                 v-if="file.isImage"
-                                 :style="{ backgroundImage: 'url('+ file.url +')' }">
-                            </div>
+                            <a @click.prevent="onClick(file)" :class="{'pointer': modal}">
+                                <div class="image"
+                                     v-if="file.isImage"
+                                     :style="{ backgroundImage: 'url('+ file.url +')' }">
+                                </div>
+                            </a>
                         </div>
 
                         <h5 class="fm-title">{{ file.basename | truncate(25) }}</h5>
@@ -41,7 +43,12 @@
             collection: {
                 type: Array,
                 default: () => [],
-            }
+            },
+            // Checks if FileManager is opened as a Modal (ex.: TinyMCE plugin)
+            modal: {
+                type: Boolean,
+                default: false,
+            },
         },
 
         computed: {
@@ -52,14 +59,20 @@
                 set(collection) {
                     this.$store.dispatch('selection/set', collection);
                 },
-            }
+            },
         },
 
         methods: {
             checked(file) {
                 return this.$store.getters['selection/has'](file);
-            }
-        }
+            },
+
+            onClick(file) {
+                if (this.modal) {
+                    this.$emit('selected', file);
+                }
+            },
+        },
     };
 </script>
 
@@ -88,5 +101,9 @@
     .thmb:hover .ckbox,
     .thmb.checked .ckbox {
         display: inline-block;
+    }
+
+    a.pointer {
+        cursor: pointer;
     }
 </style>

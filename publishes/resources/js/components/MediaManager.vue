@@ -5,7 +5,7 @@
         </div>
         <div class="row">
             <div class="col-xs-9">
-                <files-list :collection="files"></files-list>
+                <files-list :collection="files" :modal="isModal" @selected="onMediaSelected"></files-list>
             </div>
 
             <div class="col-xs-3">
@@ -28,12 +28,18 @@
     import Api from '../media/Api';
 
     export default {
-        computed: mapGetters({
-            selectedCount: 'selection/count',
-            files: 'storage/files',
-            folders: 'storage/directories',
-            fileInfo: 'selection/info',
-        }),
+        computed: Object.assign(
+            mapGetters({
+                selectedCount: 'selection/count',
+                files: 'storage/files',
+                folders: 'storage/directories',
+                fileInfo: 'selection/info',
+            }), {
+                isModal() {
+                    return !!window.mediaPopup || false;
+                },
+            },
+        ),
 
         methods: {
             remove(object) {
@@ -105,7 +111,11 @@
 
             uploadComplete(file) {
                 this.$store.dispatch('storage/push', file);
-            }
+            },
+
+            onMediaSelected(file) {
+                window.opener.onMediaFileSelected(file.url);
+            },
         },
     };
 </script>

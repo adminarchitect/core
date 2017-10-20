@@ -5,7 +5,7 @@
         </div>
         <div class="panel-body">
             <ul class="folder-list">
-                <li v-for="dir in collection" v-if="dir">
+                <li v-for="(dir, i) in collection" :key="i" v-if="dir">
                     <div class="pull-right" v-if="dir !== '../'">
                         <a @click="$emit('remove', dir)"><i class="fa fa-trash"></i></a>
                     </div>
