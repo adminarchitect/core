@@ -52,14 +52,14 @@ class Image extends File
     protected function dimensions($style)
     {
         if ($style->dimensions) {
-            return explode('x', $style->dimensions);
+            return array_map('intval', explode('x', $style->dimensions));
         }
 
         if (!$size = @getimagesize($this->value()->path($style->name))) {
             return [1, 1];
         }
 
-        return [$size[0], $size[1]];
+        return array_map('intval', [$size[0], $size[1]]);
     }
 
     /**
