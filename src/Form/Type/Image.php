@@ -51,7 +51,7 @@ class Image extends File
 
     protected function dimensions($style)
     {
-        if ($style->dimensions) {
+        if ($style->dimensions && str_contains('x', $style->dimensions)) {
             return array_map('intval', explode('x', $style->dimensions));
         }
 
