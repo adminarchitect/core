@@ -93,7 +93,7 @@ class File extends Element
         . link_to_route('scaffold.delete_attachment', 'Delete file', [
             'module' => app('scaffold.module'),
             'attachment' => $this->getName(),
-            'id' => $this->getRepository(),
+            'id' => $this->getRepository()->getKey(),
         ], [
             'onclick' => 'return confirm(\'Are you sure?\');',
             'class' => 'btn btn-danger',
