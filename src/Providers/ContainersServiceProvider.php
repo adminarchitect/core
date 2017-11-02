@@ -18,6 +18,7 @@ use Terranet\Administrator\Services\MagnetParams;
 use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
 use Terranet\Administrator\Services\Widgets;
+use Terranet\Localizer\Locale;
 
 class ContainersServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminNavigation' => 'scaffold.navigation',
         'AdminDashboard' => 'scaffold.dashboard',
+        'AdminTranslations' => 'scaffold.translations',
     ];
 
     public function register()
@@ -58,7 +60,59 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.config', function ($app) {
             $config = $app['config']['administrator'];
 
-            return new Config((array) $config);
+            return new Config((array)$config);
+        });
+    }
+
+    protected function registerAdminTranslations()
+    {
+        // Draft: Mui configuration
+        // Goal: sometimes there is a case when few content managers (admins) override the same translatable content (files, db, etc...)
+        // This service allows to make some locales readonly:
+        //  1. they are available in UI in order to preserve the context
+        //  2. they are protected from saving process
+        // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
+        // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
+        $this->app->singleton('scaffold.translations', function ($app) {
+            $service = new class
+            {
+                protected $readonly = [];
+
+                public function __construct()
+                {
+                    $this->setReadonly(config('administrator.translations.readonly', []));
+                }
+
+                /**
+                 * Set ReadOnly locales.
+                 *
+                 * @param array $readonly
+                 * @return $this
+                 */
+                public function setReadonly(array $readonly = [])
+                {
+                    $this->readonly = (array)$readonly;
+
+                    return $this;
+                }
+
+                /**
+                 * Check if a Locale is ReadOnly.
+                 *
+                 * @param $locale
+                 * @return bool
+                 */
+                public function readonly($locale)
+                {
+                    if ($locale instanceof Locale) {
+                        $locale = $locale->id();
+                    }
+
+                    return in_array((int)$locale, $this->readonly);
+                }
+            };
+
+            return $service;
         });
     }
 

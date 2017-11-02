@@ -24,13 +24,16 @@ trait RendersTranslatableElement
 
         $cycle = 0;
         $current = \localizer\locale();
-
-//        $inputs = [];
+        $translations = app('scaffold.translations');
 
         $inputs = array_build(
             \localizer\locales(),
-            function ($key, $locale) use ($repository, $current, &$cycle) {
+            function ($key, $locale) use ($repository, $current, &$cycle, $translations) {
                 $element = $this->selfClone($locale, $repository);
+
+                if ($translations->readonly($locale)) {
+                    $element->setAttributes(['disabled' => true]);
+                }
 
                 $input = $element->render() . $element->errors();
 
