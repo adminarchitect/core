@@ -39,13 +39,16 @@ tinymce.init({
     //    'lists autolink link image preview print',
     //    'fullscreen code paste',
     //],
-    //setup: (editor) => {
-    //    editor.addButton('brbtn', {
-    //        icon: 'line',
-    //        tooltip: "Insert New Line",
-    //        onclick: function() {
-    //            editor.insertContent('<br />');
-    //        },
-    //    });
-    //},
+    setup: (editor) => {
+        let e = editor.getElement();
+        editor.settings.readonly = e.readOnly || e.disabled;
+
+       // editor.addButton('brbtn', {
+       //     icon: 'line',
+       //     tooltip: "Insert New Line",
+       //     onclick: function() {
+       //         editor.insertContent('<br />');
+       //     },
+       // });
+    },
 });
