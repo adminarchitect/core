@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Traits\Module;
 
 use function admin\db\scheme;
 use Doctrine\DBAL\Schema\Column;
+use Terranet\Rankable\Rankable;
 
 trait ValidatesForm
 {
@@ -29,11 +30,17 @@ trait ValidatesForm
 
         foreach (scheme()->columns($table) as $column) {
             $name = $column->getName();
+            # skip Primary Key
             if ($name == $eloquent->getKeyName()) {
                 continue;
             }
 
-            if (! empty($columnRules = $this->proposeColumnRules($eloquent, $column))) {
+            # skip rankable field
+            if ($eloquent instanceof Rankable && $name === $eloquent->getRankableColumn()) {
+                continue;
+            }
+
+            if (!empty($columnRules = $this->proposeColumnRules($eloquent, $column))) {
                 $rules[$name] = join("|", $columnRules);
             }
         }
