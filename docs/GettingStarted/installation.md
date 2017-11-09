@@ -72,3 +72,8 @@ Now let's create a new administrator account:
 ```bash
 php artisan administrator:create
 ```
+
+### Enjoy
+
+Now you can access the Admin Architect by opening a `/cms` url. 
+So for `php artisan serve` command, it will: [http://localhost:8000/cms](http://localhost:8000/cms)

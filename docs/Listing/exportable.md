@@ -1,6 +1,6 @@
 ## Export Collections
 
-![Scopes](http://docs.adminarchitect.com/docs/images/index/exports.jpg)
+![Scopes](http://docs.adminarchitect.com/images/index/exports.jpg)
 
 Any Resource that implements `Exportable` interface allows you to export collections to a different formats.
 

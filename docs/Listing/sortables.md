@@ -1,6 +1,6 @@
 ## Sortables
 
-![Scopes](http://docs.adminarchitect.com/docs/images/index/sortables.jpg)
+![Scopes](http://docs.adminarchitect.com/images/index/sortables.jpg)
 
 Any Admin Architect resource by default implements `Sortable` interface with single method `sortable()`.
 

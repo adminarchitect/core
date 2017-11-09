@@ -69,10 +69,10 @@ public function navigableIn()
 
 #### Sidebar
 
-![Sidebar](http://docs.adminarchitect.com/docs/images/navigation/sidebar.jpg)
+![Sidebar](http://docs.adminarchitect.com/images/navigation/sidebar.jpg)
 
 #### Tools menu
-![Tools](http://docs.adminarchitect.com/docs/images/navigation/tools.jpg)
+![Tools](http://docs.adminarchitect.com/images/navigation/tools.jpg)
 
 
 #### Navigation link attributes

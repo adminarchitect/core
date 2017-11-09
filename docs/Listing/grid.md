@@ -9,7 +9,7 @@ _[Note]: .dot notation also works while referencing the relationship columns._
 
 ### Grid
 
-![Admin Architect - Columns Grid](http://docs.adminarchitect.com/docs/images/index/columns.jpg)
+![Admin Architect - Columns Grid](http://docs.adminarchitect.com/images/index/columns.jpg)
 
 Admin Architect will propose the default (auto-discovered) set of columns for publishing at index screen.
 You can always change the default look & feel by customizing any column in a set.

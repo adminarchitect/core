@@ -2,7 +2,7 @@
 
 Like any other administration framework, Admin Architect provides a simple way to split big collections to pages.
 
-![Scopes](http://docs.adminarchitect.com/docs/images/index/pagination.jpg)
+![Scopes](http://docs.adminarchitect.com/images/index/pagination.jpg)
 
 You can set the number of records fetched by default per resources:
 

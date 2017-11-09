@@ -12,7 +12,7 @@ To understand better, here are some examples:
 
 ### Single (Row-Based) Actions
 
-![Single actions](http://docs.adminarchitect.com/docs/images/index/single_actions.jpg)
+![Single actions](http://docs.adminarchitect.com/images/index/single_actions.jpg)
 
 CRUD (Create, Read, Update, Delete) actions are enabled out of the box for every single record in a resource collection.
 
@@ -262,7 +262,7 @@ class ToggleActiveStatus
 
 ### Batch Actions
 
-![Batch actions](http://docs.adminarchitect.com/docs/images/index/batch_actions.jpg)
+![Batch actions](http://docs.adminarchitect.com/images/index/batch_actions.jpg)
 
 Along with single actions Admin Architect provides a very simple way to manage collections of items.
 

@@ -1,6 +1,6 @@
 ## Show Resource Page
 
-![Scopes](http://docs.adminarchitect.com/docs/images/index/presenters.jpg)
+![Scopes](http://docs.adminarchitect.com/images/index/presenters.jpg)
 
 Every single row in your resource is available for preview out of the box.
 
@@ -123,4 +123,4 @@ class UserStats extends AbstractWidget implements Widgetable
     }
 }
 ```
-![Scopes](http://docs.adminarchitect.com/docs/images/index/view_widgets.jpg)
+![Scopes](http://docs.adminarchitect.com/images/index/view_widgets.jpg)
