@@ -1,6 +1,6 @@
 ## Presenters
 
-![Presenters](http://docs.adminarchitect.com/images/index/presenters.jpg)
+![Admin Architect - Presenters](http://docs.adminarchitect.com/images/index/presenters.jpg)
 
 Customizing every single column in a `columns()` method is a good idea, but it can by annoying for complex resources, also it leaves untouched the View Resource & Relations pages.
 

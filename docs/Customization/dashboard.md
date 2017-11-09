@@ -1,6 +1,6 @@
 ## Dashboard
 
-![Overview](http://docs.adminarchitect.com/images/dashboard/dashboard.jpg)
+![Admin Architect - Dashboard](http://docs.adminarchitect.com/images/dashboard/dashboard.jpg)
 
 Dashboard probably is the most-visited by administrators page of every admin panel! 
 And Admin Architect doesn't want to be an exception.
@@ -51,7 +51,7 @@ class Overview implements Widgetable
 
 The contents of view is too long for placing here, we just will show the result you may see.
 
-![Overview](http://docs.adminarchitect.com/images/dashboard/overview.jpg)
+![Admin Architect - Dashboard - Overview panel](http://docs.adminarchitect.com/images/dashboard/overview.jpg)
 
 Another example:
 
@@ -109,6 +109,6 @@ protected function registerPanels()
 }
 ```
 
-![Overview](http://docs.adminarchitect.com/images/dashboard/registrations.jpg)
+![Admin Architect - Dashboard -> Registrations Panel](http://docs.adminarchitect.com/images/dashboard/registrations.jpg)
 
 There is no limits how many widgets (panels) you can use in Dashboard and how to style them.

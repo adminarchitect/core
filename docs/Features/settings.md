@@ -2,7 +2,7 @@
 
 * *requires adminarchitect/options package*
 
-![Overview](http://docs.adminarchitect.com/images/plugins/settings.jpg)
+![Admin Architect - Settings](http://docs.adminarchitect.com/images/plugins/settings.jpg)
 
 ### Installation
 

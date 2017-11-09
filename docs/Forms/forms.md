@@ -1,6 +1,6 @@
 ## Forms
 
-![Scopes](http://docs.adminarchitect.com/images/form/edit.jpg)
+![Admin Architect - Form](http://docs.adminarchitect.com/images/form/edit.jpg)
 
 Admin Architect gives you a complete control over the output of the form by creating a thin DSL on top of Illuminate\Form package:
 

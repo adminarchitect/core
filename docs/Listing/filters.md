@@ -8,7 +8,7 @@ Admin Architect provides a set of default tools for you to build a compelling in
 
 ### Filters
 
-![Filters](http://docs.adminarchitect.com/images/index/filters.jpg)
+![Admin Architect - Filters](http://docs.adminarchitect.com/images/index/filters.jpg)
 
 Admin Architect provides a simple search implementation, allowing you to search/filter records in your application.
 
@@ -67,7 +67,7 @@ To disable filters for specific resource - remove Filtrable interface from Resou
 
 ### Scopes
 
-![Scopes](http://docs.adminarchitect.com/images/index/scopes.jpg)
+![Admin Architect - Scopes](http://docs.adminarchitect.com/images/index/scopes.jpg)
 
 As like as for filters feature, if Resource implements interface `Filtrable` it will parse the Eloquent model for any available scopes (having no dynamic arguments).
 

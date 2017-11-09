@@ -119,7 +119,7 @@ class PostTranslation extends Model
 ```
 
 Now, our edit form will have a look like this:
-![Overview](http://docs.adminarchitect.com/images/plugins/multilingual.png)
+![Admin Architect - Multilingual support](http://docs.adminarchitect.com/images/plugins/multilingual.png)
 
 As you might see, any `translatable` attribute has language switch box.
 Also all `translatable` attributes are available in `columns` grid.
