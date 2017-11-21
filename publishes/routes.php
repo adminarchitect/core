@@ -52,6 +52,11 @@ Route::group([
             'uses' => 'DashboardController@index',
         ]);
 
+        Route::resource('translations', 'TranslationsController', [
+            'only' => ['index', 'store'],
+            'as' => 'scaffold',
+        ]);
+
         Route::group(['prefix' => 'media'], function () {
             Route::get('/', [
                 'as' => 'scaffold.media',
@@ -65,27 +70,27 @@ Route::group([
 
             Route::post('/', [
                 'as' => 'scaffold.media.mkdir',
-                'uses' => 'MediaController@mkdir'
+                'uses' => 'MediaController@mkdir',
             ]);
 
             Route::post('rename', [
                 'as' => 'scaffold.media.rename',
-                'uses' => 'MediaController@rename'
+                'uses' => 'MediaController@rename',
             ]);
 
             Route::post('move', [
                 'as' => 'scaffold.media.move',
-                'uses' => 'MediaController@move'
+                'uses' => 'MediaController@move',
             ]);
 
             Route::post('remove', [
                 'as' => 'scaffold.media.remove',
-                'uses' => 'MediaController@removeSelected'
+                'uses' => 'MediaController@removeSelected',
             ]);
 
             Route::post('upload', [
                 'as' => 'scaffold.media.upload',
-                'uses' => 'MediaController@upload'
+                'uses' => 'MediaController@upload',
             ]);
         });
 

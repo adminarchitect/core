@@ -7,6 +7,7 @@ return [
     'view'          => 'View',
     'delete'        => 'Delete',
     'save'          => 'Save',
+    'reset'         => 'Reset',
     'save_return'   => 'Save &amp; Return',
     'save_create'   => 'Save &amp; Create new',
     'download'      => 'Download',

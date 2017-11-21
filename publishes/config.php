@@ -92,5 +92,12 @@ return [
         // 'users' => ['csv', 'pdf'],
     ],
 
+    'translations' => [
+        'filters' => [
+            'only' => null, // ['auth', 'validation']
+            'except' => null, // ['password', 'pagination']
+        ],
+    ],
+
     'version' => '1.3',
 ];

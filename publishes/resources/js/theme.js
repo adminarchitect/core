@@ -2,7 +2,7 @@ class AdminArchitect {
     constructor() {
         [
             'SidebarNavigation', 'Panels', 'Collections', 'BatchActions',
-            'DateControls', 'LiveSearch', 'Fancybox', 'Translatable',
+            'DateControls', 'LiveSearch', 'Fancybox', 'Translatable', 'Translations',
         ].map((method) => {
             AdminArchitect['handle' + method].call();
         });
@@ -15,6 +15,29 @@ class AdminArchitect {
                 lc = fn.data('locale');
 
             fn.closest('form').find('a[data-locale="' + lc + '"]').tab('show');
+        });
+    }
+
+    static handleTranslations() {
+        const activate = function(fn) {
+            fn.addClass('active').siblings('button').removeClass('active');
+        };
+
+        $('.global button[data-locale]').click(({target}) => {
+            const fn = $(target), locale = fn.data('locale');
+            $(fn).closest('table').find('tbody button[data-locale="' + locale + '"]').each(function(i, button) {
+                $(button).trigger('click');
+            });
+            activate(fn);
+        });
+
+        $('tbody button[data-locale]').click(({target}) => {
+            const fn = $(target), locale = fn.data('locale');
+            fn.closest('tr').find('.translatable').each((i, e) => {
+                const item = $(e);
+                item[item.data('locale') === locale ? 'removeClass' : 'addClass']('hidden');
+            });
+            activate(fn);
         });
     }
 
