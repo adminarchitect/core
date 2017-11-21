@@ -31,7 +31,7 @@
     @if ($columns->count())
         @component('administrator::components.index.index', ['module' => $module, 'items' => $items])
             @slot('checkboxes')
-                @if($actions->batch()->count())
+                @if($actions->batch()->count() && !$actions->readonly())
                     <th width="10">
                         <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
                             <input type="checkbox"

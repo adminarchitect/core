@@ -1,5 +1,5 @@
 <tr>
-    @if ($actions->batch()->count())
+    @if ($actions->batch()->count() && !$actions->readonly())
         <th>
             <label for="collection_{{$item->getKey()}}">
                 <input type="checkbox"
