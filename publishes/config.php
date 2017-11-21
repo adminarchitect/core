@@ -94,7 +94,9 @@ return [
 
     'translations' => [
         'filters' => [
+            # build filters based on specific translation files
             'only' => null, // ['auth', 'validation']
+            # except some translation files from filters
             'except' => null, // ['password', 'pagination']
         ],
     ],
