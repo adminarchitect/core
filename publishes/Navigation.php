@@ -54,8 +54,17 @@ class Navigation
                 $tools->url(
                     route('scaffold.media'),
                     trans('administrator::buttons.media'),
-                    99,
+                    98,
                     ['icon' => 'fa fa-file-text-o']
+                );
+            }
+
+            if (app('scaffold.config')->get('translations.enabled')) {
+                $tools->url(
+                    route('scaffold.translations.index'),
+                    trans('administrator::buttons.translations'),
+                    99,
+                    ['icon' => 'fa fa-globe']
                 );
             }
 

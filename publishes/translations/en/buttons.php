@@ -18,6 +18,7 @@ return [
     'batch_actions' => 'Batch Actions',
     'clear_filters' => 'Clear',
     'media'         => 'Media',
+    'translations'  => 'Translations',
     'upload'        => 'Upload',
     'next'          => 'Next',
     'previous'      => 'Previous',
