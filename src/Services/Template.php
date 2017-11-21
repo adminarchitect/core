@@ -51,6 +51,22 @@ class Template implements TemplateProvider
     }
 
     /**
+     * Scaffold translations templates.
+     *
+     * @param $partial
+     * @return mixed array|string
+     */
+    public function translations($partial = 'index')
+    {
+        $partials = $this->map(
+            'translations',
+            ['index']
+        );
+
+        return (null === $partial ? $partials : $partials[$partial]);
+    }
+
+    /**
      * Scaffold view templates
      *
      * @param $partial

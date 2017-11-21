@@ -36,7 +36,7 @@ class TranslationsController extends AdminController
 
         $pagination->appends(compact('term', 'only'));
 
-        return view('administrator::translations.index', [
+        return view(app('scaffold.template')->translations('index'), [
             'pagination' => $pagination,
             'scopes' => $this->translator->filters(),
         ]);
