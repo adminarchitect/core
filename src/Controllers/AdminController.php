@@ -4,7 +4,6 @@ namespace Terranet\Administrator\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
@@ -39,7 +38,6 @@ abstract class AdminController extends BaseController
         if (!$response = app('scaffold.actions')->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
-                $arguments,
                 trans('administrator::errors.unauthorized')
             );
         }
@@ -79,18 +77,15 @@ abstract class AdminController extends BaseController
      * Throw an unauthorized exception based on gate results.
      *
      * @param  string $ability
-     * @param  mixed|array $arguments
      * @param  string $message
      * @param  \Exception $previousException
      * @return \Symfony\Component\HttpKernel\Exception\HttpException
      */
     protected function createGateUnauthorizedException(
         $ability,
-        $arguments,
         $message = 'This action is unauthorized.',
         $previousException = null
-    )
-    {
+    ) {
         $message = sprintf($message . ' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);
