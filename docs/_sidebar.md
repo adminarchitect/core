@@ -27,3 +27,5 @@
 - Features
   - [Settings](Features/settings.md)
   - [Multilingual Support](Features/multilanguage.md)
+  - [File Manager](Features/media.md)
+  - [Translations Manager](Features/translations.md)

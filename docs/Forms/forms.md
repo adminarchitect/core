@@ -113,3 +113,34 @@ class User extends Eloquent implements StaplerableInterface
 }
 ```
 For more info please checkout its documentation by accessing https://github.com/CodeSleeve/laravel-stapler.
+
+### Media collection
+
+![Admin Architect - Media](http://docs.adminarchitect.com/images/form/media.png)
+
+Sometimes you may need to have multiple images attached to an Eloquent model.
+Let's say your User model should have many Images.
+In Admin Architect adding a `media` collection is quite easy:
+Admin Architect uses [Laravel MediaLibrary](https://github.com/spatie/laravel-medialibrary) package.
+So the very first thing you have to do - configure your model to use Media Library.
+Then in your resource you can call method `media` to add a `media` control to edit form. 
+
+```php
+# Ex.: app/Http/Terranet/Administrator/Modules/Users.php
+
+public function form()
+{
+    return $this->scaffoldForm()
+                ->media('galaxy', function (FormElement $element) {
+                    /** @var $media MediaElement */
+                    $media = $element->getInput();
+                    $media->hasArrows(true)             # [optional] if it should have navigation arrows
+                          ->hasIndicators(true)         # [optional] if it should have navigation bullets
+                          ->convertedTo('thumbnail')    # [optional] show specific conversion
+                          ->autoPlay(2)                 # [optional] set auto play duration (sec) - doesn't work for forms (only in columns) 
+                          ->maxWidth(200);              # [optional] set max width
+                });
+}
+```
+
+P.S. you can use the same `media()` method when listing/viewing models `<Resource>::columns()` & `<Resource>::viewColumns()`.
