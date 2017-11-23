@@ -22,9 +22,7 @@ class AuthProvider
      */
     public function handle($request, Closure $next)
     {
-        app('auth.driver')->setProvider(
-            new AuthUserProvider(app('hash'), app('scaffold.config')->get('auth.model'))
-        );
+        auth()->shouldUse('admin');
 
         return $next($request);
     }
