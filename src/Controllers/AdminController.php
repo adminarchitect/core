@@ -14,15 +14,12 @@ abstract class AdminController extends BaseController
 {
     public function __construct()
     {
-        if (!guarded_auth()) {
-            $this->middleware(AuthProvider::class);
-        }
-
-        $this->middleware(Authenticate::class);
-
-        $this->middleware(Resources::class);
-
-        $this->middleware(Badges::class);
+        $this->middleware([
+            AuthProvider::class,
+            Authenticate::class,
+            Resources::class,
+            Badges::class,
+        ]);
     }
 
     /**

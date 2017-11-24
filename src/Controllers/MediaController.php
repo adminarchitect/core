@@ -31,13 +31,15 @@ class MediaController extends AdminController
      */
     public function __construct(FileStorage $storage)
     {
-        $this->storage = $storage;
-        $this->initBreadcrumbs();
-
         parent::__construct();
 
-        $this->middleware(ProtectMedia::class);
-        $this->middleware(SanitizePaths::class);
+        $this->middleware([
+            ProtectMedia::class,
+            SanitizePaths::class,
+        ]);
+
+        $this->initBreadcrumbs();
+        $this->storage = $storage;
     }
 
     public function popup(Request $request)
@@ -58,14 +60,9 @@ class MediaController extends AdminController
             })
             ->merge($this->storage->directories($directory));
 
-        $data = [
-            'files' => $files,
-            'path' => $path,
-            'breadcrumbs' => $this->breadcrumbs($directory, $popup),
-            'popup' => $popup,
-        ];
+        $breadcrumbs = $this->breadcrumbs($directory, $popup);
 
-        return view(app('scaffold.template')->media('index'), $data);
+        return view(app('scaffold.template')->media('index'), compact('files', 'path', 'breadcrumb', 'popup'));
     }
 
     public function mkdir(Request $request)

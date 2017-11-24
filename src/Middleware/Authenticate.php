@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Terranet\Administrator\PermissionChecker;
+use Terranet\Administrator\PermissionChecker as Guard;
 
 class Authenticate
 {
@@ -13,20 +13,20 @@ class Authenticate
     protected $loginUrl;
 
     /**
-     * @var PermissionChecker
+     * @var Guard
      */
-    private $permissionChecker;
+    protected $guard;
 
     /**
      * Authenticate constructor.
      *
-     * @param PermissionChecker $permissionChecker
+     * @param Guard $guard
      */
-    public function __construct(PermissionChecker $permissionChecker)
+    public function __construct(Guard $guard)
     {
         $this->settings = app('scaffold.config');
         $this->loginUrl = route('scaffold.login');
-        $this->permissionChecker = $permissionChecker;
+        $this->guard = $guard;
     }
 
     /**
@@ -41,7 +41,7 @@ class Authenticate
         // 1. Check global permission
         $rule = $this->settings->get('permission');
 
-        $response = $this->permissionChecker->isPermissionGranted(
+        $response = $this->guard->isPermissionGranted(
             app($rule)->validate()
         );
 

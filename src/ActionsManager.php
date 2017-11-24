@@ -113,6 +113,8 @@ class ActionsManager implements ActionsManagerContract
     public function readonly()
     {
         if (null === $this->readonly) {
+            $this->readonly = false;
+
             # check for <Resource>::hideActions() method.
             if (method_exists($this->module, 'readonly')) {
                 $this->readonly = $this->module->readonly();
@@ -121,11 +123,6 @@ class ActionsManager implements ActionsManagerContract
             # check for <Actions>::readonly() method.
             elseif (method_exists($this->service, 'readonly')) {
                 $this->readonly = $this->service->readonly();
-            }
-
-            # allow actions if no other policy defined
-            else {
-                $this->readonly = false;
             }
         }
 
@@ -161,6 +158,6 @@ class ActionsManager implements ActionsManagerContract
         }
 
         // Execute CRUD action
-        return call_user_func_array([$this->service, $method], (array)$arguments);
+        return call_user_func_array([$this->service, $method], (array) $arguments);
     }
 }
