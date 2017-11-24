@@ -62,7 +62,10 @@ class MediaController extends AdminController
 
         $breadcrumbs = $this->breadcrumbs($directory, $popup);
 
-        return view(app('scaffold.template')->media('index'), compact('files', 'path', 'breadcrumb', 'popup'));
+        return view(
+            app('scaffold.template')->media('index'),
+            compact('files', 'path', 'breadcrumbs', 'popup')
+        );
     }
 
     public function mkdir(Request $request)
