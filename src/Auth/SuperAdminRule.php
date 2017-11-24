@@ -2,15 +2,19 @@
 
 namespace Terranet\Administrator\Auth;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 class SuperAdminRule
 {
-    public function validate()
+    public function validate(Authenticatable $user = null)
     {
-        if (auth('admin')->guest()) {
+        $user = $user ?: auth()->user();
+
+        if (!$user) {
             return false;
         }
 
-        if (method_exists($user = auth('admin')->user(), 'isSuperAdmin')) {
+        if (method_exists($user, 'isSuperAdmin')) {
             return call_user_func([$user, 'isSuperAdmin']);
         }
 
