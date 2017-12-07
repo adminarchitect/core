@@ -101,6 +101,4 @@ return [
             'except' => null, // ['password', 'pagination']
         ],
     ],
-
-    'version' => '1.3',
 ];
