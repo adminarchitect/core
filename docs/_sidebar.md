@@ -17,6 +17,7 @@
 - Create/Edit Resource
   - [Forms](Forms/forms.md)
   - [Persisting Forms](Forms/savers.md)
+  - [Form Validation](Forms/validation.md)
 
 - Customization
   - [Navigation](Customization/navigation.md)
