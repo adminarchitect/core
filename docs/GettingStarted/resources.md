@@ -5,7 +5,7 @@
 ### Create a Resource
 
 Resource is the main container of all services provided by Admin Architect out of the box.
-Resources handle Index Screens, Filters & Scopes, Create/Edit forms, Single & Butch Actions, Views, Exports and many other features.
+Resources handle Index Screens, Filters & Scopes, Create/Edit forms, Single & Batch Actions, Views, Exports and many other features.
 
 The basic command for creating a resource is:
 
