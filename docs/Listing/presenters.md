@@ -22,7 +22,7 @@ class Post extends Model implements \Terranet\Presentable\PresentableInterface
 }
 
 /** @class App\Presenters\PostPresenter */
-class PostPresenter extends Presenter
+class PostPresenter extends Terranet\Presentable\Presenter
 {
     public function title()
     {
