@@ -38,7 +38,7 @@ Within our `abilities`, we will determine if the logged in user has the ability 
 For this purpose we'll need to have the these `abilities` defined in our `Actions` service (See [Create Actions](/Listing/actions?id=create-actions) section).
 
 ```php
-# Actons\Posts::class
+# Actions\Posts::class
 
 /**
  * @param $user - Logged in user
