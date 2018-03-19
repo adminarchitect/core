@@ -19,7 +19,7 @@
         "terranet/presentable": "^1.0",
         "terranet/translatable": "^1.0",
         "terranet/localizer": "^1.0",
-        "zendframework/zend-code": "^3.3"
+        "zendframework/zend-code": "^2.6|^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.7",
