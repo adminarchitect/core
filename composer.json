@@ -34,6 +34,9 @@
             "src/helpers.php"
         ]
     },
+    "scripts": {
+        "tests": "vendor/bin/phpunit --coverage-clover=\"coverage.yml\""
+    },
     "extra": {
         "laravel": {
             "providers": [
