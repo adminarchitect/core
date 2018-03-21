@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![composer.lock available][ico-lock]][link-lock]
 [![Latest Stable Version][ico-stable]][link-stable]
 
 Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
@@ -24,8 +23,8 @@ The Admin Architect is open-sourced software licensed under the [MIT license](ht
 
 [ico-version]: https://img.shields.io/packagist/v/adminarchitect/core.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/adminarchitect/core.svg?style=flat-square
-[ico-stable]: https://poser.pugx.org/phpunit/phpunit/version
+[ico-stable]: https://poser.pugx.org/adminarchitect/core/version
 
 [link-packagist]: https://packagist.org/packages/adminarchitect/core
 [link-downloads]: https://packagist.org/packages/adminarchitect/core
-[link-stable]: https://packagist.org/packages/phpunit/phpunit
+[link-stable]: https://packagist.org/packages/adminarchitect/core
