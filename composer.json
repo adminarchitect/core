@@ -7,6 +7,7 @@
             "email": "endi1982@gmail.com"
         }
     ],
+    "license": "MIT",
     "require": {
         "php": ">=5.6.4",
         "laravelcollective/html": "5.*|dev-master",
