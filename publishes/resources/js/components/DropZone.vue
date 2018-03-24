@@ -6,11 +6,11 @@
         <div class="panel-body">
             <div class="text-center" id="dropzone-container">
                 <vue-clip :options="options" :on-complete="onComplete" :on-init="onInit">
-                    <template slot="clip-uploader-action" scope="state">
+                    <template slot="clip-uploader-action" slot-scope="state">
                         <div class="media-drop-zone progress" :class="{'drag-over': state.dragging}">Click or Drag and Drop files here upload.</div>
                     </template>
 
-                    <template slot="clip-uploader-body" scope="state">
+                    <template slot="clip-uploader-body" slot-scope="state">
                         <ul class="list-unstyled">
                             <li v-for="file in state.files">
                                 <div class="text-left queue-item">
