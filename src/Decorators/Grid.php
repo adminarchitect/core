@@ -2,18 +2,18 @@
 
 namespace Terranet\Administrator\Decorators;
 
-use Codesleeve\Stapler\ORM\StaplerableInterface;
-use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Columns\Decorators\AttachmentDecorator;
-use Terranet\Administrator\Columns\Decorators\BooleanDecorator;
-use Terranet\Administrator\Columns\Decorators\CellDecorator;
-use Terranet\Administrator\Columns\Decorators\DatetimeDecorator;
-use Terranet\Administrator\Columns\Decorators\RankDecorator;
-use Terranet\Administrator\Columns\Decorators\StringDecorator;
-use Terranet\Administrator\Columns\Decorators\TextDecorator;
-use Terranet\Administrator\Columns\Element;
 use Terranet\Rankable\Rankable;
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Translatable\Translatable;
+use Terranet\Administrator\Columns\Element;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Terranet\Administrator\Columns\Decorators\CellDecorator;
+use Terranet\Administrator\Columns\Decorators\RankDecorator;
+use Terranet\Administrator\Columns\Decorators\TextDecorator;
+use Terranet\Administrator\Columns\Decorators\StringDecorator;
+use Terranet\Administrator\Columns\Decorators\BooleanDecorator;
+use Terranet\Administrator\Columns\Decorators\DatetimeDecorator;
+use Terranet\Administrator\Columns\Decorators\AttachmentDecorator;
 
 class Grid
 {
@@ -46,7 +46,7 @@ class Grid
     protected function getDecorator($column)
     {
         // decorate attachment
-        if ($this->model instanceof StaplerableInterface
+        if ($this->model instanceof AttachableInterface
             && method_exists($this->model, 'getAttachedFiles')
             && array_key_exists($column, $this->model->getAttachedFiles())
         ) {
@@ -57,7 +57,7 @@ class Grid
         if ($this->model instanceof Translatable) {
             $translation = $this->model->getTranslationModel();
 
-            if ($translation instanceof StaplerableInterface
+            if ($translation instanceof AttachableInterface
                 && method_exists($translation, 'getAttachedFiles')
                 && array_key_exists($column, $translation->getAttachedFiles())
             ) {

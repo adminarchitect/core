@@ -2,9 +2,9 @@
 
 namespace Terranet\Administrator\Form\Type;
 
-use Codesleeve\Stapler\Attachment;
 use Form;
 use Terranet\Administrator\Form\Element;
+use Czim\Paperclip\Attachment\Attachment;
 
 class File extends Element
 {
@@ -38,6 +38,7 @@ class File extends Element
 
         if ($this->hasFile()) {
             $files = $this->listFiles();
+
             $output = $files
                 . ($this->forceDelete ? $this->detachLink() : '');
         }
@@ -62,15 +63,10 @@ class File extends Element
      */
     protected function listFiles()
     {
-        $files = [];
-
-        foreach ($this->value()->getConfig()->styles as $style) {
-            $files[] = link_to($this->value()->url($style->name), $this->value()->originalFilename());
-        }
-
-        $files = implode('&nbsp;', $files);
-
-        return $files;
+        return link_to(
+            $this->value()->url('original'),
+            $this->value()->originalFilename()
+        );
     }
 
     /**
@@ -83,23 +79,21 @@ class File extends Element
 
     /**
      * @return string
-     *
-     * @throws \Terranet\Administrator\Exception
      */
     protected function detachLink()
     {
         return ''
-        . '<div style="margin-top: 10px;">'
-        . link_to_route('scaffold.delete_attachment', 'Delete file', [
-            'module' => app('scaffold.module'),
-            'attachment' => $this->getName(),
-            'id' => $this->getRepository()->getKey(),
-        ], [
-            'onclick' => 'return confirm(\'Are you sure?\');',
-            'class' => 'btn btn-danger',
-            'style' => 'padding: 2px 46px;',
-        ])
-        . '</div>';
+            . '<div style="margin-top: 10px;">'
+            . link_to_route('scaffold.delete_attachment', 'Delete file', [
+                'module' => app('scaffold.module'),
+                'attachment' => $this->getName(),
+                'id' => $this->getRepository()->getKey(),
+            ], [
+                'onclick' => 'return confirm(\'Are you sure?\');',
+                'class' => 'btn btn-danger',
+                'style' => 'padding: 2px 46px;',
+            ])
+            . '</div>';
     }
 
     /**
