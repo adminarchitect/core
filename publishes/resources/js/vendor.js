@@ -5,13 +5,13 @@ window.$ = window.jQuery = require('jquery');
 window.moment = require('moment');
 
 /* Bootstrap */
-require('bootstrap/js/tab');
-require('bootstrap/js/dropdown');
-require('bootstrap/js/modal');
-require('bootstrap/js/collapse');
-require('bootstrap/js/alert');
-require('bootstrap/js/carousel');
-require('bootstrap/js/transition');
+require('adminarchitect-mix/node_modules/bootstrap/js/tab');
+require('adminarchitect-mix/node_modules/bootstrap/js/dropdown');
+require('adminarchitect-mix/node_modules/bootstrap/js/modal');
+require('adminarchitect-mix/node_modules/bootstrap/js/collapse');
+require('adminarchitect-mix/node_modules/bootstrap/js/alert');
+require('adminarchitect-mix/node_modules/bootstrap/js/carousel');
+require('adminarchitect-mix/node_modules/bootstrap/js/transition');
 
 /* Date/DateRange pickers */
 require('bootstrap-datepicker');
