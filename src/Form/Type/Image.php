@@ -3,7 +3,6 @@
 namespace Terranet\Administrator\Form\Type;
 
 use Coduo\PHPHumanizer\StringHumanizer;
-use Terranet\Administrator\Exception;
 
 class Image extends File
 {
@@ -19,20 +18,19 @@ class Image extends File
     {
         $files = [];
 
-        $styles = $this->value()->getConfig()->styles;
-
-        foreach ($styles as $style) {
-            list($w, $h) = $this->getThumbnailSize($style);
+        if (!array_has($variants = $this->value()->getConfig()['variants'], 'original')) {
+            $variants['original'] = 'original';
+        }
+        foreach ($variants as $name => $style) {
+            list($w, $h) = $this->getThumbnailSize($style, $name);
 
             $img =
-                '<a href="' . $this->value()->url($style->name) . '" class="fancybox" style="' . static::$hrefStyle . '">' .
-                '   <img src="' . $this->value()->url($style->name) . '" style="width: ' . ($w ?: 'auto') . 'px; height: ' . ($h ?: 'auto') . 'px;" />' .
-                '   <div>' .
-                '   ' . StringHumanizer::humanize($style->name) .
-                '   </div>' .
+                '<a rel="' . str_slug($this->getFormName()) . '" href="' . $this->value()->url($name) . '" class="fancybox" style="' . static::$hrefStyle . '">' .
+                '   <img src="' . $this->value()->url($name) . '" style="width: ' . ($w ? "{$w}px" : 'auto') . '; height: ' . ($h ? "{$h}px" : 'auto') . '" />' .
+                '   <div>' . StringHumanizer::humanize($name) . '</div>' .
                 '</a>';
 
-            $files[$style->name] = $img;
+            $files[$name] = $img;
         }
 
         $columnStart = '<div style="' . static::$blockStyle . '">';
@@ -49,13 +47,15 @@ class Image extends File
         return 'original' == $style->name;
     }
 
-    protected function dimensions($style)
+    protected function dimensions($style, $name)
     {
-        if ($style->dimensions && str_contains('x', $style->dimensions)) {
-            return array_map('intval', explode('x', $style->dimensions));
+        $dimensions = array_get($style, 'resize.dimensions');
+
+        if ($dimensions && str_contains('x', $dimensions)) {
+            return array_map('intval', explode('x', $dimensions));
         }
 
-        if (!$size = @getimagesize($this->value()->path($style->name))) {
+        if (!$size = @getimagesize($this->value()->path($name))) {
             return [1, 1];
         }
 
@@ -64,16 +64,18 @@ class Image extends File
 
     /**
      * @param $style
+     * @param $name
+     *
      * @return array
      */
-    protected function getThumbnailSize($style)
+    protected function getThumbnailSize($style, $name)
     {
-        list($w, $h) = $this->dimensions($style);
+        list($w, $h) = $this->dimensions($style, $name);
 
         $ratio = $this->thumbSize / min(($w ?: $h), ($h ?: $w));
 
-        $w = (int) round($w * $ratio, 0);
-        $h = (int) round($h * $ratio, 0);
+        $w = (int)round($w * $ratio, 0);
+        $h = (int)round($h * $ratio, 0);
 
         return [$w, $h];
     }

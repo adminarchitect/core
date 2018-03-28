@@ -3,13 +3,13 @@
 namespace Terranet\Administrator\Console;
 
 use Artisan;
-use Codesleeve\LaravelStapler\Providers\L5ServiceProvider;
-use Creativeorange\Gravatar\GravatarServiceProvider;
-use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 use Illuminate\Console\Command;
 use Pingpong\Menus\MenusServiceProvider;
 use Terranet\Administrator\ServiceProvider;
+use Creativeorange\Gravatar\GravatarServiceProvider;
 use Terranet\Administrator\Traits\SessionGuardHelper;
+use Czim\Paperclip\Providers\PaperclipServiceProvider;
+use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 
 class PublishCommand extends Command
 {
@@ -101,7 +101,7 @@ class PublishCommand extends Command
 
     protected function publishDependencies()
     {
-        $this->dependencies()->each(function($provider) {
+        $this->dependencies()->each(function ($provider) {
             Artisan::call('vendor:publish', [
                 '--provider' => $provider
             ]);
@@ -115,7 +115,7 @@ class PublishCommand extends Command
     protected function dependencies()
     {
         return collect([
-            L5ServiceProvider::class,
+            PaperclipServiceProvider::class,
             BreadcrumbsServiceProvider::class,
             MenusServiceProvider::class,
             GravatarServiceProvider::class,

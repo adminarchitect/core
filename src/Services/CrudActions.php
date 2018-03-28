@@ -2,16 +2,17 @@
 
 namespace Terranet\Administrator\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Actions\RemoveSelected;
-use Terranet\Administrator\Actions\SaveOrder;
-use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract;
-use Terranet\Administrator\Contracts\Services\Saver;
-use Terranet\Administrator\Exception;
-use Terranet\Administrator\Requests\UpdateRequest;
-use Terranet\Administrator\Scaffolding;
-use Terranet\Administrator\Traits\ExportsCollection;
 use Terranet\Rankable\Rankable;
+use Terranet\Administrator\Exception;
+use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Scaffolding;
+use Czim\Paperclip\Attachment\Attachment;
+use Terranet\Administrator\Actions\SaveOrder;
+use Terranet\Administrator\Requests\UpdateRequest;
+use Terranet\Administrator\Actions\RemoveSelected;
+use Terranet\Administrator\Contracts\Services\Saver;
+use Terranet\Administrator\Traits\ExportsCollection;
+use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract;
 
 class CrudActions implements CrudActionsContract
 {
@@ -90,7 +91,7 @@ class CrudActions implements CrudActionsContract
     public function detachFile(Model $item, $attachment)
     {
         try {
-            $item->$attachment = STAPLER_NULL;
+            $item->$attachment = Attachment::NULL_ATTACHMENT;
             $item->save();
 
             return true;
@@ -102,9 +103,10 @@ class CrudActions implements CrudActionsContract
     /**
      * Destroy item callback.
      *
-     * @param $item
+     * @param Model $item
      *
      * @return string
+     * @throws \Exception
      */
     public function delete(Model $item)
     {

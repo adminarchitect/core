@@ -2,17 +2,17 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use DB;
+use function admin\db\scheme;
 use function admin\db\connection;
 use function admin\db\enum_values;
-use function admin\db\scheme;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
-use DB;
 use Doctrine\DBAL\Schema\Column;
-use Terranet\Administrator\Form\Collection\Mutable;
-use Terranet\Administrator\Form\FormElement;
-use Terranet\Administrator\Form\InputFactory;
-use Terranet\Administrator\Form\Type\Select;
 use Terranet\Translatable\Translatable;
+use Terranet\Administrator\Form\FormElement;
+use Terranet\Administrator\Form\Type\Select;
+use Terranet\Administrator\Form\InputFactory;
+use Terranet\Administrator\Form\Collection\Mutable;
+use Czim\Paperclip\Contracts\AttachableInterface;
 
 trait HasForm
 {
@@ -45,8 +45,9 @@ trait HasForm
         $editable = new Mutable;
 
         if ($eloquent = $this->model()) {
-            $editable = $editable->merge($translatable = $this->scaffoldTranslatable($eloquent))
-                                 ->merge($eloquent->getFillable());
+            $editable = $editable
+                ->merge($translatable = $this->scaffoldTranslatable($eloquent))
+                ->merge($eloquent->getFillable());
 
             return $editable->map(function ($name) use ($eloquent, $translatable) {
                 $formElement = InputFactory::make(
@@ -103,7 +104,7 @@ trait HasForm
             return $types[$column];
         }
 
-        if ($eloquent instanceof StaplerableInterface
+        if ($eloquent instanceof AttachableInterface
             && array_key_exists($column, $attachments = $eloquent->getAttachedFiles())
         ) {
             return $this->getAttachmentType($column, $attachments);
@@ -171,11 +172,11 @@ trait HasForm
     /**
      * @param $column
      * @param $attachments
-     * @return array
+     * @return string
      */
     protected function getAttachmentType($column, $attachments)
     {
-        return count($attachments[$column]->getConfig()->styles) <= 1 ? 'file' : 'image';
+        return count($attachments[$column]->variants()) ? 'image' : 'file';
     }
 
     protected function scaffoldTranslatable($eloquent)

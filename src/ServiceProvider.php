@@ -2,20 +2,20 @@
 
 namespace Terranet\Administrator;
 
-use Codesleeve\LaravelStapler\Providers\L5ServiceProvider as StaplerServiceProvider;
+use Pingpong\Menus\MenuFacade;
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
 use Collective\Html\HtmlServiceProvider;
+use Pingpong\Menus\MenusServiceProvider;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Creativeorange\Gravatar\GravatarServiceProvider;
-use DaveJamesMiller\Breadcrumbs\Facade as BreadcrumbsFacade;
-use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Pingpong\Menus\MenuFacade;
-use Pingpong\Menus\MenusServiceProvider;
-use Terranet\Administrator\Providers\ArtisanServiceProvider;
-use Terranet\Administrator\Providers\ContainersServiceProvider;
+use Czim\Paperclip\Providers\PaperclipServiceProvider;
 use Terranet\Administrator\Providers\EventServiceProvider;
+use DaveJamesMiller\Breadcrumbs\Facade as BreadcrumbsFacade;
+use Terranet\Administrator\Providers\ArtisanServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Terranet\Administrator\Providers\ContainersServiceProvider;
+use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -94,7 +94,7 @@ class ServiceProvider extends BaseServiceProvider
                 'Html' => HtmlFacade::class,
                 'Form' => FormFacade::class,
             ],
-            StaplerServiceProvider::class,
+            PaperclipServiceProvider::class,
             MenusServiceProvider::class => [
                 'AdminNav' => MenuFacade::class,
             ],

@@ -5,20 +5,20 @@ window.$ = window.jQuery = require('jquery');
 window.moment = require('moment');
 
 /* Bootstrap */
-require('bootstrap/js/tab');
-require('bootstrap/js/dropdown');
-require('bootstrap/js/modal');
-require('bootstrap/js/collapse');
-require('bootstrap/js/alert');
-require('bootstrap/js/carousel');
-require('bootstrap/js/transition');
+require('@adminarchitect/bootstrap/js/tab');
+require('@adminarchitect/bootstrap/js/dropdown');
+require('@adminarchitect/bootstrap/js/modal');
+require('@adminarchitect/bootstrap/js/collapse');
+require('@adminarchitect/bootstrap/js/alert');
+require('@adminarchitect/bootstrap/js/carousel');
+require('@adminarchitect/bootstrap/js/transition');
 
 /* Date/DateRange pickers */
-require('bootstrap-datepicker');
-require('bootstrap-daterangepicker');
+require('@adminarchitect/bootstrap-datepicker');
+require('@adminarchitect/bootstrap-daterangepicker');
 
 /* jQuery Toggles */
-require('jquery-toggles/toggles');
+require('@adminarchitect/jquery-toggles/toggles');
 
 require('selectize');
 window.fancybox = require('fancybox')($);

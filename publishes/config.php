@@ -93,7 +93,7 @@ return [
     ],
 
     'translations' => [
-        'enabled' => true,
+        'enabled' => false,
         'filters' => [
             # build filters based on specific translation files
             'only' => null, // ['auth', 'validation']

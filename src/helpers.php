@@ -41,8 +41,8 @@ namespace {
 
 namespace admin\db {
 
-    use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
+    use Illuminate\Database\Eloquent\Model;
     use Terranet\Translatable\Translatable;
 
     if (!function_exists('scheme')) {
@@ -131,15 +131,15 @@ namespace admin\db {
 
 namespace admin\helpers {
 
-    use Codesleeve\Stapler\ORM\StaplerableInterface;
+    use Illuminate\Support\Facades\Route;
     use Coduo\PHPHumanizer\StringHumanizer;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\Request;
-    use Illuminate\Support\Facades\Route;
+    use Terranet\Translatable\Translatable;
+    use Terranet\Presentable\PresentableInterface;
+    use Czim\Paperclip\Contracts\AttachableInterface;
     use Terranet\Administrator\Contracts\Form\HiddenElement;
     use Terranet\Administrator\Contracts\Module\Exportable;
-    use Terranet\Presentable\PresentableInterface;
-    use Terranet\Translatable\Translatable;
 
     if (!function_exists('html_list')) {
         /**
@@ -293,6 +293,7 @@ namespace admin\helpers {
          * @since  3.1.0
          * @param array $matches preg_replace_callback matches array
          * @returns string
+         * @return mixed
          */
         function autop_newline_preservation_helper($matches)
         {
@@ -347,7 +348,7 @@ namespace admin\helpers {
     if (!function_exists('eloquent_attribute')) {
         function eloquent_attribute(Model $object, $key)
         {
-            if ($object instanceof StaplerableInterface && array_key_exists($key, $object->getAttachedFiles())) {
+            if ($object instanceof AttachableInterface && array_key_exists($key, $object->getAttachedFiles())) {
                 return \admin\output\staplerImage($object->getAttribute($key));
             }
 
@@ -467,7 +468,7 @@ namespace admin\output {
     }
 
     /**
-     * Output image from Stapler attachment object
+     * Output image from Paperclip attachment object
      *
      * @param null $attachment
      * @param null $style
@@ -477,32 +478,38 @@ namespace admin\output {
     function staplerImage($attachment = null, $style = null, $attributes = [])
     {
         if ($attachment && $attachment->originalFilename()) {
-            if (count($styles = $attachment->getConfig()->styles)) {
-                if (count($styles) > 2) {
-                    $styles = array_filter($styles, function ($style) {
-                        return $style->name !== 'original';
-                    });
-                }
-                $firstStyle = $style ?: head($styles)->name;
-                $origStyle = last($styles)->name;
+            $styles = $attachment->variants();
+
+            if (count($styles)) {
+                $firstStyle = $style ?: head($styles);
+                $origStyle = 'original';
 
                 # in case then style dimensions are less than predefined, adjust width & height to style's
-                $aWidth = (int) array_get($attributes, 'width');
-                $aHeight = (int) array_get($attributes, 'height');
+                $aWidth = (int)array_get($attributes, 'width');
+                $aHeight = (int)array_get($attributes, 'height');
 
                 if (($aWidth || $aHeight) && $firstStyle) {
                     $size = array_filter($styles, function ($style) use ($firstStyle) {
-                        return $style->name == $firstStyle;
+                        return $style == $firstStyle;
                     });
 
-                    if (($size = array_shift($size)) && $size->dimensions) {
-                        list($width, $height) = explode('x', $size->dimensions);
-                        if ($aWidth > $width) {
-                            $attributes['width'] = $width;
+                    if (($size = array_shift($size))) {
+                        $dimensions = array_get($attachment->getConfig(), "variants.{$size}");
+
+                        if (is_array($dimensions)) {
+                            $dimensions = array_get($dimensions, 'resize.dimensions');
                         }
 
-                        if ($aHeight > $height) {
-                            $attributes['height'] = $height;
+                        if ($dimensions && str_contains($dimensions, 'x')) {
+                            list($width, $height) = explode('x', $dimensions);
+
+                            if ($aWidth > $width) {
+                                $attributes['width'] = $width;
+                            }
+
+                            if ($aHeight > $height) {
+                                $attributes['height'] = $height;
+                            }
                         }
                     }
                 }
@@ -808,7 +815,7 @@ namespace admin\form {
     function relation($relation)
     {
         if (!is_string($relation)) {
-            trigger_error('Relation should be string of format table.field');
+            trigger_error('Relation should be string of format <table>.<field>');
         }
 
         return ['relation' => $relation];
