@@ -5,20 +5,20 @@ window.$ = window.jQuery = require('jquery');
 window.moment = require('moment');
 
 /* Bootstrap */
-require('adminarchitect-mix/node_modules/bootstrap/js/tab');
-require('adminarchitect-mix/node_modules/bootstrap/js/dropdown');
-require('adminarchitect-mix/node_modules/bootstrap/js/modal');
-require('adminarchitect-mix/node_modules/bootstrap/js/collapse');
-require('adminarchitect-mix/node_modules/bootstrap/js/alert');
-require('adminarchitect-mix/node_modules/bootstrap/js/carousel');
-require('adminarchitect-mix/node_modules/bootstrap/js/transition');
+require('@adminarchitect/bootstrap/js/tab');
+require('@adminarchitect/bootstrap/js/dropdown');
+require('@adminarchitect/bootstrap/js/modal');
+require('@adminarchitect/bootstrap/js/collapse');
+require('@adminarchitect/bootstrap/js/alert');
+require('@adminarchitect/bootstrap/js/carousel');
+require('@adminarchitect/bootstrap/js/transition');
 
 /* Date/DateRange pickers */
-require('bootstrap-datepicker');
-require('bootstrap-daterangepicker');
+require('@adminarchitect/bootstrap-datepicker');
+require('@adminarchitect/bootstrap-daterangepicker');
 
 /* jQuery Toggles */
-require('jquery-toggles/toggles');
+require('@adminarchitect/jquery-toggles/toggles');
 
 require('selectize');
 window.fancybox = require('fancybox')($);
