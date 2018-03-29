@@ -30,30 +30,24 @@ It will copy adminarchitect's assets to a resources/assets/administrator directo
 All views will be copied to a resources/views/vendor/administrator directory.
 
 ### Assets
-AdminArchitect assets are provided in ES6 and less/sass formats, so to convert them to a js/css there is a NPM package adminarchitect/mix.
-
-First we need to do is to install node dependencies (if you didn't do this before) by runing:
+AdminArchitect assets are provided in ES6 and less/sass formats, so to convert them to a js/css there is a NPM package `@adminarchitect/mix`.
 
 ```bash
-npm i
+yarn -D @adminarchitect/mix
+OR
+mpm i @adminarchitect/mix --save-dev
 ```
 
-then let's install adminarchitect-mix:
-
-```bash
-npm i adminarchitect/mix --save-dev
-```
-
-Next step is to register AdminMix tasks, so add these lines to your webpack.mix.js:
+Next step is to register AdminMix tasks, so add these lines to your `webpack.mix.js`:
 
 ```js
-const AdminMix = require('adminarchitect-mix');
+const AdminMix = require('@adminarchitect/mix');
 (new AdminMix).handle();
 ```
 
 then you can run any of these commands, to build assets:
 ```bash
-npm run [dev|production|watch]
+yarn run [dev|production|watch]
 ```
 
 All generated assets will be placed to `public/admin` directory.

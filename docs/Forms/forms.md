@@ -82,37 +82,39 @@ The complete list (updates constantly) of supported controls:
  * @method static FormElement tel(string $name)
 
 ### Files & Images
-Files & Images are handled by `codesleeve/laravel-stapler` library.
+Files & Images are handled by `czim/laravel-paperclip` library.
 
 This is the shortest way to attach an image object to a column:
 
 ```php
-class User extends Eloquent implements StaplerableInterface
+class User extends Eloquent implements \Czim\Paperclip\Contracts\AttachableInterface
 {
-    use EloquentTrait;
+    use \Czim\Paperclip\Model\PaperclipTrait;
 
     # Add the 'avatar' attachment to the fillable array,
 	# so that it's mass-assignable on this model.
-    protected $fillable = ['avatar', 'cv'];
+    protected $fillable = ['name', 'email', 'image'];
 
     public function __construct(array $attributes = array())
     {
-        $this->hasAttachedFile('avatar', [
-			# Image resizing configuration
-            'styles' => [
-                'medium' => '300x300',
-                'thumb' => '100x100'
-            ]
-        ]);
-
-		# Just upload a file
-        $this->hasAttachedFile('cv');
-
+        $this->hasAttachedFile('image', [
+            'variants' => [
+                'medium' => [
+                    'auto-orient' => [],
+                    'resize'      => ['dimensions' => '300x300'],
+                ],
+                'thumb' => '100x100',
+            ],
+            'attributes' => [
+                'variants' => true,
+            ],
+		]);
+		
         parent::__construct($attributes);
     }
 }
 ```
-For more info please checkout its documentation by accessing https://github.com/CodeSleeve/laravel-stapler.
+For more info please checkout its documentation by accessing https://github.com/czim/laravel-paperclip.
 
 ### Media collection
 
