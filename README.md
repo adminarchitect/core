@@ -15,11 +15,12 @@ Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
 If you have found the Admin Architect useful, you can help by:
 
+[![Buy me a coffee](http://docs.adminarchitect.com/images/bmc-button.png)](https://www.buymeacoffee.com/TerziEduard)
+
 [![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/adminarchitect)
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GYP8GMFWWUMWJ)
 
-You can also purchase the Admin Architect at [Codecanyon](https://codecanyon.net/item/admin-architect-administration-framework-for-laravel/13528564).
 
 ### License
 
