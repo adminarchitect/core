@@ -22,6 +22,11 @@ abstract class Element implements HtmlElement, Validable, Relationship
 
     protected $viewParams = [];
 
+    /**
+     * @var mixed
+     */
+    protected $defaultValue;
+
     public function __construct($name, array $attributes = [])
     {
         $this->setName($name);
@@ -85,7 +90,7 @@ abstract class Element implements HtmlElement, Validable, Relationship
     final public function html()
     {
         if (!$this->value) {
-            $this->setDefaultValue();
+            $this->populateValue();
         }
 
         if ($this->translatable) {
@@ -117,7 +122,18 @@ abstract class Element implements HtmlElement, Validable, Relationship
      */
     abstract public function render();
 
-    protected function setDefaultValue()
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setDefaultValue($value)
+    {
+        $this->defaultValue = $value;
+
+        return $this;
+    }
+
+    protected function populateValue()
     {
         /**
          * If relation detected => try to extract value from relation or magnet link
@@ -159,6 +175,10 @@ abstract class Element implements HtmlElement, Validable, Relationship
          */
         if ($magnet = $this->isMagnetParameter()) {
             return $this->setValue($magnet[$this->getName()]);
+        }
+
+        if ($this->defaultValue) {
+            return $this->setValue($this->defaultValue);
         }
 
         return null;
