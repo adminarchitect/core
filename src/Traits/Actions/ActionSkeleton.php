@@ -12,6 +12,7 @@ trait ActionSkeleton
      *
      * @param User $viewer
      * @param Eloquent $entity
+     *
      * @return bool
      */
     public function authorize(User $viewer, Eloquent $entity = null)
@@ -21,6 +22,7 @@ trait ActionSkeleton
 
     /**
      * @param Eloquent $entity
+     *
      * @return string
      */
     protected function route(Eloquent $entity = null)
@@ -34,12 +36,12 @@ trait ActionSkeleton
 
     /**
      * @param Eloquent $entity
+     *
      * @return string
      */
     protected function attributes(Eloquent $entity = null)
     {
         return \admin\helpers\html_attributes([
-            //
         ]);
     }
 }

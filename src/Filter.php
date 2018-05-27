@@ -21,7 +21,7 @@ class Filter implements FilterContract
     /**
      * Filters collection.
      *
-     * @var Collection|null
+     * @var null|Collection
      */
     protected $filters;
 
@@ -48,7 +48,8 @@ class Filter implements FilterContract
     /**
      * Set collection of filters.
      *
-     * @param Mutable|null $filters
+     * @param null|Mutable $filters
+     *
      * @return mixed|void
      */
     public function setFilters(Mutable $filters = null)
@@ -93,7 +94,7 @@ class Filter implements FilterContract
     /**
      * Get all filters.
      *
-     * @return Collection|null
+     * @return null|Collection
      */
     public function filters()
     {
@@ -138,12 +139,13 @@ class Filter implements FilterContract
      * Check if filter has element with name.
      *
      * @param $name
+     *
      * @return bool
      */
     public function has($name)
     {
         foreach ($this->filters() as $filter) {
-            if ($filter->id() == $name) {
+            if ($filter->id() === $name) {
                 return true;
             }
         }

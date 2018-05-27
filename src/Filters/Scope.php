@@ -12,6 +12,7 @@ class Scope extends ElementContainer
 
     /**
      * @param mixed $query
+     *
      * @return $this
      */
     public function setQuery($query = null)

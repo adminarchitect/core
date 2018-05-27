@@ -17,14 +17,14 @@ class Factory extends CoreFactory
     {
         $this->dashboard
             ->row(function (DashboardRow $row) {
-                $row->panel(new BlankPanel)->setWidth(12);
+                $row->panel(new BlankPanel())->setWidth(12);
             })
 //            ->row(function (DashboardRow $row) {
 //                $row->panel(new GoogleAnalyticsPanel)->setWidth(12);
 //            })
             ->row(function (DashboardRow $row) {
-                $row->panel(new MembersPanel)->setWidth(6);
-                $row->panel(new DatabasePanel)->setWidth(6);
+                $row->panel(new MembersPanel())->setWidth(6);
+                $row->panel(new DatabasePanel())->setWidth(6);
             });
 
         return $this->dashboard;

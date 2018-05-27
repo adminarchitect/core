@@ -26,7 +26,7 @@ abstract class AdminController extends BaseController
      * Authorize a given action against a set of arguments.
      *
      * @param mixed $ability
-     * @param mixed|array $arguments
+     * @param array|mixed $arguments
      *
      * @return bool
      */
@@ -42,7 +42,7 @@ abstract class AdminController extends BaseController
         return $response;
     }
 
-    protected function redirectTo($module, $key = null, Request $request)
+    protected function redirectTo($module, $key, Request $request)
     {
         if ($next = $request->get('back_to')) {
             return redirect()->to($next);
@@ -76,6 +76,7 @@ abstract class AdminController extends BaseController
      * @param  string $ability
      * @param  string $message
      * @param  \Exception $previousException
+     *
      * @return \Symfony\Component\HttpKernel\Exception\HttpException
      */
     protected function createGateUnauthorizedException(
@@ -83,7 +84,7 @@ abstract class AdminController extends BaseController
         $message = 'This action is unauthorized.',
         $previousException = null
     ) {
-        $message = sprintf($message . ' [%s]', $ability);
+        $message = sprintf($message.' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);
     }

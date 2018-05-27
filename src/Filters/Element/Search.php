@@ -14,6 +14,6 @@ class Search extends FormSearch implements Queryable
         'data-type' => 'livesearch',
         'data-url' => null,
         'class' => 'form-control',
-        'placeholder' => 'Search...'
+        'placeholder' => 'Search...',
     ];
 }

@@ -20,7 +20,7 @@ class BatchController extends AdminController
     {
         $this->authorize($action = $request->get('batch_action'), $model = app('scaffold.module')->model());
 
-        $response = app('scaffold.actions')->exec('batch::' . $action, [$model, $request]);
+        $response = app('scaffold.actions')->exec('batch::'.$action, [$model, $request]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;

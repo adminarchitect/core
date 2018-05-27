@@ -36,10 +36,10 @@ class ActionMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         if ($this->option('batch')) {
-            return __DIR__ . '/stubs/action.batch.stub';
+            return __DIR__.'/stubs/action.batch.stub';
         }
 
-        return __DIR__ . '/stubs/action.single.stub';
+        return __DIR__.'/stubs/action.single.stub';
     }
 
     /**
@@ -51,7 +51,7 @@ class ActionMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\\' . config('administrator.paths.action_handler');
+        return $rootNamespace.'\\'.config('administrator.paths.action_handler');
     }
 
     /**

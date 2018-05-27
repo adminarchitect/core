@@ -21,21 +21,23 @@ class Mutable extends BaseMutableCollection
      * @param $element
      * @param mixed string|Closure $inputType
      * @param mixed null|int|string $position
-     * @return $this
+     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function create($element, $inputType = null, $position = null)
     {
         if (!(is_string($element) || $element instanceof FormElement)) {
-            throw new Exception("\$element must be string or FormElement instance.");
+            throw new Exception('$element must be string or FormElement instance.');
         }
 
-        # Create new element from string declaration ("title").
+        // Create new element from string declaration ("title").
         if (is_string($element)) {
             $element = (new FormElement($element));
         }
 
-        # Create Form Input Element from string declaration ("textarea")
+        // Create Form Input Element from string declaration ("textarea")
         if (is_string($inputType)) {
             $oldInput = $element->getInput();
             $newInput = InputFactory::make($element->id(), $inputType);
@@ -51,7 +53,7 @@ class Mutable extends BaseMutableCollection
             );
         }
 
-        # Allow a callable input type.
+        // Allow a callable input type.
         if (is_callable($inputType)) {
             call_user_func_array($inputType, [$element]);
         }
@@ -60,7 +62,7 @@ class Mutable extends BaseMutableCollection
             return $this->insert($element, $position);
         }
 
-        # Push element
+        // Push element
         $this->push($element);
 
         if (null !== $position) {
@@ -75,6 +77,7 @@ class Mutable extends BaseMutableCollection
      *
      * @param $section
      * @param null $position
+     *
      * @return $this
      */
     public function section($section, $position = null)
@@ -90,7 +93,7 @@ class Mutable extends BaseMutableCollection
     {
         $this->validateEditor($editor);
 
-        return !!$this->filter(function (FormElement $element) use ($editor) {
+        return (bool) $this->filter(function (FormElement $element) use ($editor) {
             $input = $element->getInput();
 
             if ('ckeditor' === $editor) {
@@ -111,12 +114,13 @@ class Mutable extends BaseMutableCollection
 
     /**
      * @param $editor
+     *
      * @throws Exception
      */
     protected function validateEditor($editor)
     {
-        if (!in_array($editor, ['ckeditor', 'tinymce', 'medium', 'markdown'])) {
-            throw new Exception(sprintf("Unknown editor %s", $editor));
+        if (!in_array($editor, ['ckeditor', 'tinymce', 'medium', 'markdown'], true)) {
+            throw new Exception(sprintf('Unknown editor %s', $editor));
         }
     }
 
@@ -124,6 +128,7 @@ class Mutable extends BaseMutableCollection
      * Create element object from string.
      *
      * @param $element
+     *
      * @return mixed
      */
     protected function createElement($element)

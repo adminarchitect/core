@@ -2,18 +2,18 @@
 
 namespace Terranet\Administrator\Decorators;
 
-use Terranet\Rankable\Rankable;
-use Illuminate\Database\Eloquent\Model;
-use Terranet\Translatable\Translatable;
-use Terranet\Administrator\Columns\Element;
 use Czim\Paperclip\Contracts\AttachableInterface;
-use Terranet\Administrator\Columns\Decorators\CellDecorator;
-use Terranet\Administrator\Columns\Decorators\RankDecorator;
-use Terranet\Administrator\Columns\Decorators\TextDecorator;
-use Terranet\Administrator\Columns\Decorators\StringDecorator;
-use Terranet\Administrator\Columns\Decorators\BooleanDecorator;
-use Terranet\Administrator\Columns\Decorators\DatetimeDecorator;
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Columns\Decorators\AttachmentDecorator;
+use Terranet\Administrator\Columns\Decorators\BooleanDecorator;
+use Terranet\Administrator\Columns\Decorators\CellDecorator;
+use Terranet\Administrator\Columns\Decorators\DatetimeDecorator;
+use Terranet\Administrator\Columns\Decorators\RankDecorator;
+use Terranet\Administrator\Columns\Decorators\StringDecorator;
+use Terranet\Administrator\Columns\Decorators\TextDecorator;
+use Terranet\Administrator\Columns\Element;
+use Terranet\Rankable\Rankable;
+use Terranet\Translatable\Translatable;
 
 class Grid
 {
@@ -41,6 +41,7 @@ class Grid
 
     /**
      * @param $column
+     *
      * @return CellDecorator
      */
     protected function getDecorator($column)
@@ -75,6 +76,7 @@ class Grid
 
     /**
      * @param $column
+     *
      * @return bool
      */
     protected function realColum($column)
@@ -84,6 +86,7 @@ class Grid
 
     /**
      * @param $column
+     *
      * @return CellDecorator
      */
     protected function decorateByType($column)
@@ -92,19 +95,19 @@ class Grid
             $this->fetchTablesColumns()[$column]->getType()
         );
 
-        if ($this->model instanceof Rankable && $column == $this->model->getRankableColumn()) {
+        if ($this->model instanceof Rankable && $column === $this->model->getRankableColumn()) {
             return new RankDecorator($column);
         }
 
-        if (in_array($className, ['TimeType', 'DateType', 'DateTimeType'])) {
+        if (in_array($className, ['TimeType', 'DateType', 'DateTimeType'], true)) {
             return (new DatetimeDecorator($column))->setType($className);
         }
 
-        if (in_array($className, ['BooleanType'])) {
+        if (in_array($className, ['BooleanType'], true)) {
             return new BooleanDecorator($column);
         }
 
-        if (in_array($className, ['TextType'])) {
+        if (in_array($className, ['TextType'], true)) {
             return new TextDecorator($column);
         }
 
@@ -117,7 +120,8 @@ class Grid
     protected function fetchTablesColumns()
     {
         return \admin\db\table_columns(
-            $this->model, true
+            $this->model,
+            true
         );
     }
 }

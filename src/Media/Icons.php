@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Media;
 
 class Icons
 {
-    static protected $table = [
+    protected static $table = [
         'Dir' => 'fa fa-folder-open-o',
         'Pdf' => 'fa fa-file-pdf-o',
         'Code' => 'fa fa-file-code-o',

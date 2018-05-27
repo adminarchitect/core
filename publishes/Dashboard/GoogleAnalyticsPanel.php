@@ -6,5 +6,4 @@ use Terranet\Administrator\Dashboard\Panels\GoogleAnalyticsPanel as CoreGoogleAn
 
 class GoogleAnalyticsPanel extends CoreGoogleAnalyticsPanel
 {
-    //
 }

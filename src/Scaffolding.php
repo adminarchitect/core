@@ -5,8 +5,8 @@ namespace Terranet\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
-use Terranet\Administrator\Services\CrudActions;
 use Terranet\Administrator\Services\Breadcrumbs;
+use Terranet\Administrator\Services\CrudActions;
 use Terranet\Administrator\Services\Finder;
 use Terranet\Administrator\Services\Saver;
 use Terranet\Administrator\Services\Template;
@@ -83,7 +83,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected $guard;
 
-    static protected $methods = [];
+    protected static $methods = [];
 
     public function __construct()
     {
@@ -92,23 +92,9 @@ class Scaffolding implements Module, AutoTranslatable
         }
     }
 
-    /**
-     * Extend functionality by adding new methods.
-     *
-     * @param $name
-     * @param $closure
-     * @throws Exception
-     */
-    public static function addMethod($name, $closure)
-    {
-        if (!(new static)->hasMethod($name)) {
-            static::$methods[$name] = $closure;
-        }
-    }
-
     public function __call($method, $arguments)
     {
-        # Call user-defined method if exists.
+        // Call user-defined method if exists.
         if ($closure = array_get(static::$methods, $method)) {
             return call_user_func_array($closure, $arguments);
         }
@@ -117,11 +103,26 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * Extend functionality by adding new methods.
+     *
+     * @param $name
+     * @param $closure
+     *
+     * @throws Exception
+     */
+    public static function addMethod($name, $closure)
+    {
+        if (!(new static())->hasMethod($name)) {
+            static::$methods[$name] = $closure;
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function guard()
     {
-        # set the default guard
+        // set the default guard
         if (null === $this->guard) {
             $this->guard = config('administrator.acl.manager');
         }
@@ -147,27 +148,12 @@ class Scaffolding implements Module, AutoTranslatable
      * Check if method exists.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasMethod($name)
     {
         return method_exists($this, $name) || array_has(static::$methods, $name);
-    }
-
-    /**
-     * The module Eloquent model.
-     *
-     * @return mixed
-     *
-     * @throws \Exception
-     */
-    protected function getModelClass()
-    {
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('model')) {
-            return $value;
-        }
-
-        return $this->model;
     }
 
     /**
@@ -183,7 +169,7 @@ class Scaffolding implements Module, AutoTranslatable
 
         if (list(/*$flag*/, $value) = $this->hasCommentFlag('template')) {
             return $value;
-        };
+        }
 
         return $this->template;
     }
@@ -215,7 +201,7 @@ class Scaffolding implements Module, AutoTranslatable
 
         if (list(/*$flag*/, $value) = $this->hasCommentFlag('finder')) {
             return $value;
-        };
+        }
 
         return $this->finder;
     }
@@ -233,7 +219,7 @@ class Scaffolding implements Module, AutoTranslatable
 
         if (list(/*$flag*/, $saver) = $this->hasCommentFlag('saver')) {
             return $saver;
-        };
+        }
 
         return $this->saver;
     }
@@ -252,7 +238,7 @@ class Scaffolding implements Module, AutoTranslatable
 
         if (list(/*$flag*/, $value) = $this->hasCommentFlag('breadcrumbs')) {
             return $value;
-        };
+        }
 
         return $this->breadcrumbs;
     }
@@ -272,7 +258,7 @@ class Scaffolding implements Module, AutoTranslatable
 
         if (list(/*$flag*/, $value) = $this->hasCommentFlag('actions')) {
             return $value;
-        };
+        }
 
         return $this->actions;
     }
@@ -288,6 +274,22 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * The module Eloquent model.
+     *
+     * @throws \Exception
+     *
+     * @return mixed
+     */
+    protected function getModelClass()
+    {
+        if (list(/*$flag*/, $value) = $this->hasCommentFlag('model')) {
+            return $value;
+        }
+
+        return $this->model;
+    }
+
+    /**
      * Get the full path to class of special type.
      *
      * @param $type
@@ -296,7 +298,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected function getQualifiedClassNameOfType($type)
     {
-        return app()->getNamespace() . "Http\\Terranet\\Administrator\\{$type}\\" . class_basename($this);
+        return app()->getNamespace()."Http\\Terranet\\Administrator\\{$type}\\".class_basename($this);
     }
 
     /**

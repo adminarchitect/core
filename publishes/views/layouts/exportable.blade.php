@@ -20,7 +20,7 @@
 <?php
 $style = [
     'table' => 'width: 100%; border-collapse: collapse; border: 1px solid #ccc;',
-    'caption' => 'font-size: 16px; text-align: right; padding: 10px 0;'
+    'caption' => 'font-size: 16px; text-align: right; padding: 10px 0;',
 ];
 ?>
 

@@ -13,7 +13,7 @@ trait SortableTrait
     }
 
     /**
-     * Is Sortable item
+     * Is Sortable item.
      *
      * @return bool
      */

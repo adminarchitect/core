@@ -62,7 +62,7 @@ class MagnetParams
 
         if ($this->isStrictMode()) {
             $params = array_filter($params, function ($item) {
-                return !is_null($item);
+                return null !== $item;
             });
         }
 

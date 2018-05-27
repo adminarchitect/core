@@ -10,6 +10,7 @@ trait BatchSkeleton
      * Check if specified user is authorized to execute this action.
      *
      * @param User $viewer
+     *
      * @return bool
      */
     public function authorize(User $viewer)
@@ -19,6 +20,7 @@ trait BatchSkeleton
 
     /**
      * @param $model
+     *
      * @return string
      */
     protected function route($model)
@@ -30,6 +32,7 @@ trait BatchSkeleton
 
     /**
      * @param $model
+     *
      * @return string
      */
     protected function attributes($model)

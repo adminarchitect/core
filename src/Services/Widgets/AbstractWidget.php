@@ -6,12 +6,12 @@ use Terranet\Administrator\Exception;
 
 class AbstractWidget
 {
-    const PLACEMENT_MAIN_TOP     = 'main-top';
-    const PLACEMENT_MAIN_BOTTOM  = 'main-bottom';
-    const PLACEMENT_SIDEBAR      = 'sidebar';
-    const PLACEMENT_MODEL        = 'model';
+    const PLACEMENT_MAIN_TOP = 'main-top';
+    const PLACEMENT_MAIN_BOTTOM = 'main-bottom';
+    const PLACEMENT_SIDEBAR = 'sidebar';
+    const PLACEMENT_MODEL = 'model';
 
-    const TAB_DEFAULT            = "General";
+    const TAB_DEFAULT = 'General';
 
     protected $placement = self::PLACEMENT_MAIN_BOTTOM;
 
@@ -29,8 +29,10 @@ class AbstractWidget
 
     /**
      * @param string $placement
-     * @return $this
+     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function setPlacement($placement)
     {
@@ -51,6 +53,7 @@ class AbstractWidget
 
     /**
      * @param int $order
+     *
      * @return $this
      */
     public function setOrder($order)
@@ -70,6 +73,7 @@ class AbstractWidget
 
     /**
      * @param string $tab
+     *
      * @return $this
      */
     public function setTab($tab)
@@ -88,18 +92,19 @@ class AbstractWidget
             static::PLACEMENT_MAIN_TOP,
             static::PLACEMENT_MAIN_BOTTOM,
             static::PLACEMENT_MODEL,
-            static::PLACEMENT_SIDEBAR
+            static::PLACEMENT_SIDEBAR,
         ];
     }
 
     /**
      * @param $placement
+     *
      * @throws Exception
      */
     protected function validatePlacement($placement)
     {
-        if (! in_array($placement, $allowed = $this->allowedPlacements())) {
-            throw new Exception(sprintf('Unknown placement "%s". Use one of [%s]', $placement, join(", ", $allowed)));
+        if (!in_array($placement, $allowed = $this->allowedPlacements(), true)) {
+            throw new Exception(sprintf('Unknown placement "%s". Use one of [%s]', $placement, implode(', ', $allowed)));
         }
     }
 }

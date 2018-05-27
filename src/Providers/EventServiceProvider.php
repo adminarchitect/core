@@ -2,8 +2,8 @@
 
 namespace Terranet\Administrator\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as AppEventServiceProvider;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as AppEventServiceProvider;
 
 class EventServiceProvider extends AppEventServiceProvider
 {

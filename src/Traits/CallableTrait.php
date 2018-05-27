@@ -19,6 +19,7 @@ trait CallableTrait
                 array_unshift($arguments, \App::make($name));
             }
         }
+
         return call_user_func_array($callback, $arguments);
     }
 }

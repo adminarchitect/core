@@ -27,7 +27,7 @@ class OneToManyRelation extends AbstractWidget implements Widgetable
     }
 
     /**
-     * Widget contents
+     * Widget contents.
      *
      * @return mixed
      */
@@ -38,8 +38,8 @@ class OneToManyRelation extends AbstractWidget implements Widgetable
         $collection = $this->relation->getResults();
 
         return view(app('scaffold.template')->view('relations.one_to_many'), [
-            'title'      => $title,
-            'collection' => $collection
+            'title' => $title,
+            'collection' => $collection,
         ]);
     }
 

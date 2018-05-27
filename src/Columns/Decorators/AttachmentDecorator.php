@@ -13,11 +13,6 @@ class AttachmentDecorator extends CellDecorator
         'height' => 75,
     ];
 
-    protected function render($row)
-    {
-        return \admin\output\staplerImage($row->{$this->name}, $this->style, $this->attributes());
-    }
-
     public function setStyle($style)
     {
         $this->style = $style;
@@ -35,6 +30,7 @@ class AttachmentDecorator extends CellDecorator
 
     /**
      * @param bool $rounded
+     *
      * @return $this
      */
     public function setRounded(bool $rounded)
@@ -44,16 +40,21 @@ class AttachmentDecorator extends CellDecorator
         return $this;
     }
 
+    protected function render($row)
+    {
+        return \admin\output\staplerImage($row->{$this->name}, $this->style, $this->attributes());
+    }
+
     protected function attributes()
     {
         if (!array_key_exists('id', $this->attributes)) {
             $this->attributes['id'] = $this->name;
         }
 
-        $this->attributes['class'] = "img-responsive";
+        $this->attributes['class'] = 'img-responsive';
 
         if ($this->rounded) {
-            $this->attributes['class'] = "img-circle";
+            $this->attributes['class'] = 'img-circle';
         }
 
         return $this->attributes;

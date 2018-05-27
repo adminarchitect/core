@@ -31,7 +31,8 @@ class TranslationsController extends AdminController
         $pagination = $this->translator->load(
             $term,
             'all' === $only ? null : $only,
-            $page, 20
+            $page,
+            20
         );
 
         $pagination->appends(compact('term', 'only'));
@@ -52,7 +53,7 @@ class TranslationsController extends AdminController
 
         $changed = [];
         foreach ($this->locales() as $locale) {
-            # protect against saving foreign languages
+            // protect against saving foreign languages
             if (app('scaffold.translations')->readonly($locale)) {
                 continue;
             }

@@ -1,15 +1,11 @@
 <?php
 
-
 namespace Terranet\Administrator\Traits;
 
 trait SessionGuardHelper
 {
-
     /**
-     * Fetch auth model from Laravel 5.2 auth config
-     *
-     * @return null
+     * Fetch auth model from Laravel 5.2 auth config.
      */
     protected function guardedModel()
     {
@@ -19,9 +15,10 @@ trait SessionGuardHelper
     }
 
     /**
-     * Fetch auth model from Administrator config or Laravel 5.1 auth config
+     * Fetch auth model from Administrator config or Laravel 5.1 auth config.
      *
      * @param $config
+     *
      * @return mixed
      */
     protected function authModel($config)
@@ -30,10 +27,11 @@ trait SessionGuardHelper
     }
 
     /**
-     * Fetch authentication model
+     * Fetch authentication model.
      *
      * @param $config
-     * @return mixed|null
+     *
+     * @return null|mixed
      */
     protected function fetchModel($config)
     {

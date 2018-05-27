@@ -11,15 +11,17 @@ class InputFactory
      *
      * @param $name
      * @param string $type
-     * @return mixed
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public static function make($name, $type = 'text')
     {
-        $input = "Terranet\\Administrator\\Form\\Type\\" . ucfirst($type);
+        $input = 'Terranet\\Administrator\\Form\\Type\\'.ucfirst($type);
 
         if (!class_exists($input)) {
-            throw new Exception(sprintf("Unknown type: %s", $type));
+            throw new Exception(sprintf('Unknown type: %s', $type));
         }
 
         return new $input($name);

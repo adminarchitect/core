@@ -88,6 +88,14 @@ class Schema
     }
 
     /**
+     * @return MySqlSchemaManager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Cache lifetime.
      *
      * @param int $seconds
@@ -97,13 +105,5 @@ class Schema
     protected function lifetime($seconds = 300)
     {
         return Carbon::now()->addSeconds($seconds);
-    }
-
-    /**
-     * @return MySqlSchemaManager
-     */
-    public function getManager()
-    {
-        return $this->manager;
     }
 }

@@ -10,6 +10,7 @@ trait MethodsCollector
     /**
      * @param $instance
      * @param int $filter
+     *
      * @return \ReflectionMethod[]
      */
     protected function collectMethods($instance, $filter = ReflectionMethod::IS_PUBLIC)

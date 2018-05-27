@@ -13,7 +13,6 @@ use Terranet\Administrator\Form\Type\View;
  * instance of a special type, each form element
  * is just injected to this object-container.
  *
- * @package Terranet\Administrator\Form
  *
  * @method static FormElement text(string $name)
  * @method static FormElement view(string $name)
@@ -75,12 +74,14 @@ class FormElement extends \Terranet\Administrator\Columns\Element
      * Init FormElement object by calling static method.
      *
      * @example: FormElement::text('title')
+     *
      * @param $inputType
      * @param $arguments
      * @note:
      *  1st argument = name,
      *  2nd argument = html options,
      *  3rd argument = values (select, radio, multicheckbox)
+     *
      * @return
      */
     public static function __callStatic($inputType, $arguments)
@@ -90,7 +91,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
             $inputType
         );
 
-        # View element receives 2nd optional argument -> path to view script
+        // View element receives 2nd optional argument -> path to view script
         if (is_a($inputType, View::class) && ($view = array_get($arguments, 1))) {
             $inputType->setView($view);
         }
@@ -104,7 +105,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
         }
 
         if (is_array($options = array_get($arguments, 2)) && !empty($options)
-            && method_exists($input, "setOptions")
+            && method_exists($input, 'setOptions')
         ) {
             $input->setOptions($options);
         }
@@ -120,7 +121,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
             return $this;
         }
 
-        throw new \Exception("Call to undefined method: " . class_basename($this) . "::$method");
+        throw new \Exception('Call to undefined method: '.class_basename($this)."::$method");
     }
 
     /**
@@ -128,6 +129,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
      *
      * @param $id
      * @param mixed string|BasicFormElement $input
+     *
      * @return mixed
      */
     public static function custom($id, $input)
@@ -147,13 +149,15 @@ class FormElement extends \Terranet\Administrator\Columns\Element
      * Set wrapped input object.
      *
      * @param mixed string|FormElement $input
-     * @return $this
+     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function setInput($input)
     {
         if (!(is_string($input) || $input instanceof BasicFormElement)) {
-            throw new Exception("Input must be a String or instance of FormElement Contract");
+            throw new Exception('Input must be a String or instance of FormElement Contract');
         }
 
         if (is_string($input)) {
@@ -165,7 +169,6 @@ class FormElement extends \Terranet\Administrator\Columns\Element
         return $this;
     }
 
-
     /**
      * @return mixed
      */
@@ -176,6 +179,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
 
     /**
      * @param mixed $description
+     *
      * @return $this
      */
     public function setDescription($description)
@@ -187,6 +191,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
 
     /**
      * @param $id
+     *
      * @return Text
      */
     protected function defaultInputType($id)
@@ -198,6 +203,7 @@ class FormElement extends \Terranet\Administrator\Columns\Element
      * Make a Filter element.
      *
      * @param $input
+     *
      * @return mixed
      */
     protected function makeInput($input)

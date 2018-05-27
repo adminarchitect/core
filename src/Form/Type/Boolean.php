@@ -12,7 +12,7 @@ class Boolean extends Element
     public function render()
     {
         return
-            Form::hidden($this->getFormName(), 0, $this->hiddenAttributes()) .
+            Form::hidden($this->getFormName(), 0, $this->hiddenAttributes()).
             Form::checkbox($this->getFormName(), 1, $this->value, $this->attributes);
     }
 
@@ -21,6 +21,6 @@ class Boolean extends Element
      */
     protected function hiddenAttributes()
     {
-        return ['id' => Form::getIdAttribute($this->getFormName(), $this->attributes) . '_hidden'];
+        return ['id' => Form::getIdAttribute($this->getFormName(), $this->attributes).'_hidden'];
     }
 }

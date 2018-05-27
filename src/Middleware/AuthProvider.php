@@ -4,12 +4,9 @@ namespace Terranet\Administrator\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Terranet\Administrator\AuthUserProvider;
 
 /**
- * Class AuthProvider
- *
- * @package Terranet\Administrator\Middleware
+ * Class AuthProvider.
  */
 class AuthProvider
 {
@@ -18,6 +15,7 @@ class AuthProvider
      *
      * @param  Request $request
      * @param  Closure $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)

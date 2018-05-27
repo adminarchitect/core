@@ -16,8 +16,8 @@ return [
     'rename' => 'Rename file or folder',
     'move' => 'Move files &amp; folders',
     'mkdir' => 'Create New Directory',
-    'files' => "Files",
-    'dropzone' => "Drop zone",
+    'files' => 'Files',
+    'dropzone' => 'Drop zone',
     'file_info' => 'File info',
     'buttons' => [
         'upload' => 'Upload',

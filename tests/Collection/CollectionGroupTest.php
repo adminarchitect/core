@@ -1,11 +1,14 @@
 <?php
 
-require_once __DIR__ . '/../CreatesElement.php';
-require_once __DIR__ . '/../MocksObjects.php';
+require_once __DIR__.'/../CreatesElement.php';
+require_once __DIR__.'/../MocksObjects.php';
 
 use Terranet\Administrator\Collection\Group;
 
-class CollectionGroupTest extends PHPUnit_Framework_TestCase
+/**
+ * @coversNothing
+ */
+class CollectionGroupTest extends PHPUnit\Framework\TestCase
 {
     use CreatesElement, MocksObjects;
 
@@ -26,12 +29,14 @@ class CollectionGroupTest extends PHPUnit_Framework_TestCase
     {
         $this->group->setTranslator($this->mockTranslator());
 
-        $this->assertEquals(
-            'test', $this->group->id()
+        $this->assertSame(
+            'test',
+            $this->group->id()
         );
 
-        $this->assertEquals(
-            'Test', $this->group->title()
+        $this->assertSame(
+            'Test',
+            $this->group->title()
         );
     }
 
@@ -42,8 +47,9 @@ class CollectionGroupTest extends PHPUnit_Framework_TestCase
         $group->setTranslator($this->mockTranslator());
         $group->setModule($this->mockModule());
 
-        $this->assertEquals(
-            'Group', $group->title()
+        $this->assertSame(
+            'Group',
+            $group->title()
         );
     }
 
@@ -52,8 +58,9 @@ class CollectionGroupTest extends PHPUnit_Framework_TestCase
     {
         $this->group->setTitle($title = 'New title');
 
-        $this->assertEquals(
-            $title, $this->group->title()
+        $this->assertSame(
+            $title,
+            $this->group->title()
         );
     }
 
@@ -64,7 +71,6 @@ class CollectionGroupTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $this->group->elements());
     }
-
 
     protected function createGroup($title)
     {

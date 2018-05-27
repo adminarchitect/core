@@ -14,6 +14,7 @@ class Date extends Element
      */
     protected $attributes = [
         'class' => 'form-control',
+        'style' => 'width: 262px;',
     ];
 
     /**
@@ -25,11 +26,11 @@ class Date extends Element
 
     public function render()
     {
-        return '<!-- Scaffold: ' . $this->getName() . ' -->'
-        . '<div class="input-group">'
-        . '    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>'
-        . Form::text($this->getFormName(), $this->value, $this->attributes + ['data-filter-type' => $this->getClassName()])
-        . '</div>';
+        return '<!-- Scaffold: '.$this->getName().' -->'
+            .'<div class="input-group">'
+            .'    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>'
+            .Form::text($this->getFormName(), $this->value, $this->attributes + ['data-filter-type' => $this->getClassName()])
+            .'</div>';
     }
 
     /**

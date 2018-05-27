@@ -7,7 +7,7 @@ use Terranet\Administrator\Requests\UpdateRequest;
 class SettingsController extends AdminController
 {
     /**
-     * List settings by selected group [according to settings page name]
+     * List settings by selected group [according to settings page name].
      *
      * @return $this
      */
@@ -16,14 +16,15 @@ class SettingsController extends AdminController
         $this->authorize('index', $eloquent = app('scaffold.model'));
 
         return view(app('scaffold.template')->layout('settings'), [
-            'settings' => options_fetch()
+            'settings' => options_fetch(),
         ]);
     }
 
     /**
-     * Save settings per page
+     * Save settings per page.
      *
      * @param UpdateRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $request)

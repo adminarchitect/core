@@ -14,38 +14,18 @@ use Terranet\Translatable\Translatable;
 trait ExportsCollection
 {
     /**
-     * Fetch exportable items by query.
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    protected function exportableQuery(Builder $query): Builder
-    {
-        # Allow executing custom exportable query.
-        if (method_exists($this->module, 'exportableQuery')) {
-            return $this->module->exportableQuery($query);
-        }
-
-        return $query
-            ->when($query->getModel() instanceof Translatable, function ($query) {
-                $query->translated();
-            })
-            # leave select after joining with translations
-            # table in order to rewrite selected columns
-            ->select($this->exportableColumns());
-    }
-
-    /**
-     * Export collection to a specific format
+     * Export collection to a specific format.
      *
      * @param Builder $query
      * @param         $format
-     * @return mixed
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function export(Builder $query, $format)
     {
-        $method = "to" . strtoupper($format);
+        $method = 'to'.strtoupper($format);
 
         if (!method_exists($this, $method)) {
             throw new Exception(sprintf('Don\'t know how to export to %s format', $format));
@@ -55,9 +35,10 @@ trait ExportsCollection
     }
 
     /**
-     * Convert & download collection in JSON format
+     * Convert & download collection in JSON format.
      *
      * @param $query
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function toJSON(Builder $query)
@@ -71,14 +52,15 @@ trait ExportsCollection
     }
 
     /**
-     * Convert & download collection in XML format
+     * Convert & download collection in XML format.
      *
      * @param $query
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function toXML(Builder $query)
     {
-        $root = with($dom = new DOMDocument)->createElement('root');
+        $root = with($dom = new DOMDocument())->createElement('root');
 
         foreach ($this->each($query) as $object) {
             $item = $dom->createElement('item');
@@ -102,16 +84,17 @@ trait ExportsCollection
     }
 
     /**
-     * Convert & download collection in CSV format
+     * Convert & download collection in CSV format.
      *
      * @param $query
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function toCSV(Builder $query)
     {
         $out = fopen(
             $file = $this->getFilename(),
-            "a+"
+            'a+'
         );
         $headersPrinted = false;
 
@@ -152,11 +135,35 @@ trait ExportsCollection
 
         return $pdf->loadHTML($html)
                    ->setPaper('a4', 'landscape')
-                   ->download(app('scaffold.module')->url() . '.pdf');
+                   ->download(app('scaffold.module')->url().'.pdf');
+    }
+
+    /**
+     * Fetch exportable items by query.
+     *
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    protected function exportableQuery(Builder $query): Builder
+    {
+        // Allow executing custom exportable query.
+        if (method_exists($this->module, 'exportableQuery')) {
+            return $this->module->exportableQuery($query);
+        }
+
+        return $query
+            ->when($query->getModel() instanceof Translatable, function ($query) {
+                $query->translated();
+            })
+            // leave select after joining with translations
+            // table in order to rewrite selected columns
+            ->select($this->exportableColumns());
     }
 
     /**
      * @param $object
+     *
      * @return array
      */
     protected function toScalar($object): array
@@ -171,20 +178,21 @@ trait ExportsCollection
      */
     protected function getFilename(): string
     {
-        return tempnam(sys_get_temp_dir(), app('scaffold.module')->url() . "_");
+        return tempnam(sys_get_temp_dir(), app('scaffold.module')->url().'_');
     }
 
     /**
      * @param $file
      * @param $extension
      * @param array $headers
+     *
      * @return mixed
      */
     protected function sendDownloadResponse($file, $extension, array $headers = [])
     {
         return response()->download(
             $file,
-            app('scaffold.module')->title() . '.' . $extension,
+            app('scaffold.module')->title().'.'.$extension,
             $headers
         );
     }
@@ -194,13 +202,14 @@ trait ExportsCollection
      *
      * @param Builder $query
      * @param int $count
+     *
      * @return Generator
      */
     protected function each(Builder $query, $count = 100): Generator
     {
         $query = $this->exportableQuery($query);
 
-        # enforce order by statement.
+        // enforce order by statement.
         if (empty($query->orders) && empty($query->unionOrders)) {
             $query->orderBy($query->getModel()->getQualifiedKeyName(), 'asc');
         }
@@ -215,7 +224,7 @@ trait ExportsCollection
 
             $countResults = $results->count();
 
-            if ($countResults == 0) {
+            if (0 === $countResults) {
                 break;
             }
 
@@ -228,8 +237,8 @@ trait ExportsCollection
 
             unset($results);
 
-            $page++;
-        } while ($countResults == $count);
+            ++$page;
+        } while ($countResults === $count);
     }
 
     /**
@@ -244,7 +253,7 @@ trait ExportsCollection
         }
 
         /**
-         * @var Model $model
+         * @var Model
          */
         $model = $this->module->model();
 
@@ -264,7 +273,7 @@ trait ExportsCollection
             })
             ->all();
     }
-    
+
     protected function exportableView()
     {
         return app('scaffold.template')->layout('exportable');

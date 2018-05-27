@@ -2,12 +2,7 @@
 
 namespace Terranet\Administrator\Dashboard;
 
-use App\Http\Terranet\Administrator\Dashboard\BlankPanel;
-use App\Http\Terranet\Administrator\Dashboard\DatabasePanel;
-use App\Http\Terranet\Administrator\Dashboard\GoogleAnalyticsPanel;
-use App\Http\Terranet\Administrator\Dashboard\MembersPanel;
 use Terranet\Administrator\Dashboard\Manager as DashboardManager;
-use Terranet\Administrator\Dashboard\Manager;
 
 abstract class Factory
 {

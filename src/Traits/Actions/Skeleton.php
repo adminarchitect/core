@@ -10,11 +10,12 @@ trait Skeleton
      * Render action button.
      *
      * @param Eloquent $entity
+     *
      * @return string
      */
     public function render(Eloquent $entity = null)
     {
-        $action = app('scaffold.module')->url() . '-' . $this->action($entity);
+        $action = app('scaffold.module')->url().'-'.$this->action($entity);
 
         return
 <<<OUTPUT
@@ -26,6 +27,7 @@ OUTPUT;
 
     /**
      * @param Eloquent $entity
+     *
      * @return string
      */
     protected function action(Eloquent $entity = null)
@@ -37,6 +39,7 @@ OUTPUT;
      * Action name.
      *
      * @param Eloquent $entity
+     *
      * @return string
      */
     protected function name(Eloquent $entity = null)
@@ -48,6 +51,7 @@ OUTPUT;
 
     /**
      * @param Eloquent $entity
+     *
      * @return string
      */
     protected function icon(Eloquent $entity = null)

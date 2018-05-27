@@ -2,26 +2,26 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Terranet\Administrator\Filters\FilterElement;
+use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
+use Terranet\Administrator\Filters\Scope;
+use Terranet\Administrator\Form\Collection\Mutable;
 use function admin\db\connection;
 use function admin\db\enum_values;
 use function admin\db\table_columns;
 use function admin\db\table_indexes;
-use Terranet\Administrator\Filters\FilterElement;
-use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Form\Collection\Mutable;
-use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
 
 trait HasFilters
 {
     /**
-     * Defined filters
+     * Defined filters.
      *
      * @var Mutable
      */
     protected $filters;
 
     /**
-     * Defined scopes
+     * Defined scopes.
      *
      * @var Mutable
      */
@@ -31,6 +31,7 @@ trait HasFilters
      * Register a filter.
      *
      * @param FilterElement $filter
+     *
      * @return $this
      */
     public function addFilter(FilterElement $filter)
@@ -44,6 +45,7 @@ trait HasFilters
      * Register a scope.
      *
      * @param Scope $scope
+     *
      * @return $this
      */
     public function addScope(Scope $scope)
@@ -54,7 +56,7 @@ trait HasFilters
     }
 
     /**
-     * Default list of filters
+     * Default list of filters.
      *
      * @return mixed
      */
@@ -64,7 +66,7 @@ trait HasFilters
     }
 
     /**
-     * Default list of scopes
+     * Default list of scopes.
      */
     public function scopes()
     {
@@ -73,7 +75,7 @@ trait HasFilters
 
     protected function scaffoldFilters()
     {
-        $this->filters = new Mutable;
+        $this->filters = new Mutable();
 
         if ($model = $this->model()) {
             $columns = table_columns($model);
@@ -84,12 +86,13 @@ trait HasFilters
 
                 switch (class_basename($data->getType())) {
                     case 'StringType':
-                        if (connection('mysql') && is_null($data->getLength())) {
+                        if (connection('mysql') && null === $data->getLength()) {
                             if ($values = enum_values($model->getTable(), $column)) {
                                 $filter = $this->filterFactory($column, 'select');
                                 $filter->getInput()->setOptions(['' => '--Any--'] + $values);
 
                                 $this->addFilter($filter);
+
                                 break;
                             }
                         }
@@ -99,23 +102,26 @@ trait HasFilters
                         );
 
                         break;
-
                     case 'DateTimeType':
                         $this->addFilter(
                             $this->filterFactory($column, 'daterange')
                         );
-                        break;
 
+                        break;
                     case 'BooleanType':
                         $this->addFilter(
                             $this->filterFactory(
-                                $column, 'select', '',
+                                $column,
+                                'select',
+                                '',
                                 [
                                     '' => '--Any--',
                                     1 => 'Yes',
                                     0 => 'No',
-                                ])
+                                ]
+                            )
                         );
+
                         break;
                 }
             }
@@ -125,13 +131,13 @@ trait HasFilters
     }
 
     /**
-     * Find all public scopes in current model
+     * Find all public scopes in current model.
      *
      * @return Mutable
      */
     protected function scaffoldScopes()
     {
-        $this->scopes = new Mutable;
+        $this->scopes = new Mutable();
 
         if ($model = $this->model()) {
             $this->fetchModelScopes($model);
@@ -148,11 +154,11 @@ trait HasFilters
 
         $input = FilterInputFactory::make($name, $type);
 
-        if (!is_null($query)) {
+        if (null !== $query) {
             $input->setQuery($query);
         }
 
-        if ('select' == $type && is_array($options)) {
+        if ('select' === $type && is_array($options)) {
             $input->setOptions($options);
         }
 
@@ -160,7 +166,7 @@ trait HasFilters
     }
 
     /**
-     * Parse the model for scopes
+     * Parse the model for scopes.
      *
      * @param $model
      */
@@ -189,6 +195,7 @@ trait HasFilters
 
     /**
      * @param $method
+     *
      * @return int
      */
     protected function isDynamicScope($method)
@@ -197,20 +204,22 @@ trait HasFilters
     }
 
     /**
-     * Exists in user-defined hiddenScopes property
+     * Exists in user-defined hiddenScopes property.
      *
      * @param $name
+     *
      * @return bool
      */
     protected function isHiddenScope($name)
     {
-        return property_exists($this, 'hiddenScopes') && in_array($name, $this->hiddenScopes);
+        return property_exists($this, 'hiddenScopes') && in_array($name, $this->hiddenScopes, true);
     }
 
     /**
-     * Marked with @hidden flag
+     * Marked with @hidden flag.
      *
      * @param $docBlock
+     *
      * @return int
      */
     protected function hasHiddenFlag($docBlock)
@@ -219,9 +228,10 @@ trait HasFilters
     }
 
     /**
-     * Marked with @hidden flag
+     * Marked with @hidden flag.
      *
      * @param $docBlock
+     *
      * @return int
      */
     protected function hasIconFlag($docBlock)
@@ -232,7 +242,7 @@ trait HasFilters
     }
 
     /**
-     * Add SoftDeletes scopes if model uses that trait
+     * Add SoftDeletes scopes if model uses that trait.
      *
      * @param $model
      */
@@ -254,6 +264,6 @@ trait HasFilters
      */
     protected function softDeletesScopes()
     {
-        return ['onlyTrashed' => "Only Trashed", 'withTrashed' => "With Trashed"];
+        return ['onlyTrashed' => 'Only Trashed', 'withTrashed' => 'With Trashed'];
     }
 }

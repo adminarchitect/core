@@ -22,7 +22,7 @@ class Translator
 
     public function __construct()
     {
-        $this->reader = new Translations\Reader;
+        $this->reader = new Translations\Reader();
 
         $this->fs = app('files');
     }
@@ -38,15 +38,17 @@ class Translator
     {
         $files = $this->files($only);
 
-        return (new Translations\Finder)->find(
-            $this->reader->read($files, $this->locales()), $term,
-            $page, $perPage
+        return (new Translations\Finder())->find(
+            $this->reader->read($files, $this->locales()),
+            $term,
+            $page,
+            $perPage
         );
     }
 
     public function export()
     {
-        return new Translations\Exporter;
+        return new Translations\Exporter();
     }
 
     /**
@@ -84,7 +86,7 @@ class Translator
 
             $data = array_replace_recursive($translations['content'], $value);
 
-            $content = '<?php' . str_repeat(PHP_EOL, 2) . 'return ' . $this->arrayToString($data) . ';';
+            $content = '<?php'.str_repeat(PHP_EOL, 2).'return '.$this->arrayToString($data).';';
 
             $this->fs->put($translations['path'], $content, true);
         }
@@ -95,7 +97,7 @@ class Translator
         static $files = null;
 
         if (null === $files) {
-            $path = "lang" . DIRECTORY_SEPARATOR . \localizer\locale()->iso6391();
+            $path = 'lang'.DIRECTORY_SEPARATOR.\localizer\locale()->iso6391();
 
             $files = collect(
                 glob(resource_path("{$path}/*.php"))
@@ -125,15 +127,15 @@ class Translator
 
     protected function makeFile($file, $locale)
     {
-        $directoryTranslationsPath = resource_path('lang' . DIRECTORY_SEPARATOR . $locale);
+        $directoryTranslationsPath = resource_path('lang'.DIRECTORY_SEPARATOR.$locale);
 
         if (!$this->fs->exists($directoryTranslationsPath)) {
             $this->fs->makeDirectory($directoryTranslationsPath);
         }
 
-        $content = '<?php' . str_repeat(PHP_EOL, 2) . 'return [];';
+        $content = '<?php'.str_repeat(PHP_EOL, 2).'return [];';
 
-        $this->fs->put($directoryTranslationsPath . DIRECTORY_SEPARATOR . $file . '.php', $content, true);
+        $this->fs->put($directoryTranslationsPath.DIRECTORY_SEPARATOR.$file.'.php', $content, true);
     }
 
     protected function keyToArray(&$arr, $path, $value, $separator = '.')

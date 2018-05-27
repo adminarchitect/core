@@ -16,10 +16,10 @@ class MembersPanel extends DashboardPanel
         $weekAgo = \Carbon\Carbon::now()->subWeek();
         $monthAgo = \Carbon\Carbon::now()->subMonth();
 
-        $total            = $this->createModel()->count();
-        $signedLastWeek   = $this->createModel()
+        $total = $this->createModel()->count();
+        $signedLastWeek = $this->createModel()
                                  ->where('created_at', '>=', $weekAgo)->count();
-        $signedLastMonth  = $this->createModel()
+        $signedLastMonth = $this->createModel()
                                  ->where('created_at', '>=', $monthAgo)->count();
         $signedStatistics = $this->createModel()
                                  ->where('created_at', '>=', $monthAgo)
@@ -27,9 +27,9 @@ class MembersPanel extends DashboardPanel
                                  ->groupBy('dt')->pluck('cnt', 'dt');
 
         return view(app('scaffold.template')->dashboard('members'), [
-            'total'            => $total,
-            'signed'           => [
-                'lastWeek'  => $signedLastWeek,
+            'total' => $total,
+            'signed' => [
+                'lastWeek' => $signedLastWeek,
                 'lastMonth' => $signedLastMonth,
             ],
             'signedStatistics' => $signedStatistics,
@@ -41,6 +41,6 @@ class MembersPanel extends DashboardPanel
      */
     protected function createModel()
     {
-        return (new User);
+        return new User();
     }
 }

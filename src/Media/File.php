@@ -29,7 +29,7 @@ class File extends SplFileInfo implements Arrayable
 
     public function getIcon()
     {
-        $icons = new Icons;
+        $icons = new Icons();
         foreach ($icons->table() as $group) {
             if ((new MimeType($this))->is($group)) {
                 return $icons->icon($group);
@@ -50,7 +50,7 @@ class File extends SplFileInfo implements Arrayable
             'dirname' => $this->getPathInfo()->getFilename(),
             'basename' => $basename = $this->getBasename(),
             'extension' => $ext = $this->getExtension(),
-            'filename' => preg_replace('~\.' . $ext . '$~si', '', $basename),
+            'filename' => preg_replace('~\.'.$ext.'$~si', '', $basename),
             'icon' => $this->getIcon(),
             'isDir' => $this->isDir(),
             'isFile' => $this->isFile(),
@@ -68,11 +68,12 @@ class File extends SplFileInfo implements Arrayable
 
     /**
      * @param $path
+     *
      * @return \Illuminate\Contracts\Routing\UrlGenerator|string
      */
     public function fullUrl($path)
     {
-        return url($this->storage->basename() . '/' . $path);
+        return url($this->storage->basename().'/'.$path);
     }
 
     /**

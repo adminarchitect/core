@@ -34,6 +34,7 @@ class Authenticate
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -66,6 +67,7 @@ class Authenticate
 
     /**
      * @param $response
+     *
      * @return bool
      */
     protected function isResponseObject($response)
@@ -75,6 +77,7 @@ class Authenticate
 
     /**
      * @param $response
+     *
      * @return bool
      */
     protected function redirectReceived($response)

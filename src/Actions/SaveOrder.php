@@ -16,6 +16,7 @@ class SaveOrder
      *
      * @param Model $eloquent
      * @param Request $request
+     *
      * @return mixed
      */
     public function handle(Model $eloquent, Request $request)

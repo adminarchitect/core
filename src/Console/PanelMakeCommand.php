@@ -40,7 +40,8 @@ class PanelMakeCommand extends GeneratorCommand
             $this->makeDirectory($view);
 
             $this->files->put($view, $this->templateContents(
-                $name, ltrim(str_replace(base_path(), '', $view), DIRECTORY_SEPARATOR)
+                $name,
+                ltrim(str_replace(base_path(), '', $view), DIRECTORY_SEPARATOR)
             ));
         }
     }
@@ -55,12 +56,12 @@ class PanelMakeCommand extends GeneratorCommand
      */
     protected function replaceClass($stub, $name)
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+        $class = str_replace($this->getNamespace($name).'\\', '', $name);
         $view = $this->getViewName();
 
         $stub = str_replace('DummyClass', $class, $stub);
 
-        return str_replace('DummyTemplate', 'admin.dashboard.' . $view, $stub);
+        return str_replace('DummyTemplate', 'admin.dashboard.'.$view, $stub);
     }
 
     /**
@@ -71,10 +72,10 @@ class PanelMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         if ($this->option('no-view')) {
-            return __DIR__ . '/stubs/dashboard.panel.simple.stub';
+            return __DIR__.'/stubs/dashboard.panel.simple.stub';
         }
 
-        return __DIR__ . '/stubs/dashboard.panel.stub';
+        return __DIR__.'/stubs/dashboard.panel.stub';
     }
 
     /**
@@ -86,7 +87,7 @@ class PanelMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\\' . config('administrator.paths.panel');
+        return $rootNamespace.'\\'.config('administrator.paths.panel');
     }
 
     /**
@@ -101,6 +102,26 @@ class PanelMakeCommand extends GeneratorCommand
         ];
     }
 
+    /**
+     * @param $name
+     *
+     * @return string
+     */
+    protected function templatePath($name)
+    {
+        $tpl = base_path('resources/views/admin/dashboard/'.$name.'.blade.php');
+
+        return $tpl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getViewName()
+    {
+        return snake_case(class_basename($this->qualifyClass($this->getNameInput())));
+    }
+
     private function templateContents($title, $path)
     {
         return <<<OUT
@@ -113,25 +134,5 @@ class PanelMakeCommand extends GeneratorCommand
     </div>
 </div>
 OUT;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return string
-     */
-    protected function templatePath($name)
-    {
-        $tpl = base_path('resources/views/admin/dashboard/' . $name . '.blade.php');
-
-        return $tpl;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getViewName()
-    {
-        return snake_case(class_basename($this->qualifyClass($this->getNameInput())));
     }
 }

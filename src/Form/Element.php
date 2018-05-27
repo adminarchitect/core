@@ -18,7 +18,7 @@ abstract class Element implements HtmlElement, Validable, Relationship
 
     protected $translatable = false;
 
-    protected $view = null;
+    protected $view;
 
     protected $viewParams = [];
 
@@ -52,6 +52,7 @@ abstract class Element implements HtmlElement, Validable, Relationship
      * Init element from set of attributes.
      *
      * @param array $attributes
+     *
      * @return $this
      */
     public function setAttributes(array $attributes = [])
@@ -95,19 +96,19 @@ abstract class Element implements HtmlElement, Validable, Relationship
         if ($renderer = $this->getView()) {
             $params = $this->getViewParams();
 
-            # prevent recursion call
-            # when inside of view there is a call like: $element->html()
+            // prevent recursion call
+            // when inside of view there is a call like: $element->html()
             $this->setView(null);
 
             $html = (string) view($renderer, ['element' => $this] + $params);
 
-            # restore view
+            // restore view
             $this->setView($renderer);
         } else {
             $html = $this->render();
         }
 
-        return $html . $this->errors();
+        return $html.$this->errors();
     }
 
     /**
@@ -117,11 +118,14 @@ abstract class Element implements HtmlElement, Validable, Relationship
      */
     abstract public function render();
 
+    public function getRepository()
+    {
+        return app('scaffold.model') ?: app('scaffold.module')->model();
+    }
+
     protected function setDefaultValue()
     {
-        /**
-         * If relation detected => try to extract value from relation or magnet link
-         */
+        // If relation detected => try to extract value from relation or magnet link
         if ($this->hasRelation() && ($repository = $this->getRepository())) {
             if (!$value = $this->extractValueFromEloquentRelation($repository)) {
                 if ($magnet = $this->isMagnetParameter()) {
@@ -132,7 +136,7 @@ abstract class Element implements HtmlElement, Validable, Relationship
             return $this->setValue($value);
         }
 
-        /**
+        /*
          * Try to extract value from Closure provided by form configuration
          * Note: checking for function_exists is set to ensure that \Closure is provided
          * and protect calling functions when provided value is something like 'rand' which is also is_callable
@@ -145,28 +149,19 @@ abstract class Element implements HtmlElement, Validable, Relationship
             }
         }
 
-        /**
-         * Set default value from Eloquent model.
-         */
+        // Set default value from Eloquent model.
         if (($element = $this->getRepository()) && $element->exists) {
             if ($value = $element->getAttribute($this->name)) {
                 return $this->setValue($value);
             }
         }
 
-        /**
-         * If column configured as a magnet link, so try to extract value form Request
-         */
+        // If column configured as a magnet link, so try to extract value form Request
         if ($magnet = $this->isMagnetParameter()) {
             return $this->setValue($magnet[$this->getName()]);
         }
 
         return null;
-    }
-
-    public function getRepository()
-    {
-        return app('scaffold.model') ?: app('scaffold.module')->model();
     }
 
     protected function isMagnetParameter()

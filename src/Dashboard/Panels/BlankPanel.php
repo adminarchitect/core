@@ -10,7 +10,7 @@ class BlankPanel extends DashboardPanel
     use Stringify;
 
     /**
-     * Widget contents
+     * Widget contents.
      *
      * @return mixed
      */

@@ -2,10 +2,10 @@
 
 namespace Terranet\Administrator\Columns\Decorators;
 
+use Terranet\Presentable\PresentableInterface;
 use function admin\helpers\has_admin_presenter;
 use function admin\helpers\has_presenter;
 use function admin\helpers\present;
-use Terranet\Presentable\PresentableInterface;
 
 abstract class CellDecorator
 {

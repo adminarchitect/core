@@ -8,7 +8,7 @@ use Terranet\Administrator\Form\FormElement;
 trait HasOptions
 {
     /**
-     * List of editable options
+     * List of editable options.
      *
      * @return Mutable
      */
@@ -22,7 +22,7 @@ trait HasOptions
      */
     protected function scaffoldForm()
     {
-        $collection = new Mutable;
+        $collection = new Mutable();
 
         foreach (options_fetch() as $option) {
             $element = FormElement::text($option->key);

@@ -22,13 +22,13 @@ class FileStorage
         $this->handleStorage();
     }
 
-    public function upload(array $files = [], $directory)
+    public function upload(array $files, $directory)
     {
         /**
-         * @var $file UploadedFile
+         * @var UploadedFile
          */
         foreach ($files as $file) {
-            $filename = $this->path($directory) . DIRECTORY_SEPARATOR . $file->getClientOriginalName();
+            $filename = $this->path($directory).DIRECTORY_SEPARATOR.$file->getClientOriginalName();
 
             if ($this->filesystem->exists($filename) || move_uploaded_file($file->path(), $filename)) {
                 return (new File($filename, $this))->toArray();
@@ -40,6 +40,7 @@ class FileStorage
      * Files list.
      *
      * @param $directory
+     *
      * @return Collection
      */
     public function files($directory)
@@ -55,6 +56,7 @@ class FileStorage
      * Directories list.
      *
      * @param $directory
+     *
      * @return Collection
      */
     public function directories($directory)
@@ -68,15 +70,15 @@ class FileStorage
     public function mkdir($name, $basename = null)
     {
         $directory = array_filter([$this->path($basename), $name], function ($item) {
-            return !is_null($item);
+            return null !== $item;
         });
 
         if ($this->filesystem->exists($directory = $this->compilePath($directory))) {
-            throw new Exception(sprintf("Directory \"%s\" already exists.", $name));
+            throw new Exception(sprintf('Directory "%s" already exists.', $name));
         }
 
         if (!$this->filesystem->makeDirectory($directory)) {
-            throw new Exception(sprintf("Unable to create directory \"%s\".", $name));
+            throw new Exception(sprintf('Unable to create directory "%s".', $name));
         }
 
         return $directory;
@@ -87,7 +89,7 @@ class FileStorage
         foreach ($files as $file) {
             $this->filesystem->move(
                 $this->path($this->compilePath([$basedir, $file])),
-                realpath($this->path($this->compilePath([$basedir, $target]))) . DIRECTORY_SEPARATOR . $file
+                realpath($this->path($this->compilePath([$basedir, $target]))).DIRECTORY_SEPARATOR.$file
             );
         }
     }
@@ -95,14 +97,14 @@ class FileStorage
     public function rename($from, $to)
     {
         $from = $this->path($from);
-        $to = dirname(realpath($from)) . DIRECTORY_SEPARATOR . $to;
+        $to = dirname(realpath($from)).DIRECTORY_SEPARATOR.$to;
 
         if ($this->filesystem->exists($to)) {
-            throw new Exception(sprintf("File %s already exists.", $to));
+            throw new Exception(sprintf('File %s already exists.', $to));
         }
 
         if (!$this->filesystem->move($from, $to)) {
-            throw new Exception(sprintf("Unable to move file %s to %s.", basename($from), basename($to)));
+            throw new Exception(sprintf('Unable to move file %s to %s.', basename($from), basename($to)));
         }
 
         return $to;
@@ -133,7 +135,7 @@ class FileStorage
 
     public function path($path = null)
     {
-        return rtrim(public_path($this->basename() . DIRECTORY_SEPARATOR . $path), DIRECTORY_SEPARATOR);
+        return rtrim(public_path($this->basename().DIRECTORY_SEPARATOR.$path), DIRECTORY_SEPARATOR);
     }
 
     protected function handleStorage()
@@ -147,6 +149,7 @@ class FileStorage
 
     /**
      * @param $storage
+     *
      * @return bool
      */
     protected function createStorage($storage)
@@ -156,6 +159,7 @@ class FileStorage
 
     /**
      * @param $directories
+     *
      * @return string
      */
     protected function compilePath($directories)

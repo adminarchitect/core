@@ -5,11 +5,8 @@ namespace App\Http\Terranet\Administrator\Modules;
 use Terranet\Administrator\Modules\Users as CoreUsersModule;
 
 /**
- * Administrator Users Module
- *
- * @package Terranet\Administrator
+ * Administrator Users Module.
  */
 class Users extends CoreUsersModule
 {
-    //
 }

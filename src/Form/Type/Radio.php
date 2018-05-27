@@ -24,10 +24,10 @@ class Radio extends Select
 
             array_push(
                 $out,
-                '<div style="' . $this->getStyle(true) . '">' .
-                '   ' . $this->htmlInput($name, $value, $attributes) .
-                '   ' . PHP_EOL . '&nbsp;' .
-                '   ' . Form::label($partId, $label) .
+                '<div style="'.$this->getStyle(true).'">'.
+                '   '.$this->htmlInput($name, $value, $attributes).
+                '   '.PHP_EOL.'&nbsp;'.
+                '   '.Form::label($partId, $label).
                 '</div>'
             );
         }
@@ -40,6 +40,7 @@ class Radio extends Select
      *
      * @param array $style
      * @param bool $update
+     *
      * @return $this
      */
     public function setStyle(array $style = [], $update = true)
@@ -53,6 +54,7 @@ class Radio extends Select
 
     /**
      * @param bool $compiled
+     *
      * @return array
      */
     public function getStyle($compiled = false)
@@ -63,7 +65,7 @@ class Radio extends Select
                 $style[] = "{$property}: {$value}";
             }
 
-            return implode("; ", $style);
+            return implode('; ', $style);
         }
 
         return $this->style;
@@ -73,11 +75,12 @@ class Radio extends Select
      * @param $name
      * @param $value
      * @param $attributes
+     *
      * @return mixed
      */
     protected function htmlInput($name, $value, $attributes)
     {
-        return Form::radio($name, $value, in_array($value, (array) $this->value), $attributes);
+        return Form::radio($name, $value, in_array($value, (array) $this->value, true), $attributes);
     }
 
     /**
@@ -85,16 +88,17 @@ class Radio extends Select
      */
     protected function hiddenAttributes()
     {
-        return ['id' => Form::getIdAttribute($this->getFormName(), $this->attributes) . '_hidden'];
+        return ['id' => Form::getIdAttribute($this->getFormName(), $this->attributes).'_hidden'];
     }
 
     /**
      * @param $id
      * @param $value
+     *
      * @return string
      */
     protected function particularId($id, $value)
     {
-        return $id . '_' . $value;
+        return $id.'_'.$value;
     }
 }

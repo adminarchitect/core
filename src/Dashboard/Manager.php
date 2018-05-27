@@ -11,11 +11,12 @@ class Manager implements IteratorAggregate
 
     /**
      * @param Closure $callback
+     *
      * @return static
      */
     public function row(Closure $callback)
     {
-        $callback($row = new DashboardRow);
+        $callback($row = new DashboardRow());
 
         $this->rows[] = $row;
 

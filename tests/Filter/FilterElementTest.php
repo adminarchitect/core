@@ -2,9 +2,12 @@
 
 use Terranet\Administrator\Filters\FilterElement;
 
-require_once __DIR__ . '/../MocksValidator.php';
+require_once __DIR__.'/../MocksValidator.php';
 
-class FilterElementTest extends PHPUnit_Framework_TestCase
+/**
+ * @coversNothing
+ */
+class FilterElementTest extends PHPUnit\Framework\TestCase
 {
     use MocksValidator;
 
@@ -43,15 +46,17 @@ class FilterElementTest extends PHPUnit_Framework_TestCase
     {
         $select = FilterElement::select('select');
         $datalist = FilterElement::datalist('datalist');
-        $select->getInput()->setOptions($options = [1,2,3,4,5]);
+        $select->getInput()->setOptions($options = [1, 2, 3, 4, 5]);
         $datalist->getInput()->setOptions($options);
 
-        $this->assertEquals(
-            $options, $select->getInput()->getOptions()
+        $this->assertSame(
+            $options,
+            $select->getInput()->getOptions()
         );
 
-        $this->assertEquals(
-            $options, $datalist->getInput()->getOptions()
+        $this->assertSame(
+            $options,
+            $datalist->getInput()->getOptions()
         );
     }
 
@@ -61,7 +66,7 @@ class FilterElementTest extends PHPUnit_Framework_TestCase
         $select = FilterElement::select('select');
         $datalist = FilterElement::datalist('datalist');
 
-        $realOptions = [1,2,3,4,5];
+        $realOptions = [1, 2, 3, 4, 5];
         $options = function () use ($realOptions) {
             return $realOptions;
         };
@@ -69,12 +74,14 @@ class FilterElementTest extends PHPUnit_Framework_TestCase
         $select->getInput()->setOptions($options);
         $datalist->getInput()->setOptions($options);
 
-        $this->assertEquals(
-            $realOptions, $select->getInput()->getOptions()
+        $this->assertSame(
+            $realOptions,
+            $select->getInput()->getOptions()
         );
 
-        $this->assertEquals(
-            $realOptions, $datalist->getInput()->getOptions()
+        $this->assertSame(
+            $realOptions,
+            $datalist->getInput()->getOptions()
         );
     }
 
@@ -84,11 +91,12 @@ class FilterElementTest extends PHPUnit_Framework_TestCase
         $search = FilterElement::search('user');
         $search->getInput()->setDataUrl('/search/users');
 
-        $this->assertEquals(
-            '/search/users', $search->getInput()->getDataUrl()
+        $this->assertSame(
+            '/search/users',
+            $search->getInput()->getDataUrl()
         );
         $this->assertArrayHasKey('data-type', $attributes = $search->getInput()->getAttributes());
-        $this->assertEquals('livesearch', $attributes['data-type']);
+        $this->assertSame('livesearch', $attributes['data-type']);
     }
 
     /** @test */
@@ -96,13 +104,13 @@ class FilterElementTest extends PHPUnit_Framework_TestCase
     {
         $select = FilterElement::select('test');
         $input = $select->getInput();
-        $input->setOptions([1,2,3,4,5]);
+        $input->setOptions([1, 2, 3, 4, 5]);
 
         $input->setQuery($query = function ($query, $value = null) {
             return $query->where('test', $value);
         });
 
-        $this->assertEquals(
+        $this->assertSame(
             $query,
             $input->getQuery()
         );

@@ -2,9 +2,9 @@
 
 namespace Terranet\Administrator\Dashboard\Panels;
 
-use function admin\db\connection;
 use Terranet\Administrator\Dashboard\DashboardPanel;
 use Terranet\Administrator\Traits\Stringify;
+use function admin\db\connection;
 
 class DatabasePanel extends DashboardPanel
 {
@@ -25,7 +25,7 @@ class DatabasePanel extends DashboardPanel
     protected function getDatabaseStats()
     {
         if (connection('mysql')) {
-            return $this->connection()->select($this->connection()->raw("SHOW TABLE STATUS"));
+            return $this->connection()->select($this->connection()->raw('SHOW TABLE STATUS'));
         }
 
         return collect([]);

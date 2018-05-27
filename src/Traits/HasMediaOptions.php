@@ -2,8 +2,6 @@
 
 namespace Terranet\Administrator\Traits;
 
-use Terranet\Administrator\Columns\MediaElement;
-
 trait HasMediaOptions
 {
     protected $width = 300;
@@ -22,6 +20,7 @@ trait HasMediaOptions
      * Show/Hide Carousel arrows.
      *
      * @param bool $flag
+     *
      * @return $this
      */
     public function hasArrows(bool $flag)
@@ -35,6 +34,7 @@ trait HasMediaOptions
      * Show/Hide Carousel indicators.
      *
      * @param bool $flag
+     *
      * @return $this
      */
     public function hasIndicators(bool $flag)
@@ -48,6 +48,7 @@ trait HasMediaOptions
      * Media conversion name.
      *
      * @param $conversion
+     *
      * @return $this
      */
     public function convertedTo($conversion)
@@ -61,6 +62,7 @@ trait HasMediaOptions
      * AutoPlay interval in minutes.
      *
      * @param $interval
+     *
      * @return $this
      */
     public function autoPlay($interval)
@@ -74,6 +76,7 @@ trait HasMediaOptions
      * Carousel max Width.
      *
      * @param $width
+     *
      * @return $this
      */
     public function maxWidth($width)
@@ -87,6 +90,7 @@ trait HasMediaOptions
      * Enable/Disable uploads.
      *
      * @param bool $flag
+     *
      * @return $this
      */
     public function editable(bool $flag = true)

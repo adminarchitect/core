@@ -3,9 +3,12 @@
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\Type\Text;
 
-require_once __DIR__ . '/../MocksValidator.php';
+require_once __DIR__.'/../MocksValidator.php';
 
-class ElementTest extends PHPUnit_Framework_TestCase
+/**
+ * @coversNothing
+ */
+class ElementTest extends PHPUnit\Framework\TestCase
 {
     use MocksValidator;
 
@@ -21,12 +24,12 @@ class ElementTest extends PHPUnit_Framework_TestCase
     {
         $element = FormElement::text('name');
 
-        $this->assertEquals(
+        $this->assertSame(
             $element->id(),
             'name'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $element->getInput(),
             new Text('name')
         );

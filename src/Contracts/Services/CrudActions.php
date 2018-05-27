@@ -15,7 +15,7 @@ interface CrudActions
     public function authorize($method, $eloquent = null);
 
     /**
-     * List of single actions
+     * List of single actions.
      *
      * @return array
      */

@@ -37,6 +37,7 @@ abstract class ElementContainer implements AutoTranslatable
      *
      * @example: When using this Container in Forms, the original id should be kept to allow parsing relations.
      * When for columns there is a different logic to extract Relational data.
+     *
      * @var bool
      */
     protected $keepOriginalID = true;
@@ -67,6 +68,7 @@ abstract class ElementContainer implements AutoTranslatable
      * Set element ID.
      *
      * @param $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -94,12 +96,13 @@ abstract class ElementContainer implements AutoTranslatable
      * Set element title.
      *
      * @param $title
+     *
      * @return $this
      */
     public function setTitle($title)
     {
-        # handle relations-style titles
-        $title = preg_replace('~^(\w+)\.(\w+)$~si', "$1 $2", $title);
+        // handle relations-style titles
+        $title = preg_replace('~^(\w+)\.(\w+)$~si', '$1 $2', $title);
 
         $this->title = $title;
 
@@ -127,7 +130,29 @@ abstract class ElementContainer implements AutoTranslatable
     }
 
     /**
+     * @return string
+     */
+    public function translationKey()
+    {
+        $key = sprintf('administrator::columns.%s.%s', $this->module()->url(), $this->id);
+
+        if (!$this->translator()->has($key)) {
+            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
+    }
+
+    public function setModule($module)
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    /**
      * @param $id
+     *
      * @return string
      */
     protected function buildId($id)
@@ -152,31 +177,10 @@ abstract class ElementContainer implements AutoTranslatable
     }
 
     /**
-     * @return string
-     */
-    public function translationKey()
-    {
-        $key = sprintf('administrator::columns.%s.%s', $this->module()->url(), $this->id);
-
-        if (!$this->translator()->has($key)) {
-            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
-        }
-
-        return $key;
-    }
-
-    /**
      * @return Scaffolding
      */
     protected function module()
     {
         return $this->module ?: app('scaffold.module');
-    }
-
-    public function setModule($module)
-    {
-        $this->module = $module;
-
-        return $this;
     }
 }
