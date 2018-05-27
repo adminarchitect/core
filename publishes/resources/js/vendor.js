@@ -15,6 +15,7 @@ require('@adminarchitect/bootstrap/js/transition');
 
 /* Date/DateRange pickers */
 require('@adminarchitect/bootstrap-datepicker');
+require('@adminarchitect/bootstrap-datetimepicker');
 require('@adminarchitect/bootstrap-daterangepicker');
 
 /* jQuery Toggles */
