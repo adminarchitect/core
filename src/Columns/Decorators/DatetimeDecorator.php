@@ -20,9 +20,9 @@ class DatetimeDecorator extends CellDecorator
         $value = \admin\helpers\eloquent_attribute($row, $this->name);
 
         if ($value instanceof Carbon
-            && method_exists($value, $method = "to" . str_replace('Type', '', $this->type) . "String")
+            && method_exists($value, $method = 'to'.str_replace('Type', '', $this->type).'String')
         ) {
-            return '<span class="label label-primary">' . $value->$method() . '</span>';
+            return '<span class="label label-primary">'.$value->$method().'</span>';
         }
 
         return $value;

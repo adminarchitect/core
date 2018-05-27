@@ -14,6 +14,7 @@ class EloquentWidget extends AbstractWidget implements Widgetable
 
     /**
      * EloquentWidget constructor.
+     *
      * @param $eloquent
      */
     public function __construct($eloquent)
@@ -22,7 +23,7 @@ class EloquentWidget extends AbstractWidget implements Widgetable
     }
 
     /**
-     * Widget contents
+     * Widget contents.
      *
      * @return mixed
      */
@@ -31,8 +32,8 @@ class EloquentWidget extends AbstractWidget implements Widgetable
         $title = $this->fetchTitle();
 
         return view(app('scaffold.template')->view('model'), [
-            'title'      => $title,
-            'item'       => $this->eloquent
+            'title' => $title,
+            'item' => $this->eloquent,
         ]);
     }
 

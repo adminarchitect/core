@@ -2,9 +2,12 @@
 
 use Terranet\Administrator\Form\FormElement;
 
-require_once __DIR__ . '/../MocksValidator.php';
+require_once __DIR__.'/../MocksValidator.php';
 
-class FormElementTest extends PHPUnit_Framework_TestCase
+/**
+ * @coversNothing
+ */
+class FormElementTest extends PHPUnit\Framework\TestCase
 {
     use MocksValidator;
 
@@ -56,12 +59,14 @@ class FormElementTest extends PHPUnit_Framework_TestCase
         $select->getInput()->setOptions($options = [1, 2, 3, 4, 5]);
         $datalist->getInput()->setOptions($options);
 
-        $this->assertEquals(
-            $options, $select->getInput()->getOptions()
+        $this->assertSame(
+            $options,
+            $select->getInput()->getOptions()
         );
 
-        $this->assertEquals(
-            $options, $datalist->getInput()->getOptions()
+        $this->assertSame(
+            $options,
+            $datalist->getInput()->getOptions()
         );
     }
 
@@ -79,12 +84,14 @@ class FormElementTest extends PHPUnit_Framework_TestCase
         $select->getInput()->setOptions($options);
         $datalist->getInput()->setOptions($options);
 
-        $this->assertEquals(
-            $realOptions, $select->getInput()->getOptions()
+        $this->assertSame(
+            $realOptions,
+            $select->getInput()->getOptions()
         );
 
-        $this->assertEquals(
-            $realOptions, $datalist->getInput()->getOptions()
+        $this->assertSame(
+            $realOptions,
+            $datalist->getInput()->getOptions()
         );
     }
 
@@ -94,11 +101,11 @@ class FormElementTest extends PHPUnit_Framework_TestCase
         $search = FormElement::search('user');
         $search->getInput()->setDataUrl('/search/users');
 
-        $this->assertEquals(
-            '/search/users', $search->getInput()->getDataUrl()
+        $this->assertSame(
+            '/search/users',
+            $search->getInput()->getDataUrl()
         );
         $this->assertArrayHasKey('data-type', $attributes = $search->getInput()->getAttributes());
-        $this->assertEquals('livesearch', $attributes['data-type']);
+        $this->assertSame('livesearch', $attributes['data-type']);
     }
-
 }

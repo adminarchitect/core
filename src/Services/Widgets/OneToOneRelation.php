@@ -27,7 +27,7 @@ class OneToOneRelation extends AbstractWidget implements Widgetable
     }
 
     /**
-     * Widget contents
+     * Widget contents.
      *
      * @return mixed
      */
@@ -37,8 +37,8 @@ class OneToOneRelation extends AbstractWidget implements Widgetable
 
         if ($related = $this->relation->getResults()) {
             return view(app('scaffold.template')->view('relations.one_to_one'), [
-                'title'   => $title,
-                'related' => $related
+                'title' => $title,
+                'related' => $related,
             ]);
         }
 

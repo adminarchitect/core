@@ -26,7 +26,7 @@ class Navigation
     }
 
     /**
-     * Make SideBar navigation
+     * Make SideBar navigation.
      */
     protected function makeSidebar()
     {

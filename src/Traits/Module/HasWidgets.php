@@ -18,7 +18,7 @@ trait HasWidgets
 
     /**
      * Return list of widgets (relations)
-     * fetched while viewing item details
+     * fetched while viewing item details.
      *
      * @return array
      */
@@ -63,7 +63,7 @@ trait HasWidgets
                     $widget->setPlacement($placement);
                 }
 
-                if (! list(/*$flag*/, $order) = $this->hasCommentFlag('order', $method)) {
+                if (!list(/*$flag*/, $order) = $this->hasCommentFlag('order', $method)) {
                     $rank += 10;
                     $order = $rank;
                 }

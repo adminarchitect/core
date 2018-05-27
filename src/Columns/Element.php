@@ -24,6 +24,7 @@ class Element extends ElementContainer
      * Set element display template.
      *
      * @param $template
+     *
      * @return $this
      */
     public function display($template)
@@ -35,18 +36,17 @@ class Element extends ElementContainer
 
     /**
      * @param Eloquent $eloquent
+     *
      * @return mixed
      */
     public function render(Eloquent $eloquent)
     {
-        /**
-         * Fetch value from Eloquent instance.
-         */
+        // Fetch value from Eloquent instance.
         if (!$this->template) {
             return $this->fetchValue($eloquent);
         }
 
-        /**
+        /*
          * Handle \Illuminate\Contracts\Support\Renderable (view(<template>)) decorators.
          *
          * @example: $element->display(view('users.comments'));
@@ -58,7 +58,7 @@ class Element extends ElementContainer
             ]);
         }
 
-        /**
+        /*
          * Handle instance of CellDecorators.
          *
          * @example: $element->display(new BooleanDecorator);
@@ -78,7 +78,7 @@ class Element extends ElementContainer
             return $closure->call($eloquent, $eloquent);
         }
 
-        /**
+        /*
          * Handle pattern-based decorators.
          *
          * @example: $element->display('<a href="mailto:(:email)">(:email)</a>');
@@ -88,28 +88,6 @@ class Element extends ElementContainer
 
             return \admin\helpers\eloquent_attribute($eloquent, $field);
         }, $this->template);
-    }
-
-    /**
-     * Fetch element value from eloquent
-     *
-     * @param $eloquent
-     * @return mixed
-     */
-    protected function fetchValue($eloquent)
-    {
-        $id = $this->id();
-
-        # Treat (Has)Many(ToMany|Through) relations as "count()" subQuery.
-        if (($relation = $this->hasRelation($eloquent, $id)) && $this->isCountableRelation($relation)) {
-            return $this->fetchRelationValue($eloquent, $id, [$id => $relation], true);
-        }
-
-        if ($this->relations) {
-            return $this->fetchRelationValue($eloquent, $id, $this->relations, true);
-        }
-
-        return \admin\helpers\eloquent_attribute($eloquent, $id);
     }
 
     /**
@@ -126,6 +104,7 @@ class Element extends ElementContainer
      * Set element Standalone flag.
      *
      * @param bool $flag
+     *
      * @return $this
      */
     public function setStandalone($flag = true)
@@ -143,14 +122,16 @@ class Element extends ElementContainer
     /**
      * Make column sortable.
      *
-     * @param \Closure|null $callback
+     * @param null|\Closure $callback
+     *
      * @return $this
      */
     public function sortable(\Closure $callback = null)
     {
         return tap($this, function ($element) use ($callback) {
             app('scaffold.module')->addSortable(
-                $element->id(), $callback
+                $element->id(),
+                $callback
             );
         });
     }
@@ -165,5 +146,28 @@ class Element extends ElementContainer
         return tap($this, function ($element) {
             app('scaffold.module')->removeSortable($element->id());
         });
+    }
+
+    /**
+     * Fetch element value from eloquent.
+     *
+     * @param $eloquent
+     *
+     * @return mixed
+     */
+    protected function fetchValue($eloquent)
+    {
+        $id = $this->id();
+
+        // Treat (Has)Many(ToMany|Through) relations as "count()" subQuery.
+        if (($relation = $this->hasRelation($eloquent, $id)) && $this->isCountableRelation($relation)) {
+            return $this->fetchRelationValue($eloquent, $id, [$id => $relation], true);
+        }
+
+        if ($this->relations) {
+            return $this->fetchRelationValue($eloquent, $id, $this->relations, true);
+        }
+
+        return \admin\helpers\eloquent_attribute($eloquent, $id);
     }
 }

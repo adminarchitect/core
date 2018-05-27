@@ -1,13 +1,16 @@
 <?php
 
-require_once __DIR__ . '/../CreatesElement.php';
-require_once __DIR__ . '/../MocksObjects.php';
+require_once __DIR__.'/../CreatesElement.php';
+require_once __DIR__.'/../MocksObjects.php';
 
 use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Columns\Element;
 
-class CollectionMutableTest extends PHPUnit_Framework_TestCase
+/**
+ * @coversNothing
+ */
+class CollectionMutableTest extends PHPUnit\Framework\TestCase
 {
     use CreatesElement, MocksObjects;
 
@@ -28,7 +31,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     {
         $this->assertCount(3, $this->collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('first'),
@@ -43,7 +46,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     {
         $this->collection->insert($this->e('fifth'), 0);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('fifth'),
@@ -54,7 +57,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
         );
 
         $this->collection->insert($this->e('sixth'), 2);
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('fifth'),
@@ -71,7 +74,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     {
         $this->assertCount(2, $this->collection->without('first'));
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('second'),
@@ -87,7 +90,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $this->collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('third'),
@@ -101,10 +104,11 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
         $this->collection->update('first', function (Element $element) {
             $element->setTranslator($this->mockTranslator());
             $element->setModule($this->mockModule());
+
             return $element->setTitle('First Element');
         });
 
-        $this->assertEquals(
+        $this->assertSame(
             'First Element',
             $this->collection->find('first')->title()
         );
@@ -126,11 +130,11 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
             },
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             'First Element',
             $this->collection->toArray()[0]->title()
         );
-        $this->assertEquals(
+        $this->assertSame(
             'Third Element',
             $this->collection->toArray()[2]->title()
         );
@@ -139,7 +143,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_moves_an_element_to_a_position()
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->move('first', 1)->toArray(),
             [
                 $this->e('second'),
@@ -148,7 +152,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
             ]
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->move('second', 2)->toArray(),
             [
                 $this->e('first'),
@@ -163,7 +167,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     {
         $this->collection->move('third', 'before:first');
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('third'),
@@ -173,7 +177,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
         );
 
         $this->collection->move('first', 'before:third');
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('first'),
@@ -187,7 +191,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
     public function it_moves_an_element_after_another_element()
     {
         $this->collection->move('first', 'after:third');
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('second'),
@@ -224,7 +228,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
             ->move('group', 'after:second');
 
         $this->assertCount(2, $this->collection);
-        $this->assertEquals(
+        $this->assertSame(
             $this->collection->toArray(),
             [
                 $this->e('second'),
@@ -238,7 +242,7 @@ class CollectionMutableTest extends PHPUnit_Framework_TestCase
      */
     protected function makeElementsCollection()
     {
-        $collection = (new \Terranet\Administrator\Collection\Mutable);
+        $collection = (new \Terranet\Administrator\Collection\Mutable());
 
         return $collection
             ->push($this->e('first'))

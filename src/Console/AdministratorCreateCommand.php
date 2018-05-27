@@ -63,6 +63,7 @@ class AdministratorCreateCommand extends Command
      * @param $name
      * @param $email
      * @param $password
+     *
      * @return array
      */
     protected function prepareData($name, $email, $password)
@@ -80,6 +81,7 @@ class AdministratorCreateCommand extends Command
      * Try to update user's role to admin if column 'role' exists.
      *
      * @param $instance
+     *
      * @return bool
      */
     protected function tryUpdatingRole($instance)
@@ -95,23 +97,25 @@ class AdministratorCreateCommand extends Command
      * Insert new user into database.
      *
      * @param $data
-     * @return Model
+     *
      * @throws Exception
+     *
+     * @return Model
      */
     protected function createUserInstance($data)
     {
         $config = app('scaffold.config');
 
-        if (! $model = $this->fetchModel($config)) {
-            throw new Exception("Could not find a model to create user.");
+        if (!$model = $this->fetchModel($config)) {
+            throw new Exception('Could not find a model to create user.');
         }
 
         try {
             $model::unguard();
 
-            return (new $model)->create($this->dataWithId($data));
+            return (new $model())->create($this->dataWithId($data));
         } catch (Exception $e) {
-            return (new $model)->create($data);
+            return (new $model())->create($data);
         }
     }
 
@@ -119,6 +123,7 @@ class AdministratorCreateCommand extends Command
      * Merge Administrator's data with an ID.
      *
      * @param $data
+     *
      * @return array
      */
     protected function dataWithId($data)

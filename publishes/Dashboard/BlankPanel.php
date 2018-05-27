@@ -6,5 +6,4 @@ use Terranet\Administrator\Dashboard\Panels\BlankPanel as CoreBlankPanel;
 
 class BlankPanel extends CoreBlankPanel
 {
-    //
 }

@@ -12,6 +12,7 @@ class Reader
      *
      * @param Collection $files
      * @param Collection $locales
+     *
      * @return mixed
      */
     public function read(Collection $files, Collection $locales)
@@ -36,10 +37,11 @@ class Reader
      *
      * @param $file
      * @param $locale
+     *
      * @return string
      */
     public function pathToFile($file, $locale): string
     {
-        return resource_path('lang' . DIRECTORY_SEPARATOR . (is_a($locale, Locale::class) ? $locale->iso6391() : $locale) . DIRECTORY_SEPARATOR . $file . '.php');
+        return resource_path('lang'.DIRECTORY_SEPARATOR.(is_a($locale, Locale::class) ? $locale->iso6391() : $locale).DIRECTORY_SEPARATOR.$file.'.php');
     }
 }

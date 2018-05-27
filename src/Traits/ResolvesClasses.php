@@ -8,10 +8,10 @@ use Symfony\Component\Finder\SplFileInfo;
 trait ResolvesClasses
 {
     /**
-     * Resolves and Initializes Class by filename
+     * Resolves and Initializes Class by filename.
      *
      * @param SplFileInfo $fileInfo
-     * @param Closure|null $callback
+     * @param null|Closure $callback
      */
     public function resolveClass(SplFileInfo $fileInfo, Closure $callback = null)
     {
@@ -27,6 +27,7 @@ trait ResolvesClasses
 
     /**
      * @param SplFileInfo $fileInfo
+     *
      * @return mixed
      */
     protected function getModuleClassName(SplFileInfo $fileInfo)
@@ -34,11 +35,13 @@ trait ResolvesClasses
         $name = str_replace('.php', '', $fileInfo->getBasename());
 
         $path = trim(str_replace(
-            app_path(), '', dirname($fileInfo->getPathname())
+            app_path(),
+            '',
+            dirname($fileInfo->getPathname())
         ), DIRECTORY_SEPARATOR);
 
         $location = str_replace('/', '\\', $path);
 
-        return app()->getNamespace() . "{$location}\\{$name}";
+        return app()->getNamespace()."{$location}\\{$name}";
     }
 }

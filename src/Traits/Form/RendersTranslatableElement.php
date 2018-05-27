@@ -35,7 +35,7 @@ trait RendersTranslatableElement
                     $element->setAttributes(['disabled' => true]);
                 }
 
-                $input = $element->render() . $element->errors();
+                $input = $element->render().$element->errors();
 
                 $input = view(
                     'administrator::partials.forms.translatable.element',
@@ -62,6 +62,7 @@ trait RendersTranslatableElement
     /**
      * @param $locale
      * @param $repository
+     *
      * @return RendersTranslatableElement
      */
     protected function selfClone($locale, $repository)
@@ -85,6 +86,7 @@ trait RendersTranslatableElement
 
     /**
      * @param $locale
+     *
      * @return string
      */
     protected function getFormTranslatableName($locale)

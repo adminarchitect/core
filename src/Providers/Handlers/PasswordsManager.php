@@ -17,26 +17,12 @@ class PasswordsManager
 
     /**
      * PasswordsManager constructor.
+     *
      * @param Repository $config
      */
     public function __construct(Repository $config)
     {
         $this->config = $config;
-    }
-
-    /**
-     * Check if running under admin area.
-     *
-     * @param RouteMatched $event
-     * @return bool
-     */
-    protected function isAdminArea(RouteMatched $event)
-    {
-        if ($action = $event->route->getAction()) {
-            return config('administrator.prefix') === array_get($action, 'prefix');
-        }
-
-        return false;
     }
 
     public function handle()
@@ -56,5 +42,21 @@ class PasswordsManager
                 }
             }
         });
+    }
+
+    /**
+     * Check if running under admin area.
+     *
+     * @param RouteMatched $event
+     *
+     * @return bool
+     */
+    protected function isAdminArea(RouteMatched $event)
+    {
+        if ($action = $event->route->getAction()) {
+            return config('administrator.prefix') === array_get($action, 'prefix');
+        }
+
+        return false;
     }
 }

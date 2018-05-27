@@ -2,21 +2,20 @@
 
 namespace Terranet\Administrator\Form\Type;
 
+use Czim\Paperclip\Attachment\Attachment;
 use Form;
 use Terranet\Administrator\Form\Element;
-use Czim\Paperclip\Attachment\Attachment;
 
 class File extends Element
 {
     /**
-     * Require file deletion before new upload
+     * Require file deletion before new upload.
      *
      * @var bool
      */
     protected $forceDelete = true;
 
     protected $attributes = [
-        //
     ];
 
     /**
@@ -26,7 +25,7 @@ class File extends Element
 
     public function render()
     {
-        return $this->getOutput() . $this->getInput();
+        return $this->getOutput().$this->getInput();
     }
 
     /**
@@ -40,7 +39,7 @@ class File extends Element
             $files = $this->listFiles();
 
             $output = $files
-                . ($this->forceDelete ? $this->detachLink() : '');
+                .($this->forceDelete ? $this->detachLink() : '');
         }
 
         return $output;
@@ -83,8 +82,8 @@ class File extends Element
     protected function detachLink()
     {
         return ''
-            . '<div style="margin-top: 10px;">'
-            . link_to_route('scaffold.delete_attachment', 'Delete file', [
+            .'<div style="margin-top: 10px;">'
+            .link_to_route('scaffold.delete_attachment', 'Delete file', [
                 'module' => app('scaffold.module'),
                 'attachment' => $this->getName(),
                 'id' => $this->getRepository()->getKey(),
@@ -93,7 +92,7 @@ class File extends Element
                 'class' => 'btn btn-danger',
                 'style' => 'padding: 2px 46px;',
             ])
-            . '</div>';
+            .'</div>';
     }
 
     /**

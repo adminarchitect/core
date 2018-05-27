@@ -12,7 +12,6 @@ use Terranet\Administrator\Console\FinderMakeCommand;
 use Terranet\Administrator\Console\LanguagesMakeCommand;
 use Terranet\Administrator\Console\PanelMakeCommand;
 use Terranet\Administrator\Console\PublishCommand;
-use Terranet\Administrator\Console\PublishCommandCommand;
 use Terranet\Administrator\Console\ResourceMakeCommand;
 use Terranet\Administrator\Console\SaverMakeCommand;
 use Terranet\Administrator\Console\SettingsMakeCommand;
@@ -53,7 +52,7 @@ class ArtisanServiceProvider extends ServiceProvider
     protected function registerAdminPublishCommand()
     {
         $this->app->singleton('command.administrator.publish', function () {
-            return new PublishCommand;
+            return new PublishCommand();
         });
     }
 

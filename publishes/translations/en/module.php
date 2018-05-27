@@ -1,32 +1,32 @@
 <?php
 
 return [
-    'backend'     => 'Administration panel',
-    'success'     => 'Success!',
-    'error'       => 'Error!',
-    'settings'    => 'Settings',
-    'actions'     => 'Actions',
-    'login'       => 'Sign In',
-    'dashboard'   => 'Dashboard',
-    'filters'     => 'Filters',
+    'backend' => 'Administration panel',
+    'success' => 'Success!',
+    'error' => 'Error!',
+    'settings' => 'Settings',
+    'actions' => 'Actions',
+    'login' => 'Sign In',
+    'dashboard' => 'Dashboard',
+    'filters' => 'Filters',
     'credentials' => [
-        'email'    => 'Email',
+        'email' => 'Email',
         'username' => 'Username',
         'password' => 'Password',
     ],
-    'resources'   => [
-        'users'     => 'Users',
+    'resources' => [
+        'users' => 'Users',
         'languages' => 'Languages',
         'translations' => 'Translations',
-        'settings'  => 'Settings',
+        'settings' => 'Settings',
     ],
-    'groups'      => [
+    'groups' => [
         'users' => 'Users',
         'localization' => 'Localization',
     ],
     'action' => [
         'create' => 'Create :resource',
-        'edit'   => ':instance',
-        'view'   => ':instance',
-    ]
+        'edit' => ':instance',
+        'view' => ':instance',
+    ],
 ];

@@ -1,6 +1,6 @@
 @if ($collection->count())
     <?php
-    $titles = array_keys(\admin\helpers\eloquent_attributes($collection->first()))
+    $titles = array_keys(\admin\helpers\eloquent_attributes($collection->first()));
     ?>
     <table class="table table-striped-col">
         <tr>

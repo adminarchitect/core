@@ -6,7 +6,7 @@ use Terranet\Administrator\Form\Element;
 
 class Key extends Element
 {
-    protected $value = null;
+    protected $value;
 
     public function render()
     {

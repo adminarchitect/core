@@ -8,6 +8,7 @@ interface AutoTranslatable
      * Set a translator object.
      *
      * @param $translator
+     *
      * @return mixed
      */
     public function setTranslator($translator);

@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Filters;
 
-use function admin\db\scheme;
 use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,6 +13,7 @@ use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Translatable\Translatable;
+use function admin\db\scheme;
 
 class Assembler
 {
@@ -34,7 +34,7 @@ class Assembler
     {
         if ($this->model = $eloquent) {
             $this->query = $this->model->newQuery();
-            $this->query->select($this->model->getTable() . '.*');
+            $this->query->select($this->model->getTable().'.*');
         }
     }
 
@@ -70,15 +70,17 @@ class Assembler
      * Apply scope.
      *
      * @param Scope $scope
-     * @return $this
+     *
      * @throws \Terranet\Administrator\Exception
+     *
+     * @return $this
      */
     public function scope(Scope $scope)
     {
         $callable = $scope->getQuery();
 
         if (is_string($callable)) {
-            /**
+            /*
              * Adds a Class "ClassName::class" syntax.
              *
              * @note In this case Query class should implement Contracts\Module\Queryable interface.
@@ -90,7 +92,7 @@ class Assembler
                 if (!method_exists($object, 'query')) {
                     throw new \Terranet\Administrator\Exception(
                         sprintf(
-                            "Query object %s should implement %s interface",
+                            'Query object %s should implement %s interface',
                             get_class($object),
                             \Terranet\Administrator\Contracts\Module\Queryable::class
                         )
@@ -102,13 +104,13 @@ class Assembler
                 return $this;
             }
 
-            /**
+            /*
              * Allows "SomeClass@method" syntax.
              *
              * @example: (new Scope('name'))->addQuery("User@active")
              */
             if (str_contains($callable, '@')) {
-                list($object, $method) = explode("@", $callable);
+                list($object, $method) = explode('@', $callable);
 
                 $this->query = app($object)->$method($this->query);
 
@@ -116,7 +118,7 @@ class Assembler
             }
         }
 
-        /**
+        /*
          * Allows adding a \Closure as a query;
          *
          * @example: (new Scope('name'))->setQuery(function($query) { return $this->modify(); })
@@ -127,7 +129,7 @@ class Assembler
             return $this;
         }
 
-        /**
+        /*
          * Accepts callable builder
          *
          * @example: (new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
@@ -139,10 +141,10 @@ class Assembler
                 $object = app($object);
             }
 
-            # Call Model Scope immediately when detected.
-            #
-            # @note: We don't use call_user_func_array() here
-            # because of missing columns in returned query.
+            // Call Model Scope immediately when detected.
+            //
+            // @note: We don't use call_user_func_array() here
+            // because of missing columns in returned query.
             $this->query = with(
                 $this->model->is($object) ? $this->query : $object
             )->{$method}($this->query);
@@ -157,14 +159,14 @@ class Assembler
      * @param $element
      * @param $direction
      *
-     * @return $this
-     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function sort($element, $direction)
     {
-        # simple sorting
-        if (in_array($element, $sortable = app('scaffold.module')->sortable())) {
+        // simple sorting
+        if (in_array($element, $sortable = app('scaffold.module')->sortable(), true)) {
             if ($table = app('scaffold.module')->model()->getTable()) {
                 $element = "{$table}.{$element}";
             }
@@ -179,7 +181,7 @@ class Assembler
         if (array_key_exists($element, $sortable) && is_string($handler = $sortable[$element])) {
             $handler = new $handler($this->query, $element, $direction);
             if (!$handler instanceof QueryBuilder || !method_exists($handler, 'build')) {
-                throw new \Exception('Handler class must implement ' . QueryBuilder::class . ' contract');
+                throw new \Exception('Handler class must implement '.QueryBuilder::class.' contract');
             }
             $this->query = $handler->build();
         }
@@ -200,9 +202,9 @@ class Assembler
     /**
      * @param FormElement $element
      *
-     * @return \Illuminate\Database\Eloquent\Builder|static
-     *
      * @throws Exception
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|static
      */
     protected function assemblyQuery(FormElement $element)
     {
@@ -212,7 +214,7 @@ class Assembler
         $name = $element->id();
         $value = $input->getValue();
 
-        if (is_null($value)) {
+        if (null === $value) {
             return $this->query;
         }
 
@@ -247,28 +249,29 @@ class Assembler
             case 'text':
             case 'datalist':
                 $query->where("{$table}.{$column}", 'LIKE', "%{$value}%");
-                break;
 
+                break;
             case 'select':
             case 'multiselect':
                 if (!is_array($value)) {
                     $value = [$value];
                 }
                 $query->whereIn("{$table}.{$column}", $value);
-                break;
 
+                break;
             case 'boolean':
             case 'number':
                 $query->where("{$table}.{$column}", '=', (int) $value);
-                break;
 
+                break;
             case 'date':
                 $query->whereDate("{$table}.{$column}", '=', $value);
-                break;
 
+                break;
             case 'daterange':
                 list($date_from, $date_to) = explode(' - ', $value);
                 $query->whereBetween(\DB::raw("DATE({$table}.{$column})"), [$date_from, $date_to]);
+
                 break;
         }
 

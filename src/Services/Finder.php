@@ -62,7 +62,7 @@ class Finder implements FinderContract
      */
     public function getQuery()
     {
-        # prevent duplicated execution
+        // prevent duplicated execution
         if (null === $this->query && $this->model) {
             $this->initQuery()
                  ->applyFilters()
@@ -72,6 +72,21 @@ class Finder implements FinderContract
         }
 
         return $this->query;
+    }
+
+    /**
+     * Find a record by id or fail.
+     *
+     * @param       $key
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function find($key, $columns = ['*'])
+    {
+        $this->model = $this->model->newQueryWithoutScopes()->findOrFail($key, $columns);
+
+        return $this->model;
     }
 
     /**
@@ -126,10 +141,11 @@ class Finder implements FinderContract
 
     /**
      * Solving problem then magnet params gets used for auto-filtering
-     * even if there is another filter defined with the same name
+     * even if there is another filter defined with the same name.
      *
      * @param $magnet
      * @param $filters
+     *
      * @return array
      */
     protected function removeDuplicates($magnet, $filters)
@@ -154,7 +170,7 @@ class Finder implements FinderContract
      */
     protected function applyMagnetFilter(MagnetParams $magnet)
     {
-        $filters = new Administrator\Form\Collection\Mutable;
+        $filters = new Administrator\Form\Collection\Mutable();
 
         foreach ($magnet->toArray() as $key) {
             $element = new FormElement($key);
@@ -195,20 +211,5 @@ class Finder implements FinderContract
         return method_exists($this->module, 'perPage')
             ? $this->module->perPage()
             : 20;
-    }
-
-    /**
-     * Find a record by id or fail.
-     *
-     * @param       $key
-     * @param array $columns
-     *
-     * @return mixed
-     */
-    public function find($key, $columns = ['*'])
-    {
-        $this->model = $this->model->newQueryWithoutScopes()->findOrFail($key, $columns);
-
-        return $this->model;
     }
 }

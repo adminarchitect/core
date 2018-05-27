@@ -16,6 +16,7 @@ class RemoveSelected
      *
      * @param Model $eloquent
      * @param Request $request
+     *
      * @return mixed
      */
     public function handle(Model $eloquent, Request $request)
@@ -29,6 +30,7 @@ class RemoveSelected
      * Check if deletion of each item is authorized.
      *
      * @param Model $eloquent
+     *
      * @return bool
      */
     protected function canDelete(Model $eloquent)

@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Services;
 
-use function admin\db\scheme;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,34 +18,34 @@ use Terranet\Administrator\Form\Type\Key;
 use Terranet\Administrator\Form\Type\Media;
 use Terranet\Administrator\Requests\UpdateRequest;
 use Terranet\Administrator\Traits\LoopsOverRelations;
+use function admin\db\scheme;
 
 class Saver implements SaverContract
 {
     use LoopsOverRelations;
 
     /**
-     * Data collected during saving process
+     * Data collected during saving process.
      *
      * @var array
      */
     protected $data = [];
 
     /**
-     * List of relations queued for saving
+     * List of relations queued for saving.
      *
      * @var array
      */
     protected $relations = [];
 
     /**
-     * Main module repository
+     * Main module repository.
      *
      * @var Model
      */
     protected $repository;
 
     /**
-     *
      * @var UpdateRequest
      */
     protected $request;
@@ -64,7 +63,7 @@ class Saver implements SaverContract
     }
 
     /**
-     * Process request and persist data
+     * Process request and persist data.
      *
      * @return mixed
      */
@@ -72,7 +71,7 @@ class Saver implements SaverContract
     {
         $this->connection()->transaction(function () {
             foreach ($this->editable() as $field) {
-                # get original HTML input
+                // get original HTML input
                 $field = $field->getInput();
 
                 $name = $field->getName();
@@ -124,7 +123,7 @@ class Saver implements SaverContract
     }
 
     /**
-     * Fetch editable fields
+     * Fetch editable fields.
      *
      * @return mixed
      */
@@ -135,6 +134,7 @@ class Saver implements SaverContract
 
     /**
      * @param $field
+     *
      * @return bool
      */
     protected function isKey($field)
@@ -144,6 +144,7 @@ class Saver implements SaverContract
 
     /**
      * @param $field
+     *
      * @return bool
      */
     protected function isTranslatable($field)
@@ -153,15 +154,16 @@ class Saver implements SaverContract
 
     /**
      * @param $field
+     *
      * @return bool
      */
     protected function isFile($field)
     {
-        return ($field instanceof File || $field instanceof Image);
+        return $field instanceof File || $field instanceof Image;
     }
 
     /**
-     * Protect request data against external data
+     * Protect request data against external data.
      */
     protected function cleanData()
     {
@@ -178,7 +180,7 @@ class Saver implements SaverContract
     }
 
     /**
-     * Persist data
+     * Persist data.
      */
     protected function save()
     {
@@ -212,7 +214,8 @@ class Saver implements SaverContract
 
             if (!empty($trash = array_get($media, '_trash_', []))) {
                 $this->repository->media()->whereIn(
-                    'id', $trash
+                    'id',
+                    $trash
                 )->delete();
             }
 
@@ -225,10 +228,11 @@ class Saver implements SaverContract
     }
 
     /**
-     * Remove null values from data
+     * Remove null values from data.
      *
      * @param $relation
      * @param $values
+     *
      * @return array
      */
     protected function forgetNullValues($relation, $values)
@@ -237,12 +241,12 @@ class Saver implements SaverContract
         $key = array_pop($keys);
 
         return array_filter((array) $values[$key], function ($value) {
-            return !is_null($value);
+            return null !== $value;
         });
     }
 
     /**
-     * Collect relations for saving
+     * Collect relations for saving.
      *
      * @param $field
      * @param $name
@@ -257,7 +261,7 @@ class Saver implements SaverContract
         if ($field->hasRelation()) {
             $relation = $field->getRelation();
 
-            # register relation
+            // register relation
             if (!array_has($this->relations, $relation)) {
                 $this->relations[$relation] = [];
             }
@@ -285,12 +289,13 @@ class Saver implements SaverContract
     /**
      * @param $name
      * @param $value
+     *
      * @return mixed
      */
     protected function handleJsonType($name, $value)
     {
         if ($cast = array_get($this->repository->getCasts(), $name)) {
-            if (in_array($cast, ['array', 'json'])) {
+            if (in_array($cast, ['array', 'json'], true)) {
                 $value = json_decode($value);
             }
         }
@@ -299,7 +304,7 @@ class Saver implements SaverContract
     }
 
     /**
-     * Collect translations
+     * Collect translations.
      */
     protected function collectTranslatable()
     {
@@ -309,7 +314,7 @@ class Saver implements SaverContract
     }
 
     /**
-     * Get database connection
+     * Get database connection.
      *
      * @return \Illuminate\Foundation\Application|mixed
      */
@@ -319,10 +324,11 @@ class Saver implements SaverContract
     }
 
     /**
-     * Retrieve request input value
+     * Retrieve request input value.
      *
      * @param $key
      * @param null $default
+     *
      * @return mixed
      */
     protected function input($key, $default = null)
@@ -331,10 +337,9 @@ class Saver implements SaverContract
     }
 
     /**
-     * Set empty "nullable" values to null
+     * Set empty "nullable" values to null.
      *
      * @param $table
-     * @return null
      */
     protected function nullifyEmptyNullables($table)
     {
@@ -353,11 +358,11 @@ class Saver implements SaverContract
 
     protected function isBoolean($field)
     {
-        return ($field instanceof Boolean);
+        return $field instanceof Boolean;
     }
 
     protected function isMediaFile($field)
     {
-        return ($field instanceof Media);
+        return $field instanceof Media;
     }
 }

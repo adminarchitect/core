@@ -60,7 +60,7 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.config', function ($app) {
             $config = $app['config']['administrator'];
 
-            return new Config((array)$config);
+            return new Config((array) $config);
         });
     }
 
@@ -74,8 +74,7 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class
-            {
+            $service = new class() {
                 protected $readonly = [];
 
                 public function __construct()
@@ -87,11 +86,12 @@ class ContainersServiceProvider extends ServiceProvider
                  * Set ReadOnly locales.
                  *
                  * @param array $readonly
+                 *
                  * @return $this
                  */
                 public function setReadonly(array $readonly = [])
                 {
-                    $this->readonly = (array)$readonly;
+                    $this->readonly = (array) $readonly;
 
                     return $this;
                 }
@@ -100,6 +100,7 @@ class ContainersServiceProvider extends ServiceProvider
                  * Check if a Locale is ReadOnly.
                  *
                  * @param $locale
+                 *
                  * @return bool
                  */
                 public function readonly($locale)
@@ -108,7 +109,7 @@ class ContainersServiceProvider extends ServiceProvider
                         $locale = $locale->id();
                     }
 
-                    return in_array((int)$locale, $this->readonly);
+                    return in_array((int) $locale, $this->readonly, true);
                 }
             };
 
@@ -128,7 +129,7 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminResource()
     {
         $this->app->singleton('scaffold.module', function ($app) {
-            if (in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'])) {
+            if (in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'], true)) {
                 return $app['scaffold.module.settings'];
             }
 
@@ -204,7 +205,7 @@ class ContainersServiceProvider extends ServiceProvider
                 $handler = new $handler($module);
 
                 if (!$handler instanceof CrudActions) {
-                    throw new Exception('Actions handler must implement ' . CrudActions::class . ' contract');
+                    throw new Exception('Actions handler must implement '.CrudActions::class.' contract');
                 }
 
                 return new ActionsManager($handler, $module);
@@ -220,7 +221,7 @@ class ContainersServiceProvider extends ServiceProvider
             $handler = new $handler();
 
             if (!$handler instanceof TemplateProvider) {
-                throw new Exception('Templates handler must implement ' . TemplateProvider::class . ' contract');
+                throw new Exception('Templates handler must implement '.TemplateProvider::class.' contract');
             }
 
             return $handler;
@@ -261,15 +262,15 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.finder', function ($app) {
             if ($module = $app['scaffold.module']) {
-                # in order to register sortable columns,
-                # resolve columns service before finder.
+                // in order to register sortable columns,
+                // resolve columns service before finder.
                 $app->make('scaffold.columns');
 
                 $finder = $module->finder();
                 $finder = new $finder($module);
 
                 if (!$finder instanceof Finder) {
-                    throw new Exception('Items Finder must implement ' . Finder::class . ' contract');
+                    throw new Exception('Items Finder must implement '.Finder::class.' contract');
                 }
 
                 return $finder;

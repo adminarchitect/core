@@ -5,10 +5,11 @@ namespace Terranet\Administrator\Traits\Module;
 trait DetectsCommentFlag
 {
     /**
-     * Search class doc comment for specific flag
+     * Search class doc comment for specific flag.
      *
      * @param      $flag
      * @param null $reflection
+     *
      * @return bool
      */
     protected function hasCommentFlag($flag, $reflection = null)
@@ -23,8 +24,8 @@ trait DetectsCommentFlag
 
         foreach ($lines as $line) {
             if (false !== stripos($line, $flag)) {
-                $props = array_filter(explode(" ", $line), function ($prop) {
-                    return trim($prop) !== "" && $prop !== '*';
+                $props = array_filter(explode(' ', $line), function ($prop) {
+                    return '' !== trim($prop) && '*' !== $prop;
                 });
 
                 if (head($props) !== $flag) {

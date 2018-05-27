@@ -1,14 +1,14 @@
 <?php
 
 return [
-    # URL Prefix
+    // URL Prefix
     'prefix' => $prefix = 'cms',
 
-    'title' => "<b>Admin</b> Architect",
+    'title' => '<b>Admin</b> Architect',
     'abbreviation' => 'AA',
     'welcome' => 'Welcome! Please sign In.',
 
-    # Authentication options
+    // Authentication options
     'auth' => [
         'identity' => 'email',
         'credential' => 'password',
@@ -17,60 +17,60 @@ return [
     ],
 
     'paths' => [
-        # media storage
+        // media storage
         'media' => 'media',
 
-        'module' => "Http/Terranet/Administrator/Modules",
-        'action' => "Http/Terranet/Administrator/Actions",
-        'action_handler' => "Http/Terranet/Administrator/Actions/Handlers",
-        'panel' => "Http/Terranet/Administrator/Dashboard",
-        'finder' => "Http/Terranet/Administrator/Finders",
-        'saver' => "Http/Terranet/Administrator/Savers",
-        'column' => "Http/Terranet/Administrator/Decorators",
-        'template' => "Http/Terranet/Administrator/Templates",
-        'widget' => "Http/Terranet/Administrator/Widgets",
-        'badge' => "Http/Terranet/Administrator/Badges",
-        'breadcrumbs' => "Http/Terranet/Administrator/Breadcrumbs",
+        'module' => 'Http/Terranet/Administrator/Modules',
+        'action' => 'Http/Terranet/Administrator/Actions',
+        'action_handler' => 'Http/Terranet/Administrator/Actions/Handlers',
+        'panel' => 'Http/Terranet/Administrator/Dashboard',
+        'finder' => 'Http/Terranet/Administrator/Finders',
+        'saver' => 'Http/Terranet/Administrator/Savers',
+        'column' => 'Http/Terranet/Administrator/Decorators',
+        'template' => 'Http/Terranet/Administrator/Templates',
+        'widget' => 'Http/Terranet/Administrator/Widgets',
+        'badge' => 'Http/Terranet/Administrator/Badges',
+        'breadcrumbs' => 'Http/Terranet/Administrator/Breadcrumbs',
     ],
 
-    # Handle passwords -> Convert plain text to Hash
+    // Handle passwords -> Convert plain text to Hash
     'manage_passwords' => true,
 
-    # Enable File Manager
+    // Enable File Manager
     'file_manager' => false,
 
     'gravatar' => false,
 
-    # The menu item that should be used as the default landing page of the administrative section
+    // The menu item that should be used as the default landing page of the administrative section
     'home_page' => $prefix,
 
-    # Basic user validation Rule
+    // Basic user validation Rule
     'permission' => \Terranet\Administrator\Auth\SuperAdminRule::class,
 
-    # Navigation Factory
+    // Navigation Factory
     'menu' => \Terranet\Administrator\Navigation\Factory::class,
 
-    # Dashboard Panels Factory
+    // Dashboard Panels Factory
     'dashboard' => \App\Http\Terranet\Administrator\Dashboard\Factory::class,
 
     'resource' => [
-        # The custom way to resolve module name for custom resources
-        # when controller missing Router's $module parameter
+        // The custom way to resolve module name for custom resources
+        // when controller missing Router's $module parameter
         'resolver' => null,
 
-        # Default segment for module name resolver
-        # /admin/pages - admin => 1, pages => 2
+        // Default segment for module name resolver
+        // /admin/pages - admin => 1, pages => 2
         'segment' => 2,
     ],
 
     'acl' => [
-        # Global ACL Manager, which used to control CRUD actions
-        # in the global way. Can provide optional methods:
-        # showIf, can(Index|Update|Delete|Create)
+        // Global ACL Manager, which used to control CRUD actions
+        // in the global way. Can provide optional methods:
+        // showIf, can(Index|Update|Delete|Create)
         'manager' => null,
     ],
 
-    # main layouts
+    // main layouts
     'layouts' => [
         'app' => 'administrator::layouts.app',
         'popup' => 'administrator::layouts.popup',
@@ -86,7 +86,7 @@ return [
         ],
     ],
 
-    # Exportable formats declaration
+    // Exportable formats declaration
     'export' => [
         'default' => ['xml', 'csv', 'json'],
         // 'users' => ['csv', 'pdf'],
@@ -95,9 +95,9 @@ return [
     'translations' => [
         'enabled' => false,
         'filters' => [
-            # build filters based on specific translation files
+            // build filters based on specific translation files
             'only' => null, // ['auth', 'validation']
-            # except some translation files from filters
+            // except some translation files from filters
             'except' => null, // ['password', 'pagination']
         ],
     ],

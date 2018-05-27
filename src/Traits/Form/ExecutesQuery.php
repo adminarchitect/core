@@ -7,14 +7,14 @@ use Illuminate\Database\Query\Builder;
 trait ExecutesQuery
 {
     /**
-     * Elements query
+     * Elements query.
      *
      * @var
      */
     protected $query;
 
     /**
-     * Check if Filter element has a query
+     * Check if Filter element has a query.
      *
      * @return bool
      */
@@ -24,7 +24,7 @@ trait ExecutesQuery
     }
 
     /**
-     * Execute filter element's query
+     * Execute filter element's query.
      *
      * @return Builder|mixed
      */
@@ -45,6 +45,7 @@ trait ExecutesQuery
      * Set a query to execute.
      *
      * @param mixed $query
+     *
      * @return $this
      */
     public function setQuery($query)

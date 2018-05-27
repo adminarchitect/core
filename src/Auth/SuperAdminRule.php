@@ -18,6 +18,6 @@ class SuperAdminRule
             return call_user_func([$user, 'isSuperAdmin']);
         }
 
-        return (1 === (int) $user->getAuthIdentifier());
+        return 1 === (int) $user->getAuthIdentifier();
     }
 }

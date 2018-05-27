@@ -6,9 +6,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Terranet\Administrator\Traits\CallableTrait;
 
 /**
- * Class AuthUserProvider
- *
- * @package Terranet\Administrator
+ * Class AuthUserProvider.
  */
 class AuthUserProvider extends EloquentUserProvider
 {
@@ -22,7 +20,7 @@ class AuthUserProvider extends EloquentUserProvider
         $query = $this->createModel()->newQuery();
 
         foreach ($credentials as $key => $value) {
-            if (! str_contains($key, 'password')) {
+            if (!str_contains($key, 'password')) {
                 // handle closures
                 $value = $this->retrieveValue($value);
 
@@ -35,15 +33,17 @@ class AuthUserProvider extends EloquentUserProvider
 
     /**
      * @param $value
+     *
      * @return string
      */
     protected function searchMethod($value)
     {
-        return is_array($value) ? "whereIn" : "where";
+        return is_array($value) ? 'whereIn' : 'where';
     }
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     protected function retrieveValue($value)

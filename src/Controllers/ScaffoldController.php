@@ -71,7 +71,7 @@ class ScaffoldController extends AdminController
     /**
      * @param                    $page
      * @param                    $id
-     * @param UpdateRequest|null $request
+     * @param null|UpdateRequest $request
      *
      * @return mixed
      */
@@ -104,7 +104,7 @@ class ScaffoldController extends AdminController
      * Store new item.
      *
      * @param                    $page
-     * @param UpdateRequest|null $request
+     * @param null|UpdateRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -141,7 +141,7 @@ class ScaffoldController extends AdminController
 
         $message = trans('administrator::messages.remove_success');
 
-        if (URL::previous() == route('scaffold.view', ['module' => $module, 'id' => $id])) {
+        if (URL::previous() === route('scaffold.view', ['module' => $module, 'id' => $id])) {
             return back()->with('messages', [$message]);
         }
 
@@ -179,7 +179,7 @@ class ScaffoldController extends AdminController
     {
         $this->authorize($action, $eloquent = app('scaffold.model'));
 
-        $response = app('scaffold.actions')->exec('action::' . $action, [$eloquent]);
+        $response = app('scaffold.actions')->exec('action::'.$action, [$eloquent]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;

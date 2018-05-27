@@ -8,7 +8,19 @@ use Terranet\Administrator\Contracts\Module\Navigable;
 trait AllowsNavigation
 {
     /**
-     * The module singular title
+     * Cast to string
+     * Make module Routable.
+     * It allows referencing module object while generating routes.
+     *
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->url();
+    }
+
+    /**
+     * The module singular title.
      *
      * @return mixed
      */
@@ -18,7 +30,7 @@ trait AllowsNavigation
     }
 
     /**
-     * The module title
+     * The module title.
      *
      * @return mixed
      */
@@ -30,7 +42,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Navigation container which Resource belongs to
+     * Navigation container which Resource belongs to.
      *
      * Available: sidebar, tools
      *
@@ -42,7 +54,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Add resource to navigation if condition accepts
+     * Add resource to navigation if condition accepts.
      *
      * @return mixed
      */
@@ -64,7 +76,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Add resource to navigation as link or header
+     * Add resource to navigation as link or header.
      *
      * @return mixed
      */
@@ -74,7 +86,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Navigation group which module belongs to
+     * Navigation group which module belongs to.
      *
      * @return string
      */
@@ -84,7 +96,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Resource order number
+     * Resource order number.
      *
      * @return int
      */
@@ -94,7 +106,7 @@ trait AllowsNavigation
     }
 
     /**
-     * Attributes assigned to <a> element
+     * Attributes assigned to <a> element.
      *
      * @return mixed
      */
@@ -104,25 +116,13 @@ trait AllowsNavigation
     }
 
     /**
-     * The module url
+     * The module url.
      *
      * @return mixed
      */
     public function url()
     {
         return snake_case(class_basename($this));
-    }
-
-    /**
-     * Cast to string
-     * Make module Routable.
-     * It allows referencing module object while generating routes
-     *
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->url();
     }
 
     public function translationKey()

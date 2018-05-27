@@ -1,14 +1,13 @@
 <?php
 
 namespace {
-
     if (!function_exists('array_build')) {
-
         /**
          * Build a new array using a callback (Original method was deprecetad since version 5.2).
          *
          * @param array $array
          * @param callable $callback
+         *
          * @return array
          */
         function array_build($array, callable $callback)
@@ -40,9 +39,8 @@ namespace {
 }
 
 namespace admin\db {
-
-    use Illuminate\Support\Facades\DB;
     use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
 
     if (!function_exists('scheme')) {
@@ -67,7 +65,8 @@ namespace admin\db {
                     $columns = array_merge(
                         $columns,
                         array_except(
-                            scheme()->columns($related), array_keys($columns)
+                            scheme()->columns($related),
+                            array_keys($columns)
                         )
                     );
                 }
@@ -97,9 +96,10 @@ namespace admin\db {
 
     if (!function_exists('connection')) {
         /**
-         * Check if we are on desired connection or get the current connection name
+         * Check if we are on desired connection or get the current connection name.
          *
          * @param string $name
+         *
          * @return mixed string|boolean
          */
         function connection($name = null)
@@ -108,7 +108,7 @@ namespace admin\db {
                 return DB::connection()->getName();
             }
 
-            return (strtolower($name) == strtolower(DB::connection()->getName()));
+            return strtolower($name) === strtolower(DB::connection()->getName());
         }
     }
 
@@ -130,16 +130,15 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
-
-    use Illuminate\Support\Facades\Route;
     use Coduo\PHPHumanizer\StringHumanizer;
+    use Czim\Paperclip\Contracts\AttachableInterface;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\Request;
-    use Terranet\Translatable\Translatable;
-    use Terranet\Presentable\PresentableInterface;
-    use Czim\Paperclip\Contracts\AttachableInterface;
+    use Illuminate\Support\Facades\Route;
     use Terranet\Administrator\Contracts\Form\HiddenElement;
     use Terranet\Administrator\Contracts\Module\Exportable;
+    use Terranet\Presentable\PresentableInterface;
+    use Terranet\Translatable\Translatable;
 
     if (!function_exists('html_list')) {
         /**
@@ -148,12 +147,13 @@ namespace admin\helpers {
          * @param mixed $model
          * @param string $labelAttribute
          * @param string $keyAttribute
+         *
          * @return array
          */
         function html_list($model, $labelAttribute = 'name', $keyAttribute = 'id')
         {
             if (is_string($model)) {
-                $model = new $model;
+                $model = new $model();
             }
 
             return $model->pluck($labelAttribute, $keyAttribute)->toArray();
@@ -166,6 +166,7 @@ namespace admin\helpers {
          *
          * @param       $route
          * @param array $params
+         *
          * @return string
          */
         function qsRoute($route = null, array $params = [])
@@ -204,25 +205,25 @@ namespace admin\helpers {
 
             return implode(' ', $out);
         }
-    };
+    }
 
     if (!function_exists('auto_p')) {
         function auto_p($value, $lineBreaks = true)
         {
-            if (trim($value) === '') {
+            if ('' === trim($value)) {
                 return '';
             }
 
-            $value = $value . "\n"; // just to make things a little easier, pad the end
+            $value = $value."\n"; // just to make things a little easier, pad the end
             $value = preg_replace('|<br />\s*<br />|', "\n\n", $value);
 
             // Space things out a little
             $allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|style|input|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
-            $value = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $value);
-            $value = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $value);
+            $value = preg_replace('!(<'.$allblocks.'[^>]*>)!', "\n$1", $value);
+            $value = preg_replace('!(</'.$allblocks.'>)!', "$1\n\n", $value);
             $value = str_replace(["\r\n", "\r"], "\n", $value); // cross-platform newlines
 
-            if (strpos($value, '<object') !== false) {
+            if (false !== strpos($value, '<object')) {
                 $value = preg_replace('|\s*<param([^>]*)>\s*|', '<param$1>', $value); // no pee inside object/embed
                 $value = preg_replace('|\s*</embed>\s*|', '</embed>', $value);
             }
@@ -234,18 +235,18 @@ namespace admin\helpers {
             $value = '';
 
             foreach ($values as $tinkle) {
-                $value .= '<p>' . trim($tinkle, "\n") . "</p>\n";
+                $value .= '<p>'.trim($tinkle, "\n")."</p>\n";
             }
 
             // under certain strange conditions it could create a P of entirely whitespace
             $value = preg_replace('|<p>\s*</p>|', '', $value);
             $value = preg_replace('!<p>([^<]+)</(div|address|form)>!', '<p>$1</p></$2>', $value);
-            $value = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $value); // don't pee all over a tag
+            $value = preg_replace('!<p>\s*(</?'.$allblocks.'[^>]*>)\s*</p>!', '$1', $value); // don't pee all over a tag
             $value = preg_replace('|<p>(<li.+?)</p>|', '$1', $value); // problem with nested lists
             $value = preg_replace('|<p><blockquote([^>]*)>|i', '<blockquote$1><p>', $value);
             $value = str_replace('</blockquote></p>', '</p></blockquote>', $value);
-            $value = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', '$1', $value);
-            $value = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $value);
+            $value = preg_replace('!<p>\s*(</?'.$allblocks.'[^>]*>)!', '$1', $value);
+            $value = preg_replace('!(</?'.$allblocks.'[^>]*>)\s*</p>!', '$1', $value);
 
             if ($lineBreaks) {
                 $value = preg_replace_callback('/<(script|style).*?<\/\\1>/s', '\admin\helpers\autop_newline_preservation_helper', $value);
@@ -253,10 +254,10 @@ namespace admin\helpers {
                 $value = str_replace('<WPPreserveNewline />', "\n", $value);
             }
 
-            $value = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', '$1', $value);
+            $value = preg_replace('!(</?'.$allblocks.'[^>]*>)\s*<br />!', '$1', $value);
             $value = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $value);
 
-            if (strpos($value, '<pre') !== false) {
+            if (false !== strpos($value, '<pre')) {
                 $value = preg_replace_callback('!(<pre[^>]*>)(.*?)</pre>!is', '\admin\helpers\clean_pre', $value);
             }
             $value = preg_replace("|\n</p>$|", '</p>', $value);
@@ -270,12 +271,13 @@ namespace admin\helpers {
          * converted into paragraphs or line-breaks.
          *
          * @param array|string $matches The array or string
-         * @return string The pre block without paragraph/line-break conversion.
+         *
+         * @return string the pre block without paragraph/line-break conversion
          */
         function clean_pre($matches)
         {
             if (is_array($matches)) {
-                $text = $matches[1] . $matches[2] . '</pre>';
+                $text = $matches[1].$matches[2].'</pre>';
             } else {
                 $text = $matches;
             }
@@ -291,8 +293,10 @@ namespace admin\helpers {
          * Newline preservation help function for wpautop.
          *
          * @since  3.1.0
+         *
          * @param array $matches preg_replace_callback matches array
          * @returns string
+         *
          * @return mixed
          */
         function autop_newline_preservation_helper($matches)
@@ -331,7 +335,7 @@ namespace admin\helpers {
             $fillable = array_merge($fillable, $model->getDates());
 
             $fillable = array_filter($fillable, function ($element) use ($model) {
-                return !in_array($element, $model->getHidden());
+                return !in_array($element, $model->getHidden(), true);
             });
 
             $data = $model->toArray();
@@ -404,7 +408,6 @@ namespace admin\helpers {
 }
 
 namespace admin\column {
-
     function element($title = '', $standalone = false, $output = null)
     {
         return compact('title', 'standalone', 'output');
@@ -430,7 +433,6 @@ namespace admin\column {
 }
 
 namespace admin\output {
-
     use Closure;
 
     function label_case($key, $upper = false)
@@ -447,32 +449,34 @@ namespace admin\output {
 
     function email($value)
     {
-        return '<a href="mailto:' . $value . '">' . $value . '</a>';
+        return '<a href="mailto:'.$value.'">'.$value.'</a>';
     }
 
-    function rank($name = 'rank', $value = 1, $key)
+    function rank($name, $value, $key)
     {
-        return '<input type="number" style="width: 50px;" value="' . $value . '" name="' . $name . '[' . $key . ']" />';
+        return '<input type="number" style="width: 50px;" value="'.$value.'" name="'.$name.'['.$key.']" />';
     }
 
     /**
      * @param       $image
      * @param array $attributes
+     *
      * @return string
      */
     function image($image, array $attributes = [])
     {
         $attributes = \admin\helpers\html_attributes($attributes);
 
-        return $image ? '<img src="' . $image . '" ' . $attributes . ' />' : '';
+        return $image ? '<img src="'.$image.'" '.$attributes.' />' : '';
     }
 
     /**
-     * Output image from Paperclip attachment object
+     * Output image from Paperclip attachment object.
      *
      * @param null $attachment
      * @param null $style
      * @param array $attributes
+     *
      * @return null|string
      */
     function staplerImage($attachment = null, $style = null, $attributes = [])
@@ -484,13 +488,13 @@ namespace admin\output {
                 $firstStyle = $style ?: head($styles);
                 $origStyle = 'original';
 
-                # in case then style dimensions are less than predefined, adjust width & height to style's
-                $aWidth = (int)array_get($attributes, 'width');
-                $aHeight = (int)array_get($attributes, 'height');
+                // in case then style dimensions are less than predefined, adjust width & height to style's
+                $aWidth = (int) array_get($attributes, 'width');
+                $aHeight = (int) array_get($attributes, 'height');
 
                 if (($aWidth || $aHeight) && $firstStyle) {
                     $size = array_filter($styles, function ($style) use ($firstStyle) {
-                        return $style == $firstStyle;
+                        return $style === $firstStyle;
                     });
 
                     if (($size = array_shift($size))) {
@@ -515,8 +519,8 @@ namespace admin\output {
                 }
 
                 return
-                    '<a class="fancybox" href="' . url($attachment->url($origStyle)) . '">' .
-                    \admin\output\image($attachment->url($firstStyle), $attributes) .
+                    '<a class="fancybox" href="'.url($attachment->url($origStyle)).'">'.
+                    \admin\output\image($attachment->url($firstStyle), $attributes).
                     '</a>';
             }
 
@@ -545,43 +549,44 @@ namespace admin\output {
 
     /**
      * @param array $items
-     * @param Closure|null $callback
+     * @param null|Closure $callback
      * @param array $attributes
+     *
      * @return string
      */
     function ul($items = [], Closure $callback = null, array $attributes = [])
     {
         $items = _prepare_collection($items, $callback);
 
-        return '<ul ' . \admin\helpers\html_attributes($attributes) . '>' . '<li>' . implode('</li><li>', $items) . '</li>' . '</ul>';
+        return '<ul '.\admin\helpers\html_attributes($attributes).'>'.'<li>'.implode('</li><li>', $items).'</li>'.'</ul>';
     }
 
     /**
      * @param array $items
-     * @param Closure|null $callback
+     * @param null|Closure $callback
      * @param array $attributes
+     *
      * @return string
      */
     function ol($items = [], Closure $callback = null, array $attributes = [])
     {
         $items = _prepare_collection($items, $callback);
 
-        return '<ol ' . \admin\helpers\html_attributes($attributes) . '>' . '<li>' . implode('</li><li>', $items) . '</li>' . '</ol>';
+        return '<ol '.\admin\helpers\html_attributes($attributes).'>'.'<li>'.implode('</li><li>', $items).'</li>'.'</ol>';
     }
 
     function label($label = '', $class = 'bg-green')
     {
-        return '<span class="label ' . $class . '">' . $label . '</span>';
+        return '<span class="label '.$class.'">'.$label.'</span>';
     }
 
     function badge($label = '', $class = 'bg-green')
     {
-        return '<span class="badge ' . $class . '">' . $label . '</span>';
+        return '<span class="badge '.$class.'">'.$label.'</span>';
     }
 }
 
 namespace admin\filter {
-
     use Closure;
 
     function text($label = '', Closure $query = null)
@@ -600,6 +605,7 @@ namespace admin\filter {
      * @param mixed array|callable $options
      * @param callable|Closure $query
      * @param array $attributes
+     *
      * @return array
      */
     function select($label = '', $options = [], Closure $query = null, array $attributes = [])
@@ -621,6 +627,7 @@ namespace admin\filter {
      *
      * @param string $label
      * @param callable|Closure $query
+     *
      * @return array
      */
     function daterange($label = '', Closure $query = null)
@@ -637,6 +644,7 @@ namespace admin\filter {
      *
      * @param string $label
      * @param callable|Closure $query
+     *
      * @return array
      */
     function date($label = '', Closure $query = null)
@@ -650,7 +658,6 @@ namespace admin\filter {
 }
 
 namespace admin\form {
-
     function _input($type = 'text', $label = '', array $attributes = [])
     {
         $attributes = [
@@ -708,6 +715,7 @@ namespace admin\form {
      * @param array|callable|string $options - string options should have relation format: table.field
      * @param bool $multiple
      * @param array $attributes
+     *
      * @return array
      */
     function select($label = '', $options = [], $multiple = false, array $attributes = [])
@@ -740,6 +748,7 @@ namespace admin\form {
      *
      * @param string $label
      * @param array $attributes
+     *
      * @return array
      */
     function boolean($label = '', array $attributes = [])
@@ -752,6 +761,7 @@ namespace admin\form {
      *
      * @param string $label
      * @param array $attributes
+     *
      * @return array
      */
     function date($label = '', array $attributes = [])
@@ -764,6 +774,7 @@ namespace admin\form {
      *
      * @param string $label
      * @param array $attributes
+     *
      * @return array
      */
     function file($label = '', array $attributes = [])
@@ -776,6 +787,7 @@ namespace admin\form {
      *
      * @param string $label
      * @param array $attributes
+     *
      * @return array
      */
     function image($label = '', array $attributes = [])
@@ -787,6 +799,7 @@ namespace admin\form {
      * Set field description [optional].
      *
      * @param string $description
+     *
      * @return array
      */
     function description($description = '')
@@ -809,7 +822,9 @@ namespace admin\form {
      *
      * @Text   uses relation to fetch value from related table,
      * @example: users && user_detail.phone [user_detail.user_id => users.id]
+     *
      * @param $relation
+     *
      * @return array
      */
     function relation($relation)

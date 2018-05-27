@@ -11,6 +11,6 @@ class Text extends FormText implements Queryable
     use ExecutesQuery;
 
     protected $attributes = [
-        'class' => 'form-control'
+        'class' => 'form-control',
     ];
 }

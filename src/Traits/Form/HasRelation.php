@@ -8,11 +8,11 @@ trait HasRelation
 {
     use LoopsOverRelations;
 
-    protected $relation = null;
+    protected $relation;
 
     public function hasRelation()
     {
-        return !is_null($this->relation);
+        return null !== $this->relation;
     }
 
     public function loadRelation()
@@ -36,6 +36,7 @@ trait HasRelation
 
     /**
      * @param $model
+     *
      * @return array
      */
     protected function extractValueFromEloquentRelation($model)
@@ -45,6 +46,7 @@ trait HasRelation
 
     /**
      * @return array
+     *
      * @internal param array $options
      */
     protected function relations()

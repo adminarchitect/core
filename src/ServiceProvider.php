@@ -2,30 +2,28 @@
 
 namespace Terranet\Administrator;
 
-use Pingpong\Menus\MenuFacade;
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
 use Collective\Html\HtmlServiceProvider;
-use Pingpong\Menus\MenusServiceProvider;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Creativeorange\Gravatar\GravatarServiceProvider;
 use Czim\Paperclip\Providers\PaperclipServiceProvider;
-use Terranet\Administrator\Providers\EventServiceProvider;
 use DaveJamesMiller\Breadcrumbs\Facade as BreadcrumbsFacade;
-use Terranet\Administrator\Providers\ArtisanServiceProvider;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Terranet\Administrator\Providers\ContainersServiceProvider;
 use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Pingpong\Menus\MenuFacade;
+use Pingpong\Menus\MenusServiceProvider;
+use Terranet\Administrator\Providers\ArtisanServiceProvider;
+use Terranet\Administrator\Providers\ContainersServiceProvider;
+use Terranet\Administrator\Providers\EventServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
     public function boot()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../');
+        $baseDir = realpath(__DIR__.'/../');
 
-        /*
-         * Publish & Load routes
-         */
+        // Publish & Load routes
         $packageRoutes = "{$baseDir}/publishes/routes.php";
         $publishedRoutes = app_path('Http/Terranet/Administrator/routes.php');
         $this->publishes([$packageRoutes => $publishedRoutes], 'routes');
@@ -37,31 +35,23 @@ class ServiceProvider extends BaseServiceProvider
             require $routesFile;
         }
 
-        /*
-         * Publish & Load configuration
-         */
+        // Publish & Load configuration
         $this->publishes(["{$baseDir}/publishes/config.php" => config_path('administrator.php')], 'config');
         $this->mergeConfigFrom("{$baseDir}/publishes/config.php", 'administrator');
 
-        /*
-         * Publish & Load views, assets
-         */
+        // Publish & Load views, assets
         $this->publishes(["{$baseDir}/publishes/resources" => resource_path('assets/administrator')], 'assets');
         $this->publishes(["{$baseDir}/publishes/views" => base_path('resources/views/vendor/administrator')], 'views');
         $this->loadViewsFrom("{$baseDir}/publishes/views", 'administrator');
 
-        /*
-         * Publish & Load translations
-         */
+        // Publish & Load translations
         $this->publishes(
             ["{$baseDir}/publishes/translations" => base_path('resources/lang/vendor/administrator')],
             'translations'
         );
         $this->loadTranslationsFrom("{$baseDir}/publishes/translations", 'administrator');
 
-        /*
-         * Publish default Administrator Starter Kit: modules, dashboard panels, policies, etc...
-         */
+        // Publish default Administrator Starter Kit: modules, dashboard panels, policies, etc...
         $this->publishes(
             ["{$baseDir}/publishes/Modules" => app_path('Http/Terranet/Administrator/Modules')],
             'boilerplate'

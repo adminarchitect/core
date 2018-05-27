@@ -8,9 +8,8 @@ use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
 use Terranet\Administrator\Form\FormElement;
 
 /**
- * Class FilterElement
+ * Class FilterElement.
  *
- * @package Terranet\Administrator\Filters
  *
  * @method static FilterElement text(string $name)
  * @method static FilterElement search(string $name)
@@ -26,12 +25,14 @@ class FilterElement extends FormElement
      * Init FormElement object by calling static method.
      *
      * @example: FilterElement::text('title')
+     *
      * @param $inputType
      * @param $arguments
      * @note:
      *  1st argument = name,
      *  2nd argument = html options,
      *  3rd argument = values (select, radio, multicheckbox)
+     *
      * @return
      */
     public static function __callStatic($inputType, $arguments)
@@ -40,7 +41,7 @@ class FilterElement extends FormElement
 
         $inputType = FilterInputFactory::make($name, $inputType);
 
-        $element =  (new static($name))->setInput(
+        $element = (new static($name))->setInput(
             $inputType
         );
 
@@ -51,7 +52,7 @@ class FilterElement extends FormElement
         }
 
         if (is_array($options = array_get($arguments, 2)) && !empty($options)
-            && method_exists($input, "setOptions")
+            && method_exists($input, 'setOptions')
         ) {
             $input->setOptions($options);
         }
@@ -64,6 +65,7 @@ class FilterElement extends FormElement
      *
      * @param $id
      * @param mixed string|Queryable $input
+     *
      * @return mixed
      */
     public static function custom($id, $input)
@@ -75,6 +77,7 @@ class FilterElement extends FormElement
      * Init default input type.
      *
      * @param $id
+     *
      * @return Text
      */
     protected function defaultInputType($id)
@@ -86,6 +89,7 @@ class FilterElement extends FormElement
      * Make a Filter element.
      *
      * @param $input
+     *
      * @return mixed
      */
     protected function makeInput($input)

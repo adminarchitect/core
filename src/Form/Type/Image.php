@@ -6,10 +6,24 @@ use Coduo\PHPHumanizer\StringHumanizer;
 
 class Image extends File
 {
-    static protected $hrefStyle = 'display: inline-block; text-align: center;';
-    static protected $blockStyle = 'display:inline-block; margin-right: 5px; border: 1px solid gray;';
+    protected static $hrefStyle = 'display: inline-block; text-align: center;';
+    protected static $blockStyle = 'display:inline-block; margin-right: 5px; border: 1px solid gray;';
 
     protected $thumbSize = 75;
+
+    /**
+     * Set thumbnail size.
+     *
+     * @param int $thumbSize
+     *
+     * @return $this
+     */
+    public function setThumbSize($thumbSize)
+    {
+        $this->thumbSize = $thumbSize;
+
+        return $this;
+    }
 
     /**
      * @return array|string
@@ -25,26 +39,26 @@ class Image extends File
             list($w, $h) = $this->getThumbnailSize($style, $name);
 
             $img =
-                '<a rel="' . str_slug($this->getFormName()) . '" href="' . $this->value()->url($name) . '" class="fancybox" style="' . static::$hrefStyle . '">' .
-                '   <img src="' . $this->value()->url($name) . '" style="width: ' . ($w ? "{$w}px" : 'auto') . '; height: ' . ($h ? "{$h}px" : 'auto') . '" />' .
-                '   <div>' . StringHumanizer::humanize($name) . '</div>' .
+                '<a rel="'.str_slug($this->getFormName()).'" href="'.$this->value()->url($name).'" class="fancybox" style="'.static::$hrefStyle.'">'.
+                '   <img src="'.$this->value()->url($name).'" style="width: '.($w ? "{$w}px" : 'auto').'; height: '.($h ? "{$h}px" : 'auto').'" />'.
+                '   <div>'.StringHumanizer::humanize($name).'</div>'.
                 '</a>';
 
             $files[$name] = $img;
         }
 
-        $columnStart = '<div style="' . static::$blockStyle . '">';
+        $columnStart = '<div style="'.static::$blockStyle.'">';
         $columnEnd = '</div>';
 
         return
-            '<div>' .
-            '   ' . $columnStart . implode($columnEnd . $columnStart, $files) . $columnEnd .
+            '<div>'.
+            '   '.$columnStart.implode($columnEnd.$columnStart, $files).$columnEnd.
             '</div>';
     }
 
     protected function isOriginal($style)
     {
-        return 'original' == $style->name;
+        return 'original' === $style->name;
     }
 
     protected function dimensions($style, $name)
@@ -74,22 +88,9 @@ class Image extends File
 
         $ratio = $this->thumbSize / min(($w ?: $h), ($h ?: $w));
 
-        $w = (int)round($w * $ratio, 0);
-        $h = (int)round($h * $ratio, 0);
+        $w = (int) round($w * $ratio, 0);
+        $h = (int) round($h * $ratio, 0);
 
         return [$w, $h];
-    }
-
-    /**
-     * Set thumbnail size.
-     *
-     * @param int $thumbSize
-     * @return $this
-     */
-    public function setThumbSize($thumbSize)
-    {
-        $this->thumbSize = $thumbSize;
-
-        return $this;
     }
 }

@@ -3,13 +3,13 @@
 namespace Terranet\Administrator\Console;
 
 use Artisan;
+use Creativeorange\Gravatar\GravatarServiceProvider;
+use Czim\Paperclip\Providers\PaperclipServiceProvider;
+use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 use Illuminate\Console\Command;
 use Pingpong\Menus\MenusServiceProvider;
 use Terranet\Administrator\ServiceProvider;
-use Creativeorange\Gravatar\GravatarServiceProvider;
 use Terranet\Administrator\Traits\SessionGuardHelper;
-use Czim\Paperclip\Providers\PaperclipServiceProvider;
-use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 
 class PublishCommand extends Command
 {
@@ -92,7 +92,8 @@ class PublishCommand extends Command
 
             $this->line(sprintf(
                 '<info>%s</info> <comment>[%s]</comment> <info>has been created.</info>',
-                $type, $file
+                $type,
+                $file
             ));
         }
 
@@ -103,11 +104,12 @@ class PublishCommand extends Command
     {
         $this->dependencies()->each(function ($provider) {
             Artisan::call('vendor:publish', [
-                '--provider' => $provider
+                '--provider' => $provider,
             ]);
             $this->line(sprintf(
                 '<info>%s</info> <comment>[%s]</comment> <info>has been published.</info>',
-                'Package', $provider
+                'Package',
+                $provider
             ));
         });
     }

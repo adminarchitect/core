@@ -35,7 +35,7 @@
                         @endforeach
 
                         <div class="row mb20">
-                            <?php $sideWidgets = $widgets->setPlacement('sidebar')->filter() ?>
+                            <?php $sideWidgets = $widgets->setPlacement('sidebar')->filter(); ?>
 
                             <div class="col-md-{{ $sideWidgets->count() ? 8 : 12 }}">
                                 @foreach ($widgets->setPlacement('model')->filter() as $widget)

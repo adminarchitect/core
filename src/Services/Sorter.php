@@ -20,7 +20,54 @@ class Sorter
     }
 
     /**
-     * Retrieve first sortable element
+     * Build sortable url.
+     *
+     * @param $element
+     *
+     * @return string
+     */
+    public function makeUrl($element)
+    {
+        return \admin\helpers\qsRoute(null, [
+            'sort_by' => $element,
+            'sort_dir' => $this->proposeDirection($element),
+        ]);
+    }
+
+    /**
+     * Get current sorting direction.
+     *
+     * @return mixed
+     */
+    public function direction()
+    {
+        return $this->direction;
+    }
+
+    /**
+     * Get current sorting element.
+     *
+     * @return mixed
+     */
+    public function element()
+    {
+        return $this->element ?: $this->first();
+    }
+
+    /**
+     * Check if a column is sortable.
+     *
+     * @param $column
+     *
+     * @return bool
+     */
+    public function canSortBy($column)
+    {
+        return array_key_exists($column, $this->sortable) || in_array($column, $this->sortable, true);
+    }
+
+    /**
+     * Retrieve first sortable element.
      *
      * @return mixed
      */
@@ -38,72 +85,29 @@ class Sorter
     }
 
     /**
-     * Build sortable url
-     *
-     * @param $element
-     * @return string
-     */
-    public function makeUrl($element)
-    {
-        return \admin\helpers\qsRoute(null, [
-            'sort_by' => $element,
-            'sort_dir' => $this->proposeDirection($element),
-        ]);
-    }
-
-    /**
-     * Propose new sort direction for element
+     * Propose new sort direction for element.
      *
      * @param $forElement
+     *
      * @return string
      */
     protected function proposeDirection($forElement)
     {
         $sortDir = $this->direction();
 
-        return $forElement == $this->element() ? $this->reverseDirection($sortDir) : $sortDir;
+        return $forElement === $this->element() ? $this->reverseDirection($sortDir) : $sortDir;
     }
 
     /**
-     * Get current sorting direction
-     *
-     * @return mixed
-     */
-    public function direction()
-    {
-        return $this->direction;
-    }
-
-    /**
-     * Get current sorting element
-     *
-     * @return mixed
-     */
-    public function element()
-    {
-        return $this->element ?: $this->first();
-    }
-
-    /**
-     * Reverse sorting direction
+     * Reverse sorting direction.
      *
      * @param $direction
+     *
      * @return string
      */
     protected function reverseDirection($direction)
     {
-        return 'asc' == strtolower($direction) ? 'desc' : 'asc';
-    }
-
-    /**
-     * Check if a column is sortable
-     *
-     * @param $column
-     * @return bool
-     */
-    public function canSortBy($column)
-    {
-        return array_key_exists($column, $this->sortable) || in_array($column, $this->sortable);
+        return 'asc' === strtolower($direction) ? 'desc' : 'asc';
     }
 
     protected function input($key, $default = null)

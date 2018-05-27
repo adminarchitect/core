@@ -7,9 +7,10 @@ use Illuminate\Contracts\Support\Arrayable;
 trait SortsObjectsCollection
 {
     /**
-     * Sort collection of objects by order or class name
+     * Sort collection of objects by order or class name.
      *
      * @param $objects
+     *
      * @return array
      */
     protected function sortCollection($objects)
@@ -38,6 +39,7 @@ trait SortsObjectsCollection
     /**
      * @param $aRank
      * @param $bRank
+     *
      * @return bool
      */
     protected function equals($aRank, $bRank)
@@ -48,6 +50,7 @@ trait SortsObjectsCollection
     /**
      * @param $aObj
      * @param $bObj
+     *
      * @return int
      */
     protected function sortByName($aObj, $bObj)
@@ -61,6 +64,7 @@ trait SortsObjectsCollection
     /**
      * @param $aRank
      * @param $bRank
+     *
      * @return int
      */
     protected function sortByValue($aRank, $bRank)
@@ -70,8 +74,8 @@ trait SortsObjectsCollection
 
     protected function getRanks($aObj, $bObj)
     {
-        $aRank = method_exists($aObj, "order") ? $aObj->order() : 10;
-        $bRank = method_exists($bObj, "order") ? $bObj->order() : 10;
+        $aRank = method_exists($aObj, 'order') ? $aObj->order() : 10;
+        $bRank = method_exists($bObj, 'order') ? $bObj->order() : 10;
 
         return [$aRank, $bRank];
     }

@@ -1,8 +1,8 @@
 <div class="panel">
     <div class="panel-body">
         <form method="post" id="collection" action="{{ route('scaffold.batch', ['page' => $module]) }}">
-            <?=Form::hidden('batch_action', null, ['id' => 'batch_action'])?>
-            <?=Form::token()?>
+            <?php echo Form::hidden('batch_action', null, ['id' => 'batch_action']); ?>
+            <?php echo Form::token(); ?>
 
             {{ $gridBefore or '' }}
 

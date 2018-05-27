@@ -5,13 +5,13 @@ $resetUrl = method_exists($module, 'defaultRoute') ? $module->defaultRoute() : r
 
 $filled = $elements ? $elements->reduce(function ($filled, $element) {
     if ($element->getInput()->getValue()) {
-        $filled++;
-    };
+        ++$filled;
+    }
 
     return $filled;
 }, 0) : 0;
 
-$hasFilters = ($resetUrl != request()->fullUrl()) && $filled;
+$hasFilters = ($resetUrl !== request()->fullUrl()) && $filled;
 ?>
 
 @if ($filter && $elements && $elements->count())

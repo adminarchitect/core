@@ -22,9 +22,18 @@ class MimeType
         $this->file = $file;
     }
 
+    public function __call($method, $args)
+    {
+        if (method_exists($this->file, $method)) {
+            return call_user_func_array([$this->file, $method], $args);
+        }
+
+        throw new Exception("Method $method not found.");
+    }
+
     public function is($type)
     {
-        $method = "is" . studly_case($type);
+        $method = 'is'.studly_case($type);
 
         return $this->$method();
     }
@@ -42,7 +51,7 @@ class MimeType
      */
     public function isAudio()
     {
-        return (bool ) preg_match('~(mp3|wave?|og[ga]+|flac|aac|3gp|m4a|wav|raw|wma)~si', $this->file->getExtension());
+        return (bool) preg_match('~(mp3|wave?|og[ga]+|flac|aac|3gp|m4a|wav|raw|wma)~si', $this->file->getExtension());
     }
 
     /**
@@ -50,7 +59,7 @@ class MimeType
      */
     public function isMovie()
     {
-        return (bool ) preg_match('~(avi|mp4|mpe?g|mov|wmv|webm|mkv|flv|vob|og[vg]+|mov|3gp)~si', $this->file->getExtension());
+        return (bool) preg_match('~(avi|mp4|mpe?g|mov|wmv|webm|mkv|flv|vob|og[vg]+|mov|3gp)~si', $this->file->getExtension());
     }
 
     /**
@@ -93,14 +102,5 @@ class MimeType
     public function isCode()
     {
         return (bool) preg_match('~(php|html?|css|js|cpp|sh)~si', $this->file->getExtension());
-    }
-
-    public function __call($method, $args)
-    {
-        if (method_exists($this->file, $method)) {
-            return call_user_func_array([$this->file, $method], $args);
-        }
-
-        throw new Exception("Method $method not found.");
     }
 }

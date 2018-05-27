@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Terranet\Administrator\Badges;
 
 use Illuminate\Support\Collection as BaseCollection;
@@ -8,7 +7,7 @@ use Illuminate\Support\Collection as BaseCollection;
 class Collection
 {
     /**
-     * Collection items
+     * Collection items.
      *
      * @var BaseCollection
      */
@@ -25,7 +24,7 @@ class Collection
      * @param mixed array|BaseCollection $items
      * @param \Closure $transformer
      */
-    public function __construct($items = [], \Closure $transformer)
+    public function __construct($items, \Closure $transformer)
     {
         $this->items = collect($items);
 
@@ -33,7 +32,7 @@ class Collection
     }
 
     /**
-     * Transform items according to $transformer closure
+     * Transform items according to $transformer closure.
      *
      * @return static
      */

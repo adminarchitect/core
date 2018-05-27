@@ -17,5 +17,5 @@ return [
 
     'global' => [
         // 'remove_selected' => 'Delete collection'
-    ]
+    ],
 ];

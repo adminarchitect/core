@@ -8,6 +8,7 @@ trait CreatesElement
      * Make an element if not exists.
      *
      * @param $name
+     *
      * @return mixed
      */
     protected function e($name)

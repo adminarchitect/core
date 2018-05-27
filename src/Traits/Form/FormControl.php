@@ -16,7 +16,7 @@ trait FormControl
      *
      * @var null
      */
-    protected $value = null;
+    protected $value;
 
     /**
      * HTML attributes.
@@ -48,7 +48,7 @@ trait FormControl
     {
         if ($this->relation) {
             return $this->translatable
-                ? "{$this->relation}[translatable]" . substr($this->name, strlen('translatable'))
+                ? "{$this->relation}[translatable]".substr($this->name, strlen('translatable'))
                 : "{$this->relation}[$this->name]";
         }
 
@@ -59,6 +59,7 @@ trait FormControl
      * Set element name.
      *
      * @param $name
+     *
      * @return mixed
      */
     public function setName($name)
@@ -66,7 +67,7 @@ trait FormControl
         if (false !== stripos($name, '.')) {
             $relations = explode('.', $name);
             $name = array_pop($relations);
-            $this->relation = join('.', $relations);
+            $this->relation = implode('.', $relations);
         }
 
         $this->name = $name;
@@ -88,6 +89,7 @@ trait FormControl
      * Set element implicit value.
      *
      * @param mixed $value
+     *
      * @return $this
      */
     public function setValue($value = null)
@@ -110,7 +112,7 @@ trait FormControl
      */
     public function getType()
     {
-        $parts = explode("\\", get_class($this));
+        $parts = explode('\\', get_class($this));
 
         return strtolower(array_pop($parts));
     }
@@ -119,6 +121,7 @@ trait FormControl
      * Set element attributes.
      *
      * @param array $attributes
+     *
      * @return $this
      */
     public function setAttributes(array $attributes = [])
@@ -142,7 +145,7 @@ trait FormControl
     {
         foreach ($this->attributes as $key => $value) {
             if (property_exists($this, $key)) {
-                $method = "set" . ucfirst($key);
+                $method = 'set'.ucfirst($key);
 
                 method_exists($this, $method) ? $this->$method($value) : ($this->$key = $value);
 
@@ -153,12 +156,13 @@ trait FormControl
 
     /**
      * @param $value
+     *
      * @return string
      */
     protected function handleJsonType($value)
     {
         if (($repo = $this->getRepository())) {
-            if (($cast = array_get($repo->getCasts(), $this->name)) && in_array($cast, ['array', 'json'])) {
+            if (($cast = array_get($repo->getCasts(), $this->name)) && in_array($cast, ['array', 'json'], true)) {
                 $value = json_encode($value);
             }
         }

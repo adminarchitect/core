@@ -5,7 +5,7 @@ namespace Terranet\Administrator\Traits\Module;
 trait ValidatesOptions
 {
     /**
-     * Define validation rules
+     * Define validation rules.
      */
     public function rules()
     {
@@ -13,7 +13,7 @@ trait ValidatesOptions
     }
 
     /**
-     * Build a list of supposed validators based on columns and indexes information
+     * Build a list of supposed validators based on columns and indexes information.
      *
      * @return array
      */

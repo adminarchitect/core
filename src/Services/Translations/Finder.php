@@ -14,6 +14,7 @@ class Finder
      * @param null $term
      * @param int $page
      * @param int $perPage
+     *
      * @return LengthAwarePaginator
      */
     public function find($translations, $term = null, $page = 1, $perPage = 20)
@@ -24,6 +25,7 @@ class Finder
                 if (empty($term) || str_contains(strtoupper($value), strtoupper($term))
                     || str_contains(strtoupper($key), strtoupper($term))) {
                     $keys[$key] = $translation;
+
                     continue;
                 }
             }
@@ -38,17 +40,21 @@ class Finder
      * @param $keys
      * @param $page
      * @param $perPage
+     *
      * @return LengthAwarePaginator
      */
     protected function paginate($keys, $page, $perPage)
     {
-        return (new LengthAwarePaginator(
-            $this->chunk($keys, $page, $perPage), count($keys), 20, $page,
+        return new LengthAwarePaginator(
+            $this->chunk($keys, $page, $perPage),
+            count($keys),
+            20,
+            $page,
             [
                 'path' => Paginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ]
-        ));
+        );
     }
 
     /**
@@ -57,6 +63,7 @@ class Finder
      * @param $translations
      * @param int $page
      * @param int $perPage
+     *
      * @return array
      */
     protected function chunk($translations, $page = 1, $perPage = 20)

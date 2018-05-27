@@ -8,6 +8,6 @@ class NavbarPresenter extends CorePresenter
 {
     public function getOpenTagWrapper()
     {
-        return PHP_EOL . '<ul class="dropdown-menu pull-right">' . PHP_EOL;
+        return PHP_EOL.'<ul class="dropdown-menu pull-right">'.PHP_EOL;
     }
 }

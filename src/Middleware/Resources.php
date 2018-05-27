@@ -34,6 +34,7 @@ class Resources
      *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -56,9 +57,10 @@ class Resources
     }
 
     /**
-     * Make sure the resource is Navigable && Should be visible
+     * Make sure the resource is Navigable && Should be visible.
      *
      * @param $module
+     *
      * @return bool
      */
     protected function navigableResource($module)
@@ -79,6 +81,7 @@ class Resources
 
     /**
      * @param $module
+     *
      * @return $this
      */
     protected function registerModule(Module $module)
@@ -107,7 +110,7 @@ class Resources
             $order = $module->order() ?: count($navigation->getChilds()) + 1;
         }
 
-        if (Navigable::AS_LINK == $module->showAs()) {
+        if (Navigable::AS_LINK === $module->showAs()) {
             $navigation->route(
                 'scaffold.index',
                 $module->title(),
@@ -116,7 +119,7 @@ class Resources
                 array_merge(
                     $module->linkAttributes(),
                     [
-                        'active' => function() use ($module) {
+                        'active' => function () use ($module) {
                             return $this->isActive($module);
                         },
                     ]
@@ -124,7 +127,9 @@ class Resources
             );
         } else {
             $navigation->url(
-                '#', $module->title(), $order,
+                '#',
+                $module->title(),
+                $order,
                 array_merge(
                     $module->linkAttributes(),
                     [
@@ -140,16 +145,17 @@ class Resources
     /**
      * @param $module
      * @param $navigation
+     *
      * @return mixed
      */
     protected function validateContainer(Module $module, Menu $navigation)
     {
         $container = $module->navigableIn();
 
-        if (! array_key_exists($container, $navigation->all())) {
+        if (!array_key_exists($container, $navigation->all())) {
             $message =
-                "Can not add \"{$module->title()}\" to \"{$container}\" menu. Available menus: " .
-                implode(', ', array_keys($navigation->all())) . '.';
+                "Can not add \"{$module->title()}\" to \"{$container}\" menu. Available menus: ".
+                implode(', ', array_keys($navigation->all())).'.';
 
             throw new \InvalidArgumentException($message);
         }
@@ -161,13 +167,13 @@ class Resources
      * @param $module
      * @param $navigation
      * @param $group
+     *
      * @return mixed
      */
     protected function findOrCreateGroup(Module $module, MenuBuilder $navigation, $group)
     {
-        if (! $sub = $navigation->whereTitle($group)) {
+        if (!$sub = $navigation->whereTitle($group)) {
             $sub = $navigation->dropdown($group, function () {
-                //
             }, 99, ['id' => $module->url(), 'icon' => 'fa fa-folder']);
         }
 
@@ -180,15 +186,15 @@ class Resources
         $module = $module->url();
 
         if (!array_key_exists($module, $checked)) {
-            $urls = array_map(function($url) { return trim($url, '/'); }, [
+            $urls = array_map(function ($url) { return trim($url, '/'); }, [
                 'current' => \URL::getRequest()->getPathInfo(),
                 'create' => route('scaffold.create', ['module' => $module], false),
-                'module' => config('administrator.prefix') . "/{$module}"
+                'module' => config('administrator.prefix')."/{$module}",
             ]);
 
             $checked[$module] = starts_with($urls['current'], $urls['module']) && ($urls['current'] !== $urls['create']);
         }
-        
+
         return $checked[$module];
     }
- }
+}

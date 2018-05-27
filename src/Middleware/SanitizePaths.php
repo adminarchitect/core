@@ -12,6 +12,7 @@ class SanitizePaths
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -27,6 +28,7 @@ class SanitizePaths
 
     /**
      * @param string $path
+     *
      * @return string
      */
     protected function sanitizePath($path)
@@ -35,7 +37,7 @@ class SanitizePaths
             return array_map([$this, 'sanitizePath'], $path);
         }
 
-        $path = iconv($encoding = "UTF-8", "$encoding//IGNORE//TRANSLIT", $path);
+        $path = iconv($encoding = 'UTF-8', "$encoding//IGNORE//TRANSLIT", $path);
 
         $parts = explode('/', $path);
         $safe = [];
@@ -46,6 +48,7 @@ class SanitizePaths
 
             if ('..' === $part) {
                 array_pop($safe);
+
                 continue;
             }
 
@@ -57,6 +60,7 @@ class SanitizePaths
 
     /**
      * @param Request $request
+     *
      * @return array
      */
     protected function guardedPaths(Request $request)

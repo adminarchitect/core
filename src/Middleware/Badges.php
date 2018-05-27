@@ -5,7 +5,6 @@ namespace Terranet\Administrator\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Traits\ResolvesClasses;
 use Terranet\Administrator\Traits\SortsObjectsCollection;
 
@@ -18,6 +17,7 @@ class Badges
      *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -40,7 +40,7 @@ class Badges
     protected function collectBadges(Closure $callback)
     {
         $files = app('files')->exists(
-            $path = app_path(app('scaffold.config')->get('paths.badges', "Http/Terranet/Administrator/Badges"))
+            $path = app_path(app('scaffold.config')->get('paths.badges', 'Http/Terranet/Administrator/Badges'))
         ) ? app('files')->allFiles($path) : [];
 
         return Collection::make($files)->each($callback);
@@ -48,10 +48,11 @@ class Badges
 
     /**
      * @param $badges
+     *
      * @return mixed
      */
     protected function registerCollection($badges)
     {
-        return app()->instance("scaffold.badges", $badges);
+        return app()->instance('scaffold.badges', $badges);
     }
 }

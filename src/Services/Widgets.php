@@ -50,7 +50,7 @@ class Widgets
     }
 
     /**
-     * Fetch widgets
+     * Fetch widgets.
      *
      * @return array
      */
@@ -63,13 +63,6 @@ class Widgets
         });
     }
 
-    protected function applyFilters()
-    {
-        return $this->widgets->filter(function (AbstractWidget $widget) {
-            return ($widget->getPlacement() === $this->placement && $widget->getTab() === $this->tab);
-        });
-    }
-
     public function tabs()
     {
         // eloquent tab should be always first
@@ -77,6 +70,13 @@ class Widgets
 
         return array_build($this->widgets, function ($i, $widget) {
             return [str_slug($tab = $widget->getTab()), $tab];
+        });
+    }
+
+    protected function applyFilters()
+    {
+        return $this->widgets->filter(function (AbstractWidget $widget) {
+            return $widget->getPlacement() === $this->placement && $widget->getTab() === $this->tab;
         });
     }
 

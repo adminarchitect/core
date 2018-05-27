@@ -15,17 +15,18 @@ class MultiCheckbox extends Radio
 
     public function getFormName()
     {
-        return parent::getFormName() . '[]';
+        return parent::getFormName().'[]';
     }
 
     /**
      * @param $name
      * @param $value
      * @param $attributes
+     *
      * @return mixed
      */
     protected function htmlInput($name, $value, $attributes)
     {
-        return Form::checkbox($name, $value, in_array($value, (array) $this->value), $attributes);
+        return Form::checkbox($name, $value, in_array($value, (array) $this->value, true), $attributes);
     }
 }

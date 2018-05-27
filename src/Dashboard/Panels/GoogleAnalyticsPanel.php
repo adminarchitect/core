@@ -13,7 +13,7 @@ class GoogleAnalyticsPanel extends DashboardPanel
     use Stringify;
 
     /**
-     * Widget contents
+     * Widget contents.
      *
      * @return mixed string|View
      */
@@ -32,7 +32,12 @@ class GoogleAnalyticsPanel extends DashboardPanel
         $labels = $this->dateLabels($dailyStats);
 
         return view(app('scaffold.template')->dashboard('google_analytics'))->with(compact(
-            'dailyStats', 'labels', 'visitors', 'pageViews', 'maxVisitors', 'period'
+            'dailyStats',
+            'labels',
+            'visitors',
+            'pageViews',
+            'maxVisitors',
+            'period'
         ));
     }
 
@@ -42,7 +47,7 @@ class GoogleAnalyticsPanel extends DashboardPanel
     protected function abortMessage()
     {
         return
-            <<<OUT
+            <<<'OUT'
 <div class="panel">
     <div class="panel-heading">
         <h4 class="panel-title">Google Analytics.</h4>
@@ -72,6 +77,7 @@ OUT;
 
     /**
      * @param $dailyStats
+     *
      * @return mixed
      */
     protected function dateLabels($dailyStats)
@@ -91,9 +97,9 @@ OUT;
 
         return $this->dependencyInstalled()
             ? Period::create($start, $end)
-            : (object)[
+            : (object) [
                 'startDate' => $start,
-                'endDate' => $end
+                'endDate' => $end,
             ];
     }
 
@@ -101,6 +107,7 @@ OUT;
      * Provide fake analytics data for demo purposes.
      *
      * @param $period
+     *
      * @return \Illuminate\Support\Collection
      */
     protected function fakeData($period)

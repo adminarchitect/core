@@ -2,14 +2,14 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
-use function admin\db\scheme;
 use Doctrine\DBAL\Schema\Column;
 use Terranet\Rankable\Rankable;
+use function admin\db\scheme;
 
 trait ValidatesForm
 {
     /**
-     * Define validation rules
+     * Define validation rules.
      */
     public function rules()
     {
@@ -17,7 +17,7 @@ trait ValidatesForm
     }
 
     /**
-     * Build a list of supposed validators based on columns and indexes information
+     * Build a list of supposed validators based on columns and indexes information.
      *
      * @return array
      */
@@ -30,18 +30,18 @@ trait ValidatesForm
 
         foreach (scheme()->columns($table) as $column) {
             $name = $column->getName();
-            # skip Primary Key
-            if ($name == $eloquent->getKeyName()) {
+            // skip Primary Key
+            if ($name === $eloquent->getKeyName()) {
                 continue;
             }
 
-            # skip rankable field
+            // skip rankable field
             if ($eloquent instanceof Rankable && $name === $eloquent->getRankableColumn()) {
                 continue;
             }
 
             if (!empty($columnRules = $this->proposeColumnRules($eloquent, $column))) {
-                $rules[$name] = join("|", $columnRules);
+                $rules[$name] = implode('|', $columnRules);
             }
         }
 
@@ -49,10 +49,11 @@ trait ValidatesForm
     }
 
     /**
-     * Build a list of validators for a column
+     * Build a list of validators for a column.
      *
      * @param        $eloquent
      * @param Column $column
+     *
      * @return array
      */
     protected function proposeColumnRules($eloquent, Column $column)
@@ -62,64 +63,66 @@ trait ValidatesForm
         if ((($this->fillable($column->getName(), $eloquent) || $this->isForeignKey($column, $eloquent))
             && $column->getNotnull())) {
             // make required rule first
-            array_unshift($rules, "required");
+            array_unshift($rules, 'required');
         }
 
         if ($this->isUnique($column, $eloquent)) {
-            $rules[] = "unique";
+            $rules[] = 'unique';
         }
 
-        if ('BooleanType' == ($classname = class_basename($column->getType()))) {
-            $rules[] = "numeric";
-            $rules[] = "boolean";
+        if ('BooleanType' === ($classname = class_basename($column->getType()))) {
+            $rules[] = 'numeric';
+            $rules[] = 'boolean';
 
             if (app()->runningUnitTests()) {
                 $rules = array_diff($rules, ['required']);
             }
         }
 
-        if (in_array($classname, ['IntegerType', 'DecimalType'])) {
-            $rules[] = "numeric";
+        if (in_array($classname, ['IntegerType', 'DecimalType'], true)) {
+            $rules[] = 'numeric';
 
             if ($column->getUnsigned()) {
-                $rules[] = "unsigned";
+                $rules[] = 'unsigned';
             }
         }
 
         if ($this->isForeignKey($column, $eloquent)) {
-            $rules[] = "foreign";
+            $rules[] = 'foreign';
         }
 
         return array_map(function ($rule) use ($column, $eloquent) {
-            $method = "make" . ucfirst($rule) . "Rule";
+            $method = 'make'.ucfirst($rule).'Rule';
 
             return call_user_func_array([$this, $method], [$column, $eloquent]);
         }, $rules);
     }
 
     /**
-     * Check if column fillable
+     * Check if column fillable.
      *
      * @param            $column
      * @param            $eloquent
+     *
      * @return bool
      */
     protected function fillable($column, $eloquent)
     {
-        return in_array($column, $eloquent->getFillable());
+        return in_array($column, $eloquent->getFillable(), true);
     }
 
     /**
-     * Check if column is a part of foreign keys
+     * Check if column is a part of foreign keys.
      *
      * @param $column
      * @param $eloquent
+     *
      * @return bool
      */
     protected function isForeignKey($column, $eloquent)
     {
         foreach ($foreign = scheme()->foreignKeys($eloquent->getTable()) as $foreign) {
-            if (in_array($column->getName(), $foreign->getLocalColumns())) {
+            if (in_array($column->getName(), $foreign->getLocalColumns(), true)) {
                 return $foreign;
             }
         }
@@ -130,12 +133,13 @@ trait ValidatesForm
     /**
      * @param Column $column
      * @param        $eloquent
+     *
      * @return array
      */
     protected function isUnique(Column $column, $eloquent)
     {
         foreach (scheme()->indexes($eloquent->getTable()) as $indexName => $index) {
-            if (in_array($column->getName(), $index->getColumns()) && $index->isUnique()) {
+            if (in_array($column->getName(), $index->getColumns(), true) && $index->isUnique()) {
                 return true;
             }
         }
@@ -144,39 +148,42 @@ trait ValidatesForm
     }
 
     /**
-     * Make required rule
+     * Make required rule.
      *
      * @param Column $column
      * @param        $eloquent
+     *
      * @return string
      */
     protected function makeRequiredRule(Column $column, $eloquent)
     {
-        return "required";
+        return 'required';
     }
 
     /**
-     * Make numeric rule
+     * Make numeric rule.
      *
      * @param Column $column
      * @param        $eloquent
+     *
      * @return array
      */
     protected function makeNumericRule(Column $column, $eloquent)
     {
-        return $column->getScale() ? "numeric" : "integer";
+        return $column->getScale() ? 'numeric' : 'integer';
     }
 
     /**
-     * Make unsigned rule
+     * Make unsigned rule.
      *
      * @param Column $column
      * @param        $eloquent
+     *
      * @return array
      */
     protected function makeUnsignedRule(Column $column, $eloquent)
     {
-        return "min:0";
+        return 'min:0';
     }
 
     /**
@@ -184,14 +191,15 @@ trait ValidatesForm
      */
     protected function makeBooleanRule()
     {
-        return "in:0,1";
+        return 'in:0,1';
     }
 
     /**
-     * Parse foreign keys for column presence
+     * Parse foreign keys for column presence.
      *
      * @param Column $column
      * @param        $eloquent
+     *
      * @return array
      */
     protected function makeForeignRule(Column $column, $eloquent)
@@ -205,11 +213,11 @@ trait ValidatesForm
 
     protected function makeUniqueRule($column, $eloquent)
     {
-        if (is_object($key = $this->routeParam('id')) && method_exists($key, "getKey")) {
+        if (is_object($key = $this->routeParam('id')) && method_exists($key, 'getKey')) {
             $key = $key->getKey();
         }
 
-        return "unique:{$eloquent->getTable()},{$column->getName()}" . ($key ? ",{$key}" : "");
+        return "unique:{$eloquent->getTable()},{$column->getName()}".($key ? ",{$key}" : '');
     }
 
     protected function routeParam($name, $default = null)

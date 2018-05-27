@@ -7,7 +7,7 @@ use Terranet\Administrator\Form\Element;
 class View extends Element
 {
     protected $rules = [
-        'view' => 'required'
+        'view' => 'required',
     ];
 
     /**

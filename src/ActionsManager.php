@@ -24,14 +24,14 @@ class ActionsManager implements ActionsManagerContract
      *
      * @var array
      */
-    protected $actions = null;
+    protected $actions;
 
     /**
      * List of global actions.
      *
      * @var array
      */
-    protected $globalActions = null;
+    protected $globalActions;
 
     /**
      * Check if resource is readonly - has no actions.
@@ -68,26 +68,6 @@ class ActionsManager implements ActionsManagerContract
     }
 
     /**
-     * Parse handler class for per-item and global actions.
-     *
-     * @return Collection
-     */
-    protected function scaffoldActions()
-    {
-        return (new Collection($this->service->actions()));
-    }
-
-    /**
-     * Parse handler class for per-item and global actions.
-     *
-     * @return Collection
-     */
-    protected function scaffoldBatch()
-    {
-        return (new Collection($this->service->batchActions()));
-    }
-
-    /**
      * Determine if the user is authorized to make this request.
      *
      * @param string $action
@@ -97,13 +77,13 @@ class ActionsManager implements ActionsManagerContract
      */
     public function authorize($action, $model = null)
     {
-        # for most cases it is enough to set
-        # permissions in Resource object.
+        // for most cases it is enough to set
+        // permissions in Resource object.
         if (method_exists($this->module, 'authorize')) {
             return $this->module->authorize($action, $model);
         }
 
-        # Ask Actions Service for action permissions.
+        // Ask Actions Service for action permissions.
         return $this->service->authorize($action, $model, $this->module);
     }
 
@@ -115,12 +95,12 @@ class ActionsManager implements ActionsManagerContract
         if (null === $this->readonly) {
             $this->readonly = false;
 
-            # check for <Resource>::hideActions() method.
+            // check for <Resource>::hideActions() method.
             if (method_exists($this->module, 'readonly')) {
                 $this->readonly = $this->module->readonly();
             }
 
-            # check for <Actions>::readonly() method.
+            // check for <Actions>::readonly() method.
             elseif (method_exists($this->service, 'readonly')) {
                 $this->readonly = $this->service->readonly();
             }
@@ -159,5 +139,25 @@ class ActionsManager implements ActionsManagerContract
 
         // Execute CRUD action
         return call_user_func_array([$this->service, $method], (array) $arguments);
+    }
+
+    /**
+     * Parse handler class for per-item and global actions.
+     *
+     * @return Collection
+     */
+    protected function scaffoldActions()
+    {
+        return new Collection($this->service->actions());
+    }
+
+    /**
+     * Parse handler class for per-item and global actions.
+     *
+     * @return Collection
+     */
+    protected function scaffoldBatch()
+    {
+        return new Collection($this->service->batchActions());
     }
 }

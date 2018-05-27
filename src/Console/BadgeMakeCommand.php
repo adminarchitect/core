@@ -35,22 +35,23 @@ class BadgeMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        if (($t = $this->option('template')) && in_array($t, ['messages', 'notifications', 'tasks'])) {
-            return __DIR__ . '/stubs/badges/' . $t . '.stub';
+        if (($t = $this->option('template')) && in_array($t, ['messages', 'notifications', 'tasks'], true)) {
+            return __DIR__.'/stubs/badges/'.$t.'.stub';
         }
 
-        return __DIR__ . '/stubs/badges/messages.stub';
+        return __DIR__.'/stubs/badges/messages.stub';
     }
 
     /**
      * Get the default namespace for the class.
      *
      * @param string $rootNamespace
+     *
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\\' . config('administrator.paths.badge');
+        return $rootNamespace.'\\'.config('administrator.paths.badge');
     }
 
     /**

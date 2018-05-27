@@ -24,12 +24,13 @@ class Collection extends BaseCollection
      * Find action by name.
      *
      * @param $name
+     *
      * @return mixed
      */
     public function find($name)
     {
         return $this->first(function ($action) use ($name) {
-            return class_basename($action) == studly_case($name);
+            return class_basename($action) === studly_case($name);
         });
     }
 
@@ -38,6 +39,7 @@ class Collection extends BaseCollection
      *
      * @param User $user
      * @param Model $model
+     *
      * @return static
      */
     public function authorized(User $user, Model $model = null)

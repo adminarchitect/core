@@ -3,7 +3,6 @@
 namespace Terranet\Administrator\Form\Type;
 
 use Form;
-use Terranet\Administrator\Form\Element;
 
 class Search extends Select
 {

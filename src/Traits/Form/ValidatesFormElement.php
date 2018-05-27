@@ -21,7 +21,7 @@ trait ValidatesFormElement
      */
     protected $errors = [];
 
-    static protected $validator = null;
+    protected static $validator = null;
 
     /**
      * @param array $rules
@@ -35,21 +35,8 @@ trait ValidatesFormElement
         return $this;
     }
 
-    protected function validateAttributes()
-    {
-        $validator = $this->getValidator();
-
-        if ($validator->fails()) {
-            $message = sprintf(
-                "Field \"{$this->name}\" fails with messages: %s",
-                join("; ", $validator->getMessageBag()->all())
-            );
-            throw new WrongFieldAttributeException($message);
-        }
-    }
-
     /**
-     * Check if
+     * Check if.
      *
      * @return bool
      */
@@ -75,8 +62,22 @@ trait ValidatesFormElement
         return static::$validator;
     }
 
-    static public function setValidator($validator)
+    public static function setValidator($validator)
     {
         static::$validator = $validator;
+    }
+
+    protected function validateAttributes()
+    {
+        $validator = $this->getValidator();
+
+        if ($validator->fails()) {
+            $message = sprintf(
+                "Field \"{$this->name}\" fails with messages: %s",
+                implode('; ', $validator->getMessageBag()->all())
+            );
+
+            throw new WrongFieldAttributeException($message);
+        }
     }
 }

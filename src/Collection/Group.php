@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Collection;
 
-use Coduo\PHPHumanizer\StringHumanizer;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
@@ -27,9 +26,10 @@ class Group extends ElementContainer
     }
 
     /**
-     * Push an
+     * Push an.
      *
      * @param $element
+     *
      * @return $this
      */
     public function push(Element $element)
@@ -51,6 +51,7 @@ class Group extends ElementContainer
      *
      * @param $element
      * @param $position
+     *
      * @return $this
      */
     public function insert(Element $element, $position)
@@ -64,6 +65,7 @@ class Group extends ElementContainer
      * Remove an element from collection.
      *
      * @param $id
+     *
      * @return static
      */
     public function without($id)
@@ -78,6 +80,7 @@ class Group extends ElementContainer
      *
      * @param $id
      * @param \Closure $callback
+     *
      * @return $this
      */
     public function update($id, \Closure $callback)
@@ -91,6 +94,7 @@ class Group extends ElementContainer
      * Update many elements at once.
      *
      * @param $ids
+     *
      * @return $this
      */
     public function updateMany(array $ids = [])
@@ -105,6 +109,7 @@ class Group extends ElementContainer
      *
      * @param $id
      * @param $position
+     *
      * @return $this
      */
     public function move($id, $position)
@@ -118,6 +123,7 @@ class Group extends ElementContainer
      * Run a map over each of the items.
      *
      * @param  callable  $callback
+     *
      * @return static
      */
     public function map(callable $callback)
@@ -131,6 +137,7 @@ class Group extends ElementContainer
      * Find element by ID.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function find($id)

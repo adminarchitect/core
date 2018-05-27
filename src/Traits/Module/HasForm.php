@@ -2,17 +2,16 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
-use DB;
-use function admin\db\scheme;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Doctrine\DBAL\Schema\Column;
+use Terranet\Administrator\Form\Collection\Mutable;
+use Terranet\Administrator\Form\FormElement;
+use Terranet\Administrator\Form\InputFactory;
+use Terranet\Administrator\Form\Type\Select;
+use Terranet\Translatable\Translatable;
 use function admin\db\connection;
 use function admin\db\enum_values;
-use Doctrine\DBAL\Schema\Column;
-use Terranet\Translatable\Translatable;
-use Terranet\Administrator\Form\FormElement;
-use Terranet\Administrator\Form\Type\Select;
-use Terranet\Administrator\Form\InputFactory;
-use Terranet\Administrator\Form\Collection\Mutable;
-use Czim\Paperclip\Contracts\AttachableInterface;
+use function admin\db\scheme;
 
 trait HasForm
 {
@@ -27,7 +26,7 @@ trait HasForm
     ];
 
     /**
-     * Provides array of editable columns
+     * Provides array of editable columns.
      *
      * @return Mutable
      */
@@ -37,13 +36,13 @@ trait HasForm
     }
 
     /**
-     * Build editable columns based on table columns metadata
+     * Build editable columns based on table columns metadata.
      *
      * @return Mutable
      */
     protected function scaffoldForm()
     {
-        $editable = new Mutable;
+        $editable = new Mutable();
 
         if ($eloquent = $this->model()) {
             $editable = $editable
@@ -52,14 +51,15 @@ trait HasForm
 
             return $editable->map(function ($name) use ($eloquent, $translatable) {
                 $formElement = InputFactory::make(
-                    $name, $this->inputType($name, $eloquent)
+                    $name,
+                    $this->inputType($name, $eloquent)
                 );
 
-                if (in_array($name, $translatable)) {
+                if (in_array($name, $translatable, true)) {
                     $formElement->setTranslatable(true);
                 }
 
-                # For Enums (Select|Radio) try to extract values from database.
+                // For Enums (Select|Radio) try to extract values from database.
                 if (is_a($formElement, Select::class)
                     && empty($formElement->getOptions())
                     && connection('mysql')
@@ -68,14 +68,14 @@ trait HasForm
                         $values = enum_values($table = $eloquent->getTable(), $name)
                     );
 
-                    # set appropriate styling
+                    // set appropriate styling
                     if (count($values) > 5) {
                         $formElement->setStyle([
                             'display' => 'block',
                         ]);
                     }
 
-                    # set default value
+                    // set default value
                     if ($default = scheme()->columns($table)[$name]->getDefault()) {
                         $formElement->setValue($default);
                     }
@@ -93,6 +93,7 @@ trait HasForm
     /**
      * @param $column
      * @param $eloquent
+     *
      * @return string
      */
     protected function inputType($column, $eloquent)
@@ -113,7 +114,7 @@ trait HasForm
 
         $columns = array_merge($columns, $this->allColumns($eloquent));
 
-        # map column database type to input type
+        // map column database type to input type
         if ($column = array_get($columns, $column)) {
             return $this->mapColumnTypeToFieldType($column);
         }
@@ -142,13 +143,14 @@ trait HasForm
 
     /**
      * @param Column $column
+     *
      * @return int|string
      */
     protected function mapColumnTypeToFieldType(Column $column)
     {
         foreach ($this->typesMap as $type => $classes) {
-            if (in_array($typeClass = $this->columnType($column), $classes)) {
-                if ('StringType' == $typeClass) {
+            if (in_array($typeClass = $this->columnType($column), $classes, true)) {
+                if ('StringType' === $typeClass) {
                     if (connection('mysql') && null === $column->getLength()) {
                         return 'radio';
                     }
@@ -163,6 +165,7 @@ trait HasForm
 
     /**
      * @param $column
+     *
      * @return string
      */
     protected function columnType(Column $column)
@@ -173,6 +176,7 @@ trait HasForm
     /**
      * @param $column
      * @param $attachments
+     *
      * @return string
      */
     protected function getAttachmentType($column, $attachments)
@@ -189,6 +193,7 @@ trait HasForm
 
     /**
      * @param $eloquent
+     *
      * @return array
      */
     protected function allColumns($eloquent)
@@ -215,6 +220,7 @@ trait HasForm
 
     /**
      * @param $column
+     *
      * @return bool
      */
     protected function isRelationColumn($column)

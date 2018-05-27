@@ -6,21 +6,6 @@ use Illuminate\Routing\Events\RouteMatched;
 
 class RouteManager
 {
-    /**
-     * Check if running under admin area.
-     *
-     * @param RouteMatched $event
-     * @return bool
-     */
-    protected function isAdminArea(RouteMatched $event)
-    {
-        if ($action = $event->route->getAction()) {
-            return config('administrator.prefix') === array_get($action, 'prefix');
-        }
-
-        return false;
-    }
-
     public function handle()
     {
         app('router')->matched(function (RouteMatched $event) {
@@ -31,9 +16,9 @@ class RouteManager
             $route = $event->route;
             $request = $event->request;
 
-            if ($route->parameter('module'))
+            if ($route->parameter('module')) {
                 return true;
-
+            }
             if ($resolver = app('scaffold.config')->get('resource.resolver')) {
                 $module = call_user_func_array($resolver, [$route, $request]);
             } else {
@@ -44,5 +29,21 @@ class RouteManager
 
             return $module;
         });
+    }
+
+    /**
+     * Check if running under admin area.
+     *
+     * @param RouteMatched $event
+     *
+     * @return bool
+     */
+    protected function isAdminArea(RouteMatched $event)
+    {
+        if ($action = $event->route->getAction()) {
+            return config('administrator.prefix') === array_get($action, 'prefix');
+        }
+
+        return false;
     }
 }

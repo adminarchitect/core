@@ -18,11 +18,10 @@ class Select extends Element
     protected $options = [];
 
     protected $attributes = [
-        'class' => 'form-control'
+        'class' => 'form-control',
     ];
 
     protected $rules = [
-        //
     ];
 
     public function setOptions($options)
@@ -80,7 +79,7 @@ class Select extends Element
         $name = parent::getFormName();
 
         if (isset($this->attributes['multiple']) && $this->attributes['multiple']) {
-            $name = $name . '[]';
+            $name = $name.'[]';
         }
 
         return $name;
@@ -106,7 +105,7 @@ class Select extends Element
         }
 
         // resolve callable [$object, "method"]
-        if (count($callable) == 2 && array_key_exists(0, $callable) && array_key_exists(1, $callable)) {
+        if (2 === count($callable) && array_key_exists(0, $callable) && array_key_exists(1, $callable)) {
             if (is_object($class = $callable[0]) && is_string($method = $callable[1]) && method_exists($class, $method)) {
                 return [$class, $method];
             }
