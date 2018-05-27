@@ -165,20 +165,16 @@ class AdminArchitect {
     }
 
     static handleDateControls() {
-        $('[data-filter-type="date"]').each((i, e) => {
-            let type = $(e).attr('type');
+        $('[data-filter-type="date"]').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
 
-            if ('date' === type) {
-                $(e).datepicker({
-                    format: 'yyyy-mm-dd',
-                    clearBtn: false,
-                    multidate: false,
-                });
-            }
+        $('[data-filter-type="time"]').datetimepicker({
+            format: 'hh:mm:ss'
+        });
 
-            if ('datetime' === type) {
-                $(e).datetimepicker();
-            }
+        $('[data-filter-type="datetime"]').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm:ss'
         });
 
         $('[data-filter-type="daterange"]').daterangepicker({

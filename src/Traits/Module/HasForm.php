@@ -23,6 +23,7 @@ trait HasForm
         'number' => ['IntegerType', 'BigIntType', 'DecimalType', 'FloatType'],
         'datetime' => ['DateTimeType', 'DateTimeTzType'],
         'date' => ['DateType'],
+        'time' => ['TimeType'],
     ];
 
     /**
