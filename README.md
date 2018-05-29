@@ -13,7 +13,7 @@ Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
 ### Donation
 
-If you have found the Admin Architect useful, you can help by:
+If you have found the Admin Architect useful, you can:
 
 [![Buy me a coffee](http://docs.adminarchitect.com/images/bmc-button.png)](https://www.buymeacoffee.com/TerziEduard)
 
