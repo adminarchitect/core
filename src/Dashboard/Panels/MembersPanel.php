@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Dashboard\Panels;
 
-use App\User;
 use DB;
 use Terranet\Administrator\Dashboard\DashboardPanel;
 use Terranet\Administrator\Traits\Stringify;
@@ -41,6 +40,7 @@ class MembersPanel extends DashboardPanel
      */
     protected function createModel()
     {
-        return new User();
+        $userModelName = config('administrator.auth.model', '\App\User');
+        return new $userModelName();
     }
 }
