@@ -40,7 +40,8 @@ class MembersPanel extends DashboardPanel
      */
     protected function createModel()
     {
-        $userModelName = config('administrator.auth.model', '\App\User');
-        return new $userModelName();
+        $model = config('administrator.auth.model', '\App\User');
+        
+        return new $model();
     }
 }
