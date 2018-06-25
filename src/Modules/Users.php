@@ -31,7 +31,8 @@ class Users extends Scaffolding implements Navigable, Filtrable, Editable, Valid
 
     public function model()
     {
-        $userModelName = config('administrator.auth.model', '\App\User');
-        return new $userModelName();
+        $model = config('administrator.auth.model', '\App\User');
+        
+        return new $model();
     }
 }
