@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Modules;
 
-use App\User;
 use Terranet\Administrator\Contracts\Module\Editable;
 use Terranet\Administrator\Contracts\Module\Exportable;
 use Terranet\Administrator\Contracts\Module\Filtrable;
@@ -20,8 +19,6 @@ class Users extends Scaffolding implements Navigable, Filtrable, Editable, Valid
 {
     use HasFilters, HasForm, HasSortable, ValidatesForm, AllowFormats;
 
-    protected $model = User::class;
-
     public function group()
     {
         return trans('administrator::module.groups.users');
@@ -30,5 +27,12 @@ class Users extends Scaffolding implements Navigable, Filtrable, Editable, Valid
     public function linkAttributes()
     {
         return ['icon' => 'fa fa-user'];
+    }
+
+    public function model()
+    {
+        $model = config('administrator.auth.model', '\App\User');
+        
+        return new $model();
     }
 }
