@@ -4,9 +4,6 @@ use Terranet\Administrator\Form\FormElement;
 
 require_once __DIR__.'/../MocksValidator.php';
 
-/**
- * @coversNothing
- */
 class FormElementTest extends PHPUnit\Framework\TestCase
 {
     use MocksValidator;

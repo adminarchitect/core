@@ -4,9 +4,6 @@ use Terranet\Administrator\Filters\FilterElement;
 
 require_once __DIR__.'/../MocksValidator.php';
 
-/**
- * @coversNothing
- */
 class FilterElementTest extends PHPUnit\Framework\TestCase
 {
     use MocksValidator;

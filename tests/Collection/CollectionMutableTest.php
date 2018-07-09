@@ -7,9 +7,6 @@ use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Columns\Element;
 
-/**
- * @coversNothing
- */
 class CollectionMutableTest extends PHPUnit\Framework\TestCase
 {
     use CreatesElement, MocksObjects;
@@ -23,6 +20,8 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
+        $this->mockTranslator();
+        $this->mockModule();
         $this->collection = $this->makeElementsCollection();
     }
 
@@ -228,13 +227,10 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
             ->move('group', 'after:second');
 
         $this->assertCount(2, $this->collection);
-        $this->assertSame(
-            $this->collection->toArray(),
-            [
-                $this->e('second'),
-                (new Group('group'))->push($this->e('first'))->push($this->e('third')),
-            ]
-        );
+
+        $this->assertInstanceOf(Group::class, $this->collection->get(1));
+        $this->assertSame($this->collection->get(1)->elements()[0]->id(), 'first');
+        $this->assertSame($this->collection->get(1)->elements()[1]->id(), 'third');
     }
 
     /**

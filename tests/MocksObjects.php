@@ -11,14 +11,17 @@ trait MocksObjects
         $translator = Mockery::mock(\Illuminate\Translation\Translator::class);
         $translator->shouldReceive('has')->withAnyArgs()->andReturn(false);
 
+        app()->instance('translator', $translator);
+
         return $translator;
     }
 
     protected function mockModule()
     {
         $module = Mockery::mock(\Terranet\Administrator\Scaffolding::class);
-
         $module->shouldReceive('url')->andReturn('/module/url');
+
+        app()->instance('scaffold.module', $module);
 
         return $module;
     }
