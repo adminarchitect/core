@@ -72,7 +72,7 @@ class Element extends ElementContainer
         /**
          * Handle closure-based decorators.
          *
-         * @example: (new CellElement($id))->setDecorator(function() { return $this->id; });
+         * @example: $element->setDecorator(function() { return $this->id; });
          */
         if (($closure = $this->template) instanceof \Closure) {
             return $closure->call($eloquent, $eloquent);

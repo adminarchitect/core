@@ -8,7 +8,7 @@ class SuperAdminRule
 {
     public function validate(Authenticatable $user = null)
     {
-        $user = $user ?: auth()->user();
+        $user = $user ?: $this->user();
 
         if (!$user) {
             return false;
@@ -19,5 +19,13 @@ class SuperAdminRule
         }
 
         return 1 === (int) $user->getAuthIdentifier();
+    }
+
+    /**
+     * @return Authenticatable|null
+     */
+    protected function user()
+    {
+        return auth()->user();
     }
 }

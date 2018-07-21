@@ -1,10 +1,11 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Filter;
+
 use Terranet\Administrator\Filters\FilterElement;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../MocksValidator.php';
-
-class FilterElementTest extends PHPUnit\Framework\TestCase
+class FilterElementTest extends \PHPUnit\Framework\TestCase
 {
     use MocksValidator;
 

@@ -1,12 +1,13 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Form;
+
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\Type\Text;
+use Terranet\Administrator\Tests\MocksObjects;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../MocksValidator.php';
-require_once __DIR__.'/../MocksObjects.php';
-
-class ElementTest extends PHPUnit\Framework\TestCase
+class ElementTest extends \PHPUnit\Framework\TestCase
 {
     use MocksValidator, MocksObjects;
 

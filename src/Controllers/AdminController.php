@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Translation\Translator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
@@ -12,7 +13,12 @@ use Terranet\Administrator\Middleware\Resources;
 
 abstract class AdminController extends BaseController
 {
-    public function __construct()
+    /**
+     * @var \Illuminate\Translation\Translator|null
+     */
+    protected $translator = null;
+
+    public function __construct(Translator $translator)
     {
         $this->middleware([
             AuthProvider::class,
@@ -20,6 +26,8 @@ abstract class AdminController extends BaseController
             Resources::class,
             Badges::class,
         ]);
+
+        $this->translator = $translator;
     }
 
     /**
@@ -35,7 +43,7 @@ abstract class AdminController extends BaseController
         if (!$response = app('scaffold.actions')->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
-                trans('administrator::errors.unauthorized')
+                $this->translator->trans('administrator::errors.unauthorized')
             );
         }
 
@@ -49,14 +57,12 @@ abstract class AdminController extends BaseController
         }
 
         if ($request->exists('save')) {
-            return redirect(route('scaffold.edit', $this->toMagnetParams(['module' => $module, 'id' => $key])));
+            return redirect()->route('scaffold.edit', $this->toMagnetParams(['module' => $module, 'id' => $key]));
         }
 
-        return redirect(
-            route(
-                $request->exists('save_return') ? 'scaffold.index' : 'scaffold.create',
-                $this->toMagnetParams(['module' => $module])
-            )
+        return redirect()->route(
+            $request->exists('save_return') ? 'scaffold.index' : 'scaffold.create',
+            $this->toMagnetParams(['module' => $module])
         );
     }
 
@@ -83,7 +89,8 @@ abstract class AdminController extends BaseController
         $ability,
         $message = 'This action is unauthorized.',
         $previousException = null
-    ) {
+    )
+    {
         $message = sprintf($message.' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);

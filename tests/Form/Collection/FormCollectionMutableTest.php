@@ -1,13 +1,14 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Form\Collection;
+
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\Type\Tinymce;
+use Terranet\Administrator\Tests\MocksObjects;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../../MocksValidator.php';
-require_once __DIR__.'/../../MocksObjects.php';
-
-class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
+class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
 {
     use MocksValidator, MocksObjects;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Terranet\Administrator\Tests;
+
 use Terranet\Administrator\Columns\Element;
 
 trait CreatesElement

@@ -1,6 +1,6 @@
 <?php
 
-$pattern = '[a-z0-9\_\=]+';
+$pattern = '[a-z0-9\_\-]+';
 
 Route::group([
     'prefix' => config('administrator.prefix', 'cms'),
