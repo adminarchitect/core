@@ -1,13 +1,11 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Form;
+
 use Terranet\Administrator\Form\FormElement;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../MocksValidator.php';
-
-/**
- * @coversNothing
- */
-class FormElementTest extends PHPUnit\Framework\TestCase
+class FormElementTest extends \PHPUnit\Framework\TestCase
 {
     use MocksValidator;
 

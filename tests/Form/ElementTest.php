@@ -1,22 +1,23 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Form;
+
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\Type\Text;
+use Terranet\Administrator\Tests\MocksObjects;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../MocksValidator.php';
-
-/**
- * @coversNothing
- */
-class ElementTest extends PHPUnit\Framework\TestCase
+class ElementTest extends \PHPUnit\Framework\TestCase
 {
-    use MocksValidator;
+    use MocksValidator, MocksObjects;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->mockValidator();
+        $this->mockTranslator();
+        $this->mockModule();
     }
 
     /** @test */
@@ -24,14 +25,7 @@ class ElementTest extends PHPUnit\Framework\TestCase
     {
         $element = FormElement::text('name');
 
-        $this->assertSame(
-            $element->id(),
-            'name'
-        );
-
-        $this->assertSame(
-            $element->getInput(),
-            new Text('name')
-        );
+        $this->assertSame($element->id(), 'name');
+        $this->assertInstanceOf(Text::class, $element->getInput());
     }
 }

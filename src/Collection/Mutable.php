@@ -18,7 +18,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function push($element, Closure $callback = null)
+    public function push($element, Closure $callback = null): self
     {
         $element = $this->createElement($element);
 
@@ -38,7 +38,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function media($collection = 'default', Closure $callback = null, $position = null)
+    public function media(string $collection = 'default', Closure $callback = null, $position = null): self
     {
         $element = $this->createMediaElement($collection);
 
@@ -60,7 +60,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function insert($element, $position, Closure $callback = null)
+    public function insert($element, $position, Closure $callback = null): self
     {
         $element = $this->createElement($element);
 
@@ -100,9 +100,9 @@ class Mutable extends BaseCollection
      *
      * @param array|int $id
      *
-     * @return static
+     * @return self
      */
-    public function without($id)
+    public function without($id): self
     {
         if (!is_array($id)) {
             $id = (array) $id;
@@ -117,7 +117,11 @@ class Mutable extends BaseCollection
         return $this;
     }
 
-    public function standalone($columns)
+    /**
+     * @param array $columns
+     * @return $this
+     */
+    public function standalone(array $columns = []): self
     {
         foreach ($columns as $column) {
             $this->update($column, function ($e) {
@@ -131,12 +135,12 @@ class Mutable extends BaseCollection
     /**
      * Update elements behaviour.
      *
-     * @param $id
+     * @param string $id
      * @param Closure $callback
      *
      * @return $this
      */
-    public function update($id, Closure $callback)
+    public function update(string $id, Closure $callback): self
     {
         if (str_contains($id, ',')) {
             collect(explode(',', $id))
@@ -164,7 +168,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function updateMany(array $ids = [])
+    public function updateMany(array $ids = []): self
     {
         foreach ($ids as $id => $callback) {
             $this->update($id, $callback);
@@ -187,7 +191,7 @@ class Mutable extends BaseCollection
      * @example: move('user_id', 'before:name");
      * @example: move('user_id', 'after:id");
      */
-    public function move($id, $position)
+    public function move(string $id, $position): self
     {
         if (is_numeric($position)) {
             return $this->toPosition($id, $position);
@@ -207,12 +211,12 @@ class Mutable extends BaseCollection
     /**
      * Move element before another one.
      *
-     * @param $id
+     * @param string $id
      * @param $target
      *
      * @return $this
      */
-    public function moveBefore($id, $target)
+    public function moveBefore(string $id, $target)
     {
         if ($element = $this->find($id)) {
             $this->without($id);
@@ -229,12 +233,12 @@ class Mutable extends BaseCollection
     /**
      * Move element after another one.
      *
-     * @param $id
+     * @param string $id
      * @param $target
      *
      * @return $this
      */
-    public function moveAfter($id, $target)
+    public function moveAfter(string $id, $target): self
     {
         if ($element = $this->find($id)) {
             $this->without($id);
@@ -252,12 +256,12 @@ class Mutable extends BaseCollection
     /**
      * Add a new elements group.
      *
-     * @param $id
+     * @param string $id
      * @param Closure $callback
      *
      * @return $this
      */
-    public function group($id, Closure $callback)
+    public function group(string $id, Closure $callback): self
     {
         $group = new Group($id);
 
@@ -277,7 +281,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function join($elements, $groupId, $position = null)
+    public function join($elements, $groupId, $position = null): self
     {
         $group = new Group($groupId);
 
@@ -322,11 +326,11 @@ class Mutable extends BaseCollection
     /**
      * Find an element.
      *
-     * @param $id
+     * @param string $id
      *
      * @return mixed
      */
-    public function find($id)
+    public function find(string $id)
     {
         $element = $this->first(function ($element) use ($id) {
             return $element->id() === $id;
@@ -342,34 +346,33 @@ class Mutable extends BaseCollection
     /**
      * Find an element position.
      *
-     * @param $id
+     * @param string $id
      *
      * @return null|int|string
      */
-    public function position($id)
+    public function position(string $id): int
     {
         $i = 0;
         foreach ($this->all() as $item) {
             if ($item->id() === $id) {
-                // stop immediately when victim found.
                 return $i;
             }
 
             ++$i;
         }
 
-        $this->notFound($id);
+        return $this->notFound($id);
     }
 
     /**
      * Move an element to a position.
      *
-     * @param $id
+     * @param string $id
      * @param $position
      *
      * @return static
      */
-    protected function toPosition($id, $position)
+    protected function toPosition(string $id, $position): self
     {
         $element = $this->find($id);
 
@@ -378,6 +381,10 @@ class Mutable extends BaseCollection
             ->insert($element, $position);
     }
 
+    /**
+     * @param $id
+     * @throws Exception
+     */
     protected function notFound($id)
     {
         throw new Exception(sprintf('Element [%s] does not exist.', $id));
@@ -404,7 +411,7 @@ class Mutable extends BaseCollection
      *
      * @return MediaElement
      */
-    protected function createMediaElement($collection)
+    protected function createMediaElement($collection): MediaElement
     {
         if (is_string($collection)) {
             $collection = new MediaElement($collection);

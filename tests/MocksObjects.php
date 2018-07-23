@@ -1,5 +1,6 @@
 <?php
 
+namespace Terranet\Administrator\Tests;
 
 trait MocksObjects
 {
@@ -8,17 +9,20 @@ trait MocksObjects
      */
     protected function mockTranslator()
     {
-        $translator = Mockery::mock(\Illuminate\Translation\Translator::class);
+        $translator = \Mockery::mock(\Illuminate\Translation\Translator::class);
         $translator->shouldReceive('has')->withAnyArgs()->andReturn(false);
+
+        app()->instance('translator', $translator);
 
         return $translator;
     }
 
     protected function mockModule()
     {
-        $module = Mockery::mock(\Terranet\Administrator\Scaffolding::class);
-
+        $module = \Mockery::mock(\Terranet\Administrator\Scaffolding::class);
         $module->shouldReceive('url')->andReturn('/module/url');
+
+        app()->instance('scaffold.module', $module);
 
         return $module;
     }
@@ -28,7 +32,7 @@ trait MocksObjects
      */
     protected function mockApplication($translator)
     {
-        $app = Mockery::mock(\Illuminate\Contracts\Foundation\Application::class);
+        $app = \Mockery::mock(\Illuminate\Contracts\Foundation\Application::class);
         $app->shouldReceive('make')
             ->with('translator')
             ->andReturn($translator);

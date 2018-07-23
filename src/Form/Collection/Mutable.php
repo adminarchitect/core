@@ -2,8 +2,8 @@
 
 namespace Terranet\Administrator\Form\Collection;
 
-use Closure;
 use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
+use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\FormSection;
@@ -140,7 +140,11 @@ class Mutable extends BaseMutableCollection
         return $element;
     }
 
-    protected function createMediaElement($collection)
+    /**
+     * @param $collection
+     * @return \Terranet\Administrator\Columns\MediaElement|FormElement
+     */
+    protected function createMediaElement($collection): MediaElement
     {
         return FormElement::media($collection);
     }

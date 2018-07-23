@@ -1,16 +1,16 @@
 <?php
 
-require_once __DIR__.'/../CreatesElement.php';
-require_once __DIR__.'/../MocksObjects.php';
+namespace Terranet\Administrator\Tests\Collection;
 
 use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Columns\Element;
+use Terranet\Administrator\Columns\MediaElement;
+use Terranet\Administrator\Tests\CoreTestCase;
+use Terranet\Administrator\Tests\CreatesElement;
+use Terranet\Administrator\Tests\MocksObjects;
 
-/**
- * @coversNothing
- */
-class CollectionMutableTest extends PHPUnit\Framework\TestCase
+class MutableTest extends CoreTestCase
 {
     use CreatesElement, MocksObjects;
 
@@ -23,6 +23,8 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
+        $this->mockTranslator();
+        $this->mockModule();
         $this->collection = $this->makeElementsCollection();
     }
 
@@ -42,9 +44,19 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
     }
 
     /** @test */
+    public function it_pushes_an_element()
+    {
+        $this->collection->push('test', function($e) {
+            return $e;
+        });
+
+        $this->assertCount(4, $this->collection);
+    }
+
+    /** @test */
     public function it_inserts_an_item_to_a_collection()
     {
-        $this->collection->insert($this->e('fifth'), 0);
+        $this->collection->insert($this->e('fifth'), 'before:first', function($e) {});
 
         $this->assertSame(
             $this->collection->toArray(),
@@ -101,7 +113,7 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_update_a_collection_value()
     {
-        $this->collection->update('first', function (Element $element) {
+        $this->collection->update('first,second', function (Element $element) {
             $element->setTranslator($this->mockTranslator());
             $element->setModule($this->mockModule());
 
@@ -110,7 +122,7 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
 
         $this->assertSame(
             'First Element',
-            $this->collection->find('first')->title()
+            $this->collection->get(0)->title()
         );
     }
 
@@ -160,6 +172,36 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
                 $this->e('second'),
             ]
         );
+    }
+
+    /** @test */
+    public function it_throws_unknown_position_exception()
+    {
+        $this->expectException(\Exception::class);
+
+        $this->collection->move('first', 'unknown');
+    }
+
+    /** @test */
+    public function it_creates_media_element_from_string()
+    {
+        $group = $this->createMock(Mutable::class);
+
+        $media = $this->invokeMethod($group, 'createMediaElement', ['defaulf']);
+
+        $this->assertInstanceOf(MediaElement::class, $media);
+    }
+
+    /** @test */
+    public function it_accepts_a_media_element()
+    {
+        $this->collection->media('media2', function($e) {return $e;}, 0);
+
+        $this->assertCount(4, $this->collection);
+        $this->assertInstanceOf(MediaElement::class, $this->collection->get(3));
+
+        $this->collection->media('media1', function($e) {return $e;}, 'before:first');
+        $this->assertInstanceOf(MediaElement::class, $this->collection->get(0));
     }
 
     /** @test */
@@ -214,27 +256,66 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
             $this->collection
         );
 
-        $group = $this->collection->find('first_group');
+        $group = $this->collection->get(3);
 
         $this->assertInstanceOf('Terranet\Administrator\Collection\Group', $group);
         $this->assertCount(2, $group->elements());
     }
 
     /** @test */
+    public function it_joins_two_or_more_elements_into_a_group_using_literal_position()
+    {
+        $this->collection
+            ->join(['first', 'third'], 'group', 'after:second');
+
+        $this->assertCount(2, $this->collection);
+
+        $this->assertInstanceOf(Group::class, $this->collection->get(1));
+        $this->assertSame($this->collection->get(1)->elements()[0]->id(), 'first');
+        $this->assertSame($this->collection->get(1)->elements()[1]->id(), 'third');
+    }
+
+    /** @test */
     public function it_joins_two_or_more_elements_into_a_group()
     {
         $this->collection
-            ->join(['first', 'third'], 'group')
-            ->move('group', 'after:second');
+            ->join(['first', 'third'], 'group');
 
         $this->assertCount(2, $this->collection);
-        $this->assertSame(
-            $this->collection->toArray(),
-            [
-                $this->e('second'),
-                (new Group('group'))->push($this->e('first'))->push($this->e('third')),
-            ]
-        );
+
+        $this->assertInstanceOf(Group::class, $this->collection->get(1));
+        $this->assertSame($this->collection->get(1)->elements()[0]->id(), 'first');
+        $this->assertSame($this->collection->get(1)->elements()[1]->id(), 'third');
+    }
+
+    /** @test */
+    public function it_makes_items_standalone()
+    {
+        $this->collection->standalone(['first']);
+
+        $this->assertTrue($this->collection->get(0)->standalone());
+    }
+
+    /** @test */
+    public function it_finds_an_element_by_id()
+    {
+        $e = $this->collection->find('second');
+
+        $this->assertSame($e, $this->collection->get(1));
+
+        $this->expectException(\Exception::class);
+        $this->collection->find('not-exist');
+    }
+
+    /** @test */
+    public function it_finds_element_position()
+    {
+        $position = $this->collection->position('second');
+
+        $this->assertSame(1, $position);
+
+        $this->expectException(\Exception::class);
+        $this->collection->position('unknown');
     }
 
     /**
@@ -242,7 +323,7 @@ class CollectionMutableTest extends PHPUnit\Framework\TestCase
      */
     protected function makeElementsCollection()
     {
-        $collection = (new \Terranet\Administrator\Collection\Mutable());
+        $collection = (new Mutable());
 
         return $collection
             ->push($this->e('first'))

@@ -39,6 +39,7 @@ namespace {
 }
 
 namespace admin\db {
+
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
@@ -130,6 +131,7 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
+
     use Coduo\PHPHumanizer\StringHumanizer;
     use Czim\Paperclip\Contracts\AttachableInterface;
     use Illuminate\Database\Eloquent\Model;
@@ -433,6 +435,7 @@ namespace admin\column {
 }
 
 namespace admin\output {
+
     use Closure;
 
     function label_case($key, $upper = false)
@@ -587,6 +590,7 @@ namespace admin\output {
 }
 
 namespace admin\filter {
+
     use Closure;
 
     function text($label = '', Closure $query = null)

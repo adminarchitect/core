@@ -21,9 +21,10 @@ class RemoveSelected
      */
     public function handle(Model $eloquent, Request $request)
     {
-        return $eloquent->newQueryWithoutScopes()->whereIn('id', $request->get('collection', []))->get()->each(function ($item) {
-            return $this->canDelete($item) ? $item->delete() : $item;
-        });
+        return $this->fetchForDelete($eloquent, $request)
+                    ->each(function ($item) {
+                        return $this->canDelete($item) ? $item->delete() : $item;
+                    });
     }
 
     /**
@@ -38,6 +39,21 @@ class RemoveSelected
         return app('scaffold.actions')->authorize('delete', $eloquent);
     }
 
+    /**
+     * @param Model $eloquent
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model[]
+     */
+    protected function fetchForDelete(Model $eloquent, Request $request)
+    {
+        return $eloquent->newQueryWithoutScopes()
+                        ->whereIn('id', $request->get('collection', []))
+                        ->get();
+    }
+
+    /**
+     * @return string
+     */
     protected function icon()
     {
         return 'fa-trash';

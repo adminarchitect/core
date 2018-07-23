@@ -1,16 +1,14 @@
 <?php
 
+namespace Terranet\Administrator\Tests\Form\Collection;
+
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\Type\Tinymce;
+use Terranet\Administrator\Tests\MocksObjects;
+use Terranet\Administrator\Tests\MocksValidator;
 
-require_once __DIR__.'/../../MocksValidator.php';
-require_once __DIR__.'/../../MocksObjects.php';
-
-/**
- * @coversNothing
- */
-class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
+class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
 {
     use MocksValidator, MocksObjects;
 
@@ -18,6 +16,8 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
+        $this->mockTranslator();
+        $this->mockModule();
         $this->mockValidator();
     }
 
@@ -26,19 +26,10 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
     {
         $collection = new Mutable();
 
-        $collection
-            ->create('title')
-            ->create('body', 'text', 'before:title');
+        $collection->create('title');
 
-        $this->assertCount(
-            2,
-            $collection->all()
-        );
-
-        $this->assertSame(
-            $collection->find('title'),
-            new FormElement('title')
-        );
+        $this->assertCount(1, $collection->all());
+        $this->assertInstanceOf(FormElement::class, $collection->find('title'));
 
         return $collection;
     }
@@ -51,10 +42,7 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
      */
     public function it_sets_text_input_as_default_type($collection)
     {
-        $this->assertSame(
-            $collection->find('title')->getInput(),
-            new \Terranet\Administrator\Form\Type\Text('title')
-        );
+        $this->assertInstanceOf(\Terranet\Administrator\Form\Type\Text::class, $collection->find('title')->getInput());
     }
 
     /**
@@ -65,10 +53,8 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
      */
     public function it_sets_proper_position_to_a_new_created_element($collection)
     {
-        $this->assertSame(
-            0,
-            $collection->position('body')
-        );
+        $collection->create('body', 'text', 'before:title');
+        $this->assertSame(0, $collection->position('body'));
     }
 
     /** @test */
@@ -77,22 +63,11 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
         $collection = new Mutable();
 
         $collection
-            ->create(
-                $title = new FormElement('title')
-            )
-            ->create(
-                $body = new FormElement('body')
-            );
+            ->create($title = new FormElement('title'))
+            ->create($body = new FormElement('body'));
 
-        $this->assertCount(
-            2,
-            $collection->all()
-        );
-
-        $this->assertSame(
-            [$title, $body],
-            $collection->all()
-        );
+        $this->assertCount(2, $collection->all());
+        $this->assertSame([$title, $body], $collection->all());
 
         return $collection;
     }
@@ -110,8 +85,6 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
         $collection->create(
             $desc = new FormElement('description'),
             function ($element) {
-                $element->setTranslator($this->mockTranslator());
-                $element->setModule($this->mockModule());
                 $element->setTitle('New description');
                 $element->setInput(
                     (new Tinymce($element->id()))
@@ -140,8 +113,6 @@ class FormCollectionMutableTest extends PHPUnit\Framework\TestCase
      */
     public function it_checks_for_editors_presence($collection)
     {
-        $this->assertTrue(
-            $collection->hasEditors('tinymce')
-        );
+        $this->assertTrue($collection->hasEditors('tinymce'));
     }
 }

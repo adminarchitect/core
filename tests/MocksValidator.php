@@ -1,5 +1,7 @@
 <?php
 
+namespace Terranet\Administrator\Tests;
+
 trait MocksValidator
 {
     public function mockValidator()
