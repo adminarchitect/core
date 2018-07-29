@@ -6,12 +6,24 @@ use Terranet\Administrator\Collection\Mutable as MutableCollection;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 
+/**
+ * Class Group
+ * @package Terranet\Administrator\Collection
+ *
+ * @method merge(array $elements)
+ * @method insert(Element $element, $position)
+ * @method withoug(string $id)
+ * @method update(string $id, \Closure $callback)
+ * @method updateMany(array $ids)
+ * @method move(string $id, $position)
+ * @method map(callable $callback)
+ */
 class Group extends ElementContainer
 {
     /**
      * @var MutableCollection
      */
-    protected $elements = [];
+    protected $elements;
 
     /**
      * Group constructor.
@@ -39,100 +51,6 @@ class Group extends ElementContainer
         return $this;
     }
 
-    public function merge($elements = [])
-    {
-        $this->elements = $this->elements->merge($elements);
-
-        return $this;
-    }
-
-    /**
-     * Insert an element into collection at specified position.
-     *
-     * @param $element
-     * @param $position
-     *
-     * @return $this
-     */
-    public function insert(Element $element, $position)
-    {
-        $this->elements = $this->elements->insert($element, $position);
-
-        return $this;
-    }
-
-    /**
-     * Remove an element from collection.
-     *
-     * @param $id
-     *
-     * @return static
-     */
-    public function without($id)
-    {
-        $this->elements = $this->elements->without($id);
-
-        return $this;
-    }
-
-    /**
-     * Update elements behaviour.
-     *
-     * @param $id
-     * @param \Closure $callback
-     *
-     * @return $this
-     */
-    public function update($id, \Closure $callback)
-    {
-        $this->elements = $this->elements->update($id, $callback);
-
-        return $this;
-    }
-
-    /**
-     * Update many elements at once.
-     *
-     * @param $ids
-     *
-     * @return $this
-     */
-    public function updateMany(array $ids = [])
-    {
-        $this->elements = $this->elements->updateMany($ids);
-
-        return $this;
-    }
-
-    /**
-     * Move an element to a position.
-     *
-     * @param $id
-     * @param $position
-     *
-     * @return $this
-     */
-    public function move($id, $position)
-    {
-        $this->elements = $this->elements->move($id, $position);
-
-        return $this;
-    }
-
-    /**
-     * Run a map over each of the items.
-     *
-     * @param  callable  $callback
-     *
-     * @return static
-     */
-    public function map(callable $callback)
-    {
-        $this->elements = $this->elements->map($callback);
-
-        return $this;
-    }
-
     /**
      * Find element by ID.
      *
@@ -145,11 +63,34 @@ class Group extends ElementContainer
         return $this->elements->find($id);
     }
 
+    /**
+     * @param $method
+     * @param $args
+     * @return mixed
+     * @throws \Exception
+     */
+    public function __call($method, $args)
+    {
+        if (method_exists($this->elements, $method)) {
+            $this->elements = call_user_func_array([$this->elements, $method], $args);
+
+            return $this;
+        }
+
+        throw new \Exception(sprintf('Unknwon method "%s"', $method));
+    }
+
+    /**
+     * @return Mutable
+     */
     public function elements()
     {
         return $this->elements;
     }
 
+    /**
+     * @return bool
+     */
     public function isGroup()
     {
         return true;
