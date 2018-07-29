@@ -35,10 +35,13 @@ trait LoopsOverRelations
 
             // Treat BelongsToMany form relation as array of values.
             if ($object instanceof BelongsToMany) {
-                return \DB::table($object->getTable())
-                          ->where($this->getQualifiedForeignKeyName($object), $orig->getKey())
-                          ->pluck($this->getQualifiedRelatedKeyName($object))
-                          ->toArray();
+                return array_map(
+                    'intval',
+                    \DB::table($object->getTable())
+                       ->where($this->getQualifiedForeignKeyName($object), $orig->getKey())
+                       ->pluck($this->getQualifiedRelatedKeyName($object))
+                       ->toArray()
+                );
             }
 
             $object = $object->getResults();

@@ -6,7 +6,6 @@
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status](https://travis-ci.com/adminarchitect/core.svg?branch=master)](https://travis-ci.com/adminarchitect/core)
 
-
 Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
 ### Docs
