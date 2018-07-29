@@ -3,19 +3,19 @@
 namespace Terranet\Administrator\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Middleware\AuthProvider;
 use Terranet\Administrator\Requests\LoginRequest;
 
 class AuthController extends BaseController
 {
-    public function __construct()
-    {
-        if (!guarded_auth()) {
-            $this->middleware(AuthProvider::class);
-            $this->middleware('guest', ['except' => 'getLogout']);
-        }
-    }
-
+    /**
+     * @param LoginRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postLogin(LoginRequest $request)
     {
         $config = app('scaffold.config');
@@ -35,28 +35,44 @@ class AuthController extends BaseController
 
         $remember = (int) $request->get('remember_me', 0);
 
-        if (auth('admin')->attempt($credentials, $remember, true)) {
+        if ($this->guard()->attempt($credentials, $remember, true)) {
             if (is_callable($url = $config->get('home_page'))) {
                 $url = call_user_func($url);
             }
 
-            return redirect()->to(url($url));
+            return Redirect::to(URL::to($url));
         }
 
-        return redirect()->back()->withErrors([trans('administrator::errors.login_failed')]);
+        return Redirect::back()->withErrors([trans('administrator::errors.login_failed')]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getLogin()
     {
-        return view(app('scaffold.template')->auth('login'));
+        return View::make(
+            app('scaffold.template')->auth('login')
+        );
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function getLogout()
     {
-        auth('admin')->logout();
+        $this->guard()->logout();
 
-        return redirect()->to(
-            route('scaffold.login')
+        return Redirect::to(
+            URL::route('scaffold.login')
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return Auth::guard('admin');
     }
 }
