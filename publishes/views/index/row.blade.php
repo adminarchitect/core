@@ -11,16 +11,14 @@
             </label>
         </th>
     @endif
-    @foreach($columns as $column)
+    @foreach($columns->visibleOnPage('index') as $column)
         <td>
-            @if(!$column->isGroup())
-                {!! $column->render($item) !!}
-            @else
+            @if($column instanceof \Terranet\Administrator\Collection\Group)
                 <ul class="list-unstyled">
                     @foreach($column->elements() as $element)
-                        @if($value = $element->render($item))
+                        @if($value = $element->setModel($item)->render())
                             <li>
-                                @if ($element->standalone())
+                                @if ($element->isHiddenLabel())
                                     <strong>{!! $value !!}</strong>
                                 @else
                                     <label for="{{ $element->id() }}">{{ $element->title() }}:</label>
@@ -30,6 +28,8 @@
                         @endif
                     @endforeach
                 </ul>
+            @else
+                {!! $column->setModel($item)->render() !!}
             @endif
         </td>
     @endforeach

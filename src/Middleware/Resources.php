@@ -86,6 +86,13 @@ class Resources
      */
     protected function registerModule(Module $module)
     {
+        $modules = $this->application['scaffold.modules'] ?? collect();
+
+        if (!$modules->contains($module)) {
+            $modules->push($module);
+        }
+        $this->application->instance('scaffold.modules', $modules);
+
         $this->application->instance("scaffold.module.{$module->url()}", $module);
 
         return $this;
@@ -186,7 +193,9 @@ class Resources
         $module = $module->url();
 
         if (!array_key_exists($module, $checked)) {
-            $urls = array_map(function ($url) { return trim($url, '/'); }, [
+            $urls = array_map(function ($url) {
+                return trim($url, '/');
+            }, [
                 'current' => \URL::getRequest()->getPathInfo(),
                 'create' => route('scaffold.create', ['module' => $module], false),
                 'module' => config('administrator.prefix')."/{$module}",

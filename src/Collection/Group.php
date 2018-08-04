@@ -44,7 +44,7 @@ class Group extends ElementContainer
      *
      * @return $this
      */
-    public function push(Element $element)
+    public function push($element)
     {
         $this->elements->push($element);
 

@@ -6,7 +6,7 @@
 
             {{ $gridBefore or '' }}
 
-            <table class="table table-bordered">
+            <table class="table">
                 <thead>
                 <tr>
                     {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}

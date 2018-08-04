@@ -12,46 +12,44 @@ use Terranet\Administrator\Columns\Decorators\RankDecorator;
 use Terranet\Administrator\Columns\Decorators\StringDecorator;
 use Terranet\Administrator\Columns\Decorators\TextDecorator;
 use Terranet\Administrator\Columns\Element;
+use Terranet\Administrator\Field\Boolean;
+use Terranet\Administrator\Field\Image;
+use Terranet\Administrator\Field\Email;
+use Terranet\Administrator\Field\ID;
+use Terranet\Administrator\Field\Phone;
+use Terranet\Administrator\Field\Rank;
+use Terranet\Administrator\Field\Text;
+use Terranet\Administrator\Field\Textarea;
+use Terranet\Administrator\Field\URL;
 use Terranet\Rankable\Rankable;
 use Terranet\Translatable\Translatable;
 
 class Grid
 {
-    /**
-     * @var Model
-     */
+    /** @var Model */
     private $model;
 
+    /**
+     * Grid constructor.
+     * @param Model|null $model
+     */
     public function __construct(Model $model = null)
     {
         $this->model = $model ?: app('scaffold.module')->model();
     }
 
-    public function makeElement($element)
-    {
-        if (is_string($element)) {
-            $element = new Element($element);
-            $element->display(
-                $this->getDecorator($element->id())
-            );
-        }
-
-        return $element;
-    }
-
     /**
-     * @param $column
-     *
-     * @return CellDecorator
+     * @param $element
+     * @return mixed|\Terranet\Administrator\Field\Generic
      */
-    protected function getDecorator($column)
+    public function make($element)
     {
         // decorate attachment
         if ($this->model instanceof AttachableInterface
             && method_exists($this->model, 'getAttachedFiles')
-            && array_key_exists($column, $this->model->getAttachedFiles())
+            && array_key_exists($element, $this->model->getAttachedFiles())
         ) {
-            return new AttachmentDecorator($column);
+            return Image::make($element, $element);
         }
 
         // decorate translatable attachment
@@ -60,18 +58,20 @@ class Grid
 
             if ($translation instanceof AttachableInterface
                 && method_exists($translation, 'getAttachedFiles')
-                && array_key_exists($column, $translation->getAttachedFiles())
+                && array_key_exists($element, $translation->getAttachedFiles())
             ) {
-                return new AttachmentDecorator($column);
+                return Image::make($element);
             }
         }
 
         // decorate table column
-        if ($this->realColum($column)) {
-            return $this->decorateByType($column);
+        if ($this->realColum($element)) {
+            $field = $this->detectField($element);
+
+            return forward_static_call_array([$field, 'make'], [$element, $element]);
         }
 
-        return new StringDecorator($column);
+        return Text::make($element, $element);
     }
 
     /**
@@ -89,29 +89,46 @@ class Grid
      *
      * @return CellDecorator
      */
-    protected function decorateByType($column)
+    protected function detectField($column)
     {
+        if ($column === $this->model->getKeyName()) {
+            return ID::class;
+        }
+
         $className = class_basename(
             $this->fetchTablesColumns()[$column]->getType()
         );
 
-        if ($this->model instanceof Rankable && $column === $this->model->getRankableColumn()) {
-            return new RankDecorator($column);
-        }
+        switch (true) {
+            case $this->model instanceof Rankable && $column === $this->model->getRankableColumn():
+                return Rank::class;
 
-        if (in_array($className, ['TimeType', 'DateType', 'DateTimeType'], true)) {
-            return (new DatetimeDecorator($column))->setType($className);
-        }
+            case in_array($className, ['TimeType', 'DateType', 'DateTimeType'], true):
+                $type = str_replace('Type', '', $className);
 
-        if (in_array($className, ['BooleanType'], true)) {
-            return new BooleanDecorator($column);
-        }
+                return "\\Terranet\\Administrator\\Field\\{$type}";
 
-        if (in_array($className, ['TextType'], true)) {
-            return new TextDecorator($column);
-        }
+            case 'BooleanType' === $className:
+                return Boolean::class;
 
-        return new StringDecorator($column);
+            case 'TextType' === $className:
+                return Textarea::class;
+
+            case 'StringType' === $className:
+                if (str_contains($column, 'email')) {
+                    return Email::class;
+                }
+
+                if (str_contains($column, ['url', 'site', 'host'])) {
+                    return URL::class;
+                }
+
+                if (str_contains($column, ['phone', 'gsm'])) {
+                    return Phone::class;
+                }
+            default:
+                return Text::class;
+        }
     }
 
     /**
@@ -120,8 +137,7 @@ class Grid
     protected function fetchTablesColumns()
     {
         return \admin\db\table_columns(
-            $this->model,
-            true
+            $this->model, true
         );
     }
 }

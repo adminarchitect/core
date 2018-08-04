@@ -44,7 +44,7 @@
             @endslot
 
             @slot('headers')
-                @each($template->index('header'), $columns, 'column')
+                @each($template->index('header'), $columns->visibleOnPage('index'), 'column')
             @endslot
 
             @slot('actions')

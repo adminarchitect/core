@@ -118,18 +118,16 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * @param array $columns
-     * @return $this
+     * Retrieve only visible items.
+     *
+     * @param string $page
+     * @return Mutable
      */
-    public function standalone(array $columns = []): self
+    public function visibleOnPage(string $page)
     {
-        foreach ($columns as $column) {
-            $this->update($column, function ($e) {
-                return $e->setStandalone(true);
-            });
-        }
-
-        return $this;
+        return $this->filter(function($item) use ($page) {
+            return ($item instanceof Group) || $item->isVisibleOnPage($page);
+        });
     }
 
     /**
@@ -313,13 +311,13 @@ class Mutable extends BaseCollection
         return $this->map(function ($element) use ($decorator) {
             if ($element instanceof Group) {
                 $element->map(function ($e) use ($decorator) {
-                    return $decorator->makeElement($e);
+                    return $decorator->make($e);
                 });
 
                 return $element;
             }
 
-            return $decorator->makeElement($element);
+            return $decorator->make($element);
         });
     }
 
