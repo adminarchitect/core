@@ -289,14 +289,6 @@ class MutableTest extends CoreTestCase
     }
 
     /** @test */
-    public function it_makes_items_standalone()
-    {
-        $this->collection->standalone(['first']);
-
-        $this->assertTrue($this->collection->get(0)->standalone());
-    }
-
-    /** @test */
     public function it_finds_an_element_by_id()
     {
         $e = $this->collection->find('second');
