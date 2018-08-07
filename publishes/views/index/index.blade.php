@@ -49,9 +49,7 @@
 
             @slot('actions')
                 @unless($actions->readonly())
-                    <th class="actions" style="width: 10%; vertical-align: baseline">
-                        {{ trans('administrator::module.actions') }}
-                    </th>
+                    <th class="actions" style="width: 100px;"></th>
                 @endunless
             @endslot
 

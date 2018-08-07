@@ -538,7 +538,7 @@ namespace admin\output {
         return '<ol '.\admin\helpers\html_attributes($attributes).'>'.'<li>'.implode('</li><li>', $items).'</li>'.'</ol>';
     }
 
-    function label($label = '', $class = 'bg-green')
+    function label($label = '', $class = 'label-success')
     {
         return '<span class="label '.$class.'">'.$label.'</span>';
     }

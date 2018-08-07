@@ -92,7 +92,7 @@ class SidebarMenuPresenter extends Presenter
     {
         return '
 		<li class="'.$this->getActiveStateOnChild($item).' nav-parent">
-	        <a href="#">
+	        <a>
 	            '.$item->getIcon().' <span>'.$item->title.'</span>
 			</a>
             <ul class="children">

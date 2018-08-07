@@ -6,26 +6,27 @@
 
             {{ $gridBefore or '' }}
 
-            <table class="table">
-                <thead>
-                <tr>
-                    {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
-                </tr>
-                </thead>
-
-                <tbody>
-                {{ $rows or '' }}
-                </tbody>
-
-                @if ($items && count($items) > 10)
-                    <tfoot>
+            <div style="overflow-x: scroll">
+                <table class="table">
+                    <thead>
                     <tr>
                         {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
                     </tr>
-                    </tfoot>
-                @endif
-            </table>
+                    </thead>
 
+                    <tbody>
+                    {{ $rows or '' }}
+                    </tbody>
+
+                    @if ($items && count($items) > 10)
+                        <tfoot>
+                        <tr>
+                            {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
+                        </tr>
+                        </tfoot>
+                    @endif
+                </table>
+            </div>
             {{ $gridAfter or '' }}
         </form>
 

@@ -92,7 +92,7 @@ trait AllowsNavigation
      */
     public function group()
     {
-        return null;
+        return trans("administrator::module.groups.resources");
     }
 
     /**

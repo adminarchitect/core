@@ -32,10 +32,12 @@
             </div>
 
             <div class="headerbar">
-                <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+                {{--<a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>--}}
+                <div style="padding-top: 15px; margin-left: -45px;" class="pull-left">
+                    <input class="form-control input-sm" style="width: 250px; border-radius: 5px;" type="search" placeholder="Search" />
+                </div>
 
                 <div class="header-right">
-
                     <ul class="headermenu">
                         @include($template->menu('tools'))
                     </ul>
@@ -51,20 +53,6 @@
 
     <div class="leftpanel">
         <div class="leftpanelinner">
-            <div class="media leftpanel-profile">
-                <div class="media-left">
-                    @if (app('scaffold.config')->get('gravatar', true) && Gravatar::exists($user->email))
-                        <img height="48" width="48" src="{{ Gravatar::get($user->email, ['size' => 160, 'fallback' => $pict]) }}" alt="{{ $user->name }}" class="media-object img-circle"/>
-                    @else
-                        <img height="48" width="48" src="{{ $pict }}" class="media-object img-circle" alt="{{ $user->name }}">
-                    @endif
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">{{ auth('admin')->user()->name }}</h4>
-                    <span>Joined {{ auth('admin')->user()->created_at->diffForHumans() }}</span>
-                </div>
-            </div>
-
             <div class="tab-content">
                 <div class="tab-pane active">
                     @include('administrator::menus.sidebar')

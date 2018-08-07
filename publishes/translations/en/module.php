@@ -21,7 +21,7 @@ return [
         'settings' => 'Settings',
     ],
     'groups' => [
-        'users' => 'Users',
+        'resources' => 'Resources',
         'localization' => 'Localization',
     ],
     'action' => [
