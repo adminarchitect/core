@@ -20,6 +20,10 @@ class Scaffolding implements Module, AutoTranslatable
 {
     use AllowsNavigation, DetectsCommentFlag, HasColumns, HasWidgets, AutoTranslatesInstances;
 
+    const PAGE_INDEX = 'index';
+    const PAGE_VIEW = 'view';
+    const PAGE_EDIT = 'edit';
+
     /**
      * The module Eloquent model class.
      *

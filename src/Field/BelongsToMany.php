@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class BelongsToMany
+class BelongsToMany extends HasMany
 {
-
+    protected $icon = 'random';
 }

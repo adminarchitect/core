@@ -4,5 +4,81 @@ namespace Terranet\Administrator\Field;
 
 class Image extends Generic
 {
+    /** @var string */
+    protected $style = 'original';
 
+    /** @var bool */
+    protected $rounded = true;
+
+    /** @var array */
+    protected $attributes = [
+        'width' => 75,
+        'height' => 75,
+    ];
+
+    /**
+     * @param $style
+     * @return $this
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
+    /**
+     * @param null|int $width
+     * @param null|int $height
+     */
+    public function setSize(int $width, int $height = null)
+    {
+        if (!$height) {
+            $height = $width;
+        }
+
+        $this->attributes = array_merge($this->attributes(), [
+            'width' => $width,
+            'height' => $height,
+        ]);
+    }
+
+    /**
+     * @param bool $rounded
+     *
+     * @return $this
+     */
+    public function square()
+    {
+        $this->rounded = false;
+
+        return $this;
+    }
+
+    /**
+     * @param string $page
+     * @return mixed|null|string
+     */
+    public function render(string $page = 'index')
+    {
+        return \admin\output\staplerImage($this->model->{$this->id}, $this->style, $this->attributes());
+    }
+
+    /**
+     * @return array
+     */
+    protected function attributes()
+    {
+        if (!array_key_exists('id', $this->attributes)) {
+            $this->attributes['id'] = $this->id();
+        }
+
+        $this->attributes['class'] = 'img-responsive';
+
+        if ($this->rounded) {
+            $this->attributes['class'] = 'img-circle';
+        }
+
+        return $this->attributes;
+    }
 }

@@ -13,6 +13,7 @@ use Terranet\Administrator\Columns\Decorators\StringDecorator;
 use Terranet\Administrator\Columns\Decorators\TextDecorator;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Field\Boolean;
+use Terranet\Administrator\Field\File;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Email;
 use Terranet\Administrator\Field\ID;
@@ -21,6 +22,7 @@ use Terranet\Administrator\Field\Rank;
 use Terranet\Administrator\Field\Text;
 use Terranet\Administrator\Field\Textarea;
 use Terranet\Administrator\Field\URL;
+use Terranet\Administrator\Scaffolding;
 use Terranet\Rankable\Rankable;
 use Terranet\Translatable\Translatable;
 
@@ -49,7 +51,12 @@ class Grid
             && method_exists($this->model, 'getAttachedFiles')
             && array_key_exists($element, $this->model->getAttachedFiles())
         ) {
-            return Image::make($element, $element);
+            $file = $this->model->getAttachedFiles()[$element];
+            if ($file->variants()) {
+                return Image::make($element, $element);
+            }
+
+            return File::make($element, $element);
         }
 
         // decorate translatable attachment

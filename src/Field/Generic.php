@@ -5,13 +5,10 @@ namespace Terranet\Administrator\Field;
 use function admin\helpers\eloquent_attribute;
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Scaffolding;
 
 abstract class Generic
 {
-    const PAGE_INDEX = 'index';
-    const PAGE_EDIT = 'edit';
-    const PAGE_VIEW = 'view';
-
     /** @var string */
     protected $id;
 
@@ -26,9 +23,9 @@ abstract class Generic
 
     /** @var array */
     protected $visibility = [
-        self::PAGE_INDEX => true,
-        self::PAGE_EDIT => true,
-        self::PAGE_VIEW => true,
+        Scaffolding::PAGE_INDEX => true,
+        Scaffolding::PAGE_EDIT => true,
+        Scaffolding::PAGE_VIEW => true,
     ];
 
     /**
@@ -137,7 +134,7 @@ abstract class Generic
      * @param string|array $pages
      * @return self
      */
-    public function hideOnPages(mixed $pages): self
+    public function hideOnPages($pages): self
     {
         return $this->setPagesVisibility((array) $pages, false);
     }
@@ -146,9 +143,37 @@ abstract class Generic
      * @param string|array $pages
      * @return self
      */
-    public function showOnPages(mixed $pages): self
+    public function showOnPages($pages): self
     {
         return $this->setPagesVisibility((array) $pages, true);
+    }
+
+    /**
+     * Make column sortable.
+     *
+     * @param null|\Closure $callback
+     *
+     * @return self
+     */
+    public function sortable(\Closure $callback = null): self
+    {
+        app('scaffold.module')->addSortable(
+            $this->id(), $callback
+        );
+
+        return $this;
+    }
+
+    /**
+     * Remove column from Sortable collection.
+     *
+     * @return self
+     */
+    public function disableSorting(): self
+    {
+        app('scaffold.module')->removeSortable($this->id());
+
+        return $this;
     }
 
     /**
@@ -166,9 +191,9 @@ abstract class Generic
      * @param bool $visibility
      * @return $this
      */
-    protected function setPagesVisibility(mixed $pages, bool $visibility): Generic
+    protected function setPagesVisibility($pages, bool $visibility): Generic
     {
-        $pages = array_diff($pages, array_keys($this->visibility));
+        $pages = array_intersect($pages, array_keys($this->visibility));
 
         foreach ($pages as $page) {
             $this->visibility[$page] = $visibility;

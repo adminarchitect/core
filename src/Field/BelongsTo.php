@@ -2,16 +2,19 @@
 
 namespace Terranet\Administrator\Field;
 
+use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
+use Terranet\Administrator\Field\Traits\WorksWithModules;
+
 class BelongsTo extends Generic
 {
+    use AcceptsCustomFormat,
+        WorksWithModules;
+
     /** @var string */
     protected $relation;
 
     /** @var string */
     protected $column = 'name';
-
-    /** @var null\Closure */
-    protected $format;
 
     /**
      * @param string $page
@@ -29,7 +32,7 @@ class BelongsTo extends Generic
         }
 
         if ($this->format) {
-            return call_user_func_array($this->format, [$relation, $this->model]);
+            return $this->callFormatter($relation);
         }
 
         return $this->linkToRelation($relation);
@@ -58,17 +61,6 @@ class BelongsTo extends Generic
     }
 
     /**
-     * @param \Closure $format
-     * @return BelongsTo
-     */
-    public function setCustomFormat(\Closure $format): self
-    {
-        $this->format = $format;
-
-        return $this;
-    }
-
-    /**
      * Build a link to related model.
      *
      * @param $relation
@@ -76,11 +68,7 @@ class BelongsTo extends Generic
      */
     protected function linkToRelation($relation)
     {
-        $module = app('scaffold.modules')->first(function ($module) use ($relation) {
-            return get_class($module->model()) === get_class($relation);
-        });
-
-        if ($module) {
+        if ($module = $this->firstWithModel($relation)) {
             return link_to_route('scaffold.view', $relation->{$this->column}, [
                 'module' => $module->url(),
                 $relation->getKeyName() => $relation->getKey(),

@@ -2,12 +2,14 @@
 
 namespace Terranet\Administrator\Field;
 
+use Terranet\Administrator\Scaffolding;
+
 class Textarea extends Generic
 {
     /** @var array */
     protected $visibility = [
-        self::PAGE_INDEX => false,
-        self::PAGE_EDIT => true,
-        self::PAGE_VIEW => true,
+        Scaffolding::PAGE_INDEX => false,
+        Scaffolding::PAGE_EDIT => true,
+        Scaffolding::PAGE_VIEW => true,
     ];
 }
