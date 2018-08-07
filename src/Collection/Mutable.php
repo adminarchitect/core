@@ -7,6 +7,7 @@ use Illuminate\Support\Collection as BaseCollection;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
+use Terranet\Administrator\Field\Generic;
 
 class Mutable extends BaseCollection
 {
@@ -20,8 +21,6 @@ class Mutable extends BaseCollection
      */
     public function push($element, Closure $callback = null): self
     {
-        $element = $this->createElement($element);
-
         if ($callback) {
             $callback($element);
         }

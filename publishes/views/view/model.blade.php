@@ -10,24 +10,23 @@ $elements = $module->viewColumns($item);
         </th>
     </tr>
     @foreach($elements as $element)
-        @if ($element instanceof \Terranet\Administrator\Form\FormSection)
+        @if ($element instanceof \Terranet\Administrator\Collection\Group)
+            <tr><th colspan="2" style="background: white;">&nbsp;</th></tr>
             <tr>
                 <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
             </tr>
-        @elseif (($input = $element->getInput()) instanceof Terranet\Administrator\Form\Type\Media)
-            <tr>
-                <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
-                <td>
-                    {!! $input->editable(false)->html() !!}
-                </td>
-            </tr>
-        @else
-            @if (! (is_array($value = $element->render($item)) || is_object($value)) || $value instanceof \Carbon\Carbon)
+            @foreach($element->elements() as $element)
                 <tr>
                     <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
-                    <td>{!! $value !!}</td>
+                    <td>{!! $element->render('view') !!}</td>
                 </tr>
-            @endif
+            @endforeach
+            <tr><th colspan="2" style="background: white;">&nbsp;</th></tr>
+        @else
+            <tr>
+                <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
+                <td>{!! $element->render('view') !!}</td>
+            </tr>
         @endif
     @endforeach
 </table>

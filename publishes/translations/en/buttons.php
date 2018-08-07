@@ -5,6 +5,7 @@ return [
     'create_item'   => 'Create :resource',
     'edit'          => 'Edit',
     'view'          => 'View',
+    'view_more'     => 'View More &raquo;',
     'delete'        => 'Delete',
     'save'          => 'Save',
     'reset'         => 'Reset',

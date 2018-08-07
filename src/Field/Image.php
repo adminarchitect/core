@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Field;
 
+use Terranet\Administrator\Scaffolding;
+
 class Image extends Generic
 {
     /** @var string */
@@ -29,7 +31,7 @@ class Image extends Generic
     }
 
     /**
-     * @param null|int $width
+     * @param int $width
      * @param null|int $height
      */
     public function setSize(int $width, int $height = null)
@@ -63,7 +65,16 @@ class Image extends Generic
      */
     public function render(string $page = 'index')
     {
-        return \admin\output\staplerImage($this->model->{$this->id}, $this->style, $this->attributes());
+        if (Scaffolding::PAGE_INDEX === $page) {
+            return \admin\output\staplerImage($this->model->{$this->id}, $this->style, $this->attributes());
+        }
+
+        if (Scaffolding::PAGE_VIEW === $page) {
+            $this->rounded = false;
+            $this->setSize(480);
+
+            return \admin\output\staplerImage($this->model->{$this->id}, $this->style, $this->attributes());
+        }
     }
 
     /**

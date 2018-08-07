@@ -30,7 +30,7 @@ trait HasColumns
      */
     public function viewColumns(Model $model = null)
     {
-        return $this->scaffoldViewColumns($model ?: app('scaffold.model'));
+        return $this->scaffoldViewColumns($model);
     }
 
     /**
@@ -40,19 +40,9 @@ trait HasColumns
      *
      * @return Mutable
      */
-    public function scaffoldViewColumns(Model $model)
+    protected function scaffoldViewColumns(Model $model)
     {
-        $items = new Mutable();
-
-        $attributes = \admin\helpers\eloquent_attributes($model);
-
-        foreach ($attributes as $key => $value) {
-            $items->push($key);
-        }
-
-        return $items->build(
-            new GridDecorator($model)
-        );
+        return $this->scaffoldColumns()->each->setModel($model);
     }
 
     /**
