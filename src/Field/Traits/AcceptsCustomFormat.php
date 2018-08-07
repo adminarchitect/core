@@ -9,6 +9,7 @@ trait AcceptsCustomFormat
 
     /**
      * @param \Closure $format
+     *
      * @return BelongsTo
      */
     public function setCustomFormat(\Closure $format): self
@@ -20,6 +21,7 @@ trait AcceptsCustomFormat
 
     /**
      * @param $relation
+     *
      * @return mixed
      */
     public function callFormatter($relation)

@@ -42,6 +42,7 @@ class RemoveSelected
     /**
      * @param Model $eloquent
      * @param Request $request
+     *
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model[]
      */
     protected function fetchForDelete(Model $eloquent, Request $request)

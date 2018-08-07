@@ -7,8 +7,7 @@ use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 
 /**
- * Class Group
- * @package Terranet\Administrator\Collection
+ * Class Group.
  *
  * @method merge(array $elements)
  * @method insert(Element $element, $position)
@@ -38,6 +37,25 @@ class Group extends ElementContainer
     }
 
     /**
+     * @param $method
+     * @param $args
+     *
+     * @throws \Exception
+     *
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        if (method_exists($this->elements, $method)) {
+            $this->elements = call_user_func_array([$this->elements, $method], $args);
+
+            return $this;
+        }
+
+        throw new \Exception(sprintf('Unknwon method "%s"', $method));
+    }
+
+    /**
      * Push an.
      *
      * @param $element
@@ -61,23 +79,6 @@ class Group extends ElementContainer
     public function find($id)
     {
         return $this->elements->find($id);
-    }
-
-    /**
-     * @param $method
-     * @param $args
-     * @return mixed
-     * @throws \Exception
-     */
-    public function __call($method, $args)
-    {
-        if (method_exists($this->elements, $method)) {
-            $this->elements = call_user_func_array([$this->elements, $method], $args);
-
-            return $this;
-        }
-
-        throw new \Exception(sprintf('Unknwon method "%s"', $method));
     }
 
     /**

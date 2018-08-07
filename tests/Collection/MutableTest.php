@@ -46,7 +46,7 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_pushes_an_element()
     {
-        $this->collection->push('test', function($e) {
+        $this->collection->push('test', function ($e) {
             return $e;
         });
 
@@ -56,7 +56,7 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_inserts_an_item_to_a_collection()
     {
-        $this->collection->insert($this->e('fifth'), 'before:first', function($e) {});
+        $this->collection->insert($this->e('fifth'), 'before:first', function ($e) {});
 
         $this->assertSame(
             $this->collection->toArray(),
@@ -195,12 +195,12 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_accepts_a_media_element()
     {
-        $this->collection->media('media2', function($e) {return $e;}, 0);
+        $this->collection->media('media2', function ($e) {return $e; }, 0);
 
         $this->assertCount(4, $this->collection);
         $this->assertInstanceOf(MediaElement::class, $this->collection->get(3));
 
-        $this->collection->media('media1', function($e) {return $e;}, 'before:first');
+        $this->collection->media('media1', function ($e) {return $e; }, 'before:first');
         $this->assertInstanceOf(MediaElement::class, $this->collection->get(0));
     }
 

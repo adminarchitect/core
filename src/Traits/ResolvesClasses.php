@@ -38,7 +38,7 @@ trait ResolvesClasses
             app_path(),
             '',
             dirname($fileInfo->getPathname())
-        ), DIRECTORY_SEPARATOR);
+        ), \DIRECTORY_SEPARATOR);
 
         $location = str_replace('/', '\\', $path);
 

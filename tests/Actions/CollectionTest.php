@@ -35,16 +35,14 @@ class CollectionTest extends CoreTestCase
         $user = new User();
         $model = new User();
 
-        $allow = new class ()
-        {
+        $allow = new class() {
             public function authorize(User $user)
             {
                 return true;
             }
         };
 
-        $deny = new class ()
-        {
+        $deny = new class() {
             public function authorize(User $user)
             {
                 return false;
@@ -53,7 +51,8 @@ class CollectionTest extends CoreTestCase
 
         $collection = new Collection([$allow, $deny]);
         $this->assertCount(
-            1, $collection->authorized($user, $model)
+            1,
+            $collection->authorized($user, $model)
         );
     }
 
@@ -63,18 +62,17 @@ class CollectionTest extends CoreTestCase
         $user = new User();
         $model = new User();
 
-        $first = new class ()
-        {
+        $first = new class() {
             // do not provides `authorize` method
         };
-        $second = new class ()
-        {
+        $second = new class() {
             // do not provides `authorize` method
         };
 
         $collection = new Collection([$first, $second]);
         $this->assertCount(
-            2, $collection->authorized($user, $model)
+            2,
+            $collection->authorized($user, $model)
         );
     }
 }

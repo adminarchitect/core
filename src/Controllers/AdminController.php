@@ -14,9 +14,9 @@ use Terranet\Administrator\Middleware\Resources;
 abstract class AdminController extends BaseController
 {
     /**
-     * @var \Illuminate\Translation\Translator|null
+     * @var null|\Illuminate\Translation\Translator
      */
-    protected $translator = null;
+    protected $translator;
 
     public function __construct(Translator $translator)
     {
@@ -89,8 +89,7 @@ abstract class AdminController extends BaseController
         $ability,
         $message = 'This action is unauthorized.',
         $previousException = null
-    )
-    {
+    ) {
         $message = sprintf($message.' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);

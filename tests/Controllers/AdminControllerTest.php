@@ -2,7 +2,6 @@
 
 namespace Tests\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -197,5 +196,4 @@ class AdminControllerTest extends CoreTestCase
 
         $this->invokeMethod($controller, 'redirectTo', ['users', 1, $request]);
     }
-
 }

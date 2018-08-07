@@ -22,7 +22,7 @@ class AuthControllerTest extends CoreTestCase
     /** @var AuthController|MockObject */
     private $controller;
 
-    /** @var SessionGuard|MockObject */
+    /** @var MockObject|SessionGuard */
     private $guard;
 
     public function setUp()
@@ -131,7 +131,9 @@ class AuthControllerTest extends CoreTestCase
                    ['auth.conditions', []]
                )
                ->willReturn(
-                   'username', 'password', ['active' => true]
+                   'username',
+                   'password',
+                   ['active' => true]
                );
 
         /** @var LoginRequest|MockObject $request */

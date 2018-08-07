@@ -4,7 +4,6 @@ namespace Terranet\Administrator\Field;
 
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
-use Illuminate\Database\Eloquent\Relations\HasMany as HasManyRelation;
 
 class HasMany extends Generic
 {
@@ -16,6 +15,7 @@ class HasMany extends Generic
 
     /**
      * @param string $page
+     *
      * @return mixed|string
      */
     public function render(string $page = 'index')
@@ -38,9 +38,23 @@ class HasMany extends Generic
     }
 
     /**
+     * @param string $icon
+     *
+     * @return self
+     */
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
      * Build a link to related model.
      *
      * @param mixed $relation
+     * @param mixed $count
+     *
      * @return string
      */
     protected function linkToRelation($relation, $count)
@@ -55,22 +69,11 @@ class HasMany extends Generic
             ]);
 
             return link_to($url, $this->renderIcon().'&nbsp;'.$count, [
-                'style' => "color: white;",
+                'style' => 'color: white;',
             ], false, false);
         }
 
         return $this->renderIcon().'&nbsp;'.$count;
-    }
-
-    /**
-     * @param string $icon
-     * @return self
-     */
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-
-        return $this;
     }
 
     /**

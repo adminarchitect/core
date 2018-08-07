@@ -41,7 +41,7 @@ class PanelMakeCommand extends GeneratorCommand
 
             $this->files->put($view, $this->templateContents(
                 $name,
-                ltrim(str_replace(base_path(), '', $view), DIRECTORY_SEPARATOR)
+                ltrim(str_replace(base_path(), '', $view), \DIRECTORY_SEPARATOR)
             ));
         }
     }

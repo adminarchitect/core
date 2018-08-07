@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-use function admin\helpers\eloquent_attribute;
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Scaffolding;
@@ -30,6 +29,7 @@ abstract class Generic
 
     /**
      * Generic constructor.
+     *
      * @param $title
      * @param null $id
      */
@@ -42,6 +42,7 @@ abstract class Generic
     /**
      * @param $title
      * @param null $id
+     *
      * @return static
      */
     public static function make($title, $id = null): self
@@ -51,6 +52,7 @@ abstract class Generic
 
     /**
      * @param Model $model
+     *
      * @return self
      */
     public function setModel(Model $model): self
@@ -64,6 +66,7 @@ abstract class Generic
      * Render Element.
      *
      * @param string $page
+     *
      * @return mixed
      */
     public function render(string $page = 'index')
@@ -93,6 +96,7 @@ abstract class Generic
 
     /**
      * @param string $title
+     *
      * @return self
      */
     public function setTitle(string $title): self
@@ -104,6 +108,7 @@ abstract class Generic
 
     /**
      * @param bool $showLabel
+     *
      * @return self
      */
     public function hideLabel(bool $hideLabel): self
@@ -122,7 +127,8 @@ abstract class Generic
     }
 
     /**
-     * string $page
+     * string $page.
+     *
      * @return bool
      */
     public function isVisibleOnPage(string $page): bool
@@ -131,7 +137,8 @@ abstract class Generic
     }
 
     /**
-     * @param string|array $pages
+     * @param array|string $pages
+     *
      * @return self
      */
     public function hideOnPages($pages): self
@@ -140,7 +147,8 @@ abstract class Generic
     }
 
     /**
-     * @param string|array $pages
+     * @param array|string $pages
+     *
      * @return self
      */
     public function showOnPages($pages): self
@@ -158,7 +166,8 @@ abstract class Generic
     public function sortable(\Closure $callback = null): self
     {
         app('scaffold.module')->addSortable(
-            $this->id(), $callback
+            $this->id(),
+            $callback
         );
 
         return $this;
@@ -189,9 +198,10 @@ abstract class Generic
     /**
      * @param mixed $pages
      * @param bool $visibility
+     *
      * @return $this
      */
-    protected function setPagesVisibility($pages, bool $visibility): Generic
+    protected function setPagesVisibility($pages, bool $visibility): self
     {
         $pages = array_intersect($pages, array_keys($this->visibility));
 

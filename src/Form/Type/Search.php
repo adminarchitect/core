@@ -2,8 +2,6 @@
 
 namespace Terranet\Administrator\Form\Type;
 
-use Form;
-
 class Search extends Select
 {
     /**

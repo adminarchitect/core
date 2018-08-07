@@ -23,7 +23,7 @@ class SaveOrderTest extends CoreTestCase
 
         $action->handle($eloquent, $request);
     }
-    
+
     /** @test */
     public function it_may_have_an_icon()
     {

@@ -20,10 +20,10 @@ class ElementTest extends CoreTestCase
 {
     use MocksObjects;
 
-    /** @var Translator|MockObject */
+    /** @var MockObject|Translator */
     private $translator;
 
-    /** @var Scaffolding|MockObject */
+    /** @var MockObject|Scaffolding */
     private $module;
 
     public function setUp()
@@ -62,8 +62,9 @@ class ElementTest extends CoreTestCase
 
         $element = new Element('name');
 
-        $this->assertEquals(
-            'John Doe', $element->render($eloquent)
+        $this->assertSame(
+            'John Doe',
+            $element->render($eloquent)
         );
     }
 
@@ -74,7 +75,7 @@ class ElementTest extends CoreTestCase
 
         $element = new Element('name');
 
-        /** @var Renderable|MockObject $template */
+        /** @var MockObject|Renderable $template */
         $template = $this->createMock(View::class);
         $template->expects($this->once())
                  ->method('with')
@@ -125,7 +126,8 @@ class ElementTest extends CoreTestCase
         $element->render($eloquent);
 
         $this->assertSame(
-            'Closure output', $element->render($eloquent)
+            'Closure output',
+            $element->render($eloquent)
         );
     }
 
@@ -140,7 +142,8 @@ class ElementTest extends CoreTestCase
         $element->render($eloquent);
 
         $this->assertSame(
-            '<a href="#">John Doe</a>', $element->render($eloquent)
+            '<a href="#">John Doe</a>',
+            $element->render($eloquent)
         );
     }
 
@@ -181,7 +184,8 @@ class ElementTest extends CoreTestCase
         $element = new Element('name');
 
         $this->assertSame(
-            'John Doe', $this->invokeMethod($element, 'fetchValue', [$eloquent])
+            'John Doe',
+            $this->invokeMethod($element, 'fetchValue', [$eloquent])
         );
     }
 

@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
-use Terranet\Administrator\Middleware\AuthProvider;
 use Terranet\Administrator\Requests\LoginRequest;
 
 class AuthController extends BaseController
 {
     /**
      * @param LoginRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postLogin(LoginRequest $request)

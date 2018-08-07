@@ -55,7 +55,7 @@ class SanitizePaths
             $safe[] = $part;
         }
 
-        return implode(DIRECTORY_SEPARATOR, $safe);
+        return implode(\DIRECTORY_SEPARATOR, $safe);
     }
 
     /**

@@ -4,25 +4,18 @@ namespace Terranet\Administrator\Decorators;
 
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Columns\Decorators\AttachmentDecorator;
-use Terranet\Administrator\Columns\Decorators\BooleanDecorator;
 use Terranet\Administrator\Columns\Decorators\CellDecorator;
-use Terranet\Administrator\Columns\Decorators\DatetimeDecorator;
-use Terranet\Administrator\Columns\Decorators\RankDecorator;
-use Terranet\Administrator\Columns\Decorators\StringDecorator;
-use Terranet\Administrator\Columns\Decorators\TextDecorator;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Field\Boolean;
-use Terranet\Administrator\Field\File;
-use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Email;
+use Terranet\Administrator\Field\File;
 use Terranet\Administrator\Field\ID;
+use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Phone;
 use Terranet\Administrator\Field\Rank;
 use Terranet\Administrator\Field\Text;
 use Terranet\Administrator\Field\Textarea;
 use Terranet\Administrator\Field\URL;
-use Terranet\Administrator\Scaffolding;
 use Terranet\Rankable\Rankable;
 use Terranet\Translatable\Translatable;
 
@@ -33,7 +26,8 @@ class Grid
 
     /**
      * Grid constructor.
-     * @param Model|null $model
+     *
+     * @param null|Model $model
      */
     public function __construct(Model $model = null)
     {
@@ -42,6 +36,7 @@ class Grid
 
     /**
      * @param $element
+     *
      * @return mixed|\Terranet\Administrator\Field\Generic
      */
     public function make($element)
@@ -109,18 +104,14 @@ class Grid
         switch (true) {
             case $this->model instanceof Rankable && $column === $this->model->getRankableColumn():
                 return Rank::class;
-
             case in_array($className, ['TimeType', 'DateType', 'DateTimeType'], true):
                 $type = str_replace('Type', '', $className);
 
                 return "\\Terranet\\Administrator\\Field\\{$type}";
-
             case 'BooleanType' === $className:
                 return Boolean::class;
-
             case 'TextType' === $className:
                 return Textarea::class;
-
             case 'StringType' === $className:
                 if (str_contains($column, 'email')) {
                     return Email::class;
@@ -133,6 +124,7 @@ class Grid
                 if (str_contains($column, ['phone', 'gsm'])) {
                     return Phone::class;
                 }
+                // no break
             default:
                 return Text::class;
         }
@@ -144,7 +136,8 @@ class Grid
     protected function fetchTablesColumns()
     {
         return \admin\db\table_columns(
-            $this->model, true
+            $this->model,
+            true
         );
     }
 }

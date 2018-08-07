@@ -42,7 +42,7 @@ class File extends SplFileInfo implements Arrayable
     public function toArray()
     {
         return [
-            'path' => $path = trim(str_replace($this->storage->path(), '', $this->getPathname()), DIRECTORY_SEPARATOR),
+            'path' => $path = trim(str_replace($this->storage->path(), '', $this->getPathname()), \DIRECTORY_SEPARATOR),
             'url' => $this->fullUrl($path),
             'createdAt' => $this->createdAt(),
             'updatedAt' => $this->updatedAt(),

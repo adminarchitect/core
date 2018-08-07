@@ -39,7 +39,6 @@ namespace {
 }
 
 namespace admin\db {
-
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
@@ -131,7 +130,6 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
-
     use Coduo\PHPHumanizer\StringHumanizer;
     use Czim\Paperclip\Contracts\AttachableInterface;
     use Illuminate\Database\Eloquent\Model;
@@ -410,7 +408,6 @@ namespace admin\helpers {
 }
 
 namespace admin\output {
-
     use Closure;
 
     function boolean($value)

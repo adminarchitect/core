@@ -22,7 +22,7 @@ class SuperAdminRule
     }
 
     /**
-     * @return Authenticatable|null
+     * @return null|Authenticatable
      */
     protected function user()
     {

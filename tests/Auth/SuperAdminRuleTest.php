@@ -5,7 +5,6 @@ namespace Terranet\Administrator\Tests\Auth;
 use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory;
-use Illuminate\Support\Facades\Auth;
 use PHPUnit\Framework\MockObject\MockObject;
 use Terranet\Administrator\Auth\SuperAdminRule;
 use Terranet\Administrator\Tests\CoreTestCase;
@@ -28,7 +27,7 @@ class SuperAdminRuleTest extends CoreTestCase
     /** @test */
     public function it_returns_false_if_no_auth_user()
     {
-        /** @var SuperAdminRule|MockObject $rule */
+        /** @var MockObject|SuperAdminRule $rule */
         $rule = $this->createPartialMock(SuperAdminRule::class, ['user']);
         $rule->method('user')->willReturn(null);
 

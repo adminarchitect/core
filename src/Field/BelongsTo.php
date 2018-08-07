@@ -18,6 +18,7 @@ class BelongsTo extends Generic
 
     /**
      * @param string $page
+     *
      * @return mixed|string
      */
     public function render(string $page = 'index')
@@ -40,6 +41,7 @@ class BelongsTo extends Generic
 
     /**
      * @param string $relation
+     *
      * @return self
      */
     public function withName(string $relation): self
@@ -51,6 +53,7 @@ class BelongsTo extends Generic
 
     /**
      * @param string $column
+     *
      * @return self
      */
     public function showAs(string $column): self
@@ -64,6 +67,7 @@ class BelongsTo extends Generic
      * Build a link to related model.
      *
      * @param $relation
+     *
      * @return string
      */
     protected function linkToRelation($relation)

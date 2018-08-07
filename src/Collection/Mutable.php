@@ -121,11 +121,12 @@ class Mutable extends BaseCollection
      * Retrieve only visible items.
      *
      * @param string $page
+     *
      * @return Mutable
      */
     public function visibleOnPage(string $page)
     {
-        return $this->filter(function($item) use ($page) {
+        return $this->filter(function ($item) use ($page) {
             return ($item instanceof Group) || $item->isVisibleOnPage($page);
         });
     }
@@ -381,6 +382,7 @@ class Mutable extends BaseCollection
 
     /**
      * @param $id
+     *
      * @throws Exception
      */
     protected function notFound($id)

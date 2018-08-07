@@ -142,7 +142,8 @@ class Mutable extends BaseMutableCollection
 
     /**
      * @param $collection
-     * @return \Terranet\Administrator\Columns\MediaElement|FormElement
+     *
+     * @return FormElement|\Terranet\Administrator\Columns\MediaElement
      */
     protected function createMediaElement($collection): MediaElement
     {

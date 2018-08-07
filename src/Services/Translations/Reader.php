@@ -42,6 +42,6 @@ class Reader
      */
     public function pathToFile($file, $locale): string
     {
-        return resource_path('lang'.DIRECTORY_SEPARATOR.(is_a($locale, Locale::class) ? $locale->iso6391() : $locale).DIRECTORY_SEPARATOR.$file.'.php');
+        return resource_path('lang'.\DIRECTORY_SEPARATOR.(is_a($locale, Locale::class) ? $locale->iso6391() : $locale).\DIRECTORY_SEPARATOR.$file.'.php');
     }
 }

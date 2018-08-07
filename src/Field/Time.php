@@ -4,5 +4,4 @@ namespace Terranet\Administrator\Field;
 
 class Time extends Generic
 {
-    
 }

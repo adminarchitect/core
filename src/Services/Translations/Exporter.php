@@ -29,7 +29,7 @@ class Exporter
         if ($translations = $this->load($locales)) {
             $translations = $this->replaceAttributes($translations);
 
-            $to = $to ?: public_path('js'.DIRECTORY_SEPARATOR.'translations');
+            $to = $to ?: public_path('js'.\DIRECTORY_SEPARATOR.'translations');
 
             if (!$this->fs->exists($to)) {
                 $this->fs->makeDirectory($to);
@@ -37,7 +37,7 @@ class Exporter
 
             foreach ($translations as $lang => $translation) {
                 $content = 'window.messages = {"'.$lang.'":'.json_encode($translation).'};';
-                file_put_contents($file = $to.DIRECTORY_SEPARATOR.$lang.'.js', $content);
+                file_put_contents($file = $to.\DIRECTORY_SEPARATOR.$lang.'.js', $content);
                 $exported[] = $file;
             }
         }
@@ -48,7 +48,7 @@ class Exporter
     protected function load(Collection $locales)
     {
         $data = [];
-        $path = resource_path('lang'.DIRECTORY_SEPARATOR);
+        $path = resource_path('lang'.\DIRECTORY_SEPARATOR);
 
         foreach ($locales as $locale) {
             if (!$this->fs->exists($path.$locale->iso6391())) {

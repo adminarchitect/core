@@ -6,6 +6,7 @@ class Boolean extends Generic
 {
     /**
      * @param string $page
+     *
      * @return mixed|string
      */
     public function render(string $page = 'index')

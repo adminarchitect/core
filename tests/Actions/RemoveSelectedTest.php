@@ -28,19 +28,19 @@ class RemoveSelectedTest extends CoreTestCase
     /** @test */
     public function it_removes_authorized_models()
     {
-        /** @var Model|MockObject $user */
+        /** @var MockObject|Model $user */
         $user = $this->createMock(User::class);
         $user->expects($this->once())->method('delete');
 
-        /** @var RemoveSelected|MockObject $action */
+        /** @var MockObject|RemoveSelected $action */
         $action = $this->createPartialMock(RemoveSelected::class, ['canDelete', 'fetchForDelete']);
         $action->expects($this->once())->method('fetchForDelete')->willReturn(new Collection([$user]));
         $action->expects($this->once())->method('canDelete')->with($user)->willReturn(true);
 
-        /** @var Request|MockObject $request */
+        /** @var MockObject|Request $request */
         $request = $this->createPartialMock(Request::class, ['get']);
 
-        /** @var Model|MockObject $model */
+        /** @var MockObject|Model $model */
         $model = $this->createMock(Model::class);
 
         $action->handle($model, $request);
@@ -57,7 +57,6 @@ class RemoveSelectedTest extends CoreTestCase
         $builder = $this->createMock(Builder::class);
         $builder->expects($this->once())->method('get')->willReturn(new Collection());
         $builder->expects($this->once())->method('whereIn')->with('id', [])->willReturn($builder);
-
 
         $model = $this->createMock(User::class);
         $model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($builder);

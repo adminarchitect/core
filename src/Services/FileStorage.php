@@ -24,11 +24,9 @@ class FileStorage
 
     public function upload(array $files, $directory)
     {
-        /**
-         * @var UploadedFile
-         */
+        // @var UploadedFile
         foreach ($files as $file) {
-            $filename = $this->path($directory).DIRECTORY_SEPARATOR.$file->getClientOriginalName();
+            $filename = $this->path($directory).\DIRECTORY_SEPARATOR.$file->getClientOriginalName();
 
             if ($this->filesystem->exists($filename) || move_uploaded_file($file->path(), $filename)) {
                 return (new File($filename, $this))->toArray();
@@ -89,7 +87,7 @@ class FileStorage
         foreach ($files as $file) {
             $this->filesystem->move(
                 $this->path($this->compilePath([$basedir, $file])),
-                realpath($this->path($this->compilePath([$basedir, $target]))).DIRECTORY_SEPARATOR.$file
+                realpath($this->path($this->compilePath([$basedir, $target]))).\DIRECTORY_SEPARATOR.$file
             );
         }
     }
@@ -97,7 +95,7 @@ class FileStorage
     public function rename($from, $to)
     {
         $from = $this->path($from);
-        $to = dirname(realpath($from)).DIRECTORY_SEPARATOR.$to;
+        $to = dirname(realpath($from)).\DIRECTORY_SEPARATOR.$to;
 
         if ($this->filesystem->exists($to)) {
             throw new Exception(sprintf('File %s already exists.', $to));
@@ -135,7 +133,7 @@ class FileStorage
 
     public function path($path = null)
     {
-        return rtrim(public_path($this->basename().DIRECTORY_SEPARATOR.$path), DIRECTORY_SEPARATOR);
+        return rtrim(public_path($this->basename().\DIRECTORY_SEPARATOR.$path), \DIRECTORY_SEPARATOR);
     }
 
     protected function handleStorage()
@@ -164,6 +162,6 @@ class FileStorage
      */
     protected function compilePath($directories)
     {
-        return implode(DIRECTORY_SEPARATOR, $directories);
+        return implode(\DIRECTORY_SEPARATOR, $directories);
     }
 }

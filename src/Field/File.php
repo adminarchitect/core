@@ -14,7 +14,8 @@ class File extends Generic
 
     /**
      * @param string $page
-     * @return mixed|null|string
+     *
+     * @return null|mixed|string
      */
     public function render(string $page = 'index')
     {

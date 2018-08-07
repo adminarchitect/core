@@ -10,12 +10,13 @@ class CoreTestCase extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param mixed  &$object Instantiated object that we will run method on.
+     * @param mixed  &$object Instantiated object that we will run method on
      * @param string $method Method name to call
-     * @param array  $args Array of parameters to pass into method.
+     * @param array  $args array of parameters to pass into method
      *
-     * @return mixed Method return.
      * @throws \ReflectionException
+     *
+     * @return mixed method return
      */
     public function invokeMethod(&$object, $method, array $args = [])
     {

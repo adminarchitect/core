@@ -11,6 +11,7 @@ class DateTime extends Generic
 
     /**
      * @param string $page
+     *
      * @return mixed|string
      */
     public function render(string $page = 'index')
@@ -20,6 +21,7 @@ class DateTime extends Generic
 
     /**
      * @param string $format
+     *
      * @return self
      */
     public function setFormat(string $format): self

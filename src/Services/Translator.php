@@ -97,7 +97,7 @@ class Translator
         static $files = null;
 
         if (null === $files) {
-            $path = 'lang'.DIRECTORY_SEPARATOR.\localizer\locale()->iso6391();
+            $path = 'lang'.\DIRECTORY_SEPARATOR.\localizer\locale()->iso6391();
 
             $files = collect(
                 glob(resource_path("{$path}/*.php"))
@@ -127,7 +127,7 @@ class Translator
 
     protected function makeFile($file, $locale)
     {
-        $directoryTranslationsPath = resource_path('lang'.DIRECTORY_SEPARATOR.$locale);
+        $directoryTranslationsPath = resource_path('lang'.\DIRECTORY_SEPARATOR.$locale);
 
         if (!$this->fs->exists($directoryTranslationsPath)) {
             $this->fs->makeDirectory($directoryTranslationsPath);
@@ -135,7 +135,7 @@ class Translator
 
         $content = '<?php'.str_repeat(PHP_EOL, 2).'return [];';
 
-        $this->fs->put($directoryTranslationsPath.DIRECTORY_SEPARATOR.$file.'.php', $content, true);
+        $this->fs->put($directoryTranslationsPath.\DIRECTORY_SEPARATOR.$file.'.php', $content, true);
     }
 
     protected function keyToArray(&$arr, $path, $value, $separator = '.')
