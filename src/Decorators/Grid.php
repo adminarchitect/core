@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Decorators;
 
+use function admin\db\enum_values;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Columns\Decorators\CellDecorator;
@@ -124,7 +125,7 @@ class Grid
                 if (str_contains($column, ['phone', 'gsm'])) {
                     return Phone::class;
                 }
-                // no break
+            // no break
             default:
                 return Text::class;
         }

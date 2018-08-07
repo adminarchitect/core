@@ -4,10 +4,13 @@ namespace Terranet\Administrator\Field;
 
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Scaffolding;
 
 abstract class Generic
 {
+    use AcceptsCustomFormat;
+
     /** @var string */
     protected $id;
 
@@ -71,6 +74,10 @@ abstract class Generic
      */
     public function render(string $page = 'index')
     {
+        if ($this->format) {
+            return $this->callFormatter($this->value(), $this->model);
+        }
+
         return $this->value();
     }
 

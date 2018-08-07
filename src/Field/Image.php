@@ -75,11 +75,9 @@ class Image extends Generic
             $this->attributes['id'] = $this->id();
         }
 
-        $this->attributes['class'] = 'img-responsive';
-
-        if ($this->rounded) {
-            $this->attributes['class'] = 'img-circle';
-        }
+        $this->attributes['class'] = $this->rounded
+            ? 'img-circle'
+            : 'img-responsive';
 
         return $this->attributes;
     }

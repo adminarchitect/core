@@ -2,13 +2,11 @@
 
 namespace Terranet\Administrator\Field;
 
-use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
 
 class HasMany extends Generic
 {
-    use AcceptsCustomFormat,
-        WorksWithModules;
+    use WorksWithModules;
 
     /** @var string */
     protected $icon = 'list-ul';
@@ -27,7 +25,7 @@ class HasMany extends Generic
         }
 
         if ($this->format) {
-            return $this->callFormatter($relation);
+            return $this->callFormatter($relation, $this->model);
         }
 
         if ($count = $relation->count()) {

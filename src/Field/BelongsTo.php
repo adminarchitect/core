@@ -2,13 +2,11 @@
 
 namespace Terranet\Administrator\Field;
 
-use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
 
 class BelongsTo extends Generic
 {
-    use AcceptsCustomFormat,
-        WorksWithModules;
+    use WorksWithModules;
 
     /** @var string */
     protected $relation;
@@ -33,7 +31,7 @@ class BelongsTo extends Generic
         }
 
         if ($this->format) {
-            return $this->callFormatter($relation);
+            return $this->callFormatter($relation, $this->model);
         }
 
         return $this->linkToRelation($relation);

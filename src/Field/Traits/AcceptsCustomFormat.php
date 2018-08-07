@@ -20,12 +20,12 @@ trait AcceptsCustomFormat
     }
 
     /**
-     * @param $relation
+     * @param $args
      *
      * @return mixed
      */
-    public function callFormatter($relation)
+    protected function callFormatter(...$args)
     {
-        return call_user_func_array($this->format, [$relation, $this->model]);
+        return call_user_func_array($this->format, $args);
     }
 }
