@@ -1,6 +1,6 @@
 @unless($actions->readonly())
     @if (isset($item))
-        <div class="btn-group pull-right mt5">
+        <div class="btn-group pull-right mt10">
             @if ($actions->authorize('view', $item))
                 <a href="{{ route('scaffold.view', ['module' => $module, 'id' => $item->getKey()]) }}"
                    class="btn btn-primary btn-quirk">

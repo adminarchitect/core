@@ -14,11 +14,10 @@ use Terranet\Administrator\Traits\AutoTranslatesInstances;
 use Terranet\Administrator\Traits\Module\AllowsNavigation;
 use Terranet\Administrator\Traits\Module\DetectsCommentFlag;
 use Terranet\Administrator\Traits\Module\HasColumns;
-use Terranet\Administrator\Traits\Module\HasWidgets;
 
 class Scaffolding implements Module, AutoTranslatable
 {
-    use AllowsNavigation, DetectsCommentFlag, HasColumns, HasWidgets, AutoTranslatesInstances;
+    use AllowsNavigation, DetectsCommentFlag, HasColumns, AutoTranslatesInstances;
 
     const PAGE_INDEX = 'index';
     const PAGE_VIEW = 'view';

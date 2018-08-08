@@ -26,15 +26,17 @@
     <header>
         <div class="headerpanel">
             <div class="logopanel">
-                <h2>
-                    <a href="{{ url(config('administrator.home_page') ?: route('scaffold.dashboard')) }}">{!! $config->get('title') !!}</a>
-                </h2>
+                <h4 style="margin-top: 4px; text-align: center">
+                    <a class="btn-quirk" href="{{ url(config('administrator.home_page') ?: route('scaffold.dashboard')) }}">
+                        {!! $config->get('title') !!}
+                    </a>
+                </h4>
             </div>
 
             <div class="headerbar">
                 {{--<a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>--}}
                 <div style="padding-top: 15px; margin-left: -45px;" class="pull-left">
-                    <input class="form-control input-sm" style="width: 250px; border-radius: 5px;" type="search" placeholder="Search" />
+                    <input class="form-control input-sm" style="width: 250px;" type="search" placeholder="Search" />
                 </div>
 
                 <div class="header-right">
@@ -67,7 +69,7 @@
                 @yield('scaffold.create')
 
                 @if ($breadcrumbs)
-                    <h4>{{ $module->title() }} @yield('total')</h4>
+                    <h4 class="btn-quirk">{{ $module->title() }} @yield('total')</h4>
                     {!! $breadcrumbs->render() !!}
                 @endif
             @endif

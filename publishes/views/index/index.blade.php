@@ -49,7 +49,7 @@
 
             @slot('actions')
                 @unless($actions->readonly())
-                    <th class="actions" style="width: 100px;"></th>
+                    <th class="actions" style="width: 100px; min-width: 100px;"></th>
                 @endunless
             @endslot
 

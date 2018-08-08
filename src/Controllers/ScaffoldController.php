@@ -6,8 +6,6 @@ use Illuminate\Contracts\Support\Renderable;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
-use Terranet\Administrator\Services\Widgets\AbstractWidget;
-use Terranet\Administrator\Services\Widgets\EloquentWidget;
 use URL;
 
 class ScaffoldController extends AdminController
@@ -38,13 +36,6 @@ class ScaffoldController extends AdminController
     public function view($page, $id)
     {
         $this->authorize('view', $eloquent = app('scaffold.model'));
-
-        app('scaffold.widget')->add(
-            (new EloquentWidget($eloquent))
-                ->setOrder(0)
-                ->setTab(AbstractWidget::TAB_DEFAULT)
-                ->setPlacement('model')
-        );
 
         return view(app('scaffold.template')->view('index'), [
             'item' => $eloquent,

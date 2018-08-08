@@ -61,14 +61,6 @@ interface Module
     public function actions();
 
     /**
-     * Return list of widgets (relations)
-     * fetched while viewing item details.
-     *
-     * @return array
-     */
-    public function widgets();
-
-    /**
      * The module Templates manager.
      *
      * @return string

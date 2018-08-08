@@ -17,7 +17,6 @@ use Terranet\Administrator\Schema;
 use Terranet\Administrator\Services\MagnetParams;
 use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
-use Terranet\Administrator\Services\Widgets;
 use Terranet\Localizer\Locale;
 
 class ContainersServiceProvider extends ServiceProvider
@@ -26,7 +25,6 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminConfig' => 'scaffold.config',
         'AdminResource' => 'scaffold.module',
         'AdminModel' => 'scaffold.model',
-        'AdminWidget' => 'scaffold.widget',
         'AdminSchema' => 'scaffold.schema',
         'AdminSortable' => 'scaffold.sortable',
         'AdminFilter' => 'scaffold.filter',
@@ -149,15 +147,6 @@ class ContainersServiceProvider extends ServiceProvider
                 && ($id = $app['router']->current()->parameter('id'))
             ) {
                 return $finder->find($id);
-            }
-        });
-    }
-
-    protected function registerAdminWidget()
-    {
-        $this->app->singleton('scaffold.widget', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return new Widgets($module->widgets());
             }
         });
     }

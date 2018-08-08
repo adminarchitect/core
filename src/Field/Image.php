@@ -14,8 +14,8 @@ class Image extends Generic
 
     /** @var array */
     protected $attributes = [
-        'width' => 75,
-        'height' => 75,
+        'width' => 60,
+        'height' => 60,
     ];
 
     /**

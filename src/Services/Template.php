@@ -81,11 +81,8 @@ class Template implements TemplateProvider
     {
         $partials = $this->map('view', [
             'index',
-            'widget',
             'model',
             'create',
-            'relations.one_to_one',
-            'relations.one_to_many',
         ]);
 
         return null === $partial ? $partials : $partials[$partial];
