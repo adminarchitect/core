@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Form\Type;
 
-use Spatie\MediaLibrary\Media as MediaItem;
 use Terranet\Administrator\Form\Element;
 use Terranet\Administrator\Traits\HasMediaOptions;
 
@@ -37,7 +36,7 @@ class Media extends Element
         ]);
     }
 
-    protected function conversions(MediaItem $item)
+    protected function conversions(\Spatie\MediaLibrary\Models\Media $item)
     {
         return array_build($item->getMediaConversionNames(), function ($key, $conversion) use ($item) {
             return [$conversion, $item->getUrl($conversion)];
