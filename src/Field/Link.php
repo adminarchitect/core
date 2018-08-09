@@ -2,6 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-class ID extends Generic
+class Link extends Generic
 {
 }

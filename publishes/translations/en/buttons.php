@@ -23,4 +23,6 @@ return [
     'upload' => 'Upload',
     'next' => 'Next',
     'previous' => 'Previous',
+    'true' => 'True',
+    'false' => 'False',
 ];

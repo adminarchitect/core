@@ -170,7 +170,7 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('template')) {
+        if ([/*$flag*/, $value] = $this->hasCommentFlag('template')) {
             return $value;
         }
 
@@ -202,7 +202,7 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('finder')) {
+        if ([/*$flag*/, $value] = $this->hasCommentFlag('finder')) {
             return $value;
         }
 
@@ -220,7 +220,7 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if (list(/*$flag*/, $saver) = $this->hasCommentFlag('saver')) {
+        if ([/*$flag*/, $saver] = $this->hasCommentFlag('saver')) {
             return $saver;
         }
 
@@ -239,7 +239,7 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('breadcrumbs')) {
+        if ([/*$flag*/, $value] = $this->hasCommentFlag('breadcrumbs')) {
             return $value;
         }
 
@@ -259,11 +259,28 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('actions')) {
+        if ([/*$flag*/, $value] = $this->hasCommentFlag('actions')) {
             return $value;
         }
 
         return $this->actions;
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @return ActionsManager
+     */
+    public function actionsManager()
+    {
+        $handler = $this->actions();
+        $handler = new $handler($this);
+
+        if (!$handler instanceof CrudActions) {
+            throw new Exception('Actions handler must implement '.CrudActions::class.' contract');
+        }
+
+        return new ActionsManager($handler, $this);
     }
 
     /**
@@ -285,7 +302,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected function getModelClass()
     {
-        if (list(/*$flag*/, $value) = $this->hasCommentFlag('model')) {
+        if ([/*$flag*/, $value] = $this->hasCommentFlag('model')) {
             return $value;
         }
 

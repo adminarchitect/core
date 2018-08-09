@@ -3,20 +3,44 @@
 namespace Terranet\Administrator\Field;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Scaffolding;
 
 class DateTime extends Generic
 {
     /** @var string */
-    protected $format = 'M j, Y g:i A';
+    protected $dateFormat = 'M j, Y';
+
+    /** @var string */
+    protected $timeFormat = 'g:i A';
+
+    /** @var string */
+    protected $dateTimeFormat = 'M j, Y g:i A';
 
     /**
-     * @param string $page
-     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function onIndex()
+    {
+        $format = [
+            self::class => $this->dateTimeFormat,
+            Date::class => $this->dateFormat,
+            Time::class => $this->timeFormat,
+        ][get_class($this)];
+
+        $formattedValue = Carbon::parse($this->value())->format($format);
+
+        return [
+            'formatted' => $formattedValue,
+        ];
+    }
+
+    /**
      * @return mixed|string
      */
-    public function render(string $page = 'index')
+    public function onView()
     {
-        return Carbon::parse($this->value())->format($this->format);
+        return $this->onIndex();
     }
 
     /**
@@ -24,9 +48,33 @@ class DateTime extends Generic
      *
      * @return self
      */
-    public function setFormat(string $format): self
+    public function setDateTimeFormat(string $format): self
     {
-        $this->format = $format;
+        $this->$dateTimeFormat = $format;
+
+        return $this;
+    }
+
+    /**
+     * @param string $dateFormat
+     *
+     * @return self
+     */
+    public function setDateFormat(string $dateFormat): self
+    {
+        $this->dateFormat = $dateFormat;
+
+        return $this;
+    }
+
+    /**
+     * @param string $timeFormat
+     *
+     * @return self
+     */
+    public function setTimeFormat(string $timeFormat): self
+    {
+        $this->timeFormat = $timeFormat;
 
         return $this;
     }

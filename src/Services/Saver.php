@@ -3,18 +3,18 @@
 namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Terranet\Administrator\Contracts\Services\Saver as SaverContract;
+use Terranet\Administrator\Field\BelongsTo;
+use Terranet\Administrator\Field\BelongsToMany;
+use Terranet\Administrator\Field\Boolean;
+use Terranet\Administrator\Field\File;
+use Terranet\Administrator\Field\HasMany;
+use Terranet\Administrator\Field\HasOne;
+use Terranet\Administrator\Field\Id;
+use Terranet\Administrator\Field\Image;
+use Terranet\Administrator\Field\Media;
 use Terranet\Administrator\Form\RendersTranslatableElement;
-use Terranet\Administrator\Form\Type\Boolean;
-use Terranet\Administrator\Form\Type\File;
-use Terranet\Administrator\Form\Type\Image;
-use Terranet\Administrator\Form\Type\Key;
-use Terranet\Administrator\Form\Type\Media;
 use Terranet\Administrator\Requests\UpdateRequest;
 use Terranet\Administrator\Traits\LoopsOverRelations;
 use function admin\db\scheme;
@@ -71,15 +71,17 @@ class Saver implements SaverContract
         $this->connection()->transaction(function () {
             foreach ($this->editable() as $field) {
                 // get original HTML input
-                $field = $field->getInput();
+                $name = $field->id();
 
-                $name = $field->getName();
-
-                if ($this->isKey($field) || $this->isTranslatable($field) || $this->isMediaFile($field)) {
+                if ($this->isKey($field)
+                    || $this->isTranslatable($field)
+                    || $this->isMediaFile($field)) {
                     continue;
                 }
 
-                $this->collectRelations($field, $name);
+                if ($this->isRelation($field)) {
+                    $this->relations[$name] = $field;
+                }
 
                 $value = $this->isFile($field) ? $this->request->file($name) : $this->request->get($name);
 
@@ -138,7 +140,7 @@ class Saver implements SaverContract
      */
     protected function isKey($field)
     {
-        return $field instanceof Key;
+        return $field instanceof Id;
     }
 
     /**
@@ -188,24 +190,45 @@ class Saver implements SaverContract
         $this->repository->fill($this->data)->save();
     }
 
+    /**
+     * Save relations.
+     */
     protected function saveRelations()
     {
-        foreach ($this->relations as $relation => $values) {
-            $relation = call_user_func([$this->repository, $relation]);
+        if (!empty($this->relations)) {
+            foreach ($this->relations as $name => $field) {
+                $relation = call_user_func([$this->repository, $name]);
 
-            if ($relation instanceof BelongsToMany) {
-                $values = $this->forgetNullValues($relation, $values);
-                $relation->sync($values);
+                switch (get_class($field)) {
+                    case BelongsTo::class:
+                        /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation */
+                        $relation->associate(
+                            $this->request->get($relation->getForeignKey())
+                        );
+
+                        break;
+
+                    case HasOne::class:
+                        /** @var \Illuminate\Database\Eloquent\Relations\HasOne $relation */
+                        $related = $relation->getResults();
+
+                        $related && $related->exists
+                            ? $relation->update($this->request->get($name))
+                            : $relation->create($this->request->get($name));
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
-            if ($relation instanceof HasOne || $relation instanceof BelongsTo || $relation instanceof MorphOne) {
-                ($record = $relation->first())
-                    ? $record->fill($values)->save()
-                    : $relation->create($values);
-            }
+            $this->repository->save();
         }
     }
 
+    /**
+     * Process Media.
+     */
     protected function saveMedia()
     {
         if ($this->repository instanceof HasMedia) {
@@ -248,27 +271,13 @@ class Saver implements SaverContract
      * Collect relations for saving.
      *
      * @param $field
-     * @param $name
      */
-    protected function collectRelations($field, $name)
+    protected function isRelation($field)
     {
-        if ($field instanceof HasOne && $field->hasRelation()) {
-            $relation = $field->getRelation();
-            $this->relations[$relation][$name] = $this->input($name);
-        }
-
-        if ($field->hasRelation()) {
-            $relation = $field->getRelation();
-
-            // register relation
-            if (!array_has($this->relations, $relation)) {
-                $this->relations[$relation] = [];
-            }
-
-            if (!$field->getTranslatable()) {
-                $this->relations[$relation][$name] = $this->input("{$relation}.{$name}");
-            }
-        }
+        return (($field instanceof BelongsTo)
+            || ($field instanceof HasOne)
+            || ($field instanceof HasMany)
+            || ($field instanceof BelongsToMany));
     }
 
     /**
@@ -355,11 +364,19 @@ class Saver implements SaverContract
         }
     }
 
+    /**
+     * @param $field
+     * @return bool
+     */
     protected function isBoolean($field)
     {
         return $field instanceof Boolean;
     }
 
+    /**
+     * @param $field
+     * @return bool
+     */
     protected function isMediaFile($field)
     {
         return $field instanceof Media;

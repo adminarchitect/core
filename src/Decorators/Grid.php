@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Decorators;
 
-use function admin\db\enum_values;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Columns\Decorators\CellDecorator;
@@ -10,13 +9,13 @@ use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Field\Boolean;
 use Terranet\Administrator\Field\Email;
 use Terranet\Administrator\Field\File;
-use Terranet\Administrator\Field\ID;
+use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
+use Terranet\Administrator\Field\Link;
 use Terranet\Administrator\Field\Phone;
 use Terranet\Administrator\Field\Rank;
 use Terranet\Administrator\Field\Text;
 use Terranet\Administrator\Field\Textarea;
-use Terranet\Administrator\Field\URL;
 use Terranet\Rankable\Rankable;
 use Terranet\Translatable\Translatable;
 
@@ -95,7 +94,7 @@ class Grid
     protected function detectField($column)
     {
         if ($column === $this->model->getKeyName()) {
-            return ID::class;
+            return Id::class;
         }
 
         $className = class_basename(
@@ -119,7 +118,7 @@ class Grid
                 }
 
                 if (str_contains($column, ['url', 'site', 'host'])) {
-                    return URL::class;
+                    return Link::class;
                 }
 
                 if (str_contains($column, ['phone', 'gsm'])) {
@@ -136,9 +135,6 @@ class Grid
      */
     protected function fetchTablesColumns()
     {
-        return \admin\db\table_columns(
-            $this->model,
-            true
-        );
+        return \admin\db\table_columns($this->model, true);
     }
 }

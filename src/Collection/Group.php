@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Collection;
 
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
 use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
@@ -53,6 +54,16 @@ class Group extends ElementContainer
         }
 
         throw new \Exception(sprintf('Unknwon method "%s"', $method));
+    }
+
+    /**
+     * @param Model $model
+     */
+    public function setModel(Model $model)
+    {
+        $this->elements->each->setModel($model);
+
+        return $this;
     }
 
     /**

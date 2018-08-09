@@ -15,7 +15,7 @@ namespace {
             $results = [];
 
             foreach ($array as $key => $value) {
-                list($innerKey, $innerValue) = call_user_func($callback, $key, $value);
+                [$innerKey, $innerValue] = call_user_func($callback, $key, $value);
 
                 $results[$innerKey] = $innerValue;
             }
@@ -468,7 +468,7 @@ namespace admin\output {
                         }
 
                         if ($dimensions && str_contains($dimensions, 'x')) {
-                            list($width, $height) = explode('x', $dimensions);
+                            [$width, $height] = explode('x', $dimensions);
 
                             if ($aWidth > $width) {
                                 $attributes['width'] = $width;

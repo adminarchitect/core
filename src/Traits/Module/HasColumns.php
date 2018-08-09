@@ -28,21 +28,9 @@ trait HasColumns
      *
      * @return Mutable
      */
-    public function viewColumns(Model $model = null)
+    public function viewColumns()
     {
-        return $this->scaffoldViewColumns($model);
-    }
-
-    /**
-     * Fetch "viewable" columns.
-     *
-     * @param Model $model
-     *
-     * @return Mutable
-     */
-    protected function scaffoldViewColumns(Model $model)
-    {
-        return $this->scaffoldColumns()->each->setModel($model);
+        return $this->scaffoldColumns();
     }
 
     /**
@@ -88,7 +76,7 @@ trait HasColumns
          */
         $elements = new MutableCollection($fillable);
 
-        if ($this->includeDateColumns && count($dates = $model->getDates())) {
+        if (property_exists($this, 'includeDateColumns') && $this->includeDateColumns && count($dates = $model->getDates())) {
             // allow setting specific timestamp: created_at
             if (is_string($this->includeDateColumns)) {
                 $dates = array_intersect($dates, [$this->includeDateColumns]);

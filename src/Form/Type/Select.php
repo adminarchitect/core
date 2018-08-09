@@ -100,7 +100,7 @@ class Select extends Element
         }
 
         // resolve callable "Class@method" style
-        if (is_string($callable) && list($class, $method) = explode('@', $callable)) {
+        if (is_string($callable) && [$class, $method] = explode('@', $callable)) {
             return [app()->make($class), $method];
         }
 

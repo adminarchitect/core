@@ -93,22 +93,20 @@ class Mutable extends BaseMutableCollection
     {
         $this->validateEditor($editor);
 
-        return (bool) $this->filter(function (FormElement $element) use ($editor) {
-            $input = $element->getInput();
-
+        return (bool) $this->filter(function ($field) use ($editor) {
             if ('ckeditor' === $editor) {
-                return $input instanceof Ckeditor;
+                return $field instanceof Ckeditor;
             }
 
             if ('medium' === $editor) {
-                return $input instanceof Medium;
+                return $field instanceof Medium;
             }
 
             if ('markdown' === $editor) {
-                return $input instanceof Markdown;
+                return $field instanceof Markdown;
             }
 
-            return $input instanceof Tinymce;
+            return $field instanceof Tinymce;
         })->count();
     }
 

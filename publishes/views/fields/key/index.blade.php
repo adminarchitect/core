@@ -1,0 +1,1 @@
+<span>{{ $field->value() }}</span>

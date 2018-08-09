@@ -24,7 +24,7 @@ trait SortsObjectsCollection
         }
 
         usort($objects, function ($aObj, $bObj) {
-            list($aRank, $bRank) = $this->getRanks($aObj, $bObj);
+            [$aRank, $bRank] = $this->getRanks($aObj, $bObj);
 
             if ($this->equals($aRank, $bRank)) {
                 return $this->sortByName($aObj, $bObj);

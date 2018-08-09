@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Scaffolding;
 
@@ -17,6 +18,9 @@ abstract class Generic
     /** @var string */
     protected $title;
 
+    /** @var string */
+    protected $description;
+
     /** @var Model */
     protected $model;
 
@@ -29,6 +33,9 @@ abstract class Generic
         Scaffolding::PAGE_EDIT => true,
         Scaffolding::PAGE_VIEW => true,
     ];
+
+    /** @var array */
+    protected $attributes = [];
 
     /**
      * Generic constructor.
@@ -45,12 +52,19 @@ abstract class Generic
     /**
      * @param $title
      * @param null $id
+     * @param \Closure $callback
      *
      * @return static
      */
-    public static function make($title, $id = null): self
+    public static function make($title, $id = null, \Closure $callback = null): self
     {
-        return new static($title, $id);
+        $instance = new static($title, $id);
+
+        if (null !== $callback) {
+            $callback->call($instance, $instance);
+        }
+
+        return $instance;
     }
 
     /**
@@ -72,13 +86,31 @@ abstract class Generic
      *
      * @return mixed
      */
-    public function render(string $page = 'index')
+    final public function render(string $page = 'index')
     {
         if ($this->format) {
-            return $this->callFormatter($this->value(), $this->model);
+            // Each Field can define its own data for custom formatter.
+            $withData = method_exists($this, 'renderWith')
+                ? $this->renderWith()
+                : [$this->value(), $this->model];
+
+            return $this->callFormatter($withData);
         }
 
-        return $this->value();
+        $data = [
+            'field' => $this,
+            'model' => $this->model,
+        ];
+
+        if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
+            $data += call_user_func([$this, $dataGetter]);
+        }
+
+        if (View::exists($view = $this->template($page))) {
+            return View::make($view, $data);
+        }
+
+        return View::make($this->template($page, 'Key'), $data);
     }
 
     /**
@@ -92,6 +124,40 @@ abstract class Generic
     }
 
     /**
+     * Form name.
+     *
+     * @return string
+     */
+    public function name()
+    {
+        $parts = explode('.', $this->id());
+
+        if (count($parts) > 1) {
+            $first = array_first($parts);
+            $other = array_slice($parts, 1);
+
+            $other = array_map(function ($part) {
+                return "[$part]";
+            }, $other);
+
+            return join('', array_merge([$first], $other));
+        }
+
+        return $this->id();
+    }
+
+    /**
+     * @param string $id
+     * @return self
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Return Element title.
      *
      * @return string
@@ -102,6 +168,14 @@ abstract class Generic
     }
 
     /**
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
      * @param string $title
      *
      * @return self
@@ -109,6 +183,17 @@ abstract class Generic
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @param string $description
+     * @return self
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -197,9 +282,34 @@ abstract class Generic
      *
      * @return mixed
      */
-    protected function value()
+    public function value()
     {
+        if (!$this->model) {
+            return null;
+        }
+
         return $this->model->getAttribute($this->id);
+    }
+
+    /**
+     * @param $key
+     * @param null $value
+     * @return self
+     */
+    public function setAttribute($attribute, $value = null): self
+    {
+        if (is_array($attribute)) {
+            foreach ($attribute as $key => $value) {
+                $this->setAttribute($key, $value);
+            }
+        } else {
+            if (!array_key_exists($key, $this->attributes)) {
+                throw new Exception("Unknown attribute {$key}");
+            }
+            $this->attributes[$key] = $value;
+        }
+
+        return $this;
     }
 
     /**
@@ -217,5 +327,20 @@ abstract class Generic
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $page
+     * @param string $field
+     *
+     * @return string
+     */
+    protected function template(string $page, string $field = null): string
+    {
+        return sprintf(
+            'administrator::fields.%s.%s',
+            snake_case($field ?? class_basename($this)),
+            $page
+        );
     }
 }

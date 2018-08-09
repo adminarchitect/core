@@ -14,7 +14,7 @@
         <div class="panel-body">
             {!! Form::model(isset($item) ? $item : null, ['method' => 'post', 'files' => true]) !!}
             <table class="table table-striped-col">
-                @each($template->edit('row'), $form, 'field')
+                @each($template->edit('row'), $form->each->setModel($item), 'field')
 
                 @unless($actions->readonly())
                     @include($template->edit('actions'))

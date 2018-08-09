@@ -94,6 +94,12 @@ Route::group([
             ]);
         });
 
+        // Search for a model
+        Route::get('search', [
+            'as' => 'scaffold.search',
+            'uses' => 'ScaffoldController@search',
+        ])->where('module', $pattern);
+
         // Index
         Route::get('{module}', [
             'as' => 'scaffold.index',

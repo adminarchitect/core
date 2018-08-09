@@ -11,28 +11,18 @@ $elements = $module->viewColumns()->each->setModel($item);
     </tr>
     @foreach($elements as $element)
         @if ($element instanceof \Terranet\Administrator\Collection\Group)
-            <tr>
-                <th colspan="2" style="background: white;">&nbsp;</th>
-            </tr>
-            <tr>
-                <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
-            </tr>
+            @component('administrator::components.table.group')
+                @slot('title', $element->title())
+            @endcomponent
             @foreach($element->elements() as $element)
-                <tr>
-                    <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
-                    <td>{!! $element->render('view') !!}</td>
-                </tr>
+                {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
             @endforeach
-            <tr>
-                <th colspan="2" style="background: white;">&nbsp;</th>
-            </tr>
+            @component('administrator::components.table.spacer')
+            @endcomponent
         @elseif ($element instanceof \Terranet\Administrator\Field\HasMany)
             @continue
         @else
-            <tr>
-                <td style="width: 20%; min-width: 200px;">{{ $element->title() }}</td>
-                <td>{!! $element->render('view') !!}</td>
-            </tr>
+            {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
         @endif
     @endforeach
 </table>
@@ -41,12 +31,11 @@ $elements = $module->viewColumns()->each->setModel($item);
     @if ($element instanceof \Terranet\Administrator\Field\HasMany)
         @if ($output = $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
             <table class="table">
-                <tr>
-                    <th colspan="2" style="background: white;">&nbsp;</th>
-                </tr>
-                <tr>
-                    <th colspan="2" class="btn-quirk">{{ $element->title() }}</th>
-                </tr>
+                @component('administrator::components.table.spacer')
+                @endcomponent
+                @component('administrator::components.table.header')
+                    @slot('title', $element->title())
+                @endcomponent
             </table>
             {!! $output !!}
         @endif

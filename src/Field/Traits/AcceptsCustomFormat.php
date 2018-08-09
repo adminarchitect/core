@@ -24,7 +24,7 @@ trait AcceptsCustomFormat
      *
      * @return mixed
      */
-    protected function callFormatter(...$args)
+    protected function callFormatter($args)
     {
         return call_user_func_array($this->format, $args);
     }

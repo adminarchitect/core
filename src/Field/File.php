@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Scaffolding;
 
 class File extends Generic
@@ -13,12 +14,28 @@ class File extends Generic
     ];
 
     /**
-     * @param string $page
-     *
      * @return null|mixed|string
      */
-    public function render(string $page = 'index')
+    protected function onIndex()
     {
-        return \admin\output\staplerImage($this->model->{$this->id}, [], []);
+        return [
+            'attachment' => $this->model->{$this->id},
+        ];
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function onEdit()
+    {
+        return $this->onIndex();
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function onView()
+    {
+        return $this->onIndex();
     }
 }

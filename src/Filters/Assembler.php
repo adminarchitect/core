@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
+use Terranet\Administrator\Field\BelongsToMany;
+use Terranet\Administrator\Field\HasMany;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Translatable\Translatable;
 use function admin\db\scheme;
@@ -110,7 +112,7 @@ class Assembler
              * @example: (new Scope('name'))->addQuery("User@active")
              */
             if (str_contains($callable, '@')) {
-                list($object, $method) = explode('@', $callable);
+                [$object, $method] = explode('@', $callable);
 
                 $this->query = app($object)->$method($this->query);
 
@@ -135,7 +137,7 @@ class Assembler
          * @example: (new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
          */
         if (is_callable($callable)) {
-            list($object, $method) = $callable;
+            [$object, $method] = $callable;
 
             if (is_string($object)) {
                 $object = app($object);
@@ -167,11 +169,28 @@ class Assembler
     {
         // simple sorting
         if (in_array($element, $sortable = app('scaffold.module')->sortable(), true)) {
-            if ($table = app('scaffold.module')->model()->getTable()) {
-                $element = "{$table}.{$element}";
-            }
+            $columns = app('scaffold.module')->columns();
+            $model = app('scaffold.module')->model();
 
-            $this->query->orderBy($element, $direction);
+            $sortable = $columns->find($element);
+
+            if ($sortable && ($sortable instanceof HasMany || $sortable instanceof BelongsToMany)) {
+                $this->handleManyToManyRelations($element, $direction);
+            } elseif ($sortable && $sortable instanceof \Terranet\Administrator\Field\BelongsTo) {
+                $table = $model->getTable();
+                $relation = call_user_func([$model, $element]);
+                $joinTable = $relation->getRelated()->getTable();
+                $alias = str_random(4);
+
+                $ownerKey = $relation->getOwnerKey();
+                $foreignKey = $relation->getForeignKey();
+                $foreignColumn = $sortable->getColumn();
+                $this->query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")
+                            ->orderBy("{$alias}.{$foreignColumn}", $direction);
+            } else {
+                $table = $model->getTable();
+                $this->query->orderBy("{$table}.{$element}", $direction);
+            }
         }
 
         if (array_key_exists($element, $sortable) && is_callable($callback = $sortable[$element])) {
@@ -269,7 +288,7 @@ class Assembler
 
                 break;
             case 'daterange':
-                list($date_from, $date_to) = explode(' - ', $value);
+                [$date_from, $date_to] = explode(' - ', $value);
                 $query->whereBetween(\DB::raw("DATE({$table}.{$column})"), [$date_from, $date_to]);
 
                 break;
@@ -351,5 +370,14 @@ class Assembler
     {
         return ($this->model instanceof Translatable)
             && $this->isTranslatable($input, $this->translatableColumns($columns));
+    }
+
+    /**
+     * @param $element
+     * @param $direction
+     */
+    protected function handleManyToManyRelations($element, $direction): void
+    {
+        $this->query->withCount($element)->orderBy("{$element}_count", $direction);
     }
 }

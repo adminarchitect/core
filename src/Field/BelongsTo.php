@@ -2,52 +2,20 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
+use Terranet\Administrator\Scaffolding;
 
 class BelongsTo extends Generic
 {
     use WorksWithModules;
 
     /** @var string */
-    protected $relation;
-
-    /** @var string */
     protected $column = 'name';
 
-    /**
-     * @param string $page
-     *
-     * @return mixed|string
-     */
-    public function render(string $page = 'index')
-    {
-        $method = $this->relation ?: $this->id;
-        $hasRelation = method_exists($this->model, $method);
-
-        $relation = $this->model->{$method};
-
-        if (!$relation) {
-            return null;
-        }
-
-        if ($this->format) {
-            return $this->callFormatter($relation, $this->model);
-        }
-
-        return $this->linkToRelation($relation);
-    }
-
-    /**
-     * @param string $relation
-     *
-     * @return self
-     */
-    public function withName(string $relation): self
-    {
-        $this->relation = $relation;
-
-        return $this;
-    }
+    /** @var bool */
+    protected $searchable = true;
 
     /**
      * @param string $column
@@ -62,21 +30,84 @@ class BelongsTo extends Generic
     }
 
     /**
-     * Build a link to related model.
-     *
-     * @param $relation
-     *
      * @return string
      */
-    protected function linkToRelation($relation)
+    public function getColumn()
     {
-        if ($module = $this->firstWithModel($relation)) {
-            return link_to_route('scaffold.view', $relation->{$this->column}, [
-                'module' => $module->url(),
-                $relation->getKeyName() => $relation->getKey(),
-            ]);
+        return $this->column;
+    }
+
+    /**
+     * @return $this
+     */
+    public function searchable()
+    {
+        $this->searchable = true;
+
+        return $this;
+    }
+
+    /**
+     * @return null|\Illuminate\Contracts\View\View
+     */
+    protected function onIndex()
+    {
+        if ($relation = $this->model->{$this->id}) {
+            $title = $relation->{$this->getColumn()};
+            $module = $this->firstWithModel($relation);
         }
 
-        return $relation->{$this->column};
+        return [
+            'title' => $title ?? null,
+            'relation' => $relation ?? null,
+            'module' => $module ?? null,
+        ];
+    }
+
+    /**
+     * @return null|\Illuminate\Contracts\View\View
+     */
+    protected function onView()
+    {
+        return $this->onIndex();
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    protected function onEdit()
+    {
+        if (method_exists($this->model, $this->id)) {
+            $relation = call_user_func([$this->model, $this->id]);
+            $eloquent = $relation->getRelated();
+            $related = $this->model->{$this->id};
+
+            $model = $this->firstWithModel($eloquent);
+            $titleColumn = $model ? $model::$title : $this->getColumn();
+
+            if ($this->searchable) {
+                if ($value = $this->value()) {
+                    $options = [
+                        $value->getKey() => $value->getAttribute($titleColumn),
+                    ];
+                }
+            } else {
+                $options = $eloquent::pluck($titleColumn, $eloquent->getKeyName())->toArray();
+            }
+        }
+
+        return [
+            'options' => $options ?? [],
+            'related' => $related ? get_class($related) : null,
+            'searchable' => $this->searchable,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->model->{$this->id}()->getForeignKey();
     }
 }

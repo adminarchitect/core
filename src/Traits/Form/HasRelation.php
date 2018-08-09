@@ -17,7 +17,7 @@ trait HasRelation
 
     public function loadRelation()
     {
-        list($table) = explode('.', $this->relation);
+        [$table] = explode('.', $this->relation);
 
         return $this->getRepository()->$table();
     }

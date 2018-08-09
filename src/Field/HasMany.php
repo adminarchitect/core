@@ -2,7 +2,10 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
+use Terranet\Administrator\Scaffolding;
 
 class HasMany extends Generic
 {
@@ -11,28 +14,19 @@ class HasMany extends Generic
     /** @var string */
     protected $icon = 'list-ul';
 
+    /** @var Builder */
+    protected $query;
+
     /**
-     * @param string $page
+     * @param \Closure $query
      *
-     * @return mixed|string
+     * @return $this
      */
-    public function render(string $page = 'index')
+    public function withQuery(\Closure $query)
     {
-        $relation = call_user_func([$this->model, $this->id]);
+        $this->query = $query;
 
-        if (!$relation) {
-            return null;
-        }
-
-        if ($this->format) {
-            return $this->callFormatter($relation, $this->model);
-        }
-
-        if ($count = $relation->count()) {
-            return '<span class="label label-success">'.$this->linkToRelation($relation, $count).'</span>';
-        }
-
-        return null;
+        return $this;
     }
 
     /**
@@ -48,15 +42,20 @@ class HasMany extends Generic
     }
 
     /**
-     * Build a link to related model.
-     *
-     * @param mixed $relation
-     * @param mixed $count
-     *
-     * @return string
+     * @return \Illuminate\Contracts\View\View
      */
-    protected function linkToRelation($relation, $count)
+    protected function onIndex()
     {
+        $relation = call_user_func([$this->model, $this->id]);
+        $module = $this->firstWithModel($relation->getRelated());
+
+        // apply a query
+        if ($this->query) {
+            $relation = call_user_func_array($this->query, [$relation]);
+        }
+
+        $count = $relation->count();
+
         $related = $relation->getRelated();
 
         if ($module = $this->firstWithModel($related)) {
@@ -65,20 +64,34 @@ class HasMany extends Generic
                 $related->getKeyName() => $related->getKey(),
                 $relation->getForeignKeyName() => $this->model->getKey(),
             ]);
-
-            return link_to($url, $this->renderIcon().'&nbsp;'.$count, [
-                'style' => 'color: white;',
-            ], false, false);
         }
 
-        return $this->renderIcon().'&nbsp;'.$count;
+        return [
+            'icon' => $this->icon,
+            'module' => $module,
+            'count' => $count,
+            'url' => $url ?? null,
+        ];
     }
 
     /**
-     * @return string
+     * @return \Illuminate\Contracts\View\View
      */
-    protected function renderIcon()
+    protected function onView()
     {
-        return '<i class="fa fa-'.ltrim($this->icon, 'fa-').'"></i>';
+        $relation = call_user_func([$this->model, $this->id]);
+        $module = $this->firstWithModel($relation->getRelated());
+
+        if ($module) {
+            $columns = $module->columns()->each->disableSorting();
+            $actions = $module->actionsManager();
+        }
+
+        return [
+            'module' => $module ?? null,
+            'columns' => $columns ?? null,
+            'actions' => $actions ?? null,
+            'items' => $relation ? $relation->getResults() : null,
+        ];
     }
 }

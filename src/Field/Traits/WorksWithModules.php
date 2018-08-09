@@ -14,6 +14,10 @@ trait WorksWithModules
     public function firstWithModel($model)
     {
         return app('scaffold.modules')->first(function ($module) use ($model) {
+            if (is_string($model)) {
+                return get_class($module->model()) === $model;
+            }
+
             return get_class($module->model()) === get_class($model);
         });
     }

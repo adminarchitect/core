@@ -2,14 +2,19 @@
 
 namespace Terranet\Administrator\Controllers;
 
+use App\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
+use Terranet\Administrator\Field\Traits\WorksWithModules;
 use Terranet\Administrator\Requests\UpdateRequest;
 use URL;
 
 class ScaffoldController extends AdminController
 {
+    use WorksWithModules;
+
     /**
      * @param        $page
      * @param Module $resource
@@ -155,6 +160,23 @@ class ScaffoldController extends AdminController
         app('scaffold.actions')->exec('detachFile', [$eloquent, $attachment]);
 
         return back()->with('messages', [trans('administrator::messages.remove_success')]);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function search(Request $request)
+    {
+        $searchable = $request->get('searchable', User::class);
+        $module = $this->firstWithModel($searchable);
+        $titleField = $module ? $module::$title : 'name';
+
+        $searchTerm = $request->get('query');
+        $instance = (new $searchable)->where('id', (int) $searchTerm)
+                                     ->orWhere($titleField, 'LIKE', "%{$request->get('query')}%")
+                                     ->get(['id', "{$titleField} as name"]);
+
+        return response()->json(['items' => $instance->toArray()]);
     }
 
     /**

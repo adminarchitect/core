@@ -36,7 +36,7 @@ class Image extends File
             $variants['original'] = 'original';
         }
         foreach ($variants as $name => $style) {
-            list($w, $h) = $this->getThumbnailSize($style, $name);
+            [$w, $h] = $this->getThumbnailSize($style, $name);
 
             $img =
                 '<a rel="'.str_slug($this->getFormName()).'" href="'.$this->value()->url($name).'" class="fancybox" style="'.static::$hrefStyle.'">'.
@@ -84,7 +84,7 @@ class Image extends File
      */
     protected function getThumbnailSize($style, $name)
     {
-        list($w, $h) = $this->dimensions($style, $name);
+        [$w, $h] = $this->dimensions($style, $name);
 
         $ratio = $this->thumbSize / min(($w ?: $h), ($h ?: $w));
 

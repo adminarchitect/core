@@ -4,11 +4,9 @@ namespace Terranet\Administrator\Providers;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider;
-use Terranet\Administrator\ActionsManager;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Module\Sortable;
-use Terranet\Administrator\Contracts\Services\CrudActions;
 use Terranet\Administrator\Contracts\Services\Finder;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
 use Terranet\Administrator\Exception;
@@ -190,14 +188,7 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.actions', function ($app) {
             if ($module = $app['scaffold.module']) {
-                $handler = $module->actions();
-                $handler = new $handler($module);
-
-                if (!$handler instanceof CrudActions) {
-                    throw new Exception('Actions handler must implement '.CrudActions::class.' contract');
-                }
-
-                return new ActionsManager($handler, $module);
+                return $module->actionsManager();
             }
         });
     }
