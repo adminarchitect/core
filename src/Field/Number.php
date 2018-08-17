@@ -16,9 +16,9 @@ class Number extends Generic
     ];
 
     /**
-     * @return mixed
+     * @return array
      */
-    protected function onEdit()
+    protected function onEdit(): array 
     {
         return [
             'attributes' => $this->attributes,

@@ -42,9 +42,9 @@ class HasMany extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onIndex()
+    protected function onIndex(): array
     {
         $relation = call_user_func([$this->model, $this->id]);
         $module = $this->firstWithModel($relation->getRelated());
@@ -75,9 +75,9 @@ class HasMany extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onView()
+    protected function onView(): array
     {
         $relation = call_user_func([$this->model, $this->id]);
         $module = $this->firstWithModel($relation->getRelated());

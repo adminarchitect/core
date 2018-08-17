@@ -5,7 +5,7 @@ $elements = $module->viewColumns()->each->setModel($item);
 ?>
 <table class="table table-striped-col">
     <tr>
-        <th colspan="{{ $elements->count() }}" class="btn-quirk">
+        <th colspan="2" class="btn-quirk">
             {{ (isset($title) ? $title: $module->singular()) }}
         </th>
     </tr>

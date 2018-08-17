@@ -17,9 +17,9 @@ class HasOne extends BelongsTo
     protected $except;
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onEdit()
+    protected function onEdit(): array 
     {
         $relation = $this->model->{$this->id()}();
 

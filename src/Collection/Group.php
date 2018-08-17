@@ -99,12 +99,4 @@ class Group extends ElementContainer
     {
         return $this->elements;
     }
-
-    /**
-     * @return bool
-     */
-    public function isGroup()
-    {
-        return true;
-    }
 }

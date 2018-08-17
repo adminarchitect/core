@@ -22,7 +22,7 @@ class BelongsTo extends Generic
      *
      * @return self
      */
-    public function showAs(string $column): self
+    public function useForTitle(string $column): self
     {
         $this->column = $column;
 
@@ -48,9 +48,9 @@ class BelongsTo extends Generic
     }
 
     /**
-     * @return null|\Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onIndex()
+    protected function onIndex(): array
     {
         if ($relation = $this->model->{$this->id}) {
             $title = $relation->{$this->getColumn()};
@@ -65,17 +65,17 @@ class BelongsTo extends Generic
     }
 
     /**
-     * @return null|\Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onView()
+    protected function onView(): array
     {
         return $this->onIndex();
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onEdit()
+    protected function onEdit(): array
     {
         if (method_exists($this->model, $this->id)) {
             $relation = call_user_func([$this->model, $this->id]);

@@ -18,9 +18,9 @@ class DateTime extends Generic
     protected $dateTimeFormat = 'M j, Y g:i A';
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    public function onIndex()
+    public function onIndex(): array
     {
         $format = [
             self::class => $this->dateTimeFormat,
@@ -36,9 +36,9 @@ class DateTime extends Generic
     }
 
     /**
-     * @return mixed|string
+     * @return array
      */
-    public function onView()
+    public function onView(): array
     {
         return $this->onIndex();
     }

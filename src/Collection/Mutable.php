@@ -152,7 +152,12 @@ class Mutable extends BaseCollection
         $element = $this->find($id);
 
         if ($element && $callback) {
-            $callback($element);
+            $newElement = $callback($element);
+            if ($newElement !== $element) {
+                $position = $this->position($id);
+                $this->without($id);
+                $this->insert($newElement, $position);
+            }
         }
 
         return $this;
@@ -330,7 +335,7 @@ class Mutable extends BaseCollection
     public function find(string $id)
     {
         $element = $this->first(function ($element) use ($id) {
-            return $element->id() === $id;
+            return $element && $element->id() === $id;
         });
 
         if (!$element) {

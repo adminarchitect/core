@@ -25,9 +25,9 @@ class Media extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onIndex()
+    protected function onIndex(): array
     {
         $media = $this->model->getMedia($this->id());
         $module = $this->firstWithModel($this->model) ?: app('scaffold.module');
@@ -39,9 +39,9 @@ class Media extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onView()
+    protected function onView(): array
     {
         $media = $this->model->getMedia($this->id());
         $media = $media->map(function ($item) {
@@ -58,9 +58,9 @@ class Media extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    protected function onEdit()
+    protected function onEdit(): array
     {
         return $this->onView();
     }

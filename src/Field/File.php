@@ -14,9 +14,9 @@ class File extends Generic
     ];
 
     /**
-     * @return null|mixed|string
+     * @return array
      */
-    protected function onIndex()
+    protected function onIndex(): array
     {
         return [
             'attachment' => $this->model->{$this->id},
@@ -24,17 +24,17 @@ class File extends Generic
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    public function onEdit()
+    public function onEdit(): array
     {
         return $this->onIndex();
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @return array
      */
-    public function onView()
+    public function onView(): array
     {
         return $this->onIndex();
     }
