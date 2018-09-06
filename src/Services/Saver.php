@@ -218,7 +218,7 @@ class Saver implements SaverContract
                         break;
 
                     case BelongsToMany::class:
-                        $values = array_map('intval', $this->request->get($name));
+                        $values = array_map('intval', $this->request->get($name, []));
                         $relation->sync($this->request->get($name));
                         break;
 

@@ -38,38 +38,10 @@ class BelongsToMany extends HasMany
      * @param string $column
      * @return BelongsToMany
      */
-    public function withTitleField(string $column): BelongsToMany
+    public function useAsTitle(string $column): BelongsToMany
     {
         $this->titleField = $column;
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function onEdit(): array
-    {
-        $relation = $this->model->{$this->id()}();
-        if (static::MODE_CHECKBOXES === $this->editMode && $this->completeList) {
-            $values = $relation->getRelated()->all();
-        } else {
-            $values = $this->value();
-        }
-
-        if ($module = $this->firstWithModel($relation->getRelated())) {
-            $titleField = $module::$title;
-        } else {
-            $module = Faked::make($relation->getRelated());
-            $titleField = $this->titleField;
-        }
-
-        return [
-            'relation' => $relation,
-            'values' => $values,
-            'completeList' => $this->completeList,
-            'titleField' => $titleField,
-            'editMode' => $this->editMode,
-        ];
     }
 }

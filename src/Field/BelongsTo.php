@@ -4,12 +4,13 @@ namespace Terranet\Administrator\Field;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
 use Terranet\Administrator\Scaffolding;
 
 class BelongsTo extends Generic
 {
-    use WorksWithModules;
+    use WorksWithModules, HandlesRelation;
 
     /** @var string */
     protected $column = 'name';
@@ -53,7 +54,7 @@ class BelongsTo extends Generic
     protected function onIndex(): array
     {
         if ($relation = $this->model->{$this->id}) {
-            $title = $relation->{$this->getColumn()};
+            $title = $relation->getAttribute($this->getColumn());
             $module = $this->firstWithModel($relation);
         }
 
@@ -78,27 +79,24 @@ class BelongsTo extends Generic
     protected function onEdit(): array
     {
         if (method_exists($this->model, $this->id)) {
-            $relation = call_user_func([$this->model, $this->id]);
-            $eloquent = $relation->getRelated();
-            $related = $this->model->{$this->id};
-
-            $model = $this->firstWithModel($eloquent);
-            $titleColumn = $model ? $model::$title : $this->getColumn();
+            $relation = $this->relation();
+            $related = $this->model->{$this->id} ?: $relation->getRelated();
+            $column = $this->getColumn();
 
             if ($this->searchable) {
                 if ($value = $this->value()) {
                     $options = [
-                        $value->getKey() => $value->getAttribute($titleColumn),
+                        $value->getKey() => $value->getAttribute($column),
                     ];
                 }
             } else {
-                $options = $eloquent::pluck($titleColumn, $eloquent->getKeyName())->toArray();
+                $options = $eloquent::pluck($column, $eloquent->getKeyName())->toArray();
             }
         }
 
         return [
             'options' => $options ?? [],
-            'related' => $related ? get_class($related) : null,
+            'related' => $related ?? null,
             'searchable' => $this->searchable,
         ];
     }

@@ -34,7 +34,22 @@ $elements = $module->viewColumns()->each->setModel($item);
                 @component('administrator::components.table.spacer')
                 @endcomponent
                 @component('administrator::components.table.header')
-                    @slot('title', $element->title())
+                    @slot('title')
+                        {{ $element->title() }}
+                        @if ($relationModule = $element->relationModule())
+                            @php($relation = $element->relation())
+                            <div class="pull-right">
+                                <a class="btn btn-quirk btn-default"
+                                   style="padding: 4px 12px 4px;"
+                                   href="{{ route('scaffold.create', [
+                                    'module' => $relationModule->url(),
+                                    $relation->getForeignKeyName() => $relation->getParent()->getKey()
+                                   ]) }}">
+                                    {{ trans('administrator::buttons.attach') }}
+                                </a>
+                            </div>
+                        @endif
+                    @endslot
                 @endcomponent
             </table>
             {!! $output !!}

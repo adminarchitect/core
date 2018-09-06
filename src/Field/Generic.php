@@ -83,6 +83,14 @@ abstract class Generic
     }
 
     /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * Render Element.
      *
      * @param string $page
