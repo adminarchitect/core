@@ -201,13 +201,12 @@ class Saver implements SaverContract
 
                 switch (get_class($field)) {
                     case BelongsTo::class:
-                        /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation */
+                        // @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
                         $relation->associate(
                             $this->request->get($relation->getForeignKey())
                         );
 
                         break;
-
                     case HasOne::class:
                         /** @var \Illuminate\Database\Eloquent\Relations\HasOne $relation */
                         $related = $relation->getResults();
@@ -215,13 +214,13 @@ class Saver implements SaverContract
                         $related && $related->exists
                             ? $relation->update($this->request->get($name))
                             : $relation->create($this->request->get($name));
-                        break;
 
+                        break;
                     case BelongsToMany::class:
                         $values = array_map('intval', $this->request->get($name, []));
                         $relation->sync($this->request->get($name));
-                        break;
 
+                        break;
                     default:
                         break;
                 }
@@ -279,10 +278,10 @@ class Saver implements SaverContract
      */
     protected function isRelation($field)
     {
-        return (($field instanceof BelongsTo)
+        return ($field instanceof BelongsTo)
             || ($field instanceof HasOne)
             || ($field instanceof HasMany)
-            || ($field instanceof BelongsToMany));
+            || ($field instanceof BelongsToMany);
     }
 
     /**
@@ -371,6 +370,7 @@ class Saver implements SaverContract
 
     /**
      * @param $field
+     *
      * @return bool
      */
     protected function isBoolean($field)
@@ -380,6 +380,7 @@ class Saver implements SaverContract
 
     /**
      * @param $field
+     *
      * @return bool
      */
     protected function isMediaFile($field)

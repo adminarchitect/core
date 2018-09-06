@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Scaffolding;
 
 class File extends Generic
@@ -12,16 +11,6 @@ class File extends Generic
         Scaffolding::PAGE_EDIT => true,
         Scaffolding::PAGE_VIEW => true,
     ];
-
-    /**
-     * @return array
-     */
-    protected function onIndex(): array
-    {
-        return [
-            'attachment' => $this->model ? $this->model->{$this->id} : null,
-        ];
-    }
 
     /**
      * @return array
@@ -37,5 +26,15 @@ class File extends Generic
     public function onView(): array
     {
         return $this->onIndex();
+    }
+
+    /**
+     * @return array
+     */
+    protected function onIndex(): array
+    {
+        return [
+            'attachment' => $this->model ? $this->model->{$this->id} : null,
+        ];
     }
 }

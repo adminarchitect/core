@@ -12,6 +12,7 @@ class Boolean extends Generic
 
     /**
      * @param $value
+     *
      * @return $this
      */
     public function trueValue($value)
@@ -23,6 +24,7 @@ class Boolean extends Generic
 
     /**
      * @param $value
+     *
      * @return $this
      */
     public function falseValue($value)

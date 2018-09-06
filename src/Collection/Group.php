@@ -4,14 +4,13 @@ namespace Terranet\Administrator\Collection;
 
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
-use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 
 /**
  * Class Group.
  *
  * @method merge(array $elements)
- * @method insert(Element $element, $position)
+ * @method insert($element, $position)
  * @method withoug(string $id)
  * @method update(string $id, \Closure $callback)
  * @method updateMany(array $ids)

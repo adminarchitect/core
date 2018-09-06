@@ -2,9 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-use App\User;
-use Illuminate\Support\Facades\View;
-use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\Module\HasColumns;
 
 class HasOne extends BelongsTo
@@ -16,6 +13,30 @@ class HasOne extends BelongsTo
 
     /** @var null|array */
     protected $except;
+
+    /**
+     * @param array $only
+     *
+     * @return self
+     */
+    public function only(array $only): self
+    {
+        $this->only = $only;
+
+        return $this;
+    }
+
+    /**
+     * @param array $except
+     *
+     * @return self
+     */
+    public function except(array $except): self
+    {
+        $this->except = $except;
+
+        return $this;
+    }
 
     /**
      * @return array
@@ -37,27 +58,5 @@ class HasOne extends BelongsTo
         return [
             'columns' => $columns,
         ];
-    }
-
-    /**
-     * @param array $only
-     * @return self
-     */
-    public function only(array $only): self
-    {
-        $this->only = $only;
-
-        return $this;
-    }
-
-    /**
-     * @param array $except
-     * @return self
-     */
-    public function except(array $except): self
-    {
-        $this->except = $except;
-
-        return $this;
     }
 }

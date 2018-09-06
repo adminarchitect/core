@@ -2,10 +2,8 @@
 
 namespace Terranet\Administrator\Field;
 
-use Illuminate\Support\Facades\View;
 use Spatie\MediaLibrary\Models\Media as MediaModel;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
-use Terranet\Administrator\Scaffolding;
 
 class Media extends Generic
 {
@@ -15,6 +13,7 @@ class Media extends Generic
 
     /**
      * @param string $conversion
+     *
      * @return self
      */
     public function convertedTo(string $conversion): self

@@ -22,6 +22,7 @@ class Textarea extends Generic
 
     /**
      * @param $editor
+     *
      * @return bool
      */
     public function editorEnabled($editor)

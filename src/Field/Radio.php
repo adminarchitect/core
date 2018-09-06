@@ -19,6 +19,7 @@ class Radio extends Generic
 
     /**
      * @param array $options
+     *
      * @return self
      */
     public function setOptions(array $options): self

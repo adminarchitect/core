@@ -2,11 +2,8 @@
 
 namespace Terranet\Administrator\Field;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
-use Terranet\Administrator\Scaffolding;
 
 class BelongsTo extends Generic
 {
@@ -46,6 +43,14 @@ class BelongsTo extends Generic
         $this->searchable = true;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->model->{$this->id}()->getForeignKey();
     }
 
     /**
@@ -90,7 +95,7 @@ class BelongsTo extends Generic
                     ];
                 }
             } else {
-                $options = $eloquent::pluck($column, $eloquent->getKeyName())->toArray();
+                $options = $related::pluck($column, $related->getKeyName())->toArray();
             }
         }
 
@@ -99,13 +104,5 @@ class BelongsTo extends Generic
             'related' => $related ?? null,
             'searchable' => $this->searchable,
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function name()
-    {
-        return $this->model->{$this->id}()->getForeignKey();
     }
 }

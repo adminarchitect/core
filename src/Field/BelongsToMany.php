@@ -2,8 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-use Terranet\Administrator\Modules\Faked;
-
 class BelongsToMany extends HasMany
 {
     const MODE_TAGS = 'tags';
@@ -36,12 +34,36 @@ class BelongsToMany extends HasMany
 
     /**
      * @param string $column
+     *
      * @return BelongsToMany
      */
-    public function useAsTitle(string $column): BelongsToMany
+    public function useAsTitle(string $column): self
     {
         $this->titleField = $column;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function onEdit(): array
+    {
+        $relation = $this->relation();
+
+        if (static::MODE_CHECKBOXES === $this->editMode && $this->completeList) {
+            $values = $relation->getRelated()->all();
+        } else {
+            $values = $this->value();
+        }
+
+        return [
+            'relation' => $relation,
+            'searchable' => get_class($relation->getRelated()),
+            'values' => $values,
+            'completeList' => $this->completeList,
+            'titleField' => $this->titleField,
+            'editMode' => $this->editMode,
+        ];
     }
 }

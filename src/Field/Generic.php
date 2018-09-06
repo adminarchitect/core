@@ -151,7 +151,7 @@ abstract class Generic
                 return "[$part]";
             }, $other);
 
-            return join('', array_merge([$first], $other));
+            return implode('', array_merge([$first], $other));
         }
 
         return $this->id();
@@ -159,6 +159,7 @@ abstract class Generic
 
     /**
      * @param string $id
+     *
      * @return self
      */
     public function setId(string $id): self
@@ -200,6 +201,7 @@ abstract class Generic
 
     /**
      * @param string $description
+     *
      * @return self
      */
     public function setDescription(string $description): self
@@ -292,6 +294,7 @@ abstract class Generic
      * Set value.
      *
      * @param $value
+     *
      * @return Generic
      */
     public function setValue($value): self
@@ -322,6 +325,8 @@ abstract class Generic
     /**
      * @param $key
      * @param null $value
+     * @param mixed $attribute
+     *
      * @return self
      */
     public function setAttribute($attribute, $value = null): self

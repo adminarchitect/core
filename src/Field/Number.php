@@ -2,10 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-use Illuminate\Support\Facades\View;
-use Terranet\Administrator\Exception;
-use Terranet\Administrator\Scaffolding;
-
 class Number extends Generic
 {
     /** @var array */
@@ -18,7 +14,7 @@ class Number extends Generic
     /**
      * @return array
      */
-    protected function onEdit(): array 
+    protected function onEdit(): array
     {
         return [
             'attributes' => $this->attributes,

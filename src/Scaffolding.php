@@ -193,6 +193,7 @@ class Scaffolding implements Module, AutoTranslatable
 
     /**
      * @param $model
+     *
      * @return $this
      */
     public function setModel($model)

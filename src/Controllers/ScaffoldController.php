@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator\Controllers;
 
-use App\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -179,7 +178,7 @@ class ScaffoldController extends AdminController
         $items = [];
 
         if ($eloquent && $column) {
-            $eloquent = new $eloquent;
+            $eloquent = new $eloquent();
             $searchByKey = is_numeric($term);
             $searchableKey = $searchByKey ? $eloquent->getKeyName() : $column;
 

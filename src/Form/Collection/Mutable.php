@@ -9,10 +9,6 @@ use Terranet\Administrator\Field\Textarea;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\FormSection;
 use Terranet\Administrator\Form\InputFactory;
-use Terranet\Administrator\Form\Type\Ckeditor;
-use Terranet\Administrator\Form\Type\Markdown;
-use Terranet\Administrator\Form\Type\Medium;
-use Terranet\Administrator\Form\Type\Tinymce;
 
 class Mutable extends BaseMutableCollection
 {
@@ -94,8 +90,10 @@ class Mutable extends BaseMutableCollection
      * Whether the collection has active editor of specific type.
      *
      * @param $editor
-     * @return bool
+     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function hasEditors($editor)
     {

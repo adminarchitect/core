@@ -3,8 +3,6 @@
 namespace Terranet\Administrator\Field;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\View;
-use Terranet\Administrator\Scaffolding;
 
 class DateTime extends Generic
 {
