@@ -172,17 +172,25 @@ class ScaffoldController extends AdminController
      */
     public function search(Request $request): \Illuminate\Http\JsonResponse
     {
-        $searchable = $request->get('searchable');
-        $titleField = $request->get('field');
-        $searchTerm = $request->get('query');
+        $eloquent = $request->get('searchable');
+        $column = $request->get('field');
+        $term = $request->get('query');
 
         $items = [];
 
-        if ($searchable && $titleField) {
-            $searchable = new $searchable;
-            $instance = $searchable->where($id = $searchable->getKeyName(), (int) $searchTerm)
-                                   ->orWhere($titleField, 'LIKE', "%{$request->get('query')}%")
-                                   ->get(["{$id} as id", "{$titleField} as name"]);
+        if ($eloquent && $column) {
+            $eloquent = new $eloquent;
+            $searchByKey = is_numeric($term);
+            $searchableKey = $searchByKey ? $eloquent->getKeyName() : $column;
+
+            $instance = $eloquent
+                ->when($searchByKey, function ($query) use ($searchableKey, $term) {
+                    return $query->where($searchableKey, (int) $term);
+                })
+                ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
+                    return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");
+                })
+                ->get(["{$eloquent->getKeyName()} as id", "{$column} as name"]);
 
             $items = $instance->toArray();
         }
