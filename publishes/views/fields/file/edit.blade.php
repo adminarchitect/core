@@ -1,7 +1,8 @@
 @component('administrator::components.table.row')
     @slot('label', Form::label($field->id(), $field->title()))
+    @slot('description', $field->getDescription())
     @slot('input')
-        @if ($attachment->exists())
+        @if ($attachment && $attachment->exists())
             <a href="{{ $attachment->url() }}" target="_blank">
                 <i class="fa fa-cloud-download"></i>&nbsp;{{ $attachment->originalFilename() }}
             </a>
@@ -16,7 +17,7 @@
                 </a>
             </div>
         @else
-            {!! Form::file($attachment->name(), []) !!}
+            {!! Form::file($field->name(), []) !!}
         @endif
     @endslot
 @endcomponent

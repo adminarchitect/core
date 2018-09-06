@@ -13,6 +13,7 @@ if ($searchable) {
 ?>
 @component('administrator::components.table.row')
     @slot('label', Form::label($field->id(), $field->title()))
+    @slot('description', $field->getDescription())
     @slot('input')
         {!! Form::select($field->name(), $options, optional($field->value())->getKey(), $attributes) !!}
     @endslot
