@@ -192,6 +192,17 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * @param $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
      * Define the class responsive for fetching items.
      *
      * @return mixed
