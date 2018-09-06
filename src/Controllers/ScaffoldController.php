@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Controllers;
 
 use App\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
@@ -69,7 +70,7 @@ class ScaffoldController extends AdminController
      * @param                    $id
      * @param null|UpdateRequest $request
      *
-     * @return mixed
+     * @return RedirectResponse
      */
     public function update($page, $id, UpdateRequest $request)
     {
@@ -91,9 +92,9 @@ class ScaffoldController extends AdminController
      */
     public function create()
     {
-        $this->authorize('create', app('scaffold.module')->model());
+        $this->authorize('create', $eloquent = app('scaffold.module')->model());
 
-        return view(app('scaffold.template')->edit('index'));
+        return view(app('scaffold.template')->edit('index'), ['item' => $eloquent]);
     }
 
     /**
@@ -163,18 +164,23 @@ class ScaffoldController extends AdminController
     }
 
     /**
+     * Search for a model(s).
+     *
      * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function search(Request $request)
+    public function search(Request $request): \Illuminate\Http\JsonResponse
     {
         $searchable = $request->get('searchable', User::class);
         $module = $this->firstWithModel($searchable);
-        $titleField = $module ? $module::$title : 'name';
+        $titleField = $request->get('field') ?: ($module ? $module::$title : 'name');
 
         $searchTerm = $request->get('query');
-        $instance = (new $searchable)->where('id', (int) $searchTerm)
+        $searchable = new $searchable;
+        $instance = $searchable->where($id = $searchable->getKeyName(), (int) $searchTerm)
                                      ->orWhere($titleField, 'LIKE', "%{$request->get('query')}%")
-                                     ->get(['id', "{$titleField} as name"]);
+                                     ->get(["{$id} as id", "{$titleField} as name"]);
 
         return response()->json(['items' => $instance->toArray()]);
     }
