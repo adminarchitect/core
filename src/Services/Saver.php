@@ -217,6 +217,11 @@ class Saver implements SaverContract
                             : $relation->create($this->request->get($name));
                         break;
 
+                    case BelongsToMany::class:
+                        $values = array_map('intval', $this->request->get($name));
+                        $relation->sync($this->request->get($name));
+                        break;
+
                     default:
                         break;
                 }
