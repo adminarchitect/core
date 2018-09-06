@@ -14,7 +14,7 @@
                       name="{{ $field->name() }}"
                       key-name="{{ $relation->getRelated()->getKeyName() }}"
                       label-name="{{ $titleField }}"
-                      search-url="{{ route('scaffold.search', ['searchable' => \App\Tag::class, 'field' => 'label']) }}"
+                      search-url="{{ route('scaffold.search', ['searchable' => $searchable, 'field' => $titleField]) }}"
             ></tag-list>
         @elseif(\Terranet\Administrator\Field\BelongsToMany::MODE_CHECKBOXES === $editMode)
             <ul class="list-unstyled">

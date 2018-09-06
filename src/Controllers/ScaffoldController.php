@@ -172,17 +172,22 @@ class ScaffoldController extends AdminController
      */
     public function search(Request $request): \Illuminate\Http\JsonResponse
     {
-        $searchable = $request->get('searchable', User::class);
-        $module = $this->firstWithModel($searchable);
-        $titleField = $request->get('field') ?: ($module ? $module::$title : 'name');
-
+        $searchable = $request->get('searchable');
+        $titleField = $request->get('field');
         $searchTerm = $request->get('query');
-        $searchable = new $searchable;
-        $instance = $searchable->where($id = $searchable->getKeyName(), (int) $searchTerm)
-                                     ->orWhere($titleField, 'LIKE', "%{$request->get('query')}%")
-                                     ->get(["{$id} as id", "{$titleField} as name"]);
 
-        return response()->json(['items' => $instance->toArray()]);
+        $items = [];
+
+        if ($searchable && $titleField) {
+            $searchable = new $searchable;
+            $instance = $searchable->where($id = $searchable->getKeyName(), (int) $searchTerm)
+                                   ->orWhere($titleField, 'LIKE', "%{$request->get('query')}%")
+                                   ->get(["{$id} as id", "{$titleField} as name"]);
+
+            $items = $instance->toArray();
+        }
+
+        return response()->json(['items' => $items]);
     }
 
     /**
