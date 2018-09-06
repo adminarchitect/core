@@ -19,7 +19,7 @@ class File extends Generic
     protected function onIndex(): array
     {
         return [
-            'attachment' => $this->model->{$this->id},
+            'attachment' => $this->model ? $this->model->{$this->id} : null,
         ];
     }
 

@@ -18,6 +18,9 @@ abstract class Generic
     /** @var string */
     protected $title;
 
+    /** @var mixed */
+    protected $value;
+
     /** @var string */
     protected $description;
 
@@ -278,6 +281,19 @@ abstract class Generic
     }
 
     /**
+     * Set value.
+     *
+     * @param $value
+     * @return Generic
+     */
+    public function setValue($value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
      * Extract Element value.
      *
      * @return mixed
@@ -288,7 +304,11 @@ abstract class Generic
             return null;
         }
 
-        return $this->model->getAttribute($this->id);
+        if (null === $this->value) {
+            $this->value = $this->model->getAttribute($this->id);
+        }
+
+        return $this->value;
     }
 
     /**

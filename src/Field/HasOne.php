@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use App\User;
 use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\Module\HasColumns;
@@ -19,14 +20,13 @@ class HasOne extends BelongsTo
     /**
      * @return array
      */
-    protected function onEdit(): array 
+    protected function onEdit(): array
     {
         $relation = $this->model->{$this->id()}();
 
         $related = $relation->getRelated();
         $columns = $this->collectColumns($related)
-                        ->without($related->getKeyName())
-                        ->without($this->except)
+                        ->without(array_merge([$related->getKeyName()], $this->except ?? []))
                         ->only($this->only)
                         ->each(function ($field) {
                             $field->setId(
@@ -43,7 +43,7 @@ class HasOne extends BelongsTo
      * @param array $only
      * @return self
      */
-    public function setOnly(array $only): self
+    public function only(array $only): self
     {
         $this->only = $only;
 
@@ -54,7 +54,7 @@ class HasOne extends BelongsTo
      * @param array $except
      * @return self
      */
-    public function setExcept(array $except): self
+    public function except(array $except): self
     {
         $this->except = $except;
 

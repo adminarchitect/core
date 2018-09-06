@@ -4,8 +4,12 @@ namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
+use Terranet\Administrator\Modules\Faked;
 use Terranet\Administrator\Scaffolding;
+use Terranet\Administrator\Services\CrudActions;
+use Terranet\Administrator\Traits\Module\HasColumns;
 
 class HasMany extends Generic
 {
@@ -80,12 +84,14 @@ class HasMany extends Generic
     protected function onView(): array
     {
         $relation = call_user_func([$this->model, $this->id]);
-        $module = $this->firstWithModel($relation->getRelated());
+        $module = $this->firstWithModel($related = $relation->getRelated());
 
-        if ($module) {
-            $columns = $module->columns()->each->disableSorting();
-            $actions = $module->actionsManager();
+        if (!$module) {
+            // Build a runtime module
+            $module = Faked::make($related);
         }
+        $columns = $module->columns()->each->disableSorting();
+        $actions = $module->actionsManager();
 
         return [
             'module' => $module ?? null,
