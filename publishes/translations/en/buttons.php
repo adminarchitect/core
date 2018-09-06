@@ -21,6 +21,7 @@ return [
     'media' => 'Media',
     'translations' => 'Translations',
     'upload' => 'Upload',
+    'attach' => '+ Attach new',
     'next' => 'Next',
     'previous' => 'Previous',
     'true' => 'True',

@@ -12,9 +12,11 @@
 @section('scaffold.content')
     <div class="panel">
         <div class="panel-body">
-            {!! Form::model(isset($item) ? $item : null, ['method' => 'post', 'files' => true]) !!}
+            @php($form->each->setModel($item))
+
+            {!! Form::model($item, ['method' => 'post', 'files' => true]) !!}
             <table class="table table-striped-col">
-                @each($template->edit('row'), $form->each->setModel($item), 'field')
+                @each($template->edit('row'), $form, 'field')
 
                 @unless($actions->readonly())
                     @include($template->edit('actions'))

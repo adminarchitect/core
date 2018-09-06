@@ -9,16 +9,18 @@
 
         @slot('rows')
             @forelse($items as $item)
-                @foreach($columns = $columns->visibleOnPage('index') as $column)
-                    <td>
-                        @include('administrator::index.cell', ['column' => $column, 'item' => $item])
-                    </td>
-                @endforeach
-                @unless($actions->readonly())
-                    <td class="actions">
-                        @include('administrator::index.row_actions', ['actions' => $actions, 'module' => $module])
-                    </td>
-                @endunless
+                <tr>
+                    @foreach($columns = $columns->visibleOnPage('index') as $column)
+                        <td>
+                            @include('administrator::index.cell', ['column' => $column, 'item' => $item])
+                        </td>
+                    @endforeach
+                    @unless($actions->readonly())
+                        <td class="actions">
+                            @include('administrator::index.row_actions', ['actions' => $actions, 'module' => $module])
+                        </td>
+                    @endunless
+                </tr>
             @empty
                 <tr>
                     <td colspan="{{ $columns->count() }}">No data</td>

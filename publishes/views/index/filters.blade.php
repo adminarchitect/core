@@ -17,13 +17,10 @@ $hasFilters = ($resetUrl !== request()->fullUrl()) && $filled;
 @if ($filter && $elements && $elements->count())
 @section('scaffold.filter')
     <div class="panel">
-        <ul class="panel-options">
-            <li><a class="panel-minimize"><i class="fa fa-chevron-down"></i></a></li>
-        </ul>
         <div class="panel-heading">
-            <h4 class="panel-title panel-minimize">{{ trans('administrator::module.filters') }}</h4>
+            <h4 class="panel-title">{{ trans('administrator::module.filters') }}</h4>
         </div>
-        <div class="panel-body" style="display: {{ ($hasFilters ? 'block' : 'none') }};">
+        <div class="panel-body">
             <form action="" data-id="filter-form" class="form">
                 <input type="hidden" name="sort_by" value="{{ $sortable->element() }}"/>
                 <input type="hidden" name="sort_dir" value="{{ $sortable->direction() }}"/>
