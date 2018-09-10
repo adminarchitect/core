@@ -71,6 +71,28 @@ abstract class Generic
     }
 
     /**
+     * Create new element from another.
+     *
+     * @param Generic $element
+     * @return Generic
+     */
+    public static function makeFrom(Generic $element)
+    {
+        return static::make($element->title(), $element->id());
+    }
+
+    /**
+     * Switch to a new element type.
+     *
+     * @param string $className
+     * @return mixed
+     */
+    public function switchTo(string $className)
+    {
+        return forward_static_call_array([$className, "make"], [$this->title(), $this->id()]);
+    }
+
+    /**
      * @param Model $model
      *
      * @return self
