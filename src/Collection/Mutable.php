@@ -4,9 +4,8 @@ namespace Terranet\Administrator\Collection;
 
 use Closure;
 use Illuminate\Support\Collection as BaseCollection;
-use Terranet\Administrator\Columns\Element;
-use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
+use Terranet\Administrator\Field\Text;
 
 class Mutable extends BaseCollection
 {
@@ -25,26 +24,6 @@ class Mutable extends BaseCollection
         }
 
         parent::push($element);
-
-        return $this;
-    }
-
-    /**
-     * @param string $collection
-     * @param null|Closure $callback
-     * @param null $position
-     *
-     * @return $this
-     */
-    public function media(string $collection = 'default', Closure $callback = null, $position = null): self
-    {
-        $element = $this->createMediaElement($collection);
-
-        if ($position) {
-            $this->insert($element, $position, $callback);
-        } else {
-            $this->push($element, $callback);
-        }
 
         return $this;
     }
@@ -403,23 +382,9 @@ class Mutable extends BaseCollection
     protected function createElement($element)
     {
         if (is_string($element)) {
-            $element = new Element($element);
+            $element = Text::make($element, $element);
         }
 
         return $element;
-    }
-
-    /**
-     * @param $collection
-     *
-     * @return MediaElement
-     */
-    protected function createMediaElement($collection): MediaElement
-    {
-        if (is_string($collection)) {
-            $collection = new MediaElement($collection);
-        }
-
-        return $collection;
     }
 }

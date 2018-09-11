@@ -4,7 +4,6 @@ namespace Terranet\Administrator\Columns;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Terranet\Administrator\Columns\Decorators\CellDecorator;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 use Terranet\Administrator\Traits\LoopsOverRelations;
 

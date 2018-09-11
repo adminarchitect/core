@@ -4,11 +4,10 @@ namespace Terranet\Administrator\Decorators;
 
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Columns\Decorators\CellDecorator;
-use Terranet\Administrator\Columns\Element;
 use Terranet\Administrator\Field\Boolean;
 use Terranet\Administrator\Field\Email;
 use Terranet\Administrator\Field\File;
+use Terranet\Administrator\Field\Generic;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Link;
@@ -89,7 +88,7 @@ class Grid
     /**
      * @param $column
      *
-     * @return CellDecorator
+     * @return Generic
      */
     protected function detectField($column)
     {
