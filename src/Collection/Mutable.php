@@ -19,6 +19,8 @@ class Mutable extends BaseCollection
      */
     public function push($element, Closure $callback = null): self
     {
+        $element = $this->createElement($element);
+
         if ($callback) {
             $callback($element);
         }
@@ -73,20 +75,21 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * Remove an element(s) from collection.
+     * Get all items except for those with the specified keys.
      *
-     * @param array|int $id
-     *
-     * @return self
+     * @param  mixed|string|array $keys
+     * @return static
      */
-    public function without($id): self
+    public function except($keys)
     {
-        if (!is_array($id)) {
-            $id = (array) $id;
+        if ($keys instanceof self) {
+            $keys = $keys->all();
+        } elseif (!is_array($keys)) {
+            $keys = func_get_args();
         }
 
-        $items = $this->filter(function ($element) use ($id) {
-            return !in_array($element->id(), $id, true);
+        $items = $this->filter(function ($element) use ($keys) {
+            return !in_array($element->id(), $keys, true);
         })->all();
 
         $this->items = array_values($items);
@@ -134,7 +137,7 @@ class Mutable extends BaseCollection
             $newElement = $callback($element);
             if ($newElement !== $element) {
                 $position = $this->position($id);
-                $this->without($id);
+                $this->except($id);
                 $this->insert($newElement, $position);
             }
         }
@@ -200,7 +203,7 @@ class Mutable extends BaseCollection
     public function moveBefore(string $id, $target)
     {
         if ($element = $this->find($id)) {
-            $this->without($id);
+            $this->except($id);
             $targetPosition = $this->position($target);
 
             if ($targetPosition >= 0) {
@@ -222,7 +225,7 @@ class Mutable extends BaseCollection
     public function moveAfter(string $id, $target): self
     {
         if ($element = $this->find($id)) {
-            $this->without($id);
+            $this->except($id);
 
             $targetPosition = $this->position($target);
 
@@ -270,7 +273,7 @@ class Mutable extends BaseCollection
             return in_array($element->id(), $elements, true);
         })->each(function ($element) use ($group) {
             $group->push($element);
-            $this->items = $this->without($element->id())->all();
+            $this->items = $this->except($element->id())->all();
         });
 
         if ($position) {
@@ -358,7 +361,7 @@ class Mutable extends BaseCollection
         $element = $this->find($id);
 
         return $this
-            ->without($id)
+            ->except($id)
             ->insert($element, $position);
     }
 
