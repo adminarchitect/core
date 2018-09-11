@@ -4,30 +4,30 @@
             <?php echo Form::hidden('batch_action', null, ['id' => 'batch_action']); ?>
             <?php echo Form::token(); ?>
 
-            {{ $gridBefore or '' }}
+            {{ $gridBefore ?? '' }}
 
             <div style="overflow-x: scroll">
                 <table class="table">
                     <thead>
                     <tr>
-                        {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
+                        {{ $checkboxes ?? '' }} {{ $headers ?? '' }} {{ $actions ?? '' }}
                     </tr>
                     </thead>
 
                     <tbody>
-                    {{ $rows or '' }}
+                    {{ $rows ?? '' }}
                     </tbody>
 
                     @if ($items && count($items) > 10)
                         <tfoot>
                         <tr>
-                            {{ $checkboxes or '' }} {{ $headers or '' }} {{ $actions or '' }}
+                            {{ $checkboxes ?? '' }} {{ $headers ?? '' }} {{ $actions ?? '' }}
                         </tr>
                         </tfoot>
                     @endif
                 </table>
             </div>
-            {{ $gridAfter or '' }}
+            {{ $gridAfter ?? '' }}
         </form>
 
         @if (trim($exportable ?? null) || trim($paginator ?? null))
