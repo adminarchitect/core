@@ -18,9 +18,6 @@ abstract class Generic
     /** @var string */
     protected $title;
 
-    /** @var mixed */
-    protected $value;
-
     /** @var string */
     protected $description;
 
@@ -337,11 +334,7 @@ abstract class Generic
             return null;
         }
 
-        if (null === $this->value) {
-            $this->value = $this->model->getAttribute($this->id);
-        }
-
-        return $this->value;
+        return $this->model->getAttribute($this->id);
     }
 
     /**
