@@ -349,6 +349,54 @@ class Mutable extends BaseCollection
     }
 
     /**
+     * Make elements sortable.
+     *
+     * @param mixed string|array $keys
+     * @param \Closure $callback
+     * @example: sortable(['title'])
+     * @example: sortable(['title' => function($query) {  }])
+     */
+    public function sortable($keys, \Closure $callback = null)
+    {
+        if (is_array($keys)) {
+            foreach ($keys as $id => $callback) {
+                if (is_string($id)) {
+                    $this->sortable($id, $callback);
+                } else {
+                    $this->sortable($callback);
+                }
+            }
+
+            return $this;
+        }
+
+        app('scaffold.module')->addSortable(
+            $keys,
+            $callback
+        );
+
+        return $this;
+    }
+
+    /**
+     * Remove column from Sortable collection.
+     *
+     * @return self
+     */
+    public function disableSorting($keys): self
+    {
+        if (!is_array($keys)) {
+            $keys = func_get_args();
+        }
+
+        foreach ($keys as $key) {
+            app('scaffold.module')->removeSortable($key);
+        }
+
+        return $this;
+    }
+
+    /**
      * Move an element to a position.
      *
      * @param string $id
