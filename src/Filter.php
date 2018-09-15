@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Terranet\Administrator\Contracts\Filter as FilterContract;
 use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Form\Collection\Mutable;
+use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Traits\CallableTrait;
 
 class Filter implements FilterContract
@@ -57,7 +57,7 @@ class Filter implements FilterContract
         if ($filters) {
             $filters = $filters->map(function ($element) {
                 if ($this->request->has($id = $element->id())) {
-                    $element->getInput()->setValue(
+                    $element->setValue(
                         $this->request->get($id)
                     );
                 }

@@ -26,4 +26,11 @@ return [
     'previous' => 'Previous',
     'true' => 'True',
     'false' => 'False',
+    'search_modes' => [
+        'contains' => 'Contains',
+        'equals' => 'Equals',
+        'not_equals' => 'Not',
+        'starts_with' => 'Starts With',
+        'ends_with' => 'Ends With',
+    ]
 ];

@@ -9,10 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Field\BelongsToMany;
 use Terranet\Administrator\Field\HasMany;
+use Terranet\Administrator\Filter\Date;
+use Terranet\Administrator\Filter\DateRange;
+use Terranet\Administrator\Filter\Enum;
+use Terranet\Administrator\Filter\Filter;
+use Terranet\Administrator\Filter\Number;
+use Terranet\Administrator\Filter\Text;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Translatable\Translatable;
 use function admin\db\scheme;
@@ -225,13 +232,10 @@ class Assembler
      *
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
-    protected function assemblyQuery(FormElement $element)
+    protected function assemblyQuery(Filter $element)
     {
         $table = $this->model->getTable();
-        $input = $element->getInput();
-        $type = $input->getType();
-        $name = $element->id();
-        $value = $input->getValue();
+        $value = $element->value();
 
         if (null === $value) {
             return $this->query;
@@ -239,57 +243,78 @@ class Assembler
 
         $columns = scheme()->columns($table);
 
-        if ($input->hasQuery() && ($subQuery = $input->execQuery($this->query, $input->getValue()))) {
+        if ($element->hasQuery() && ($subQuery = $element->execQuery($this->query, $value))) {
+            dd('@todo', __METHOD__, __LINE__);
             $this->query = $subQuery;
 
             return $this->query;
         }
 
-        if ($this->touchedTranslatableFilter($input, $columns)) {
-            return $this->filterByTranslatableColumn($name, $type, $value);
+        if ($this->touchedTranslatableFilter($element, $columns)) {
+            return $this->filterByTranslatableColumn($element);
         }
 
-        if (!array_key_exists($name, $columns) && $input->hasRelation()) {
-            if (($relation = call_user_func([$this, $input->getRelation()])) instanceof HasOne
+        if (!array_key_exists($element->id(), $columns) && $element->hasRelation()) {
+            dd('@todo', __METHOD__, __LINE__);
+            if (($relation = call_user_func([$this, $element->getRelation()])) instanceof HasOne
                 || $relation instanceof BelongsTo
             ) {
                 return $this->filterRelationShipColumn($input, $relation, $name, $type, $value);
             }
         }
 
-        $this->query = $this->applyQueryElementByType($this->query, $table, $name, $type, $value);
+        $this->query = $this->applyQueryElementByType($this->query, $table, $element);
 
         return $this->query;
     }
 
-    protected function applyQueryElementByType(Builder $query, $table, $column, $type, $value = null)
+    /**
+     * Apply query filter based on Filter type.
+     *
+     * @param Builder $query
+     * @param $table
+     * @param $element
+     * @return Builder
+     */
+    protected function applyQueryElementByType(Builder $query, $table, $element)
     {
-        switch ($type) {
-            case 'text':
-            case 'datalist':
-                $query->where("{$table}.{$column}", 'LIKE', "%{$value}%");
-
+        switch (get_class($element)) {
+            case Number::class:
+                $query->where("{$table}.{$element->id()}", '=', (int) $element->value());
                 break;
-            case 'select':
-            case 'multiselect':
-                if (!is_array($value)) {
+
+            case Text::class:
+                $modeName = $element->name().'_mode';
+                $mode = Request::get($modeName, 'equals');
+
+                $modeMap = [
+                    'equals' => ['=', $element->value()],
+                    'not_equals' => ['<>', $element->value()],
+                    'starts_with' => ['LIKE', "{$element->value()}%"],
+                    'ends_with' => ['LIKE', "%{$element->value()}"],
+                    'contains' => ['LIKE', "%{$element->value()}%"],
+                ];
+
+                [$operator, $value] = $modeMap[$mode];
+                $query->where("{$table}.{$element->id()}", $operator, $value);
+                break;
+
+            case Enum::class:
+                if (!is_array($value = $element->value())) {
                     $value = [$value];
                 }
-                $query->whereIn("{$table}.{$column}", $value);
-
+                $query->whereIn("{$table}.{$element->id()}", $value);
                 break;
-            case 'boolean':
-            case 'number':
-                $query->where("{$table}.{$column}", '=', (int) $value);
 
-                break;
-            case 'date':
-                $query->whereDate("{$table}.{$column}", '=', $value);
 
+            case Date::class:
+                $query->whereDate("{$table}.{$element->id()}", '=', $element->value());
                 break;
-            case 'daterange':
-                [$date_from, $date_to] = explode(' - ', $value);
-                $query->whereBetween(\DB::raw("DATE({$table}.{$column})"), [$date_from, $date_to]);
+
+            case DateRange::class:
+                [$date_from, $date_to] = explode(' - ', $element->value());
+                $query->whereDate("{$table}.{$element->id()}", '>=', $date_from);
+                $query->whereDate("{$table}.{$element->id()}", '<=', $date_to);
 
                 break;
         }
@@ -328,9 +353,11 @@ class Assembler
      *
      * @return Builder
      */
-    protected function filterByTranslatableColumn($name, $type, $value)
+    protected function filterByTranslatableColumn($element)
     {
         $translation = $this->model->getTranslationModel();
+
+        dd('@todo', __METHOD__);
 
         return $this->query->whereHas('translations', function ($query) use ($translation, $name, $type, $value) {
             return $query = $this->applyQueryElementByType($query, $translation->getTable(), $name, $type, $value);

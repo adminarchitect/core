@@ -2,10 +2,13 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Terranet\Administrator\Filter\Filter;
+use Terranet\Administrator\Filter\Text;
+use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filters\FilterElement;
 use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
 use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Form\Collection\Mutable;
+use Terranet\Administrator\Collection\Mutable;
 use function admin\db\connection;
 use function admin\db\enum_values;
 use function admin\db\table_columns;
@@ -30,11 +33,11 @@ trait HasFilters
     /**
      * Register a filter.
      *
-     * @param FilterElement $filter
+     * @param Filter $filter
      *
      * @return $this
      */
-    public function addFilter(FilterElement $filter)
+    public function addFilter(Filter $filter)
     {
         $this->filters->push($filter);
 
@@ -88,32 +91,27 @@ trait HasFilters
                     case 'StringType':
                         if (connection('mysql') && null === $data->getLength()) {
                             if ($values = enum_values($model->getTable(), $column)) {
-                                $filter = $this->filterFactory($column, 'select');
-                                $filter->getInput()->setOptions(['' => '--Any--'] + $values);
-
-                                $this->addFilter($filter);
-
+                                $this->addFilter(
+                                    Enum::make($column, $column)->setOptions(['' => '--Any--'] + $values)
+                                );
                                 break;
                             }
                         }
 
                         $this->addFilter(
-                            $this->filterFactory($column, 'text')
+                            Text::make($column, $column)
                         );
 
                         break;
                     case 'DateTimeType':
                         $this->addFilter(
-                            $this->filterFactory($column, 'daterange')
+                            DateRange::make($column, $column)
                         );
 
                         break;
                     case 'BooleanType':
                         $this->addFilter(
-                            $this->filterFactory(
-                                $column,
-                                'select',
-                                '',
+                            Enum::make($column, $column)->setOptions(
                                 [
                                     '' => '--Any--',
                                     1 => 'Yes',

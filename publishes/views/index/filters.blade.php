@@ -4,7 +4,7 @@ $elements = $filter->filters();
 $resetUrl = method_exists($module, 'defaultRoute') ? $module->defaultRoute() : route('scaffold.index', ['module' => $module]);
 
 $filled = $elements ? $elements->reduce(function ($filled, $element) {
-    if ($element->getInput()->getValue()) {
+    if ($element->value()) {
         ++$filled;
     }
 
@@ -43,8 +43,8 @@ $hasFilters = ($resetUrl !== request()->fullUrl()) && $filled;
                             <div class="form-group">
                                 <label for="{{ $element->id() }}">
                                     {{ $element->title() }}
-                                    {!! $element->getInput()->html() !!}
                                 </label>
+                                {!! $element->render('index') !!}
                             </div>
                         @endforeach
                     </div>

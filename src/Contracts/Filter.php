@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Contracts;
 
-use Terranet\Administrator\Form\Collection\Mutable;
+use Terranet\Administrator\Collection\Mutable;
 
 interface Filter
 {
