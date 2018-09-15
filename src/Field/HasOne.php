@@ -47,7 +47,7 @@ class HasOne extends BelongsTo
 
         $related = $relation->getRelated();
         $columns = $this->collectColumns($related)
-                        ->without(array_merge([$related->getKeyName()], $this->except ?? []))
+                        ->except(array_merge([$related->getKeyName()], $this->except ?? []))
                         ->only($this->only)
                         ->each(function ($field) {
                             $field->setId(
