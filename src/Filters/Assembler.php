@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use Terranet\Administrator\Contracts\Filter\Searchable;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Field\BelongsToMany;
@@ -263,63 +264,11 @@ class Assembler
             }
         }
 
-        $this->query = $this->applyQueryElementByType($this->query, $table, $element);
-
-        return $this->query;
-    }
-
-    /**
-     * Apply query filter based on Filter type.
-     *
-     * @param Builder $query
-     * @param $table
-     * @param $element
-     * @return Builder
-     */
-    protected function applyQueryElementByType(Builder $query, $table, $element)
-    {
-        switch (get_class($element)) {
-            case Number::class:
-                $query->where("{$table}.{$element->id()}", '=', (int) $element->value());
-                break;
-
-            case Text::class:
-                $modeName = $element->name().'_mode';
-                $mode = Request::get($modeName, 'equals');
-
-                $modeMap = [
-                    'equals' => ['=', $element->value()],
-                    'not_equals' => ['<>', $element->value()],
-                    'starts_with' => ['LIKE', "{$element->value()}%"],
-                    'ends_with' => ['LIKE', "%{$element->value()}"],
-                    'contains' => ['LIKE', "%{$element->value()}%"],
-                ];
-
-                [$operator, $value] = $modeMap[$mode];
-                $query->where("{$table}.{$element->id()}", $operator, $value);
-                break;
-
-            case Enum::class:
-                if (!is_array($value = $element->value())) {
-                    $value = [$value];
-                }
-                $query->whereIn("{$table}.{$element->id()}", $value);
-                break;
-
-
-            case Date::class:
-                $query->whereDate("{$table}.{$element->id()}", '=', $element->value());
-                break;
-
-            case DateRange::class:
-                [$date_from, $date_to] = explode(' - ', $element->value());
-                $query->whereDate("{$table}.{$element->id()}", '>=', $date_from);
-                $query->whereDate("{$table}.{$element->id()}", '<=', $date_to);
-
-                break;
+        if ($element instanceof Searchable) {
+            $this->query = $element->searchBy($this->query, $this->model);
         }
 
-        return $query;
+        return $this->query;
     }
 
     /**
