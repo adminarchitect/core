@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Request;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
+use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\BelongsToMany;
 use Terranet\Administrator\Field\HasMany;
 use Terranet\Administrator\Filter\Date;
@@ -182,22 +183,9 @@ class Assembler
 
             $sortable = $columns->find($element);
 
-            if ($sortable && ($sortable instanceof HasMany || $sortable instanceof BelongsToMany)) {
-                $this->handleManyToManyRelations($element, $direction);
-            } elseif ($sortable && $sortable instanceof \Terranet\Administrator\Field\BelongsTo) {
-                $table = $model->getTable();
-                $relation = call_user_func([$model, $element]);
-                $joinTable = $relation->getRelated()->getTable();
-                $alias = str_random(4);
-
-                $ownerKey = $relation->getOwnerKey();
-                $foreignKey = $relation->getForeignKey();
-                $foreignColumn = $sortable->getColumn();
-                $this->query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")
-                            ->orderBy("{$alias}.{$foreignColumn}", $direction);
-            } else {
-                $table = $model->getTable();
-                $this->query->orderBy("{$table}.{$element}", $direction);
+            // Each column may apply it's own sorting policy.
+            if ($sortable instanceof Sortable) {
+                $sortable->sortBy($this->query, $model, $direction);
             }
         }
 
@@ -346,14 +334,5 @@ class Assembler
     {
         return ($this->model instanceof Translatable)
             && $this->isTranslatable($input, $this->translatableColumns($columns));
-    }
-
-    /**
-     * @param $element
-     * @param $direction
-     */
-    protected function handleManyToManyRelations($element, $direction): void
-    {
-        $this->query->withCount($element)->orderBy("{$element}_count", $direction);
     }
 }

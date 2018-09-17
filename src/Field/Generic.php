@@ -5,12 +5,14 @@ namespace Terranet\Administrator\Field;
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
+use Terranet\Administrator\Field\Traits\AppliesSorting;
 use Terranet\Administrator\Scaffolding;
 
-abstract class Generic
+abstract class Generic implements Sortable
 {
-    use AcceptsCustomFormat;
+    use AcceptsCustomFormat, AppliesSorting;
 
     /** @var string */
     protected $id;

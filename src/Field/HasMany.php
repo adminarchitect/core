@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
@@ -93,5 +94,16 @@ class HasMany extends Generic
             'relation' => $relation ?? null,
             'items' => $relation ? $relation->getResults() : null,
         ];
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Model $model
+     * @param string $direction
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function sortBy(\Illuminate\Database\Eloquent\Builder $query, Model $model, string $direction): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->withCount($this->id())->orderBy("{$this->id()}_count", $direction);
     }
 }
