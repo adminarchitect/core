@@ -9,10 +9,12 @@ use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\AppliesSorting;
 use Terranet\Administrator\Scaffolding;
+use Terranet\Administrator\Contracts\AutoTranslatable;
+use Terranet\Administrator\Traits\AutoTranslatesInstances;
 
-abstract class Generic implements Sortable
+abstract class Generic implements Sortable, AutoTranslatable
 {
-    use AcceptsCustomFormat, AppliesSorting;
+    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances;
 
     /** @var string */
     protected $id;
@@ -42,13 +44,28 @@ abstract class Generic implements Sortable
     /**
      * Generic constructor.
      *
-     * @param $title
-     * @param null $id
+     * @param string $title
+     * @param null|string $id
      */
-    private function __construct($title, $id = null)
+    private function __construct(string $title, string $id = null)
     {
-        $this->title = StringHumanizer::humanize($title);
-        $this->id = snake_case($id ?: $this->title);
+        $this->setId(
+            snake_case($id ?: $title)
+        );
+
+        if ($this->translator()->has($key = $this->translationKey())) {
+            $this->setTitle($this->translator()->trans($key));
+        } else {
+            $this->setTitle(
+                'id' === $this->id
+                    ? 'ID'
+                    : StringHumanizer::humanize(str_replace(['_id', '-', '_'], ['', ' ', ' '], $this->id))
+            );
+        }
+
+        if ($this->translator()->has($key = $this->descriptionKey())) {
+            $this->setDescription($this->translator()->trans($key));
+        }
     }
 
     /**
@@ -392,5 +409,33 @@ abstract class Generic implements Sortable
             snake_case($field ?? class_basename($this)),
             $page
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function translationKey()
+    {
+        $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!$this->translator()->has($key)) {
+            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function descriptionKey()
+    {
+        $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!$this->translator()->has($key)) {
+            $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
     }
 }

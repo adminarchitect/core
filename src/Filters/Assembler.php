@@ -232,11 +232,10 @@ class Assembler
 
         $columns = scheme()->columns($table);
 
-        if ($element->hasQuery() && ($subQuery = $element->execQuery($this->query, $value))) {
+        if ($element instanceof Queryable && $element->hasQuery()) {
             dd('@todo', __METHOD__, __LINE__);
-            $this->query = $subQuery;
 
-            return $this->query;
+            return $this->query = $element->execQuery($this->query, $value);
         }
 
         if ($this->touchedTranslatableFilter($element, $columns)) {
