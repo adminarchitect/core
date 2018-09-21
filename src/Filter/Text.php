@@ -10,6 +10,33 @@ use Illuminate\Support\Facades\Request;
 class Text extends Filter implements Searchable
 {
     /**
+     * Whether to enable modes or not.
+     *
+     * @var bool
+     */
+    protected $withModes = true;
+
+    /**
+     * @return array
+     */
+    protected function renderWith()
+    {
+        return [
+            'modes' => $this->withModes ? trans('administrator::buttons.search_modes') : []
+        ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableModes()
+    {
+        $this->withModes = false;
+
+        return $this;
+    }
+
+    /**
      * @param Builder $query
      * @param Model $model
      * @return Builder|void

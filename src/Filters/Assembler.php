@@ -232,9 +232,8 @@ class Assembler
 
         $columns = scheme()->columns($table);
 
+        /** Filters with a custom query */
         if ($element instanceof Queryable && $element->hasQuery()) {
-            dd('@todo', __METHOD__, __LINE__);
-
             return $this->query = $element->execQuery($this->query, $value);
         }
 
@@ -242,15 +241,7 @@ class Assembler
             return $this->filterByTranslatableColumn($element);
         }
 
-        if (!array_key_exists($element->id(), $columns) && $element->hasRelation()) {
-            dd('@todo', __METHOD__, __LINE__);
-            if (($relation = call_user_func([$this, $element->getRelation()])) instanceof HasOne
-                || $relation instanceof BelongsTo
-            ) {
-                return $this->filterRelationShipColumn($input, $relation, $name, $type, $value);
-            }
-        }
-
+        /** Basic filters */
         if ($element instanceof Searchable) {
             $this->query = $element->searchBy($this->query, $this->model);
         }
@@ -298,29 +289,6 @@ class Assembler
         return $this->query->whereHas('translations', function ($query) use ($translation, $name, $type, $value) {
             return $query = $this->applyQueryElementByType($query, $translation->getTable(), $name, $type, $value);
         });
-    }
-
-    /**
-     * @param Queryable $input
-     * @param $relation
-     * @param $name
-     * @param $type
-     * @param $value
-     *
-     * @return Builder
-     */
-    protected function filterRelationShipColumn(Queryable $input, $relation, $name, $type, $value)
-    {
-        $relatedTable = $relation->getRelated()->getTable();
-
-        return $this->query->whereHas(
-            $input->getRelation(),
-            function ($query) use ($relatedTable, $name, $type, $value) {
-                $query = $this->applyQueryElementByType($query, $relatedTable, $name, $type, $value);
-
-                return $query;
-            }
-        );
     }
 
     /**

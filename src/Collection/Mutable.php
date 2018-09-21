@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Collection;
 
 use Closure;
 use Illuminate\Support\Collection as BaseCollection;
+use Terranet\Administrator\Contracts\Module\Sortable;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Field\Text;
 
@@ -259,13 +260,13 @@ class Mutable extends BaseCollection
     /**
      * Join existing elements to a group.
      *
-     * @param $elements
-     * @param $groupId
-     * @param null $position
+     * @param array $elements
+     * @param string $groupId
+     * @param null|int|string $position
      *
      * @return $this
      */
-    public function join($elements, $groupId, $position = null): self
+    public function join(array $elements, string $groupId, $position = null): self
     {
         $group = new Group($groupId);
 
@@ -370,10 +371,10 @@ class Mutable extends BaseCollection
             return $this;
         }
 
-        app('scaffold.module')->addSortable(
-            $keys,
-            $callback
-        );
+        $module = app('scaffold.module');
+        if ($module instanceof Sortable && method_exists($module, 'addSortable')) {
+            $module->addSortable($keys, $callback);
+        }
 
         return $this;
     }
@@ -381,6 +382,7 @@ class Mutable extends BaseCollection
     /**
      * Remove column from Sortable collection.
      *
+     * @param string|array $keys
      * @return self
      */
     public function disableSorting($keys): self
@@ -389,8 +391,11 @@ class Mutable extends BaseCollection
             $keys = func_get_args();
         }
 
-        foreach ($keys as $key) {
-            app('scaffold.module')->removeSortable($key);
+        $module = app('scaffold.module');
+        if ($module instanceof Sortable && method_exists($module, 'removeSortable')) {
+            foreach ($keys as $key) {
+                $module->removeSortable($key);
+            }
         }
 
         return $this;
@@ -400,7 +405,7 @@ class Mutable extends BaseCollection
      * Move an element to a position.
      *
      * @param string $id
-     * @param $position
+     * @param int|string $position
      *
      * @return static
      */
@@ -414,11 +419,11 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * @param $id
+     * @param string $id
      *
      * @throws Exception
      */
-    protected function notFound($id)
+    protected function notFound(string $id)
     {
         throw new Exception(sprintf('Element [%s] does not exist.', $id));
     }

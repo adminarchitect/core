@@ -54,7 +54,7 @@ abstract class Generic implements Sortable, AutoTranslatable
         );
 
         if ($this->translator()->has($key = $this->translationKey())) {
-            $this->setTitle($this->translator()->trans($key));
+            $this->setTitle((string) $this->translator()->trans($key));
         } else {
             $this->setTitle(
                 'id' === $this->id
@@ -64,7 +64,7 @@ abstract class Generic implements Sortable, AutoTranslatable
         }
 
         if ($this->translator()->has($key = $this->descriptionKey())) {
-            $this->setDescription($this->translator()->trans($key));
+            $this->setDescription((string) $this->translator()->trans($key));
         }
     }
 
@@ -238,11 +238,11 @@ abstract class Generic implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      *
      * @return self
      */
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
