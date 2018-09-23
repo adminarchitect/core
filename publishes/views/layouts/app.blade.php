@@ -34,9 +34,13 @@
             </div>
 
             <div class="headerbar">
-                {{--<a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>--}}
-                <div style="padding-top: 15px; margin-left: -45px;" class="pull-left">
-                    <input class="form-control input-sm" style="width: 250px;" type="search" placeholder="Search" />
+                <div class="searchpanel">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div><!-- input-group -->
                 </div>
 
                 <div class="header-right">

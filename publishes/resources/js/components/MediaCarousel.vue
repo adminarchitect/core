@@ -1,7 +1,14 @@
 <template>
     <div class="media-carousel">
         <p v-if="enabled && !readonly">
-            <input class="drop-zone__file" type="file" :accept="acceptedTypes" :name="'_media_[' + id + '][]'" :ref="ref" @change="onFilesSelected" multiple/>
+            <input class="drop-zone__file"
+                   type="file"
+                   multiple
+                   :accept="acceptedTypes"
+                   :name="'_media_[' + id + '][]'"
+                   :ref="ref"
+                   @change="onFilesSelected"
+            />
         </p>
         <input v-for="media in pendingRemoval" type="hidden" name="_media_[_trash_][]" :value="media">
 
@@ -17,46 +24,54 @@
                 Drop files here
             </div>
 
-            <div :id="'media-' + id"
-                 class="carousel slide"
-                 data-ride="carousel"
-                 :data-interval="interval"
-                 @dragover.stop.prevent=""
-                 @dragenter.stop.prevent="onDragEnter"
-            >
-                <!-- Indicators -->
-                <ol class="carousel-indicators" v-if="media.length > 1 && hasIndicators">
-                    <li v-for="(item, index) in media"
-                        :data-target="'#media-' + id"
-                        :data-slide-to="index"
-                        :class="{'active': active === index}"
-                        @click.prevent="setActive(index)"
-                    ></li>
-                </ol>
+            <div :class="{'preloading': preloading}">
+                <img v-if="preloading" src="/admin/editors/skins/lightgray/img/loader.gif" alt="">
 
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner">
-                    <div class="item active" v-if="!media.length">
-                        <img src="/images/vendor/fancybox/dist/blank.gif" style="width: 320px; height: 160px;" alt="">
-                    </div>
-                    <div v-for="(item, index) in media" class="item" :class="{'active': active === index, 'removed': pending = pendingForRemoval(item)}">
-                        <a class="media-carousel__toolbar" v-if="!readonly">
-                            <i v-if="!pending" @click.prevent="removeMedia(item)" class="media-carousel__toolbar__action fa fa-trash"></i>
-                            <i v-else @click.prevent="restoreMedia(item)" class="media-carousel__toolbar__action fa fa-refresh"></i>
-                        </a>
-                        <img :src="mediaUrl(item)" alt="">
-                    </div>
-                </div>
+                <div v-if="loaded === media.length && !preloading"
+                     :id="'media-' + id"
+                     class="carousel slide"
+                     data-ride="carousel"
+                     data-interval="0"
+                     style="max-width: 360px;"
+                     @dragover.stop.prevent=""
+                     @dragenter.stop.prevent="onDragEnter"
+                >
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators" v-if="media.length > 1">
+                        <li v-for="(item, index) in media"
+                            :data-target="'#media-' + id"
+                            :data-slide-to="index"
+                            :class="{'active': active === index}"
+                            @click.prevent="setActive(index)"
+                        ></li>
+                    </ol>
 
-                <div v-if="media.length > 1 && hasArrows">
-                    <a class="left carousel-control" :href="'#media-' + id" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                        <span class="sr-only">&laquo;</span>
-                    </a>
-                    <a class="right carousel-control" :href="'#media-' + id" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <span class="sr-only">&raquo;</span>
-                    </a>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active" v-if="!media.length">
+                            <img src="/images/vendor/fancybox/dist/blank.gif" style="width: 480px; height: 240px;" alt="">
+                        </div>
+
+                        <div v-for="(item, index) in media" class="item"
+                             :class="{'active': active === index, 'removed': pending = pendingForRemoval(item)}"
+                        >
+                            <a class="media-carousel__toolbar" v-if="!readonly">
+                                <i v-if="!pending"
+                                   @click.prevent="removeMedia(item)"
+                                   title="Queue for removal"
+                                   class="media-carousel__toolbar__action fa fa-trash"></i>
+
+                                <i v-else
+                                   @click.prevent="restoreMedia(item)"
+                                   title="Un-queue removal"
+                                   class="media-carousel__toolbar__action fa fa-random"></i>
+                            </a>
+
+                            <a class="fancybox" :href="mediaUrl(item)" :rel="'media_' + id">
+                                <img :src="mediaUrl(item)"/>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,128 +92,149 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            id: {
-                type: String,
-            },
-            media: {
-                type: Array,
-                default: [],
-            },
-            hasArrows: {
-                type: Boolean,
-                default: false,
-            },
-            hasIndicators: {
-                type: Boolean,
-                default: false,
-            },
-            conversion: {
-                type: String,
-                default: '',
-            },
-            interval: {
-                type: Number,
-                default: 0,
-            },
-            readonly: {
-                type: Boolean,
-                default: false,
-            },
-        },
+  export default {
+    props: {
+      id: {
+        type: String,
+      },
+      media: {
+        type: Array,
+        default: [],
+      },
+      conversion: {
+        type: String,
+        default: '',
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
+      },
+    },
 
-        data() {
-            return {
-                editable: false,
-                queue: [],
-                pendingRemoval: [],
-                enabled: true,
-                active: 0,
-            };
-        },
+    data() {
+      return {
+        editable: false,
+        queue: [],
+        pendingRemoval: [],
+        enabled: true,
+        active: 0,
+        loaded: 0,
+        preloading: false,
+      };
+    },
 
-        computed: {
-            ref() {
-                return 'scaffold_' + this.id;
-            },
+    computed: {
+      ref() {
+        return 'scaffold_' + this.id;
+      },
 
-            acceptedTypes() {
-                return (this.mimeTypes || []).join(', ');
-            },
+      acceptedTypes() {
+        return (this.mimeTypes || []).join(', ');
+      },
 
-            pendingCount() {
-                return `${this.pendingRemoval.length} item(s) queued for removal.`;
-            },
-        },
+      pendingCount() {
+        return `${this.pendingRemoval.length} item(s) queued for removal.`;
+      },
+    },
 
-        methods: {
-            pendingForRemoval(item) {
-                return -1 !== this.pendingRemoval.indexOf(
-                    parseInt(item.id),
-                );
-            },
+    methods: {
+      pendingForRemoval(item) {
+        return -1 !== this.pendingRemoval.indexOf(
+            parseInt(item.id),
+        );
+      },
 
-            addToQueue(event) {
-                this.input().files = event.dataTransfer.files;
+      addToQueue(event) {
+        this.input().files = event.dataTransfer.files;
 
-                this.editable = false;
-            },
+        this.editable = false;
+      },
 
-            clearQueue() {
-                if (!confirm('Are you sure?')) {
-                    return false;
-                }
+      clearQueue() {
+        if (!confirm('Are you sure?')) {
+          return false;
+        }
 
-                this.enabled = false;
+        this.enabled = false;
 
-                this.$nextTick(() => {
-                    this.enabled = true;
-                    this.queue = [];
-                });
-            },
+        this.$nextTick(() => {
+          this.enabled = true;
+          this.queue = [];
+        });
+      },
 
-            onDragEnter() {
-                this.editable = true;
-            },
+      onDragEnter() {
+        this.editable = true;
+      },
 
-            onDragLeave() {
-                this.editable = false;
-            },
+      onDragLeave() {
+        this.editable = false;
+      },
 
-            mediaUrl(item) {
-                return this.conversion ? item.conversions[this.conversion] : item.url;
-            },
+      mediaUrl(item) {
+        return this.conversion ? item.conversions[this.conversion] : item.url;
+      },
 
-            removeMedia(item) {
-                this.pendingRemoval.push(
-                    parseInt(item.id),
-                );
-            },
+      removeMedia(item) {
+        this.pendingRemoval.push(
+            parseInt(item.id),
+        );
+      },
 
-            restoreMedia(item) {
-                this.pendingRemoval.splice(
-                    this.pendingRemoval.indexOf(item.id),
-                    1,
-                );
-            },
+      restoreMedia(item) {
+        this.pendingRemoval.splice(
+            this.pendingRemoval.indexOf(item.id),
+            1,
+        );
+      },
 
-            onFilesSelected(event) {
-                this.queue = event.target.files;
-            },
+      onFilesSelected(event) {
+        this.queue = event.target.files;
+      },
 
-            input() {
-                return this.$refs[this.ref];
-            },
+      input() {
+        return this.$refs[this.ref];
+      },
 
-            setActive(index) {
-                setTimeout(() => this.active = index, 500);
-            },
-        },
-    };
+      setActive(index) {
+        setTimeout(() => this.active = index, 500);
+      },
+    },
+
+    mounted() {
+      if ((this.media || []).length) {
+        this.preloading = true;
+        this.media.forEach(item => {
+          let image = new Image;
+          image.onload = () => {
+            ++this.loaded;
+            if (this.loaded === this.media.length) {
+              this.preloading = false;
+              setTimeout(function() {
+                $('.media-carousel .fancybox').fancybox();
+              }, 50);
+            }
+          };
+          image.src = item.url;
+        });
+      }
+    },
+  };
 </script>
 
-<style>
+<style lang="scss">
+    .preloading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        width: 400px;
+        border: 1px solid #d8dce3;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+
     .media-carousel__toolbar {
         opacity: 0;
         padding: 10px;
@@ -222,10 +258,24 @@
         opacity: 1;
     }
 
+    .carousel-indicators {
+        position: relative;
+        margin-top: 60px;
+
+        li, li.active {
+            background-color: #22629d;
+        }
+
+        li.active {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
     .drop-zone__area {
         position: absolute;
-        background: black;
-        color: white;
+        border: 3px dashed lightslategray;
+        color: black;
         font-size: 1.2em;
         display: flex;
         align-items: center;

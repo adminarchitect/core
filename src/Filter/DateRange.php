@@ -15,9 +15,12 @@ class DateRange extends Filter implements Searchable
      */
     public function searchBy(Builder $query, Model $model): Builder
     {
-        [$date_from, $date_to] = explode(' - ', $this->value());
-        $query->whereDate("{$model->getTable()}.{$this->id()}", '>=', $date_from);
-        $query->whereDate("{$model->getTable()}.{$this->id()}", '<=', $date_to);
+        [$date_from, $date_to] = array_values($this->value());
+
+        if ($date_from && $date_to) {
+            $query->whereDate("{$model->getTable()}.{$this->id()}", '>=', $date_from);
+            $query->whereDate("{$model->getTable()}.{$this->id()}", '<=', $date_to);
+        }
 
         return $query;
     }

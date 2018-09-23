@@ -18,27 +18,19 @@
                 margin-bottom: 20px;
             }
 
-            .selectize-input {
-                padding: 0 !important;
-                background: #fcfcfd;
+            .el-date-editor.el-input,
+            .el-date-editor.el-input__inner {
+                width: 100%;
+            }
 
-                .item, input {
-                    height: 37px !important;
-                    padding: 10px 12px !important;
-                    margin: 0 !important;
-                }
+            .el-input__inner.is-active,
+            .el-input__inner:focus {
+                border: 1px solid #409EFF;
+            }
 
-                &.full {
-                    height: 38px !important;
-
-                    .item {
-                        padding-right: 0 !important;
-                    }
-
-                    input {
-                        padding-left: 0 !important;
-                    }
-                }
+            .el-input__inner {
+                border: 1px solid #bcc3d2;
+                height: 38px;
             }
         }
 
@@ -54,7 +46,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        padding-top: 14px;
+        padding-top: 19px;
         flex: 0 0 10%;
 
         .btn-clear {

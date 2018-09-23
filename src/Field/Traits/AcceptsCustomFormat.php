@@ -12,7 +12,7 @@ trait AcceptsCustomFormat
      *
      * @return BelongsTo
      */
-    public function setCustomFormat(\Closure $format): self
+    public function renderAs(\Closure $format): self
     {
         $this->format = $format;
 

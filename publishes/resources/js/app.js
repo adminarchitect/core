@@ -1,11 +1,12 @@
 require('./bootstrap');
 
 import store from './media/store/index';
-import VueClip from 'vue-clip';
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
 
-Vue.use(VueClip);
+locale.use(lang);
 
 new Vue({
     el: '#app',
-    store,
+    store
 });

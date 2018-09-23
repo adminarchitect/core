@@ -90,9 +90,9 @@ abstract class Generic implements Sortable, AutoTranslatable
      * Create new element from another.
      *
      * @param Generic $element
-     * @return Generic
+     * @return static
      */
-    public static function makeFrom(Generic $element)
+    public static function makeFrom(Generic $element): self
     {
         return static::make($element->title(), $element->id());
     }
@@ -111,7 +111,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param Model $model
      *
-     * @return self
+     * @return static
      */
     public function setModel(Model $model): self
     {
@@ -198,7 +198,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param string $id
      *
-     * @return self
+     * @return static
      */
     public function setId(string $id): self
     {
@@ -228,7 +228,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param string $title
      *
-     * @return self
+     * @return static
      */
     public function setTitle(string $title): self
     {
@@ -240,7 +240,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param null|string $description
      *
-     * @return self
+     * @return static
      */
     public function setDescription(?string $description): self
     {
@@ -252,7 +252,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param bool $showLabel
      *
-     * @return self
+     * @return static
      */
     public function hideLabel(bool $hideLabel): self
     {
@@ -282,7 +282,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param array|string $pages
      *
-     * @return self
+     * @return static
      */
     public function hideOnPages($pages): self
     {
@@ -292,7 +292,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param array|string $pages
      *
-     * @return self
+     * @return static
      */
     public function showOnPages($pages): self
     {
@@ -304,7 +304,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      *
      * @param null|\Closure $callback
      *
-     * @return self
+     * @return static
      */
     public function sortable(\Closure $callback = null): self
     {
@@ -319,7 +319,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * Remove column from Sortable collection.
      *
-     * @return self
+     * @return static
      */
     public function disableSorting(): self
     {
@@ -361,7 +361,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      * @param null $value
      * @param mixed $attribute
      *
-     * @return self
+     * @return static
      */
     public function setAttribute($attribute, $value = null): self
     {
