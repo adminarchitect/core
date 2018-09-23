@@ -2,6 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-class Time extends Generic
+class Time extends DateTime
 {
 }
