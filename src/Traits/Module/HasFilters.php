@@ -89,7 +89,7 @@ trait HasFilters
 
                 switch (class_basename($data->getType())) {
                     case 'StringType':
-                        if (connection('mysql') && null === $data->getLength()) {
+                        if (connection('mysql') && !$data->getLength()) {
                             if ($values = enum_values($model->getTable(), $column)) {
                                 $this->addFilter(
                                     Enum::make($column, $column)->setOptions(['' => '--Any--'] + $values)
