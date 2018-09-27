@@ -2,10 +2,14 @@
 
 namespace Terranet\Administrator\Decorators;
 
+use function admin\db\connection;
+use function admin\db\enum_values;
+use function admin\db\translated_values;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Field\Boolean;
 use Terranet\Administrator\Field\Email;
+use Terranet\Administrator\Field\Enum;
 use Terranet\Administrator\Field\File;
 use Terranet\Administrator\Field\Generic;
 use Terranet\Administrator\Field\Id;
@@ -69,6 +73,10 @@ class Grid
         if ($this->realColum($element)) {
             $field = $this->detectField($element);
 
+            if (is_object($field)) {
+                return $field;
+            }
+
             return forward_static_call_array([$field, 'make'], [$element, $element]);
         }
 
@@ -96,9 +104,8 @@ class Grid
             return Id::class;
         }
 
-        $className = class_basename(
-            $this->fetchTablesColumns()[$column]->getType()
-        );
+        $data = $this->fetchTablesColumns()[$column];
+        $className = class_basename($data->getType());
 
         switch (true) {
             case $this->model instanceof Rankable && $column === $this->model->getRankableColumn():
@@ -112,6 +119,17 @@ class Grid
             case 'TextType' === $className:
                 return Textarea::class;
             case 'StringType' === $className:
+                if (connection('mysql') && !$data->getLength()) {
+                    if ($values = enum_values($this->model->getTable(), $column)) {
+                        $values = translated_values($values, app('scaffold.module')->url(), $column);
+                        if (!$data->getNotNull()) {
+                            $values = ['' => '----'] + $values;
+                        }
+
+                        return Enum::make($column, $column)->setOptions($values);
+                    }
+                }
+
                 if (str_contains($column, 'email')) {
                     return Email::class;
                 }

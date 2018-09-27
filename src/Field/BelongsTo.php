@@ -50,7 +50,7 @@ class BelongsTo extends Generic
     /**
      * @return string
      */
-    public function name()
+    public function name(): string
     {
         return $this->model->{$this->id}()->getForeignKey();
     }

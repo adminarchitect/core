@@ -23,6 +23,9 @@ abstract class Generic implements Sortable, AutoTranslatable
     protected $title;
 
     /** @var string */
+    protected $name;
+
+    /** @var string */
     protected $description;
 
     /** @var Model */
@@ -177,22 +180,37 @@ abstract class Generic implements Sortable, AutoTranslatable
      *
      * @return string
      */
-    public function name()
+    public function name(): string
     {
-        $parts = explode('.', $this->id());
+        if (null === $this->name) {
+            $parts = explode('.', $this->id());
 
-        if (count($parts) > 1) {
-            $first = array_first($parts);
-            $other = array_slice($parts, 1);
+            if (count($parts) > 1) {
+                $first = array_first($parts);
+                $other = array_slice($parts, 1);
 
-            $other = array_map(function ($part) {
-                return "[$part]";
-            }, $other);
+                $other = array_map(function ($part) {
+                    return "[$part]";
+                }, $other);
 
-            return implode('', array_merge([$first], $other));
+                return $this->name = implode('', array_merge([$first], $other));
+            }
+
+            return $this->name = $this->id();
         }
 
-        return $this->id();
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Generic
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**

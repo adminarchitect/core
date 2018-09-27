@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use function admin\db\translated_values;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Filter\Text;
 use Terranet\Administrator\Filter\Enum;
@@ -76,6 +77,9 @@ trait HasFilters
         return $this->scaffoldScopes();
     }
 
+    /**
+     * @return Mutable
+     */
     protected function scaffoldFilters()
     {
         $this->filters = new Mutable();
@@ -91,8 +95,10 @@ trait HasFilters
                     case 'StringType':
                         if (connection('mysql') && !$data->getLength()) {
                             if ($values = enum_values($model->getTable(), $column)) {
+                                $values = translated_values($values, $this->url(), $column);
+
                                 $this->addFilter(
-                                    Enum::make($column, $column)->setOptions(['' => '--Any--'] + $values)
+                                    Enum::make($column, $column)->setOptions(['' => '----'] + $values)
                                 );
                                 break;
                             }
@@ -226,7 +232,7 @@ trait HasFilters
     }
 
     /**
-     * Marked with @hidden flag.
+     * Marked with @icon flag.
      *
      * @param $docBlock
      *

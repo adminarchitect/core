@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Form;
 
+use Terranet\Administrator\Scaffolding;
 use Terranet\Translatable\Translatable;
 
 trait RendersTranslatableElement
@@ -9,7 +10,7 @@ trait RendersTranslatableElement
     /**
      * @return mixed
      */
-    public function html()
+    public function render($page = Scaffolding::PAGE_INDEX)
     {
         /**
          * to be able using translations we have to get element's Eloquent model.
@@ -17,10 +18,6 @@ trait RendersTranslatableElement
          * @var \Terranet\Translatable\Translatable;
          */
         $repository = app('scaffold.model') ?: app('scaffold.module')->model();
-
-        if ($relation = $this->relation) {
-            $repository = $repository->$relation;
-        }
 
         $cycle = 0;
         $current = \localizer\locale();
@@ -35,7 +32,7 @@ trait RendersTranslatableElement
                     $element->setAttributes(['disabled' => true]);
                 }
 
-                $input = $element->render().$element->errors();
+                $input = $element->render();//.$element->errors();
 
                 $input = view(
                     'administrator::partials.forms.translatable.element',
@@ -67,17 +64,16 @@ trait RendersTranslatableElement
      */
     protected function selfClone($locale, $repository)
     {
-        $element = clone $this;
+        $element = clone $this->field;
 
-        // set element belongs to locale
         $element->setName(
-            $this->getFormTranslatableName($locale)
+            $this->translatableName($locale)
         );
 
         // set translated value
         if ($repository instanceof Translatable && $repository->hasTranslation($locale->id())) {
             $element->setValue(
-                $repository->translate($locale->id())->{$this->name}
+                $repository->translate($locale->id())->{$this->id()}
             );
         }
 
@@ -89,8 +85,8 @@ trait RendersTranslatableElement
      *
      * @return string
      */
-    protected function getFormTranslatableName($locale)
+    protected function translatableName($locale)
     {
-        return "translatable[{$locale->id()}][{$this->name}]";
+        return "translatable[{$locale->id()}][{$this->id()}]";
     }
 }

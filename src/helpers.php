@@ -39,6 +39,7 @@ namespace {
 }
 
 namespace admin\db {
+
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
@@ -126,10 +127,32 @@ namespace admin\db {
 
             return $values;
         }
+
+        /**
+         * @param $values
+         * @param $column
+         * @return array
+         */
+        function translated_values($values, $namespace, $column)
+        {
+            $translator = app('translator');
+
+            foreach ($values as $value => &$label) {
+                $trKey = "administrator::enums.{$namespace}.{$column}.{$value}";
+                if ($translator->has($trKey)) {
+                    $label = $translator->trans($trKey);
+                } else if ($translator->has($trKey = "administrator::enums.global.{$column}.{$value}")) {
+                    $label = $translator->trans($trKey);
+                }
+            }
+
+            return $values;
+        }
     }
 }
 
 namespace admin\helpers {
+
     use Coduo\PHPHumanizer\StringHumanizer;
     use Czim\Paperclip\Contracts\AttachableInterface;
     use Illuminate\Database\Eloquent\Model;
@@ -408,6 +431,7 @@ namespace admin\helpers {
 }
 
 namespace admin\output {
+
     use Closure;
 
     function boolean($value)

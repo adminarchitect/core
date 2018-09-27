@@ -16,13 +16,10 @@ use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
 use Terranet\Administrator\Form\RendersTranslatableElement;
 use Terranet\Administrator\Requests\UpdateRequest;
-use Terranet\Administrator\Traits\LoopsOverRelations;
 use function admin\db\scheme;
 
 class Saver implements SaverContract
 {
-    use LoopsOverRelations;
-
     /**
      * Data collected during saving process.
      *
