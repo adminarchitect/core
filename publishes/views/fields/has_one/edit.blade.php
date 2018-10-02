@@ -2,6 +2,7 @@
     @slot('title', $field->title())
     @slot('description', $field->getDescription())
 @endcomponent
+
 @foreach($columns as $field)
-    {!! $field->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT) !!}
+    @include('administrator::edit.row', ['field' => $field])
 @endforeach

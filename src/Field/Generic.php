@@ -25,6 +25,9 @@ abstract class Generic implements Sortable, AutoTranslatable
     /** @var string */
     protected $name;
 
+    /** @var mixed */
+    protected $value;
+
     /** @var string */
     protected $description;
 
@@ -42,7 +45,9 @@ abstract class Generic implements Sortable, AutoTranslatable
     ];
 
     /** @var array */
-    protected $attributes = [];
+    protected $attributes = [
+        'class' => 'form-control',
+    ];
 
     /**
      * Generic constructor.
@@ -152,6 +157,7 @@ abstract class Generic implements Sortable, AutoTranslatable
         $data = [
             'field' => $this,
             'model' => $this->model,
+            'attributes' => $this->getAttributes(),
         ];
 
         if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
@@ -367,6 +373,10 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     public function value()
     {
+        if (null !== $this->value) {
+            return $this->value;
+        }
+
         if (!$this->model) {
             return null;
         }
@@ -388,13 +398,18 @@ abstract class Generic implements Sortable, AutoTranslatable
                 $this->setAttribute($key, $value);
             }
         } else {
-            if (!array_key_exists($key, $this->attributes)) {
-                throw new Exception("Unknown attribute {$key}");
-            }
-            $this->attributes[$key] = $value;
+            $this->attributes[$attribute] = $value;
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 
     /**

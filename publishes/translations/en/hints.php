@@ -16,6 +16,7 @@ return [
 //    ],
 
     'global' => [
+        'optional' => 'Leave empty for default value',
         // 'desc' => 'Description',
     ],
 ];

@@ -1,6 +1,1 @@
-@component('administrator::components.table.row')
-    @slot('label', Form::label($field->id(), $field->title()))
-    @slot('input')
-        @include('administrator::fields.belongs_to.index')
-    @endslot
-@endcomponent
+@include('administrator::fields.belongs_to.index')

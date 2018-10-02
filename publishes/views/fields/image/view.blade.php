@@ -5,9 +5,4 @@ $attributes = [
     'style' => 'max-width: 400px; max-height: 400px;',
 ];
 ?>
-@component('administrator::components.table.row')
-    @slot('label', Form::label($field->id(), $field->title()))
-    @slot('input')
-        {!! \admin\output\staplerImage($attachment, 'original', $attributes) !!}
-    @endslot
-@endcomponent
+{!! \admin\output\staplerImage($attachment, 'original', $attributes) !!}

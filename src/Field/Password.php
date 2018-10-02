@@ -4,4 +4,13 @@ namespace Terranet\Administrator\Field;
 
 class Password extends Generic
 {
+    /**
+     * @return array
+     */
+    public function getAttributes():array
+    {
+        return parent::getAttributes() + [
+                'placeholder' => $this->translator()->trans('administrator::hints.global.optional'),
+            ];
+    }
 }

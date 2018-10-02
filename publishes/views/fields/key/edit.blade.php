@@ -1,1 +1,1 @@
-@include('administrator::fields.key.view')
+{!! $field->value() !!}

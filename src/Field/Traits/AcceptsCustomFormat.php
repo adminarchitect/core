@@ -8,6 +8,14 @@ trait AcceptsCustomFormat
     protected $format;
 
     /**
+     * @return bool
+     */
+    public function hasFormat()
+    {
+        return null !== $this->format;
+    }
+
+    /**
      * @param \Closure $format
      *
      * @return BelongsTo

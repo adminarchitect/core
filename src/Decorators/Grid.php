@@ -15,6 +15,7 @@ use Terranet\Administrator\Field\Generic;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Link;
+use Terranet\Administrator\Field\Password;
 use Terranet\Administrator\Field\Phone;
 use Terranet\Administrator\Field\Rank;
 use Terranet\Administrator\Field\Text;
@@ -128,6 +129,10 @@ class Grid
 
                         return Enum::make($column, $column)->setOptions($values);
                     }
+                }
+
+                if (str_contains($column, 'password')) {
+                    return Password::class;
                 }
 
                 if (str_contains($column, 'email')) {

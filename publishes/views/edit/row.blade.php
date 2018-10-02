@@ -3,5 +3,9 @@
         @slot('title', $field->title())
     @endcomponent
 @else
-    {!! $field->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT) !!}
+    @component('administrator::components.table.row')
+        @slot('label', Form::label($field->id(), $field->title()))
+        @slot('description', $field->getDescription())
+        @slot('input', $field->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT))
+    @endcomponent
 @endif

@@ -73,7 +73,7 @@ class Textarea extends Generic
     /**
      * @return array
      */
-    public function onEdit()
+    protected function onEdit(): array
     {
         return $this->editor ? [
             'dataEditor' => $this->editor,

@@ -15,14 +15,22 @@ $elements = $module->viewColumns()->each->setModel($item);
                 @slot('title', $element->title())
             @endcomponent
             @foreach($element->elements() as $element)
-                {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
+                @component('administrator::components.table.row')
+                    @slot('label', Form::label($element->id(), $element->title()))
+                    @slot('description', $element->getDescription())
+                    @slot('input', $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
+                @endcomponent
             @endforeach
             @component('administrator::components.table.spacer')
             @endcomponent
         @elseif ($element instanceof \Terranet\Administrator\Field\HasMany)
             @continue
         @else
-            {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
+            @component('administrator::components.table.row')
+                @slot('label', Form::label($element->id(), $element->title()))
+                @slot('description', $element->getDescription())
+                @slot('input', $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
+            @endcomponent
         @endif
     @endforeach
 </table>

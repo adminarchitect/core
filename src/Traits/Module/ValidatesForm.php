@@ -60,6 +60,10 @@ trait ValidatesForm
     {
         $rules = [];
 
+        if ('password' === $column->getName()) {
+            return ['min:8'];
+        }
+
         if ((($this->fillable($column->getName(), $eloquent) || $this->isForeignKey($column, $eloquent))
             && $column->getNotnull())) {
             // make required rule first
