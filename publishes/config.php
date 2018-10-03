@@ -29,7 +29,6 @@ return [
         'column' => 'Http/Terranet/Administrator/Decorators',
         'template' => 'Http/Terranet/Administrator/Templates',
         'widget' => 'Http/Terranet/Administrator/Widgets',
-        'badge' => 'Http/Terranet/Administrator/Badges',
         'breadcrumbs' => 'Http/Terranet/Administrator/Breadcrumbs',
     ],
 

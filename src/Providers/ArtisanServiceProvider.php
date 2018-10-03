@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Terranet\Administrator\Console\ActionMakeCommand;
 use Terranet\Administrator\Console\ActionsMakeCommand;
 use Terranet\Administrator\Console\AdministratorCreateCommand;
-use Terranet\Administrator\Console\BadgeMakeCommand;
 use Terranet\Administrator\Console\BreadcrumbsMakeCommand;
 use Terranet\Administrator\Console\FinderMakeCommand;
 use Terranet\Administrator\Console\LanguagesMakeCommand;
@@ -26,7 +25,6 @@ class ArtisanServiceProvider extends ServiceProvider
         'AdminActions' => 'command.administrator.actions',
         'AdminAction' => 'command.administrator.action',
         'AdminSaver' => 'command.administrator.saver',
-        'AdminBadge' => 'command.administrator.badge',
         'AdminTemplate' => 'command.administrator.template',
         'AdminPanel' => 'command.administrator.panel',
         'AdminFinder' => 'command.administrator.finder',
@@ -95,13 +93,6 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.administrator.saver', function ($app) {
             return new SaverMakeCommand($app['files']);
-        });
-    }
-
-    protected function registerAdminBadgeCommand()
-    {
-        $this->app->singleton('command.administrator.badge', function ($app) {
-            return new BadgeMakeCommand($app['files']);
         });
     }
 

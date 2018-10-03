@@ -137,13 +137,6 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
-    public function badge($partial = null)
-    {
-        $partials = $this->map('badges', ['messages', 'notifications', 'tasks']);
-
-        return null === $partial ? $partials : $partials[$partial];
-    }
-
     /**
      * @param $namespace
      * @param array $views

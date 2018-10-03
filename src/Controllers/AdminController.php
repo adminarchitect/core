@@ -8,7 +8,6 @@ use Illuminate\Translation\Translator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
-use Terranet\Administrator\Middleware\Badges;
 use Terranet\Administrator\Middleware\Resources;
 
 abstract class AdminController extends BaseController
@@ -24,7 +23,6 @@ abstract class AdminController extends BaseController
             AuthProvider::class,
             Authenticate::class,
             Resources::class,
-            Badges::class,
         ]);
 
         $this->translator = $translator;

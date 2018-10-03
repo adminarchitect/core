@@ -82,13 +82,4 @@ interface TemplateProvider
      * @return mixed array|string
      */
     public function dashboard($partial = 'index');
-
-    /**
-     * Scaffold badges templates.
-     *
-     * @param $partial
-     *
-     * @return mixed array|string
-     */
-    public function badge($partial = 'notifications');
 }
