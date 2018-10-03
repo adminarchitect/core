@@ -184,7 +184,9 @@ class Saver implements SaverContract
     {
         $this->nullifyEmptyNullables($this->repository->getTable());
 
-        $this->repository->fill($this->data)->save();
+        $this->repository->fill(
+            $this->protectAgainstNullPassword($this->data)
+        )->save();
     }
 
     /**
@@ -363,6 +365,20 @@ class Saver implements SaverContract
                 $value = null;
             }
         }
+    }
+
+    /**
+     * Ignore empty password from being saved.
+     *
+     * @return array
+     */
+    protected function protectAgainstNullPassword(): array
+    {
+        if (array_has($this->data, 'password') && empty($this->data['password'])) {
+            unset($this->data['password']);
+        }
+
+        return $this->data;
     }
 
     /**
