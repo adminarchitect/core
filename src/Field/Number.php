@@ -4,20 +4,16 @@ namespace Terranet\Administrator\Field;
 
 class Number extends Generic
 {
-    /** @var array */
-    protected $attributes = [
-        'min' => null,
-        'max' => null,
-        'step' => null,
-    ];
-
     /**
      * @return array
      */
-    protected function onEdit(): array
+    public function getAttributes(): array
     {
-        return [
-            'attributes' => $this->attributes,
-        ];
+        return parent::getAttributes() + [
+                'min' => 0,
+                'max' => null,
+                'step' => 1,
+                'style' => 'width: 150px',
+            ];
     }
 }

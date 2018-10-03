@@ -1,1 +1,1 @@
-{!! Form::input('number', $field->name(), $field->value(), ['class' => 'form-control']) !!}
+{!! Form::input('number', $field->name(), $field->value(), $attributes) !!}

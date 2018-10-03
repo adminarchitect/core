@@ -4,8 +4,13 @@ namespace Terranet\Administrator\Field;
 
 class Email extends Generic
 {
-    protected $attributes = [
-        'class' => 'form-control',
-        'style' => 'width: 250px'
-    ];
+    /**
+     * @return arrray
+     */
+    public function getAattributes(): arrray
+    {
+        return parent::getAttributes() + [
+                'style' => 'width: 250px',
+            ];
+    }
 }
