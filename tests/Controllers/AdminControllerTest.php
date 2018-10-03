@@ -10,7 +10,6 @@ use Terranet\Administrator\ActionsManager;
 use Terranet\Administrator\Controllers\AdminController;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
-use Terranet\Administrator\Middleware\Badges;
 use Terranet\Administrator\Middleware\Resources;
 use Terranet\Administrator\Tests\CoreTestCase;
 use Terranet\Administrator\Tests\MocksObjects;
@@ -33,7 +32,6 @@ class AdminControllerTest extends CoreTestCase
                        AuthProvider::class,
                        Authenticate::class,
                        Resources::class,
-                       Badges::class,
                    ]);
 
         $controller->__construct($this->mockTranslator());

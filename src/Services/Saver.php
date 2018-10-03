@@ -185,7 +185,7 @@ class Saver implements SaverContract
         $this->nullifyEmptyNullables($this->repository->getTable());
 
         $this->repository->fill(
-            $this->protectAgainstNullPassword($this->data)
+            $this->protectAgainstNullPassword()
         )->save();
     }
 

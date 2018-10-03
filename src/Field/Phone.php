@@ -5,9 +5,9 @@ namespace Terranet\Administrator\Field;
 class Phone extends Generic
 {
     /**
-     * @return arrray
+     * @return array
      */
-    public function getAattributes(): arrray
+    public function getAattributes(): array
     {
         return parent::getAttributes() + [
                 'style' => 'width: 250px',
