@@ -36,7 +36,7 @@ public function columns()
 	# function is available as second argument.
 	->push('profile.phone', function(Element $element) {
 		# custom output goes here...
-		return '<a href="#">.....</a>; 
+		return '<a href="#">.....</a>'; 
 		return view('path.to.view')->with([...$args]);
 	})
 
