@@ -32,7 +32,7 @@ public function columns()
 	# add a HasOne or BelongsTo relationship column (Ex.: $eloquent->profile->phone)
 	->push('profile.phone')
 
-	# if you want to controle the ouput, the callback 
+	# if you want to control the ouput, the callback 
 	# function is available as second argument.
 	->push('profile.phone', function(Element $element) {
 		# custom output goes here...
