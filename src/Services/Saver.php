@@ -14,7 +14,6 @@ use Terranet\Administrator\Field\HasOne;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
-use Terranet\Administrator\Form\RendersTranslatableElement;
 use Terranet\Administrator\Requests\UpdateRequest;
 use function admin\db\scheme;
 
@@ -70,9 +69,7 @@ class Saver implements SaverContract
                 // get original HTML input
                 $name = $field->id();
 
-                if ($this->isKey($field)
-                    || $this->isTranslatable($field)
-                    || $this->isMediaFile($field)) {
+                if ($this->isKey($field) || $this->isMediaFile($field)) {
                     continue;
                 }
 
@@ -138,16 +135,6 @@ class Saver implements SaverContract
     protected function isKey($field)
     {
         return $field instanceof Id;
-    }
-
-    /**
-     * @param $field
-     *
-     * @return bool
-     */
-    protected function isTranslatable($field)
-    {
-        return $field instanceof RendersTranslatableElement;
     }
 
     /**

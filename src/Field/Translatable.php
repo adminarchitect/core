@@ -8,8 +8,22 @@ use function localizer\locale;
 use Terranet\Administrator\Exception;
 use Terranet\Localizer\Locale;
 
+/**
+ * Class Translatable
+ *
+ * @package Terranet\Administrator\Field
+ * @method switchTo(string $className)
+ * @method tinymce()
+ * @method ckeditor()
+ * @method markdown()
+ * @method medium()
+ * @method hideLabel()
+ * @method sortable(\Closure $callback = null)
+ * @method disableSorting()
+ */
 class Translatable
 {
+    /** @var Generic */
     protected $field;
 
     /**
@@ -17,9 +31,18 @@ class Translatable
      *
      * @param Generic $field
      */
-    public function __construct(Generic $field)
+    protected function __construct(Generic $field)
     {
         $this->field = $field;
+    }
+
+    /**
+     * @param Generic $field
+     * @return Translatable
+     */
+    public static function make(Generic $field)
+    {
+        return new static($field);
     }
 
     /**
@@ -33,8 +56,6 @@ class Translatable
         if (method_exists($this->field, $method)) {
             return call_user_func_array([$this->field, $method], $args);
         }
-
-        throw new Exception(sprintf('Unknown method [%s]', $method));
     }
 
     /**
@@ -91,7 +112,8 @@ class Translatable
     public function value(Locale $language)
     {
         $model = $this->field->getModel();
+        $entity = $model->translate($language->id());
 
-        return $model->translate($language->id())->{$this->field->id()};
+        return $entity ? $entity->getAttribute($this->field->id()) : null;
     }
 }

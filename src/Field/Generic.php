@@ -274,6 +274,16 @@ abstract class Generic implements Sortable, AutoTranslatable
     }
 
     /**
+     * Make element translatable.
+     *
+     * @return Translatable
+     */
+    public function translatable()
+    {
+        return Translatable::make($this);
+    }
+
+    /**
      * @param bool $showLabel
      *
      * @return static

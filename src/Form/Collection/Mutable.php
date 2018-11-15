@@ -6,6 +6,7 @@ use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
 use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Field\Textarea;
+use Terranet\Administrator\Field\Translatable;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Administrator\Form\FormSection;
 use Terranet\Administrator\Form\InputFactory;
@@ -26,7 +27,8 @@ class Mutable extends BaseMutableCollection
         $this->validateEditor($editor);
 
         return (bool) $this->filter(function ($field) use ($editor) {
-            return $field instanceof Textarea && $field->editorEnabled($editor);
+            return in_array(get_class($field), [Textarea::class, Translatable::class])
+                && $field->editorEnabled($editor);
         })->count();
     }
 

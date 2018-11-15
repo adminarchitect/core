@@ -5,7 +5,6 @@ namespace Terranet\Administrator\Traits\Module;
 use Terranet\Administrator\Decorators\Grid;
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Translatable\Translatable;
-use Terranet\Administrator\Field\Translatable as MuiField;
 
 trait HasForm
 {
@@ -38,7 +37,7 @@ trait HasForm
                 new Grid($eloquent)
             )->map(function ($element) use ($translatable) {
                 if (in_array($element->id(), $translatable)) {
-                    $element = new MuiField($element);
+                    return $element->translatable();
                 }
 
                 return $element;
