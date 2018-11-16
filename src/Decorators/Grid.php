@@ -7,7 +7,19 @@ use function admin\db\enum_values;
 use function admin\db\translated_values;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Chain;
 use Terranet\Administrator\Field\Boolean;
+use Terranet\Administrator\Field\Detectors\BooleanDetector;
+use Terranet\Administrator\Field\Detectors\DateTimeDetector;
+use Terranet\Administrator\Field\Detectors\EmailDetector;
+use Terranet\Administrator\Field\Detectors\EnumDetector;
+use Terranet\Administrator\Field\Detectors\LinkDetector;
+use Terranet\Administrator\Field\Detectors\PasswordDetector;
+use Terranet\Administrator\Field\Detectors\PhoneDetector;
+use Terranet\Administrator\Field\Detectors\PrimaryKeyDetector;
+use Terranet\Administrator\Field\Detectors\RankableDetector;
+use Terranet\Administrator\Field\Detectors\TextareaDetector;
+use Terranet\Administrator\Field\Detectors\TextDetector;
 use Terranet\Administrator\Field\Email;
 use Terranet\Administrator\Field\Enum;
 use Terranet\Administrator\Field\File;
@@ -101,55 +113,19 @@ class Grid
      */
     protected function detectField($column)
     {
-        if ($column === $this->model->getKeyName()) {
-            return Id::class;
-        }
-
-        $data = $this->fetchTablesColumns()[$column];
-        $className = class_basename($data->getType());
-
-        switch (true) {
-            case $this->model instanceof Rankable && $column === $this->model->getRankableColumn():
-                return Rank::class;
-            case in_array($className, ['TimeType', 'DateType', 'DateTimeType'], true):
-                $type = str_replace('Type', '', $className);
-
-                return "\\Terranet\\Administrator\\Field\\{$type}";
-            case 'BooleanType' === $className:
-                return Boolean::class;
-            case 'TextType' === $className:
-                return Textarea::class;
-            case 'StringType' === $className:
-                if (connection('mysql') && !$data->getLength()) {
-                    if ($values = enum_values($this->model->getTable(), $column)) {
-                        $values = translated_values($values, app('scaffold.module')->url(), $column);
-                        if (!$data->getNotNull()) {
-                            $values = ['' => '----'] + $values;
-                        }
-
-                        return Enum::make($column, $column)->setOptions($values);
-                    }
-                }
-
-                if (str_contains($column, 'password')) {
-                    return Password::class;
-                }
-
-                if (str_contains($column, 'email')) {
-                    return Email::class;
-                }
-
-                if (str_contains($column, ['url', 'site', 'host'])) {
-                    return Link::class;
-                }
-
-                if (str_contains($column, ['phone', 'gsm'])) {
-                    return Phone::class;
-                }
-            // no break
-            default:
-                return Text::class;
-        }
+        return Chain::make([
+            new PrimaryKeyDetector(),
+            new RankableDetector(),
+            new DateTimeDetector(),
+            new BooleanDetector(),
+            new TextareaDetector(),
+            new EnumDetector(),
+            new PasswordDetector(),
+            new EmailDetector(),
+            new LinkDetector(),
+            new PhoneDetector(),
+            new TextDetector(),
+        ])($column, $this->fetchTablesColumns()[$column], $this->model);
     }
 
     /**
