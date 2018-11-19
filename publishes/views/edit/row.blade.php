@@ -3,7 +3,9 @@
         @slot('title', $field->title())
     @endcomponent
 @else
-    @component('administrator::components.table.row')
+    @component('administrator::components.table.row', [
+        'section' => $field instanceof \Terranet\Administrator\Field\HasOne
+    ])
         @slot('label', Form::label($field->id(), $field->title()))
         @slot('description', $field->getDescription())
         @slot('input', $field->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT))

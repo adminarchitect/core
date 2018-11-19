@@ -1,9 +1,8 @@
+@extends($template->layout())
 @inject('form', 'scaffold.form')
 @inject('module', 'scaffold.module')
 @inject('actions', 'scaffold.actions')
 @inject('template', 'scaffold.template')
-
-@extends($template->layout())
 
 @section('scaffold.create')
     @include($template->edit('create'))
