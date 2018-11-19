@@ -15,7 +15,7 @@ class SuperAdminRule
         }
 
         if (method_exists($user, 'isSuperAdmin')) {
-            return call_user_func([$user, 'isSuperAdmin']);
+            return \call_user_func([$user, 'isSuperAdmin']);
         }
 
         return 1 === (int) $user->getAuthIdentifier();

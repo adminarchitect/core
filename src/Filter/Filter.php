@@ -4,8 +4,8 @@ namespace Terranet\Administrator\Filter;
 
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Support\Facades\View;
-use Terranet\Administrator\Traits\Form\ExecutesQuery;
 use Terranet\Administrator\Contracts\Form\Queryable;
+use Terranet\Administrator\Traits\Form\ExecutesQuery;
 
 abstract class Filter implements Queryable
 {
@@ -69,9 +69,9 @@ abstract class Filter implements Queryable
     {
         $parts = explode('.', $this->id());
 
-        if (count($parts) > 1) {
+        if (\count($parts) > 1) {
             $first = array_first($parts);
-            $other = array_slice($parts, 1);
+            $other = \array_slice($parts, 1);
 
             $other = array_map(function ($part) {
                 return "[$part]";

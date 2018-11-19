@@ -48,7 +48,7 @@ class Mutable extends BaseCollection
             $callback($element);
         }
 
-        if (is_string($position)) {
+        if (\is_string($position)) {
             $this->push($element);
 
             return $this->move($element->id(), $position);
@@ -78,19 +78,20 @@ class Mutable extends BaseCollection
     /**
      * Get all items except for those with the specified keys.
      *
-     * @param  mixed|string|array $keys
+     * @param  array|mixed|string $keys
+     *
      * @return static
      */
     public function except($keys)
     {
         if ($keys instanceof self) {
             $keys = $keys->all();
-        } elseif (!is_array($keys)) {
-            $keys = func_get_args();
+        } elseif (!\is_array($keys)) {
+            $keys = \func_get_args();
         }
 
         $items = $this->filter(function ($element) use ($keys) {
-            return !in_array($element->id(), $keys, true);
+            return !\in_array($element->id(), $keys, true);
         })->all();
 
         $this->items = array_values($items);
@@ -271,7 +272,7 @@ class Mutable extends BaseCollection
         $group = new Group($groupId);
 
         $this->filter(function ($element) use ($elements) {
-            return in_array($element->id(), $elements, true);
+            return \in_array($element->id(), $elements, true);
         })->each(function ($element) use ($group) {
             $group->push($element);
             $this->items = $this->except($element->id())->all();
@@ -359,9 +360,9 @@ class Mutable extends BaseCollection
      */
     public function sortable($keys, \Closure $callback = null)
     {
-        if (is_array($keys)) {
+        if (\is_array($keys)) {
             foreach ($keys as $id => $callback) {
-                if (is_string($id)) {
+                if (\is_string($id)) {
                     $this->sortable($id, $callback);
                 } else {
                     $this->sortable($callback);
@@ -382,13 +383,14 @@ class Mutable extends BaseCollection
     /**
      * Remove column from Sortable collection.
      *
-     * @param string|array $keys
+     * @param array|string $keys
+     *
      * @return self
      */
     public function disableSorting($keys): self
     {
-        if (!is_array($keys)) {
-            $keys = func_get_args();
+        if (!\is_array($keys)) {
+            $keys = \func_get_args();
         }
 
         $module = app('scaffold.module');
@@ -437,7 +439,7 @@ class Mutable extends BaseCollection
      */
     protected function createElement($element)
     {
-        if (is_string($element)) {
+        if (\is_string($element)) {
             $element = Text::make($element, $element);
         }
 

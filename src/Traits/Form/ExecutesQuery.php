@@ -20,7 +20,7 @@ trait ExecutesQuery
      */
     public function hasQuery()
     {
-        return isset($this->query) && is_callable($this->query);
+        return isset($this->query) && \is_callable($this->query);
     }
 
     /**
@@ -30,7 +30,7 @@ trait ExecutesQuery
      */
     public function execQuery()
     {
-        return call_user_func_array($this->query, func_get_args());
+        return \call_user_func_array($this->query, \func_get_args());
     }
 
     /**

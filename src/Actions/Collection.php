@@ -11,7 +11,7 @@ class Collection extends BaseCollection
     public function __construct($items = [])
     {
         // initialize action classes only at first execution.
-        if (is_array($items)) {
+        if (\is_array($items)) {
             $items = array_map(function ($handler) {
                 return new $handler();
             }, $items);

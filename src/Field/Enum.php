@@ -14,6 +14,7 @@ class Enum extends Generic
 
     /**
      * @param array $options
+     *
      * @return self
      */
     public function setOptions(array $options): self
@@ -21,8 +22,8 @@ class Enum extends Generic
         $i = 0;
         foreach ($options as $key => $value) {
             if (!array_has($this->palette, $key)) {
-                $this->palette[$key] = $this->colors[$i % count($this->colors)];
-                $i++;
+                $this->palette[$key] = $this->colors[$i % \count($this->colors)];
+                ++$i;
             }
         }
         $this->options = $options;
@@ -33,12 +34,13 @@ class Enum extends Generic
     /**
      * Set colors palette.
      *
-     * @param string|array $colors
-     * @param string|null $value
+     * @param array|string $colors
+     * @param null|string $value
+     * @param mixed $color
      */
     public function palette($color, string $value = null)
     {
-        if (is_array($color)) {
+        if (\is_array($color)) {
             foreach ($color as $name => $code) {
                 $this->palette($name, $code);
             }

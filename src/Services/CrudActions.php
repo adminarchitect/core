@@ -160,15 +160,15 @@ class CrudActions implements CrudActionsContract
 
             // Check for custom action method.
             if (method_exists($this, $method)) {
-                $response = call_user_func_array([$this, $method], $payload);
+                $response = \call_user_func_array([$this, $method], $payload);
             }
             // Check for CRUD authorizations in Scaffolding Resource.
             elseif ($this->module->hasMethod($method)) {
-                $response = call_user_func_array([$this->module, $method], $payload);
+                $response = \call_user_func_array([$this->module, $method], $payload);
             }
             // Check for CRUD authorizations from GuardManager service.
             elseif (($guard = $this->module->guard()) && method_exists($guard, $method)) {
-                $response = call_user_func_array([$guard, $method], $payload);
+                $response = \call_user_func_array([$guard, $method], $payload);
             }
 
             static::$responses[$key] = $response;

@@ -6,22 +6,13 @@ use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Contracts\Sortable;
-use Terranet\Administrator\Field\BelongsToMany;
-use Terranet\Administrator\Field\HasMany;
-use Terranet\Administrator\Filter\Date;
-use Terranet\Administrator\Filter\DateRange;
-use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
-use Terranet\Administrator\Filter\Number;
-use Terranet\Administrator\Filter\Text;
 use Terranet\Administrator\Form\FormElement;
 use Terranet\Translatable\Translatable;
 use function admin\db\scheme;
@@ -90,7 +81,7 @@ class Assembler
     {
         $callable = $scope->getQuery();
 
-        if (is_string($callable)) {
+        if (\is_string($callable)) {
             /*
              * Adds a Class "ClassName::class" syntax.
              *
@@ -104,7 +95,7 @@ class Assembler
                     throw new \Terranet\Administrator\Exception(
                         sprintf(
                             'Query object %s should implement %s interface',
-                            get_class($object),
+                            \get_class($object),
                             \Terranet\Administrator\Contracts\Module\Queryable::class
                         )
                     );
@@ -145,10 +136,10 @@ class Assembler
          *
          * @example: (new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
          */
-        if (is_callable($callable)) {
+        if (\is_callable($callable)) {
             [$object, $method] = $callable;
 
-            if (is_string($object)) {
+            if (\is_string($object)) {
                 $object = app($object);
             }
 
@@ -177,7 +168,7 @@ class Assembler
     public function sort($element, $direction)
     {
         // simple sorting
-        if (in_array($element, $sortable = app('scaffold.module')->sortable(), true)) {
+        if (\in_array($element, $sortable = app('scaffold.module')->sortable(), true)) {
             $columns = app('scaffold.module')->columns();
             $model = app('scaffold.module')->model();
 
@@ -189,11 +180,11 @@ class Assembler
             }
         }
 
-        if (array_key_exists($element, $sortable) && is_callable($callback = $sortable[$element])) {
-            $this->query = call_user_func_array($callback, [$this->query, $element, $direction]);
+        if (array_key_exists($element, $sortable) && \is_callable($callback = $sortable[$element])) {
+            $this->query = \call_user_func_array($callback, [$this->query, $element, $direction]);
         }
 
-        if (array_key_exists($element, $sortable) && is_string($handler = $sortable[$element])) {
+        if (array_key_exists($element, $sortable) && \is_string($handler = $sortable[$element])) {
             $handler = new $handler($this->query, $element, $direction);
             if (!$handler instanceof QueryBuilder || !method_exists($handler, 'build')) {
                 throw new \Exception('Handler class must implement '.QueryBuilder::class.' contract');
@@ -232,7 +223,7 @@ class Assembler
 
         $columns = scheme()->columns($table);
 
-        /** Filters with a custom query */
+        // Filters with a custom query
         if ($element instanceof Queryable && $element->hasQuery()) {
             return $this->query = $element->execQuery($this->query, $value);
         }
@@ -241,7 +232,7 @@ class Assembler
             return $this->filterByTranslatableColumn($element);
         }
 
-        /** Basic filters */
+        // Basic filters
         if ($element instanceof Searchable) {
             $this->query = $element->searchBy($this->query, $this->model);
         }
@@ -277,6 +268,7 @@ class Assembler
      * @param $name
      * @param $type
      * @param $value
+     * @param mixed $element
      *
      * @return Builder
      */

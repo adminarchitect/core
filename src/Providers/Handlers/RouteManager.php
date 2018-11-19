@@ -20,7 +20,7 @@ class RouteManager
                 return true;
             }
             if ($resolver = app('scaffold.config')->get('resource.resolver')) {
-                $module = call_user_func_array($resolver, [$route, $request]);
+                $module = \call_user_func_array($resolver, [$route, $request]);
             } else {
                 $module = $request->segment(app('scaffold.config')->get('resource.segment', 2));
             }

@@ -2,9 +2,8 @@
 
 namespace Terranet\Administrator\Filter;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\View;
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 
 class Enum extends Filter implements Searchable
@@ -14,6 +13,7 @@ class Enum extends Filter implements Searchable
 
     /**
      * @param array $options
+     *
      * @return self
      */
     public function setOptions(array $options = []): self
@@ -24,6 +24,21 @@ class Enum extends Filter implements Searchable
     }
 
     /**
+     * @param Builder $query
+     * @param Model $model
+     *
+     * @return Builder
+     */
+    public function searchBy(Builder $query, Model $model): Builder
+    {
+        if (!\is_array($value = $this->value())) {
+            $value = [$value];
+        }
+
+        return $query->whereIn("{$model->getTable()}.{$this->id()}", $value);
+    }
+
+    /**
      * @return array
      */
     protected function renderWith()
@@ -31,19 +46,5 @@ class Enum extends Filter implements Searchable
         return [
             'options' => $this->options,
         ];
-    }
-
-    /**
-     * @param Builder $query
-     * @param Model $model
-     * @return Builder
-     */
-    public function searchBy(Builder $query, Model $model): Builder
-    {
-        if (!is_array($value = $this->value())) {
-            $value = [$value];
-        }
-
-        return $query->whereIn("{$model->getTable()}.{$this->id()}", $value);
     }
 }

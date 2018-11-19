@@ -31,7 +31,7 @@ trait LoopsOverRelations
                 return present($object, $name, $object->$name()->count());
             }
 
-            $object = call_user_func([$orig = $object, $relation]);
+            $object = \call_user_func([$orig = $object, $relation]);
 
             // Treat BelongsToMany form relation as array of values.
             if ($object instanceof BelongsToMany) {
@@ -47,7 +47,7 @@ trait LoopsOverRelations
             $object = $object->getResults();
         }
 
-        return ($object && is_object($object))
+        return ($object && \is_object($object))
             ? ($format ? \admin\helpers\eloquent_attribute($object, $name) : $object->$name)
             : null;
     }

@@ -75,7 +75,7 @@ class Breadcrumbs
      */
     protected function assembly($action)
     {
-        return call_user_func_array([$this, $action], []);
+        return \call_user_func_array([$this, $action], []);
     }
 
     protected function edit()

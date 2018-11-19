@@ -36,7 +36,7 @@ trait HasForm
             return $editable->build(
                 new Grid($eloquent)
             )->map(function ($element) use ($translatable) {
-                if (in_array($element->id(), $translatable)) {
+                if (\in_array($element->id(), $translatable, true)) {
                     return $element->translatable();
                 }
 

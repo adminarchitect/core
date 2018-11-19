@@ -20,7 +20,7 @@ trait SortableTrait
     public function isSortable()
     {
         if (property_exists($this, 'sortable')) {
-            return is_string($this->sortable) || is_callable($this->sortable);
+            return \is_string($this->sortable) || \is_callable($this->sortable);
         }
 
         return false;

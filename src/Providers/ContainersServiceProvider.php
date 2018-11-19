@@ -43,7 +43,7 @@ class ContainersServiceProvider extends ServiceProvider
         foreach (array_keys($this->containers) as $container) {
             $method = "register{$container}";
 
-            call_user_func_array([$this, $method], []);
+            \call_user_func_array([$this, $method], []);
         }
 
         $this->app->bind(Module::class, function ($app) {
@@ -105,7 +105,7 @@ class ContainersServiceProvider extends ServiceProvider
                         $locale = $locale->id();
                     }
 
-                    return in_array((int) $locale, $this->readonly, true);
+                    return \in_array((int) $locale, $this->readonly, true);
                 }
             };
 
@@ -125,7 +125,7 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminResource()
     {
         $this->app->singleton('scaffold.module', function ($app) {
-            if (in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'], true)) {
+            if (\in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'], true)) {
                 return $app['scaffold.module.settings'];
             }
 

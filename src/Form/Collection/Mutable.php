@@ -3,13 +3,9 @@
 namespace Terranet\Administrator\Form\Collection;
 
 use Terranet\Administrator\Collection\Mutable as BaseMutableCollection;
-use Terranet\Administrator\Columns\MediaElement;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Field\Textarea;
 use Terranet\Administrator\Field\Translatable;
-use Terranet\Administrator\Form\FormElement;
-use Terranet\Administrator\Form\FormSection;
-use Terranet\Administrator\Form\InputFactory;
 
 class Mutable extends BaseMutableCollection
 {
@@ -27,7 +23,7 @@ class Mutable extends BaseMutableCollection
         $this->validateEditor($editor);
 
         return (bool) $this->filter(function ($field) use ($editor) {
-            return in_array(get_class($field), [Textarea::class, Translatable::class])
+            return \in_array(\get_class($field), [Textarea::class, Translatable::class], true)
                 && $field->editorEnabled($editor);
         })->count();
     }
@@ -39,11 +35,11 @@ class Mutable extends BaseMutableCollection
      */
     public function editors($fields, string $editor = null)
     {
-        if (is_array($fields)) {
+        if (\is_array($fields)) {
             foreach ($fields as $field => $editor) {
                 $this->editors($field, $editor);
             }
-        } elseif (is_string($fields) && $editor) {
+        } elseif (\is_string($fields) && $editor) {
             $item = $this->find($fields);
             if ($item instanceof Textarea) {
                 if (method_exists($item, $editor)) {
@@ -62,11 +58,11 @@ class Mutable extends BaseMutableCollection
      */
     public function hints($fields, string $hint = null)
     {
-        if (is_array($fields)) {
+        if (\is_array($fields)) {
             foreach ($fields as $field => $hint) {
                 $this->hints($field, $hint);
             }
-        } elseif (is_string($fields) && $hint) {
+        } elseif (\is_string($fields) && $hint) {
             $item = $this->find($fields);
             $item->setDescription($hint);
         }
@@ -81,7 +77,7 @@ class Mutable extends BaseMutableCollection
      */
     protected function validateEditor($editor)
     {
-        if (!in_array($editor, ['ckeditor', 'tinymce', 'medium', 'markdown'], true)) {
+        if (!\in_array($editor, ['ckeditor', 'tinymce', 'medium', 'markdown'], true)) {
             throw new Exception(sprintf('Unknown editor %s', $editor));
         }
     }

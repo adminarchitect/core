@@ -99,7 +99,7 @@ class Scaffolding implements Module, AutoTranslatable
     {
         // Call user-defined method if exists.
         if ($closure = array_get(static::$methods, $method)) {
-            return call_user_func_array($closure, $arguments);
+            return \call_user_func_array($closure, $arguments);
         }
 
         return null;
@@ -130,7 +130,7 @@ class Scaffolding implements Module, AutoTranslatable
             $this->guard = config('administrator.acl.manager');
         }
 
-        if (is_string($this->guard)) {
+        if (\is_string($this->guard)) {
             $this->guard = new $this->guard($this);
         }
 

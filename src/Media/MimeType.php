@@ -25,7 +25,7 @@ class MimeType
     public function __call($method, $args)
     {
         if (method_exists($this->file, $method)) {
-            return call_user_func_array([$this->file, $method], $args);
+            return \call_user_func_array([$this->file, $method], $args);
         }
 
         throw new Exception("Method $method not found.");

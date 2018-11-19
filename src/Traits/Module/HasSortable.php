@@ -48,7 +48,7 @@ trait HasSortable
             return $this->sortable = array_except($this->sortable, $element);
         }
 
-        if (in_array($element, $this->sortable(), true)) {
+        if (\in_array($element, $this->sortable(), true)) {
             return $this->sortable = array_except(
                 $this->sortable,
                 array_search($element, $this->sortable, true)

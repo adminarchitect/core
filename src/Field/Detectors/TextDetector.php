@@ -3,10 +3,8 @@
 namespace Terranet\Administrator\Field\Detectors;
 
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Types\TextType;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Field\Text;
-use Terranet\Administrator\Field\Textarea;
 
 class TextDetector extends AbstractDetector
 {

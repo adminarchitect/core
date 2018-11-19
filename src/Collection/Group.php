@@ -47,7 +47,7 @@ class Group extends ElementContainer
     public function __call($method, $args)
     {
         if (method_exists($this->elements, $method)) {
-            $this->elements = call_user_func_array([$this->elements, $method], $args);
+            $this->elements = \call_user_func_array([$this->elements, $method], $args);
 
             return $this;
         }

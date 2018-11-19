@@ -21,7 +21,7 @@ class DateTimeDetector extends AbstractDetector
      */
     protected function authorize(string $column, Column $metadata, Model $model): bool
     {
-        return in_array(get_class($metadata), [
+        return \in_array(\get_class($metadata->getType()), [
             TimeType::class,
             DateType::class,
             DateTimeType::class,

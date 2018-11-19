@@ -125,7 +125,7 @@ class ActionsManager implements ActionsManagerContract
                 str_replace('action::', '', $method)
             );
 
-            return call_user_func_array([$handler, 'handle'], $arguments);
+            return \call_user_func_array([$handler, 'handle'], $arguments);
         }
 
         // Execute batch action
@@ -134,11 +134,11 @@ class ActionsManager implements ActionsManagerContract
                 str_replace('batch::', '', $method)
             );
 
-            return call_user_func_array([$handler, 'handle'], $arguments);
+            return \call_user_func_array([$handler, 'handle'], $arguments);
         }
 
         // Execute CRUD action
-        return call_user_func_array([$this->service, $method], (array) $arguments);
+        return \call_user_func_array([$this->service, $method], (array) $arguments);
     }
 
     /**

@@ -20,7 +20,7 @@ trait ResolvesClasses
 
         $instance = app()->make($this->getModuleClassName($fileInfo));
 
-        if (is_callable($callback)) {
+        if (\is_callable($callback)) {
             $callback($instance);
         }
     }
@@ -37,7 +37,7 @@ trait ResolvesClasses
         $path = trim(str_replace(
             app_path(),
             '',
-            dirname($fileInfo->getPathname())
+            \dirname($fileInfo->getPathname())
         ), \DIRECTORY_SEPARATOR);
 
         $location = str_replace('/', '\\', $path);

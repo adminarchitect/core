@@ -83,7 +83,7 @@ trait ValidatesForm
             }
         }
 
-        if (in_array($classname, ['IntegerType', 'DecimalType'], true)) {
+        if (\in_array($classname, ['IntegerType', 'DecimalType'], true)) {
             $rules[] = 'numeric';
 
             if ($column->getUnsigned()) {
@@ -98,7 +98,7 @@ trait ValidatesForm
         return array_map(function ($rule) use ($column, $eloquent) {
             $method = 'make'.ucfirst($rule).'Rule';
 
-            return call_user_func_array([$this, $method], [$column, $eloquent]);
+            return \call_user_func_array([$this, $method], [$column, $eloquent]);
         }, $rules);
     }
 
@@ -112,7 +112,7 @@ trait ValidatesForm
      */
     protected function fillable($column, $eloquent)
     {
-        return in_array($column, $eloquent->getFillable(), true);
+        return \in_array($column, $eloquent->getFillable(), true);
     }
 
     /**
@@ -126,7 +126,7 @@ trait ValidatesForm
     protected function isForeignKey($column, $eloquent)
     {
         foreach ($foreign = scheme()->foreignKeys($eloquent->getTable()) as $foreign) {
-            if (in_array($column->getName(), $foreign->getLocalColumns(), true)) {
+            if (\in_array($column->getName(), $foreign->getLocalColumns(), true)) {
                 return $foreign;
             }
         }
@@ -143,7 +143,7 @@ trait ValidatesForm
     protected function isUnique(Column $column, $eloquent)
     {
         foreach (scheme()->indexes($eloquent->getTable()) as $indexName => $index) {
-            if (in_array($column->getName(), $index->getColumns(), true) && $index->isUnique()) {
+            if (\in_array($column->getName(), $index->getColumns(), true) && $index->isUnique()) {
                 return true;
             }
         }
@@ -217,7 +217,7 @@ trait ValidatesForm
 
     protected function makeUniqueRule($column, $eloquent)
     {
-        if (is_object($key = $this->routeParam('id')) && method_exists($key, 'getKey')) {
+        if (\is_object($key = $this->routeParam('id')) && method_exists($key, 'getKey')) {
             $key = $key->getKey();
         }
 

@@ -12,14 +12,6 @@ abstract class AbstractDetector implements Chainable
     protected $successor;
 
     /**
-     * @param Chainable $successor
-     */
-    public function setNext(Chainable $successor)
-    {
-        $this->successor = $successor;
-    }
-
-    /**
      * Execute the chain.
      *
      * @param string $column
@@ -35,10 +27,18 @@ abstract class AbstractDetector implements Chainable
         }
 
         if ($this->successor) {
-            return call_user_func_array($this->successor, compact('column', 'metadata', 'model'));
+            return \call_user_func_array($this->successor, compact('column', 'metadata', 'model'));
         }
 
         return null;
+    }
+
+    /**
+     * @param Chainable $successor
+     */
+    public function setNext(Chainable $successor)
+    {
+        $this->successor = $successor;
     }
 
     /**

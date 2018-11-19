@@ -2,14 +2,12 @@
 
 namespace Terranet\Administrator\Field\Detectors;
 
+use Doctrine\DBAL\Schema\Column;
+use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Field\Enum;
 use function admin\db\connection;
 use function admin\db\enum_values;
 use function admin\db\translated_values;
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Types\StringType;
-use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Field\Enum;
-use Terranet\Administrator\Field\Link;
 
 class EnumDetector extends AbstractDetector
 {
@@ -19,6 +17,7 @@ class EnumDetector extends AbstractDetector
     /**
      * @param string $column
      * @param Model $model
+     *
      * @return mixed
      */
     protected function enumValues(string $column, Model $model)

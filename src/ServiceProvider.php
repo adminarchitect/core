@@ -94,7 +94,7 @@ class ServiceProvider extends BaseServiceProvider
         ];
 
         array_walk($dependencies, function ($package, $provider) {
-            if (is_string($package) && is_numeric($provider)) {
+            if (\is_string($package) && is_numeric($provider)) {
                 $provider = $package;
                 $package = null;
             }
@@ -102,7 +102,7 @@ class ServiceProvider extends BaseServiceProvider
             if (!$this->app->getProvider($provider)) {
                 $this->app->register($provider);
 
-                if (is_array($package)) {
+                if (\is_array($package)) {
                     foreach ($package as $alias => $facade) {
                         if (class_exists($alias)) {
                             continue;

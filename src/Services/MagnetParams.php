@@ -55,7 +55,7 @@ class MagnetParams
     public function toArray()
     {
         $params = array_build($this->params, function ($index, $param) {
-            if (is_string($param)) {
+            if (\is_string($param)) {
                 return [$param, $this->request->get($param, null)];
             }
         });

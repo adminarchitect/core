@@ -34,6 +34,6 @@ trait AcceptsCustomFormat
      */
     protected function callFormatter($args)
     {
-        return call_user_func_array($this->format, $args);
+        return \call_user_func_array($this->format, $args);
     }
 }

@@ -11,7 +11,7 @@ trait HandlesRelation
      */
     public function relation()
     {
-        return call_user_func([$this->model, $this->id]);
+        return \call_user_func([$this->model, $this->id]);
     }
 
     /**

@@ -24,7 +24,7 @@ class AuthUserProvider extends EloquentUserProvider
                 // handle closures
                 $value = $this->retrieveValue($value);
 
-                $query = call_user_func_array([$query, $this->searchMethod($value)], [$key, $value]);
+                $query = \call_user_func_array([$query, $this->searchMethod($value)], [$key, $value]);
             }
         }
 
@@ -38,7 +38,7 @@ class AuthUserProvider extends EloquentUserProvider
      */
     protected function searchMethod($value)
     {
-        return is_array($value) ? 'whereIn' : 'where';
+        return \is_array($value) ? 'whereIn' : 'where';
     }
 
     /**
@@ -48,7 +48,7 @@ class AuthUserProvider extends EloquentUserProvider
      */
     protected function retrieveValue($value)
     {
-        if (is_callable($value)) {
+        if (\is_callable($value)) {
             $value = $this->callback($value);
         }
 

@@ -6,7 +6,7 @@ trait CallableTrait
 {
     public function callback()
     {
-        $arguments = func_get_args();
+        $arguments = \func_get_args();
         $callback = array_shift($arguments);
 
         $reflection = new \ReflectionFunction($callback);
@@ -20,6 +20,6 @@ trait CallableTrait
             }
         }
 
-        return call_user_func_array($callback, $arguments);
+        return \call_user_func_array($callback, $arguments);
     }
 }

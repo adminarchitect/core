@@ -5,11 +5,11 @@ namespace Terranet\Administrator\Field;
 use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\AppliesSorting;
 use Terranet\Administrator\Scaffolding;
-use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 
 abstract class Generic implements Sortable, AutoTranslatable
@@ -98,9 +98,10 @@ abstract class Generic implements Sortable, AutoTranslatable
      * Create new element from another.
      *
      * @param Generic $element
+     *
      * @return static
      */
-    public static function makeFrom(Generic $element): self
+    public static function makeFrom(self $element): self
     {
         return static::make($element->title(), $element->id());
     }
@@ -109,11 +110,12 @@ abstract class Generic implements Sortable, AutoTranslatable
      * Switch to a new element type.
      *
      * @param string $className
+     *
      * @return mixed
      */
     public function switchTo(string $className)
     {
-        return forward_static_call_array([$className, "make"], [$this->title(), $this->id()]);
+        return forward_static_call_array([$className, 'make'], [$this->title(), $this->id()]);
     }
 
     /**
@@ -161,7 +163,7 @@ abstract class Generic implements Sortable, AutoTranslatable
         ];
 
         if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
-            $data += call_user_func([$this, $dataGetter]);
+            $data += \call_user_func([$this, $dataGetter]);
         }
 
         if (View::exists($view = $this->template($page))) {
@@ -191,9 +193,9 @@ abstract class Generic implements Sortable, AutoTranslatable
         if (null === $this->name) {
             $parts = explode('.', $this->id());
 
-            if (count($parts) > 1) {
+            if (\count($parts) > 1) {
                 $first = array_first($parts);
-                $other = array_slice($parts, 1);
+                $other = \array_slice($parts, 1);
 
                 $other = array_map(function ($part) {
                     return "[$part]";
@@ -210,6 +212,7 @@ abstract class Generic implements Sortable, AutoTranslatable
 
     /**
      * @param string $name
+     *
      * @return Generic
      */
     public function setName(string $name): self
@@ -403,7 +406,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     public function setAttribute($attribute, $value = null): self
     {
-        if (is_array($attribute)) {
+        if (\is_array($attribute)) {
             foreach ($attribute as $key => $value) {
                 $this->setAttribute($key, $value);
             }
@@ -420,6 +423,34 @@ abstract class Generic implements Sortable, AutoTranslatable
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return string
+     */
+    public function translationKey()
+    {
+        $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!$this->translator()->has($key)) {
+            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function descriptionKey()
+    {
+        $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!$this->translator()->has($key)) {
+            $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
     }
 
     /**
@@ -452,33 +483,5 @@ abstract class Generic implements Sortable, AutoTranslatable
             snake_case($field ?? class_basename($this)),
             $page
         );
-    }
-
-    /**
-     * @return string
-     */
-    public function translationKey()
-    {
-        $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
-
-        if (!$this->translator()->has($key)) {
-            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
-        }
-
-        return $key;
-    }
-
-    /**
-     * @return string
-     */
-    public function descriptionKey()
-    {
-        $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
-
-        if (!$this->translator()->has($key)) {
-            $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
-        }
-
-        return $key;
     }
 }

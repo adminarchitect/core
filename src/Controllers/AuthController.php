@@ -36,8 +36,8 @@ class AuthController extends BaseController
         $remember = (int) $request->get('remember_me', 0);
 
         if ($this->guard()->attempt($credentials, $remember, true)) {
-            if (is_callable($url = $config->get('home_page'))) {
-                $url = call_user_func($url);
+            if (\is_callable($url = $config->get('home_page'))) {
+                $url = \call_user_func($url);
             }
 
             return Redirect::to(URL::to($url));

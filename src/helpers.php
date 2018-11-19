@@ -39,19 +39,18 @@ namespace {
 }
 
 namespace admin\db {
-
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
 
-    if (!function_exists('scheme')) {
+    if (!\function_exists('scheme')) {
         function scheme()
         {
             return app('scaffold.schema');
         }
     }
 
-    if (!function_exists('table_columns')) {
+    if (!\function_exists('table_columns')) {
         function table_columns($model, $withTranslated = true)
         {
             static $data = [];
@@ -79,7 +78,7 @@ namespace admin\db {
         }
     }
 
-    if (!function_exists('table_indexes')) {
+    if (!\function_exists('table_indexes')) {
         function table_indexes(Model $model, $withTranslated = true)
         {
             $indexes = scheme()->indexedColumns($model->getTable());
@@ -95,7 +94,7 @@ namespace admin\db {
         }
     }
 
-    if (!function_exists('connection')) {
+    if (!\function_exists('connection')) {
         /**
          * Check if we are on desired connection or get the current connection name.
          *
@@ -113,7 +112,7 @@ namespace admin\db {
         }
     }
 
-    if (!function_exists('enum_values')) {
+    if (!\function_exists('enum_values')) {
         function enum_values($table, $column)
         {
             $columns = DB::select("SHOW COLUMNS FROM `{$table}` LIKE '{$column}'");
@@ -131,6 +130,8 @@ namespace admin\db {
         /**
          * @param $values
          * @param $column
+         * @param mixed $namespace
+         *
          * @return array
          */
         function translated_values($values, $namespace, $column)
@@ -141,7 +142,7 @@ namespace admin\db {
                 $trKey = "administrator::enums.{$namespace}.{$column}.{$value}";
                 if ($translator->has($trKey)) {
                     $label = $translator->trans($trKey);
-                } else if ($translator->has($trKey = "administrator::enums.global.{$column}.{$value}")) {
+                } elseif ($translator->has($trKey = "administrator::enums.global.{$column}.{$value}")) {
                     $label = $translator->trans($trKey);
                 }
             }
@@ -152,7 +153,6 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
-
     use Coduo\PHPHumanizer\StringHumanizer;
     use Czim\Paperclip\Contracts\AttachableInterface;
     use Illuminate\Database\Eloquent\Model;
@@ -163,7 +163,7 @@ namespace admin\helpers {
     use Terranet\Presentable\PresentableInterface;
     use Terranet\Translatable\Translatable;
 
-    if (!function_exists('html_list')) {
+    if (!\function_exists('html_list')) {
         /**
          * Fetch key => value pairs from an Eloquent model.
          *
@@ -175,7 +175,7 @@ namespace admin\helpers {
          */
         function html_list($model, $labelAttribute = 'name', $keyAttribute = 'id')
         {
-            if (is_string($model)) {
+            if (\is_string($model)) {
                 $model = new $model();
             }
 
@@ -183,7 +183,7 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('qsRoute')) {
+    if (!\function_exists('qsRoute')) {
         /**
          * Generate route with query string.
          *
@@ -208,13 +208,13 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('html_attributes')) {
+    if (!\function_exists('html_attributes')) {
         function html_attributes(array $attributes = [])
         {
             $out = [];
             foreach ($attributes as $key => $value) {
                 // transform
-                if (is_bool($value)) {
+                if (\is_bool($value)) {
                     $out[] = "{$key}=\"{$key}\"";
                 } else {
                     if (is_numeric($key)) {
@@ -230,7 +230,7 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('auto_p')) {
+    if (!\function_exists('auto_p')) {
         function auto_p($value, $lineBreaks = true)
         {
             if ('' === trim($value)) {
@@ -299,7 +299,7 @@ namespace admin\helpers {
          */
         function clean_pre($matches)
         {
-            if (is_array($matches)) {
+            if (\is_array($matches)) {
                 $text = $matches[1].$matches[2].'</pre>';
             } else {
                 $text = $matches;
@@ -328,21 +328,21 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('hidden_element')) {
+    if (!\function_exists('hidden_element')) {
         function hidden_element($element)
         {
             return $element instanceof HiddenElement;
         }
     }
 
-    if (!function_exists('exportable')) {
+    if (!\function_exists('exportable')) {
         function exportable($module)
         {
             return $module instanceof Exportable;
         }
     }
 
-    if (!function_exists('eloquent_attributes')) {
+    if (!\function_exists('eloquent_attributes')) {
         function eloquent_attributes(Model $model)
         {
             $fillable = $model->getFillable();
@@ -358,7 +358,7 @@ namespace admin\helpers {
             $fillable = array_merge($fillable, $model->getDates());
 
             $fillable = array_filter($fillable, function ($element) use ($model) {
-                return !in_array($element, $model->getHidden(), true);
+                return !\in_array($element, $model->getHidden(), true);
             });
 
             $data = $model->toArray();
@@ -372,7 +372,7 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('eloquent_attribute')) {
+    if (!\function_exists('eloquent_attribute')) {
         function eloquent_attribute(Model $object, $key)
         {
             if ($object instanceof AttachableInterface && array_key_exists($key, $object->getAttachedFiles())) {
@@ -381,7 +381,7 @@ namespace admin\helpers {
 
             $value = present($object, $key);
 
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 return !empty($value)
                     ? highlight_string(json_encode($value, JSON_PRETTY_PRINT))
                     : null;
@@ -422,7 +422,7 @@ namespace admin\helpers {
         }
     }
 
-    if (!function_exists('str_humanize')) {
+    if (!\function_exists('str_humanize')) {
         function str_humanize($key)
         {
             return StringHumanizer::humanize($key);
@@ -431,7 +431,6 @@ namespace admin\helpers {
 }
 
 namespace admin\output {
-
     use Closure;
 
     function boolean($value)
@@ -471,7 +470,7 @@ namespace admin\output {
         if ($attachment && $attachment->originalFilename()) {
             $styles = $attachment->variants();
 
-            if (count($styles)) {
+            if (\count($styles)) {
                 $firstStyle = $style ?: head($styles);
                 $origStyle = 'original';
 
@@ -487,7 +486,7 @@ namespace admin\output {
                     if (($size = array_shift($size))) {
                         $dimensions = array_get($attachment->getConfig(), "variants.{$size}");
 
-                        if (is_array($dimensions)) {
+                        if (\is_array($dimensions)) {
                             $dimensions = array_get($dimensions, 'resize.dimensions');
                         }
 
@@ -519,7 +518,7 @@ namespace admin\output {
 
     function _prepare_collection($items, Closure $callback = null)
     {
-        if (is_object($items) && method_exists($items, 'toArray')) {
+        if (\is_object($items) && method_exists($items, 'toArray')) {
             $items = $items->toArray();
         }
 

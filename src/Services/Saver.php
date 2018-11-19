@@ -183,9 +183,9 @@ class Saver implements SaverContract
     {
         if (!empty($this->relations)) {
             foreach ($this->relations as $name => $field) {
-                $relation = call_user_func([$this->repository, $name]);
+                $relation = \call_user_func([$this->repository, $name]);
 
-                switch (get_class($field)) {
+                switch (\get_class($field)) {
                     case BelongsTo::class:
                         // @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
                         $relation->associate(
@@ -293,7 +293,7 @@ class Saver implements SaverContract
     protected function handleJsonType($name, $value)
     {
         if ($cast = array_get($this->repository->getCasts(), $name)) {
-            if (in_array($cast, ['array', 'json'], true)) {
+            if (\in_array($cast, ['array', 'json'], true)) {
                 $value = json_decode($value);
             }
         }

@@ -59,7 +59,7 @@ class BelongsToMany extends HasMany
 
         return [
             'relation' => $relation,
-            'searchable' => get_class($relation->getRelated()),
+            'searchable' => \get_class($relation->getRelated()),
             'values' => $values,
             'completeList' => $this->completeList,
             'titleField' => $this->titleField,

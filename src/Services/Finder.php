@@ -120,7 +120,7 @@ class Finder implements FinderContract
             }
 
             if ($magnet = app('scaffold.magnet')) {
-                if ($filters && count($filters)) {
+                if ($filters && \count($filters)) {
                     $magnet = $this->removeDuplicates($magnet, $filters);
                 }
 
@@ -158,7 +158,7 @@ class Finder implements FinderContract
             }
         }
 
-        $class = get_class(app('scaffold.magnet'));
+        $class = \get_class(app('scaffold.magnet'));
 
         return new $class(app('request'), $magnetKeys);
     }
@@ -198,7 +198,7 @@ class Finder implements FinderContract
         $direction = $sortable->direction();
 
         if ($element && $direction) {
-            if (is_string($element)) {
+            if (\is_string($element)) {
                 $this->assembler()->sort($element, $direction);
             }
         }

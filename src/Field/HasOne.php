@@ -78,6 +78,7 @@ class HasOne extends BelongsTo
 
     /**
      * @param $related
+     *
      * @return \Terranet\Administrator\Collection\Mutable
      */
     protected function relatedColumns($related): Mutable

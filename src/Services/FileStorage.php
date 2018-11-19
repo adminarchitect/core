@@ -95,7 +95,7 @@ class FileStorage
     public function rename($from, $to)
     {
         $from = $this->path($from);
-        $to = dirname(realpath($from)).\DIRECTORY_SEPARATOR.$to;
+        $to = \dirname(realpath($from)).\DIRECTORY_SEPARATOR.$to;
 
         if ($this->filesystem->exists($to)) {
             throw new Exception(sprintf('File %s already exists.', $to));

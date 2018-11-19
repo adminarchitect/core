@@ -31,7 +31,7 @@ trait ExportsCollection
             throw new Exception(sprintf('Don\'t know how to export to %s format', $format));
         }
 
-        return call_user_func_array([$this, $method], [$query]);
+        return \call_user_func_array([$this, $method], [$query]);
     }
 
     /**
@@ -94,7 +94,7 @@ trait ExportsCollection
     {
         $out = fopen(
             $file = $this->getFilename(),
-            'a+'
+            'a+b'
         );
         $headersPrinted = false;
 

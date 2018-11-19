@@ -63,7 +63,7 @@ class Sorter
      */
     public function canSortBy($column)
     {
-        return array_key_exists($column, $this->sortable) || in_array($column, $this->sortable, true);
+        return array_key_exists($column, $this->sortable) || \in_array($column, $this->sortable, true);
     }
 
     /**

@@ -109,7 +109,7 @@ class Translator
         }
 
         return $files->when($only, function (Collection $files) use ($only) {
-            return $files->intersect(is_array($only) ? $only : [$only]);
+            return $files->intersect(\is_array($only) ? $only : [$only]);
         });
     }
 

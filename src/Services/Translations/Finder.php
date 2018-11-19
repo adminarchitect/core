@@ -47,7 +47,7 @@ class Finder
     {
         return new LengthAwarePaginator(
             $this->chunk($keys, $page, $perPage),
-            count($keys),
+            \count($keys),
             20,
             $page,
             [
@@ -68,7 +68,7 @@ class Finder
      */
     protected function chunk($translations, $page = 1, $perPage = 20)
     {
-        if (!$count = count($translations)) {
+        if (!$count = \count($translations)) {
             return [];
         }
 

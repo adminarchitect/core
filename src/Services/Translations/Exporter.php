@@ -69,7 +69,7 @@ class Exporter
     protected function replaceAttributes($translations)
     {
         foreach ($translations as &$content) {
-            if (is_array($content)) {
+            if (\is_array($content)) {
                 $content = $this->replaceAttributes($content);
 
                 continue;

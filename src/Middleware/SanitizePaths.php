@@ -33,7 +33,7 @@ class SanitizePaths
      */
     protected function sanitizePath($path)
     {
-        if (is_array($path)) {
+        if (\is_array($path)) {
             return array_map([$this, 'sanitizePath'], $path);
         }
 

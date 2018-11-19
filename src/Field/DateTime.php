@@ -24,7 +24,7 @@ class DateTime extends Generic
             self::class => $this->dateTimeFormat,
             Date::class => $this->dateFormat,
             Time::class => $this->timeFormat,
-        ][get_class($this)];
+        ][\get_class($this)];
 
         $formattedValue = Carbon::parse($this->value())->format($format);
 

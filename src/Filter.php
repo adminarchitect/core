@@ -4,9 +4,9 @@ namespace Terranet\Administrator;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Contracts\Filter as FilterContract;
 use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Traits\CallableTrait;
 
 class Filter implements FilterContract
@@ -132,7 +132,7 @@ class Filter implements FilterContract
     {
         return \admin\helpers\qsRoute(null, [
             'scoped_to' => $scope,
-            'page' => 1
+            'page' => 1,
         ]);
     }
 

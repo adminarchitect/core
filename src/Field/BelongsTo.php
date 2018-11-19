@@ -56,6 +56,28 @@ class BelongsTo extends Generic
     }
 
     /**
+     * @param Builder $query
+     * @param Model $model
+     * @param string $direction
+     *
+     * @return Builder
+     */
+    public function sortBy(Builder $query, Model $model, string $direction): Builder
+    {
+        $table = $model->getTable();
+        $relation = \call_user_func([$model, $this->id()]);
+        $joinTable = $relation->getRelated()->getTable();
+        $alias = str_random(4);
+
+        $ownerKey = $relation->getOwnerKey();
+        $foreignKey = $relation->getForeignKey();
+        $foreignColumn = $this->getColumn();
+
+        return $query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")
+                     ->orderBy("{$alias}.{$foreignColumn}", $direction);
+    }
+
+    /**
      * @return array
      */
     protected function onIndex(): array
@@ -106,26 +128,5 @@ class BelongsTo extends Generic
             'related' => $related ?? null,
             'searchable' => $this->searchable,
         ];
-    }
-
-    /**
-     * @param Builder $query
-     * @param Model $model
-     * @param string $direction
-     * @return Builder
-     */
-    public function sortBy(Builder $query, Model $model, string $direction): Builder
-    {
-        $table = $model->getTable();
-        $relation = call_user_func([$model, $this->id()]);
-        $joinTable = $relation->getRelated()->getTable();
-        $alias = str_random(4);
-
-        $ownerKey = $relation->getOwnerKey();
-        $foreignKey = $relation->getForeignKey();
-        $foreignColumn = $this->getColumn();
-
-        return $query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")
-                     ->orderBy("{$alias}.{$foreignColumn}", $direction);
     }
 }

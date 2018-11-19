@@ -18,7 +18,7 @@ trait SortsObjectsCollection
         $class = false;
 
         if ($objects instanceof Arrayable) {
-            $class = get_class($objects);
+            $class = \get_class($objects);
 
             $objects = $objects->toArray();
         }

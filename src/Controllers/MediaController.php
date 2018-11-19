@@ -146,7 +146,7 @@ class MediaController extends AdminController
         $directory = str_replace($this->storage->path(), '', $directory);
 
         // remove storage path from $directory
-        $directory = implode('/', array_slice(explode('/', $directory), 1));
+        $directory = implode('/', \array_slice(explode('/', $directory), 1));
 
         $this->breadcrumbs->register('index', function (Generator $generator) use ($popup) {
             $generator->push('Home', route('scaffold.media'.($popup ? '.popup' : '')));
@@ -161,7 +161,7 @@ class MediaController extends AdminController
             $path[] = $dir;
             $this->breadcrumbs->register($section = implode('.', $path), function (Generator $generator) use (&$parent, $dir, $tmpPath, $dirs) {
                 $generator->parent($parent = implode('.', $tmpPath));
-                $generator->push($dir, route('scaffold.media', ['path' => implode('/', array_slice($dirs, 0, -1))]));
+                $generator->push($dir, route('scaffold.media', ['path' => implode('/', \array_slice($dirs, 0, -1))]));
             });
         }
 

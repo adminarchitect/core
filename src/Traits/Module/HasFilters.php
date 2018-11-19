@@ -2,18 +2,18 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
-use function admin\db\translated_values;
+use Terranet\Administrator\Collection\Mutable;
+use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Filter\Text;
-use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filters\FilterElement;
 use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
 use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Collection\Mutable;
 use function admin\db\connection;
 use function admin\db\enum_values;
 use function admin\db\table_columns;
 use function admin\db\table_indexes;
+use function admin\db\translated_values;
 
 trait HasFilters
 {
@@ -100,6 +100,7 @@ trait HasFilters
                                 $this->addFilter(
                                     Enum::make($column, $column)->setOptions(['' => '----'] + $values)
                                 );
+
                                 break;
                             }
                         }
@@ -162,7 +163,7 @@ trait HasFilters
             $input->setQuery($query);
         }
 
-        if ('select' === $type && is_array($options)) {
+        if ('select' === $type && \is_array($options)) {
             $input->setOptions($options);
         }
 
@@ -204,7 +205,7 @@ trait HasFilters
      */
     protected function isDynamicScope($method)
     {
-        return count($method->getParameters()) > 1;
+        return \count($method->getParameters()) > 1;
     }
 
     /**
@@ -216,7 +217,7 @@ trait HasFilters
      */
     protected function isHiddenScope($name)
     {
-        return property_exists($this, 'hiddenScopes') && in_array($name, $this->hiddenScopes, true);
+        return property_exists($this, 'hiddenScopes') && \in_array($name, $this->hiddenScopes, true);
     }
 
     /**

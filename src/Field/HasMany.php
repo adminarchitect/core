@@ -44,6 +44,18 @@ class HasMany extends Generic
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Model $model
+     * @param string $direction
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function sortBy(\Illuminate\Database\Eloquent\Builder $query, Model $model, string $direction): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->withCount($this->id())->orderBy("{$this->id()}_count", $direction);
+    }
+
+    /**
      * @return array
      */
     protected function onIndex(): array
@@ -53,7 +65,7 @@ class HasMany extends Generic
 
         // apply a query
         if ($this->query) {
-            $relation = call_user_func_array($this->query, [$relation]);
+            $relation = \call_user_func_array($this->query, [$relation]);
         }
 
         if ($module = $this->firstWithModel($related)) {
@@ -94,16 +106,5 @@ class HasMany extends Generic
             'relation' => $relation ?? null,
             'items' => $relation ? $relation->getResults() : null,
         ];
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param Model $model
-     * @param string $direction
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function sortBy(\Illuminate\Database\Eloquent\Builder $query, Model $model, string $direction): \Illuminate\Database\Eloquent\Builder
-    {
-        return $query->withCount($this->id())->orderBy("{$this->id()}_count", $direction);
     }
 }

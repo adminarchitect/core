@@ -29,7 +29,7 @@ abstract class DashboardPanel implements Widgetable
      */
     protected function validateWidth($width)
     {
-        if (!in_array($width, range(1, 12, 1), true)) {
+        if (!\in_array($width, range(1, 12, 1), true)) {
             throw new \Exception('Width must be between 1 and 12.');
         }
     }

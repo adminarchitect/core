@@ -3,15 +3,11 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Support\Facades\View;
-use League\Flysystem\Adapter\Local;
-use function localizer\locale;
-use Terranet\Administrator\Exception;
 use Terranet\Localizer\Locale;
 
 /**
- * Class Translatable
+ * Class Translatable.
  *
- * @package Terranet\Administrator\Field
  * @method switchTo(string $className)
  * @method tinymce()
  * @method ckeditor()
@@ -37,15 +33,6 @@ class Translatable
     }
 
     /**
-     * @param Generic $field
-     * @return Translatable
-     */
-    public static function make(Generic $field)
-    {
-        return new static($field);
-    }
-
-    /**
      * Proxy field methods calls.
      *
      * @param $method
@@ -54,12 +41,23 @@ class Translatable
     public function __call($method, $args)
     {
         if (method_exists($this->field, $method)) {
-            return call_user_func_array([$this->field, $method], $args);
+            return \call_user_func_array([$this->field, $method], $args);
         }
     }
 
     /**
+     * @param Generic $field
+     *
+     * @return Translatable
+     */
+    public static function make(Generic $field)
+    {
+        return new static($field);
+    }
+
+    /**
      * @param string $page
+     *
      * @return mixed
      */
     public function render(string $page = 'index')
@@ -79,27 +77,14 @@ class Translatable
         ];
 
         if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
-            $data += call_user_func([$this, $dataGetter]);
+            $data += \call_user_func([$this, $dataGetter]);
         }
 
         return View::make('administrator::fields.translatable.'.$page, $data);
     }
 
     /**
-     * @return array
-     */
-    protected function onEdit(): array
-    {
-        return [
-            'languages' => \localizer\locales(),
-            'locale' => \localizer\locale(),
-            'container' => $this,
-            'translations' => app('scaffold.translations'),
-        ];
-    }
-
-    /**
-     * @param Language $language
+     * @param Locale $language
      */
     public function name(Locale $language)
     {
@@ -115,5 +100,18 @@ class Translatable
         $entity = $model->translate($language->id());
 
         return $entity ? $entity->getAttribute($this->field->id()) : null;
+    }
+
+    /**
+     * @return array
+     */
+    protected function onEdit(): array
+    {
+        return [
+            'languages' => \localizer\locales(),
+            'locale' => \localizer\locale(),
+            'container' => $this,
+            'translations' => app('scaffold.translations'),
+        ];
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Terranet\Administrator\Filter;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Terranet\Administrator\Contracts\Filter\Searchable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Terranet\Administrator\Contracts\Filter\Searchable;
 
 class Text extends Filter implements Searchable
 {
@@ -15,16 +15,6 @@ class Text extends Filter implements Searchable
      * @var bool
      */
     protected $withModes = true;
-
-    /**
-     * @return array
-     */
-    protected function renderWith()
-    {
-        return [
-            'modes' => $this->withModes ? trans('administrator::buttons.search_modes') : []
-        ];
-    }
 
     /**
      * @return $this
@@ -39,6 +29,7 @@ class Text extends Filter implements Searchable
     /**
      * @param Builder $query
      * @param Model $model
+     *
      * @return Builder|void
      */
     public function searchBy(Builder $query, Model $model): Builder
@@ -57,5 +48,15 @@ class Text extends Filter implements Searchable
         [$operator, $value] = $modeMap[$mode];
 
         return $query->where("{$model->getTable()}.{$this->id()}", $operator, $value);
+    }
+
+    /**
+     * @return array
+     */
+    protected function renderWith()
+    {
+        return [
+            'modes' => $this->withModes ? trans('administrator::buttons.search_modes') : [],
+        ];
     }
 }

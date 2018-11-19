@@ -114,7 +114,7 @@ class Resources
         if ($group = $module->group()) {
             $navigation = $this->findOrCreateGroup($module, $navigation, $group);
 
-            $order = $module->order() ?: count($navigation->getChilds()) + 1;
+            $order = $module->order() ?: \count($navigation->getChilds()) + 1;
         }
 
         if (Navigable::AS_LINK === $module->showAs()) {

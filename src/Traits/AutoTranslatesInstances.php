@@ -23,6 +23,7 @@ trait AutoTranslatesInstances
 
     /**
      * @param $translator
+     *
      * @return $this
      */
     public function setTranslator($translator)
