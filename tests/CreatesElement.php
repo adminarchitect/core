@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Tests;
 
 use Terranet\Administrator\Columns\Element;
+use Terranet\Administrator\Field\Text;
 
 trait CreatesElement
 {
@@ -18,7 +19,7 @@ trait CreatesElement
         static $elements = [];
 
         if (!array_key_exists($name, $elements)) {
-            $elements[$name] = new Element($name);
+            $elements[$name] = Text::make($name);
         }
 
         return $elements[$name];

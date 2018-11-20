@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Tests\Collection;
 
 use Terranet\Administrator\Collection\Group;
+use Terranet\Administrator\Field\Generic;
 use Terranet\Administrator\Tests\CreatesElement;
 use Terranet\Administrator\Tests\MocksObjects;
 
@@ -16,14 +17,6 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 
         $this->mockTranslator();
         $this->mockModule();
-    }
-
-    /** @test */
-    public function it_is_a_group()
-    {
-        $group = new Group('test');
-
-        $this->assertTrue($group->isGroup());
     }
 
     /** @test */
@@ -92,7 +85,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
         $group->push($first = $this->e('first'))
               ->push($this->e('second'));
 
-        $filtered = $group->without('second');
+        $filtered = $group->except('second');
 
         $this->assertCount(1, $filtered->elements());
         $this->assertSame($first, $filtered->elements()->first());
@@ -104,8 +97,10 @@ class GroupTest extends \PHPUnit\Framework\TestCase
         $group = new Group('test');
         $group->push($this->e('first'));
 
-        $group->update('first', function ($e) {
+        $group->update('first', function (Generic $e) {
             $e->setTitle('second');
+
+            return $e;
         });
 
         $this->assertCount(1, $group->elements());
@@ -122,10 +117,14 @@ class GroupTest extends \PHPUnit\Framework\TestCase
         $group->updateMany([
             'first' => function ($e) {
                 $e->setTitle('first modified');
+
+                return $e;
             },
 
             'second' => function ($e) {
                 $e->setTitle('second modified');
+
+                return $e;
             },
         ]);
 

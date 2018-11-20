@@ -2,15 +2,14 @@
 
 namespace Terranet\Administrator\Tests\Form\Collection;
 
+use Terranet\Administrator\Field\Text;
+use Terranet\Administrator\Field\Textarea;
 use Terranet\Administrator\Form\Collection\Mutable;
-use Terranet\Administrator\Form\FormElement;
-use Terranet\Administrator\Form\Type\Tinymce;
 use Terranet\Administrator\Tests\MocksObjects;
-use Terranet\Administrator\Tests\MocksValidator;
 
 class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
 {
-    use MocksValidator, MocksObjects;
+    use MocksObjects;
 
     public function setUp()
     {
@@ -18,18 +17,16 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
 
         $this->mockTranslator();
         $this->mockModule();
-        $this->mockValidator();
     }
 
     /** @test */
     public function it_creates_a_form_element_from_string_id()
     {
         $collection = new Mutable();
-
-        $collection->create('title');
+        $collection->push('title');
 
         $this->assertCount(1, $collection->all());
-        $this->assertInstanceOf(FormElement::class, $collection->find('title'));
+        $this->assertInstanceOf(Text::class, $collection->find('title'));
 
         return $collection;
     }
@@ -42,7 +39,7 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
      */
     public function it_sets_text_input_as_default_type($collection)
     {
-        $this->assertInstanceOf(\Terranet\Administrator\Form\Type\Text::class, $collection->find('title')->getInput());
+        $this->assertInstanceOf(Text::class, $collection->find('title'));
     }
 
     /**
@@ -53,7 +50,7 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
      */
     public function it_sets_proper_position_to_a_new_created_element($collection)
     {
-        $collection->create('body', 'text', 'before:title');
+        $collection->insert(Textarea::make('body'), 'before:title');
         $this->assertSame(0, $collection->position('body'));
     }
 
@@ -63,8 +60,8 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
         $collection = new Mutable();
 
         $collection
-            ->create($title = new FormElement('title'))
-            ->create($body = new FormElement('body'));
+            ->push($title = Text::make('title'))
+            ->push($body = Textarea::make('body'));
 
         $this->assertCount(2, $collection->all());
         $this->assertSame([$title, $body], $collection->all());
@@ -82,24 +79,27 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
      */
     public function it_allows_editing_of_new_created_element($collection)
     {
-        $collection->create(
-            $desc = new FormElement('description'),
-            function ($element) {
+        $collection->push(
+            $desc = Textarea::make('description'),
+            function (Textarea $element) {
                 $element->setTitle('New description');
-                $element->setInput(
-                    (new Tinymce($element->id()))
-                )->setDescription('Describe your personality');
+                $element->tinymce()
+                        ->setDescription('Describe your personality');
+
+                return $element;
             }
         );
 
+        $e = $collection->find('description');
+
         $this->assertSame(
             'New description',
-            $collection->find('description')->title()
+            $e->title()
         );
 
         $this->assertSame(
             'Describe your personality',
-            $collection->find('description')->getDescription()
+            $e->getDescription()
         );
 
         return $collection;

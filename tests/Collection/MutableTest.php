@@ -4,8 +4,7 @@ namespace Terranet\Administrator\Tests\Collection;
 
 use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable;
-use Terranet\Administrator\Columns\Element;
-use Terranet\Administrator\Columns\MediaElement;
+use Terranet\Administrator\Field\Text;
 use Terranet\Administrator\Tests\CoreTestCase;
 use Terranet\Administrator\Tests\CreatesElement;
 use Terranet\Administrator\Tests\MocksObjects;
@@ -56,7 +55,8 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_inserts_an_item_to_a_collection()
     {
-        $this->collection->insert($this->e('fifth'), 'before:first', function ($e) {});
+        $this->collection->insert($this->e('fifth'), 'before:first', function ($e) {
+        });
 
         $this->assertSame(
             $this->collection->toArray(),
@@ -84,7 +84,7 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_removes_an_element_from_collection()
     {
-        $this->assertCount(2, $this->collection->without('first'));
+        $this->assertCount(2, $this->collection->except('first'));
 
         $this->assertSame(
             $this->collection->toArray(),
@@ -98,7 +98,7 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_removes_many_elements_at_once_from_collection()
     {
-        $this->collection->without(['first', 'second']);
+        $this->collection->except(['first', 'second']);
 
         $this->assertCount(1, $this->collection);
 
@@ -113,9 +113,8 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_can_update_a_collection_value()
     {
-        $this->collection->update('first,second', function (Element $element) {
+        $this->collection->update('first,second', function (Text $element) {
             $element->setTranslator($this->mockTranslator());
-            $element->setModule($this->mockModule());
 
             return $element->setTitle('First Element');
         });
@@ -131,14 +130,14 @@ class MutableTest extends CoreTestCase
     {
         $this->collection->updateMany([
             'first' => function ($element) {
-                $element->setTranslator($this->mockTranslator());
-                $element->setModule($this->mockModule());
                 $element->setTitle('First Element');
+
+                return $element;
             },
             'third' => function ($element) {
-                $element->setTranslator($this->mockTranslator());
-                $element->setModule($this->mockModule());
                 $element->setTitle('Third Element');
+
+                return $element;
             },
         ]);
 
@@ -180,28 +179,6 @@ class MutableTest extends CoreTestCase
         $this->expectException(\Exception::class);
 
         $this->collection->move('first', 'unknown');
-    }
-
-    /** @test */
-    public function it_creates_media_element_from_string()
-    {
-        $group = $this->createMock(Mutable::class);
-
-        $media = $this->invokeMethod($group, 'createMediaElement', ['defaulf']);
-
-        $this->assertInstanceOf(MediaElement::class, $media);
-    }
-
-    /** @test */
-    public function it_accepts_a_media_element()
-    {
-        $this->collection->media('media2', function ($e) {return $e; }, 0);
-
-        $this->assertCount(4, $this->collection);
-        $this->assertInstanceOf(MediaElement::class, $this->collection->get(3));
-
-        $this->collection->media('media1', function ($e) {return $e; }, 'before:first');
-        $this->assertInstanceOf(MediaElement::class, $this->collection->get(0));
     }
 
     /** @test */

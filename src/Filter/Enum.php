@@ -12,15 +12,33 @@ class Enum extends Filter implements Searchable
     protected $options;
 
     /**
-     * @param array $options
+     * @param mixed array|\Closure $options
      *
      * @return self
      */
-    public function setOptions(array $options = []): self
+    public function setOptions($options): self
     {
+        if (!(is_array($options) || $options instanceof \Closure)) {
+            throw new \Exception("Enum accepts only `array` or `Closure` as options.");
+        }
+
+        if ($options instanceof \Closure) {
+            $options = call_user_func_array($options, []);
+
+            return $this->setOptions($options);
+        }
+
         $this->options = $options;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
@@ -44,7 +62,7 @@ class Enum extends Filter implements Searchable
     protected function renderWith()
     {
         return [
-            'options' => $this->options,
+            'options' => $this->getOptions(),
         ];
     }
 }

@@ -20,7 +20,7 @@ class CoreTestCase extends TestCase
      */
     public function invokeMethod(&$object, $method, array $args = [])
     {
-        $reflection = new ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(\get_class($object));
         $method = $reflection->getMethod($method);
         $method->setAccessible(true);
 

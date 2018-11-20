@@ -11,7 +11,7 @@ use Terranet\Administrator\Traits\Collection\ElementContainer;
  *
  * @method merge(array $elements)
  * @method insert($element, $position)
- * @method withoug(string $id)
+ * @method except(string|array $id)
  * @method update(string $id, \Closure $callback)
  * @method updateMany(array $ids)
  * @method move(string $id, $position)
