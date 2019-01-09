@@ -2,6 +2,11 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Terranet\Administrator\Annotations\ScopeFilter;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
@@ -153,23 +158,6 @@ trait HasFilters
         return $this->scopes;
     }
 
-    protected function filterFactory($name, $type = 'text', $label = '', array $options = [], callable $query = null)
-    {
-        $element = FilterElement::$type($name);
-
-        $input = FilterInputFactory::make($name, $type);
-
-        if (null !== $query) {
-            $input->setQuery($query);
-        }
-
-        if ('select' === $type && \is_array($options)) {
-            $input->setOptions($options);
-        }
-
-        return $element->setInput($input);
-    }
-
     /**
      * Parse the model for scopes.
      *
@@ -180,17 +168,22 @@ trait HasFilters
         $reflection = new \ReflectionClass($model);
 
         foreach ($reflection->getMethods() as $method) {
-            if (preg_match('~^scope(.+)$~i', $method->name, $match)) {
-                if ($this->isHiddenScope($name = $match[1])
-                    || $this->isDynamicScope($method)
-                    || $this->hasHiddenFlag($method->getDocComment())
-                    || 'scopeTranslated' === $match[0]) {
+            /** @var ScopeFilter $info */
+            if ($info = app('scaffold.annotations')->getMethodAnnotation($method, ScopeFilter::class)) {
+                if ($this->isDynamicScope($method) || 'scopeTranslated' === $method->getName()) {
                     continue;
                 }
 
-                $scope = with(new Scope($name))->setQuery([$model, $name]);
-                if ($icon = $this->hasIconFlag($method->getDocComment())) {
-                    $scope->setIcon($icon);
+                $name = $callback = str_replace('scope', '', $method->getName());
+
+                if ($info->name || $info->translate) {
+                    $name = $info->name ?: trans($info->translate);
+                };
+
+                $scope = new Scope($name, str_slug($callback, '_'));
+                $scope->setQuery([$model, $callback]);
+                if ($info->icon) {
+                    $scope->setIcon($info->icon);
                 }
 
                 $this->addScope($scope);
@@ -206,44 +199,6 @@ trait HasFilters
     protected function isDynamicScope($method)
     {
         return \count($method->getParameters()) > 1;
-    }
-
-    /**
-     * Exists in user-defined hiddenScopes property.
-     *
-     * @param $name
-     *
-     * @return bool
-     */
-    protected function isHiddenScope($name)
-    {
-        return property_exists($this, 'hiddenScopes') && \in_array($name, $this->hiddenScopes, true);
-    }
-
-    /**
-     * Marked with @hidden flag.
-     *
-     * @param $docBlock
-     *
-     * @return int
-     */
-    protected function hasHiddenFlag($docBlock)
-    {
-        return preg_match('~\@hidden~si', $docBlock);
-    }
-
-    /**
-     * Marked with @icon flag.
-     *
-     * @param $docBlock
-     *
-     * @return int
-     */
-    protected function hasIconFlag($docBlock)
-    {
-        preg_match('~\@icon\s+([^\\s]+)~is', $docBlock, $icon);
-
-        return $icon ? $icon[1] : null;
     }
 
     /**

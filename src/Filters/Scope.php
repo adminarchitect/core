@@ -2,13 +2,37 @@
 
 namespace Terranet\Administrator\Filters;
 
+use Terranet\Administrator\Traits\AutoTranslatesInstances;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 
-class Scope extends ElementContainer
+class Scope
 {
+    /** @var string */
+    protected $id;
+
+    /** @var string */
+    protected $title;
+
+    /** @var callable */
     protected $query;
 
+    /** @var null|string */
     protected $icon;
+
+    /**
+     * Scope constructor.
+     *
+     * @param string $title
+     * @param string|null $id
+     */
+    public function __construct(string $title, string $id = null)
+    {
+        if (null === $id) {
+            $id = $title;
+        }
+        $this->id = str_slug($id, '_');
+        $this->title = $title;
+    }
 
     /**
      * @param mixed $query
@@ -31,36 +55,45 @@ class Scope extends ElementContainer
     }
 
     /**
-     * @return string
+     * @param $value
+     * @return $this
      */
-    public function translationKey()
+    public function setIcon($value)
     {
-        $key = sprintf('administrator::scopes.%s.%s', $this->module()->url(), $this->id);
-
-        if (!$this->translator()->has($key)) {
-            $key = sprintf('administrator::scopes.%s.%s', 'global', $this->id);
+        if (starts_with($value, 'fa-')) {
+            $value = "fa {$value}";
         }
 
-        return $key;
-    }
-
-    public function setIcon($class)
-    {
-        if (starts_with($class, 'fa-')) {
-            $class = "fa {$class}";
+        if (starts_with($value, 'glyphicon-')) {
+            $value = "glyphicon {$value}";
         }
 
-        if (starts_with($class, 'glyphicon-')) {
-            $class = "glyphicon {$class}";
-        }
-
-        $this->icon = $class;
+        $this->icon = $value;
 
         return $this;
     }
 
-    public function icon()
+    /**
+     * @return null|string
+     */
+    public function icon(): ?string
     {
         return $this->icon;
+    }
+
+    /**
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
     }
 }

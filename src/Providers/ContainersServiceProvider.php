@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Providers;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider;
 use Terranet\Administrator\Contracts\Module;
@@ -36,6 +38,7 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminNavigation' => 'scaffold.navigation',
         'AdminDashboard' => 'scaffold.dashboard',
         'AdminTranslations' => 'scaffold.translations',
+        'AdminAnnotations' => 'scaffold.annotations',
     ];
 
     public function register()
@@ -48,6 +51,18 @@ class ContainersServiceProvider extends ServiceProvider
 
         $this->app->bind(Module::class, function ($app) {
             return $app['scaffold.module'];
+        });
+    }
+
+    protected function registerAdminAnnotations()
+    {
+        $this->app->singleton('scaffold.annotations', function () {
+            AnnotationRegistry::registerUniqueLoader('class_exists');
+
+            $reader = new SimpleAnnotationReader();
+            $reader->addNamespace("\\Terranet\\Administrator\\Annotations");
+
+            return $reader;
         });
     }
 
