@@ -10,7 +10,7 @@ use Terranet\Administrator\Contracts\Filter\Searchable;
 class Text extends Filter implements Searchable
 {
     /**
-     * Whether to enable modes or not.
+     * Whether to enable search modes or not.
      *
      * @var bool
      */
@@ -19,7 +19,7 @@ class Text extends Filter implements Searchable
     /**
      * @return $this
      */
-    public function disableModes()
+    public function disableModes(): self
     {
         $this->withModes = false;
 
@@ -30,16 +30,16 @@ class Text extends Filter implements Searchable
      * @param Builder $query
      * @param Model $model
      *
-     * @return Builder|void
+     * @return Builder
      */
     public function searchBy(Builder $query, Model $model): Builder
     {
         $modeName = $this->name().'_mode';
-        $mode = Request::get($modeName, 'equals');
+        $mode = Request::get($modeName, 'contains');
 
         $modeMap = [
             'equals' => ['=', $this->value()],
-            'not_equals' => ['<>', $this->value()],
+            'not_equals' => ['!=', $this->value()],
             'starts_with' => ['LIKE', "{$this->value()}%"],
             'ends_with' => ['LIKE', "%{$this->value()}"],
             'contains' => ['LIKE', "%{$this->value()}%"],
@@ -47,13 +47,21 @@ class Text extends Filter implements Searchable
 
         [$operator, $value] = $modeMap[$mode];
 
+        if ($this->shouldSearchInTranslations($model)) {
+            $translation = $model->getTranslationModel();
+
+            return $query->whereHas('translations', function ($query) use ($translation, $value, $operator) {
+                return $query->where("{$translation->getTable()}.{$this->name()}", $operator, $value);
+            });
+        }
+
         return $query->where("{$model->getTable()}.{$this->id()}", $operator, $value);
     }
 
     /**
      * @return array
      */
-    protected function renderWith()
+    protected function renderWith(): array
     {
         return [
             'modes' => $this->withModes ? trans('administrator::buttons.search_modes') : [],

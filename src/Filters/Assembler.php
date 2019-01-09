@@ -228,70 +228,11 @@ class Assembler
             return $this->query = $element->execQuery($this->query, $value);
         }
 
-        if ($this->touchedTranslatableFilter($element, $columns)) {
-            return $this->filterByTranslatableColumn($element);
-        }
-
         // Basic filters
         if ($element instanceof Searchable) {
             $this->query = $element->searchBy($this->query, $this->model);
         }
 
         return $this->query;
-    }
-
-    /**
-     * @param $columns
-     *
-     * @return array
-     */
-    protected function translatableColumns(array $columns = [])
-    {
-        return array_except(
-            scheme()->columns($this->model->getTranslationModel()->getTable()),
-            array_keys($columns)
-        );
-    }
-
-    /**
-     * @param Queryable $input
-     * @param $translatable
-     *
-     * @return bool
-     */
-    protected function isTranslatable(Queryable $input, array $translatable = [])
-    {
-        return array_key_exists($input->getName(), $translatable);
-    }
-
-    /**
-     * @param $name
-     * @param $type
-     * @param $value
-     * @param mixed $element
-     *
-     * @return Builder
-     */
-    protected function filterByTranslatableColumn($element)
-    {
-        $translation = $this->model->getTranslationModel();
-
-        dd('@todo', __METHOD__);
-
-        return $this->query->whereHas('translations', function ($query) use ($translation, $name, $type, $value) {
-            return $query = $this->applyQueryElementByType($query, $translation->getTable(), $name, $type, $value);
-        });
-    }
-
-    /**
-     * @param Queryable $input
-     * @param $columns
-     *
-     * @return bool
-     */
-    protected function touchedTranslatableFilter(Queryable $input, $columns)
-    {
-        return ($this->model instanceof Translatable)
-            && $this->isTranslatable($input, $this->translatableColumns($columns));
     }
 }

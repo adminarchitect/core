@@ -6,6 +6,7 @@ use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Support\Facades\View;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Traits\Form\ExecutesQuery;
+use Terranet\Translatable\Translatable;
 
 abstract class Filter implements Queryable
 {
@@ -145,5 +146,15 @@ abstract class Filter implements Queryable
             'administrator::filters.%s',
             snake_case(class_basename($this))
         );
+    }
+
+    /**
+     * @param $model
+     * @return bool
+     */
+    protected function shouldSearchInTranslations($model): bool
+    {
+        return $model instanceof Translatable
+            && in_array($this->name(), $model->getTranslatedAttributes());
     }
 }
