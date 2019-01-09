@@ -26,13 +26,6 @@ abstract class ElementContainer implements AutoTranslatable
     protected $title;
 
     /**
-     * Relations chain.
-     *
-     * @var array
-     */
-    protected $relations = [];
-
-    /**
      * Keep original id or extract only last part.
      *
      * @example: When using this Container in Forms, the original id should be kept to allow parsing relations.
@@ -73,21 +66,7 @@ abstract class ElementContainer implements AutoTranslatable
      */
     public function setId($id)
     {
-        $id = $this->buildId($id);
-
-        if ($this->isRelation($id)) {
-            $relations = explode('.', $id);
-
-            $lastElement = array_pop($relations);
-
-            if (!$this->keepOriginalID) {
-                $id = $lastElement;
-            }
-
-            $this->relations = $relations;
-        }
-
-        $this->id = $id;
+        $this->id = $this->buildId($id);
 
         return $this;
     }
@@ -164,16 +143,6 @@ abstract class ElementContainer implements AutoTranslatable
         $id = implode('.', $parts);
 
         return $id;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return bool
-     */
-    protected function isRelation($id)
-    {
-        return false !== stripos($id, '.');
     }
 
     /**

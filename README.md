@@ -1,5 +1,6 @@
 # Admin Architect
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/adminarchitect/core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/adminarchitect/core/?branch=master)
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Latest Stable Version][ico-stable]][link-stable]
