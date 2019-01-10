@@ -30,8 +30,32 @@ class Scope
         if (null === $id) {
             $id = $title;
         }
-        $this->id = str_slug($id, '_');
-        $this->title = $title;
+        $this->id = snake_case($id);
+        $this->title = title_case($title);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function icon(): ?string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
     }
 
     /**
@@ -71,29 +95,5 @@ class Scope
         $this->icon = $value;
 
         return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function icon(): ?string
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @return string
-     */
-    public function id(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function title(): string
-    {
-        return $this->title;
     }
 }

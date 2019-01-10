@@ -28,9 +28,15 @@ return [
     'false' => 'False',
     'search_modes' => [
         'contains' => 'Contains',
+        'not_contains' => 'Missing',
         'equals' => 'Equals',
         'not_equals' => 'Not',
         'starts_with' => 'Starts With',
         'ends_with' => 'Ends With',
-    ]
+    ],
+    'only_trashed' => 'Only Trashed',
+    'with_trashed' => 'With Trashed',
+    'any' => '--Any--',
+    'yes' => 'Yes',
+    'no' => 'No',
 ];

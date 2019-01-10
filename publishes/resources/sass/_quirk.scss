@@ -3219,7 +3219,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li > a {
     position: relative;
     display: block;
-    padding: 14px 25px;
+    padding: 8px 16px;
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
@@ -11287,6 +11287,7 @@ fieldset[disabled] .btn-fb.active {
 }
 .nav-translatable {
     background-color: rgba(164, 194, 191, .75);
+    border-bottom: 1px solid #ddd;
 }
 .nav-translatable > li > a:hover,
 .nav-translatable > li > a:focus {

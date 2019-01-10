@@ -6,3 +6,5 @@
         {{ $title }}
     </td>
 </tr>
+
+{{ $elements or '' }}

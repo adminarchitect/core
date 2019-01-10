@@ -1,4 +1,4 @@
-@if ($section)
+@if (isset($section) && $section)
     @component('administrator::components.table.spacer')
     @endcomponent
     <tr>

@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use function localizer\locale;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 
 class Text extends Filter implements Searchable
@@ -14,14 +15,14 @@ class Text extends Filter implements Searchable
      *
      * @var bool
      */
-    protected $withModes = true;
+    protected $withModes = false;
 
     /**
      * @return $this
      */
-    public function disableModes(): self
+    public function enableModes(): self
     {
-        $this->withModes = false;
+        $this->withModes = true;
 
         return $this;
     }
@@ -43,6 +44,7 @@ class Text extends Filter implements Searchable
             'starts_with' => ['LIKE', "{$this->value()}%"],
             'ends_with' => ['LIKE', "%{$this->value()}"],
             'contains' => ['LIKE', "%{$this->value()}%"],
+            'not_contains' => ['NOT LIKE', "%{$this->value()}%"],
         ];
 
         [$operator, $value] = $modeMap[$mode];
@@ -51,6 +53,8 @@ class Text extends Filter implements Searchable
             $translation = $model->getTranslationModel();
 
             return $query->whereHas('translations', function ($query) use ($translation, $value, $operator) {
+                $query->where("{$translation->getTable()}.language_id", locale()->id());
+
                 return $query->where("{$translation->getTable()}.{$this->name()}", $operator, $value);
             });
         }

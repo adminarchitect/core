@@ -125,9 +125,9 @@ trait HasFilters
                         $this->addFilter(
                             Enum::make($column, $column)->setOptions(
                                 [
-                                    '' => '--Any--',
-                                    1 => 'Yes',
-                                    0 => 'No',
+                                    '' => trans('administrator::buttons.any'),
+                                    1 => trans('administrator::buttons.yes'),
+                                    0 => trans('administrator::buttons.no'),
                                 ]
                             )
                         );
@@ -210,11 +210,10 @@ trait HasFilters
     {
         if (array_key_exists('Illuminate\Database\Eloquent\SoftDeletes', class_uses($model))) {
             foreach ($this->softDeletesScopes() as $method => $name) {
-                $this->addScope(
-                    with(new Scope($method))
-                        ->setTitle($name)
-                        ->setQuery([$model, $method])
-                );
+                $scope = new Scope($name, $method);
+                $scope->setQuery([$model, $method]);
+
+                $this->addScope($scope);
             }
         }
     }
@@ -224,6 +223,9 @@ trait HasFilters
      */
     protected function softDeletesScopes()
     {
-        return ['onlyTrashed' => 'Only Trashed', 'withTrashed' => 'With Trashed'];
+        return [
+            'onlyTrashed' => trans('administrator::buttons.only_trashed'),
+            'withTrashed' => trans('administrator::buttons.with_trashed'),
+        ];
     }
 }

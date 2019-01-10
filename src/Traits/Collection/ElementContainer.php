@@ -11,30 +11,13 @@ abstract class ElementContainer implements AutoTranslatable
 {
     use AutoTranslatesInstances;
 
-    /**
-     * Element id.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $id;
 
-    /**
-     * Element title.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $title;
 
-    /**
-     * Keep original id or extract only last part.
-     *
-     * @example: When using this Container in Forms, the original id should be kept to allow parsing relations.
-     * When for columns there is a different logic to extract Relational data.
-     *
-     * @var bool
-     */
-    protected $keepOriginalID = true;
-
+    /** @var null|object */
     protected $module;
 
     /**
@@ -140,9 +123,8 @@ abstract class ElementContainer implements AutoTranslatable
         $parts = array_map(function ($part) {
             return str_slug($part, '_');
         }, $parts);
-        $id = implode('.', $parts);
 
-        return $id;
+        return implode('.', $parts);
     }
 
     /**

@@ -16,7 +16,7 @@ class HasMany extends Generic
     /** @var string */
     protected $icon = 'list-ul';
 
-    /** @var Builder */
+    /** @var null|\Closure */
     protected $query;
 
     /**
@@ -64,7 +64,7 @@ class HasMany extends Generic
         $module = $this->firstWithModel($related = $relation->getRelated());
 
         // apply a query
-        if ($this->query) {
+        if ($this->query instanceof \Closure) {
             $relation = \call_user_func_array($this->query, [$relation]);
         }
 
@@ -91,6 +91,11 @@ class HasMany extends Generic
     {
         $relation = $this->relation();
         $related = $relation->getRelated();
+
+        // apply a query
+        if ($this->query instanceof \Closure) {
+            $relation = \call_user_func_array($this->query, [$relation]);
+        }
 
         if (!$module = $this->relationModule()) {
             // Build a runtime module

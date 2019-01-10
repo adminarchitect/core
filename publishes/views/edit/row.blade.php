@@ -1,6 +1,9 @@
 @if ($field instanceof \Terranet\Administrator\Collection\Group)
     @component('administrator::components.table.group')
         @slot('title', $field->title())
+        @slot('elements')
+            @each('administrator::edit.row', $field->elements(), 'field')
+        @endslot
     @endcomponent
 @else
     @component('administrator::components.table.row', [

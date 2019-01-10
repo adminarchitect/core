@@ -214,14 +214,11 @@ class Assembler
      */
     protected function assemblyQuery(Filter $element)
     {
-        $table = $this->model->getTable();
         $value = $element->value();
 
         if (null === $value) {
             return $this->query;
         }
-
-        $columns = scheme()->columns($table);
 
         // Filters with a custom query
         if ($element instanceof Queryable && $element->hasQuery()) {
