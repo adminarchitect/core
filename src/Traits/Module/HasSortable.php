@@ -9,7 +9,10 @@ trait HasSortable
 {
     protected $sortable;
 
-    public function sortable()
+    /**
+     * @return array
+     */
+    public function sortable(): array
     {
         return $this->scaffoldSortable();
     }
@@ -65,11 +68,18 @@ trait HasSortable
         }
 
         if (null === $this->sortable && ($schema = scheme())) {
-            $this->sortable = (array) $this->excludeUnSortable(
-                $schema->indexedColumns(
-                    $this->model()->getTable()
+            $indexed = $schema->indexedColumns(
+                $this->model()->getTable()
+            );
+
+            $sortable = (array) $this->excludeUnSortable(
+                array_intersect(
+                    $indexed,
+                    array_merge($this->model()->getFillable(), [$this->model()->getKeyName()])
                 )
             );
+
+            $this->sortable = $sortable;
         }
 
         return $this->sortable;
