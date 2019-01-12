@@ -11,6 +11,13 @@ class Textarea extends Generic
     const EDITOR_MEDIUM = 'medium';
     const EDITOR_MARKDOWN = 'markdown';
 
+    const KNOWN_EDITORS = [
+        self::EDITOR_MEDIUM,
+        self::EDITOR_CKEDITOR,
+        self::EDITOR_MARKDOWN,
+        self::EDITOR_TINYMCE,
+    ];
+
     /** @var array */
     protected $visibility = [
         Scaffolding::PAGE_INDEX => false,

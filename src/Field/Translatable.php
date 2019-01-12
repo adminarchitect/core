@@ -37,9 +37,14 @@ class Translatable
      *
      * @param $method
      * @param $args
+     * @return mixed
      */
     public function __call($method, $args)
     {
+        if (in_array($method, Textarea::KNOWN_EDITORS)) {
+            return new static($this->field->$method());
+        }
+
         if (method_exists($this->field, $method)) {
             return \call_user_func_array([$this->field, $method], $args);
         }
