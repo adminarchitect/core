@@ -68,13 +68,13 @@ trait HasSortable
         }
 
         if (null === $this->sortable && ($schema = scheme())) {
-            $indexed = $schema->indexedColumns(
+            $sortable = $schema->indexedColumns(
                 $this->model()->getTable()
             );
 
             $sortable = (array) $this->excludeUnSortable(
                 array_intersect(
-                    $indexed,
+                    $sortable,
                     array_merge($this->model()->getFillable(), [$this->model()->getKeyName()])
                 )
             );

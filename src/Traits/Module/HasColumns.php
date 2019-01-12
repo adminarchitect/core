@@ -35,13 +35,23 @@ trait HasColumns
     }
 
     /**
-     * @param Manager $dashboard
+     * @param Manager $widgets
      *
      * @return Manager
      */
-    public function widgets(Manager $dashboard): Manager
+    public function widgets(Manager $widgets): Manager
     {
-        return $dashboard;
+        return $widgets;
+    }
+
+    /**
+     * @param Manager $cards
+     *
+     * @return Manager
+     */
+    public function cards(Manager $cards): Manager
+    {
+        return $cards;
     }
 
     /**

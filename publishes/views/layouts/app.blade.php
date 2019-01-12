@@ -80,6 +80,8 @@
 
             @include($template->partials('messages'))
 
+            @yield('scaffold.cards')
+
             @yield('scaffold.filter')
 
             @yield('scaffold.batch')

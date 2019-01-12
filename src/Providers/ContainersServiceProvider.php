@@ -84,7 +84,8 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class() {
+            $service = new class()
+            {
                 protected $readonly = [];
 
                 public function __construct()
@@ -159,6 +160,14 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.widgets', function () {
             if (($module = app('scaffold.module'))) {
                 return $module->widgets(new Manager());
+            }
+
+            return new Manager();
+        });
+
+        $this->app->singleton('scaffold.cards', function () {
+            if (($module = app('scaffold.module'))) {
+                return $module->cards(new Manager());
             }
 
             return new Manager();

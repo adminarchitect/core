@@ -27,6 +27,10 @@
     @endif
 @endsection
 
+@section('scaffold.cards')
+    @include('administrator::dashboard.widgets', ['widgets' => app('scaffold.cards')])
+@endsection
+
 @section('scaffold.content')
     @if ($columns->count())
         @component('administrator::components.index.index', ['module' => $module, 'items' => $items])

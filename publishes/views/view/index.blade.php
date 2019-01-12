@@ -1,7 +1,6 @@
 @inject('template', 'scaffold.template')
 @inject('module', 'scaffold.module')
 @inject('actions', 'scaffold.actions')
-@inject('widgets', 'scaffold.widgets')
 
 @extends($template->layout())
 
@@ -20,5 +19,5 @@
         </div>
     </div>
 
-    @include('administrator::dashboard.widgets', ['widgets' => $widgets])
+    @include('administrator::dashboard.widgets', ['widgets' => app('scaffold.widgets')])
 @append
