@@ -7,12 +7,9 @@ use Illuminate\Support\Collection;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Contracts\Filter as FilterContract;
 use Terranet\Administrator\Filters\Scope;
-use Terranet\Administrator\Traits\CallableTrait;
 
 class Filter implements FilterContract
 {
-    use CallableTrait;
-
     /**
      * @var Request
      */

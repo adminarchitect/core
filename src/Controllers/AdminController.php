@@ -55,23 +55,13 @@ abstract class AdminController extends BaseController
         }
 
         if ($request->exists('save')) {
-            return redirect()->route('scaffold.edit', $this->toMagnetParams(['module' => $module, 'id' => $key]));
+            return redirect()->route('scaffold.edit', ['module' => $module, 'id' => $key]);
         }
 
         return redirect()->route(
             $request->exists('save_return') ? 'scaffold.index' : 'scaffold.create',
-            $this->toMagnetParams(['module' => $module])
+            ['module' => $module]
         );
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function toMagnetParams(array $data = [])
-    {
-        return app('scaffold.magnet')->with($data)->toArray();
     }
 
     /**

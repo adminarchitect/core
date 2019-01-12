@@ -28,15 +28,6 @@ $hasFilters = ($resetUrl !== request()->fullUrl()) && $filled;
                     <input type="hidden" name="scoped_to" value="{{ $scope }}"/>
                 @endif
 
-                @if ($magnet = app('scaffold.magnet'))
-                    @foreach ($magnet->toArray() as $key => $value)
-                        @if ($filter->has($key))
-                            @continue;
-                        @endif
-                        <input type="hidden" name="{{ $key }}" value="{{ $value }}"/>
-                    @endforeach
-                @endif
-
                 <div class="scaffold-filters">
                     <div class="inputs">
                         @foreach($elements as $element)

@@ -121,11 +121,9 @@ class AdminControllerTest extends CoreTestCase
     {
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(['toMagnetParams'])
+                           ->setMethods([])
                            ->setConstructorArgs([$this->mockTranslator()])
                            ->getMock();
-        $controller->method('toMagnetParams')
-                   ->willReturn(['module' => 'users', 'id' => 1]);
 
         $request = $this->getMockBuilder(Request::class)
                         ->disableOriginalConstructor()
@@ -158,11 +156,8 @@ class AdminControllerTest extends CoreTestCase
     {
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(['toMagnetParams'])
                            ->setConstructorArgs([$this->mockTranslator()])
                            ->getMock();
-        $controller->method('toMagnetParams')
-                   ->willReturn(['module' => 'users', 'id' => 1]);
 
         $request = $this->getMockBuilder(Request::class)
                         ->disableOriginalConstructor()
@@ -188,7 +183,7 @@ class AdminControllerTest extends CoreTestCase
         $redirector = $this->createMock(Redirector::class);
         $redirector->expects($this->once())
                    ->method('route')
-                   ->with('scaffold.index', ['module' => 'users', 'id' => 1]);
+                   ->with('scaffold.index');
 
         app()->instance('redirect', $redirector);
 

@@ -16,7 +16,6 @@ use Terranet\Administrator\Dashboard\Manager;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Filter;
 use Terranet\Administrator\Schema;
-use Terranet\Administrator\Services\MagnetParams;
 use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
 use Terranet\Localizer\Locale;
@@ -35,7 +34,6 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminActions' => 'scaffold.actions',
         'AdminTemplate' => 'scaffold.template',
         'AdminForm' => 'scaffold.form',
-        'AdminMagnet' => 'scaffold.magnet',
         'AdminFinder' => 'scaffold.finder',
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminTranslations' => 'scaffold.translations',
@@ -160,7 +158,7 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminWidgets()
     {
         $this->app->singleton('scaffold.widgets', function () {
-            if (($module = app('scaffold.module')) && method_exists($module, 'widgets')) {
+            if (($module = app('scaffold.module'))) {
                 return $module->widgets(new Manager());
             }
 
@@ -232,15 +230,6 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.form', function ($app) {
             if ($module = $app['scaffold.module']) {
                 return $module->form();
-            }
-        });
-    }
-
-    protected function registerAdminMagnet()
-    {
-        $this->app->singleton('scaffold.magnet', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return new MagnetParams($app['request'], $module->magnetParams());
             }
         });
     }

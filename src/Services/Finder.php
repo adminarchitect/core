@@ -119,14 +119,6 @@ class Finder implements FinderContract
                 $this->assembler()->filters($filters);
             }
 
-            if ($magnet = app('scaffold.magnet')) {
-                if ($filters && \count($filters)) {
-                    $magnet = $this->removeDuplicates($magnet, $filters);
-                }
-
-                $this->applyMagnetFilter($magnet);
-            }
-
             if ($scopes = $filter->scopes()) {
                 if (($scope = $filter->scope()) && ($found = $scopes->find($scope))) {
                     $this->assembler()->scope(
@@ -137,55 +129,6 @@ class Finder implements FinderContract
         }
 
         return $this;
-    }
-
-    /**
-     * Solving problem then magnet params gets used for auto-filtering
-     * even if there is another filter defined with the same name.
-     *
-     * @param $magnet
-     * @param $filters
-     *
-     * @return array
-     */
-    protected function removeDuplicates($magnet, $filters)
-    {
-        $magnetKeys = $magnet->toArray();
-
-        foreach ($filters as $filter) {
-            if (array_has($magnetKeys, $filter->id())) {
-                unset($magnetKeys[$filter->id()]);
-            }
-        }
-
-        $class = \get_class(app('scaffold.magnet'));
-
-        return new $class(app('request'), $magnetKeys);
-    }
-
-    /**
-     * Auto-scope fetching items to magnet parameter.
-     *
-     * @param MagnetParams $magnet
-     */
-    protected function applyMagnetFilter(MagnetParams $magnet)
-    {
-        $filters = new Administrator\Form\Collection\Mutable();
-
-        foreach ($magnet->toArray() as $key) {
-            $element = new FormElement($key);
-            $element->setInput(
-                InputFactory::make($key, 'text')
-            );
-            $filters->push($element);
-        }
-
-        $magnetFilters = new Administrator\Filter(
-            app('request'),
-            $filters
-        );
-
-        $this->assembler()->filters($magnetFilters->filters());
     }
 
     /**

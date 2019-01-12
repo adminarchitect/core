@@ -5,6 +5,7 @@ namespace Terranet\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
+use Terranet\Administrator\Contracts\Services\TemplateProvider;
 use Terranet\Administrator\Services\Breadcrumbs;
 use Terranet\Administrator\Services\CrudActions;
 use Terranet\Administrator\Services\Finder;
@@ -12,12 +13,11 @@ use Terranet\Administrator\Services\Saver;
 use Terranet\Administrator\Services\Template;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 use Terranet\Administrator\Traits\Module\AllowsNavigation;
-use Terranet\Administrator\Traits\Module\DetectsCommentFlag;
 use Terranet\Administrator\Traits\Module\HasColumns;
 
 class Scaffolding implements Module, AutoTranslatable
 {
-    use AllowsNavigation, DetectsCommentFlag, HasColumns, AutoTranslatesInstances;
+    use AllowsNavigation, HasColumns, AutoTranslatesInstances;
 
     const PAGE_INDEX = 'index';
     const PAGE_VIEW = 'view';
@@ -33,44 +33,37 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * Breadcrumbs provider.
      *
-     * @var
+     * @var Breadcrumbs
      */
     protected $breadcrumbs = Breadcrumbs::class;
 
     /**
      * Service layer responsible for searching items.
      *
-     * @var
+     * @var \Terranet\Administrator\Contracts\Services\Finder
      */
     protected $finder = Finder::class;
 
     /**
      * Service layer responsible for persisting request.
      *
-     * @var
+     * @var \Terranet\Administrator\Contracts\Services\Saver
      */
     protected $saver = Saver::class;
 
     /**
      * Actions manager class.
      *
-     * @var
+     * @var \Terranet\Administrator\Contracts\Services\CrudActions
      */
     protected $actions = CrudActions::class;
 
     /**
      * View templates provider.
      *
-     * @var
+     * @var TemplateProvider
      */
     protected $template = Template::class;
-
-    /**
-     * Query string parameters that should be appended to whole links and forms.
-     *
-     * @var array
-     */
-    protected $magnetParams = [];
 
     /**
      * Include or not columns of Date type in index listing.
@@ -86,8 +79,12 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected $guard;
 
+    /** @var array */
     protected static $methods = [];
 
+    /**
+     * Scaffolding constructor.
+     */
     public function __construct()
     {
         if (null === $this->includeDateColumns) {
@@ -95,6 +92,11 @@ class Scaffolding implements Module, AutoTranslatable
         }
     }
 
+    /**
+     * @param $method
+     * @param $arguments
+     * @return mixed|null
+     */
     public function __call($method, $arguments)
     {
         // Call user-defined method if exists.
@@ -170,10 +172,6 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if ([/*$flag*/, $value] = $this->hasCommentFlag('template')) {
-            return $value;
-        }
-
         return $this->template;
     }
 
@@ -214,10 +212,6 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if ([/*$flag*/, $value] = $this->hasCommentFlag('finder')) {
-            return $value;
-        }
-
         return $this->finder;
     }
 
@@ -230,10 +224,6 @@ class Scaffolding implements Module, AutoTranslatable
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Savers'))) {
             return $file;
-        }
-
-        if ([/*$flag*/, $saver] = $this->hasCommentFlag('saver')) {
-            return $saver;
         }
 
         return $this->saver;
@@ -251,10 +241,6 @@ class Scaffolding implements Module, AutoTranslatable
             return $file;
         }
 
-        if ([/*$flag*/, $value] = $this->hasCommentFlag('breadcrumbs')) {
-            return $value;
-        }
-
         return $this->breadcrumbs;
     }
 
@@ -269,10 +255,6 @@ class Scaffolding implements Module, AutoTranslatable
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Actions'))) {
             return $file;
-        }
-
-        if ([/*$flag*/, $value] = $this->hasCommentFlag('actions')) {
-            return $value;
         }
 
         return $this->actions;
@@ -296,16 +278,6 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * Return magnet params.
-     *
-     * @return array
-     */
-    public function magnetParams()
-    {
-        return (array) $this->magnetParams;
-    }
-
-    /**
      * The module Eloquent model.
      *
      * @throws \Exception
@@ -314,10 +286,6 @@ class Scaffolding implements Module, AutoTranslatable
      */
     protected function getModelClass()
     {
-        if ([/*$flag*/, $value] = $this->hasCommentFlag('model')) {
-            return $value;
-        }
-
         return $this->model;
     }
 

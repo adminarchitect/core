@@ -25,9 +25,7 @@ trait BatchSkeleton
      */
     protected function route($model)
     {
-        return route('scaffold.batch', app('scaffold.magnet')->with(
-            ['module' => app('scaffold.module')->url()]
-        )->toArray());
+        return route('scaffold.batch', ['module' => app('scaffold.module')->url()]);
     }
 
     /**

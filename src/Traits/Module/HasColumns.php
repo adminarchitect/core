@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Traits\Module;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
+use Terranet\Administrator\Dashboard\Manager;
 use Terranet\Administrator\Decorators\Grid as GridDecorator;
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Translatable\Translatable;
@@ -43,6 +44,15 @@ trait HasColumns
         return $this->collectColumns(
             $this->model()
         );
+    }
+
+    /**
+     * @param Manager $dashboard
+     * @return Manager
+     */
+    public function widgets(Manager $dashboard): Manager
+    {
+        return $dashboard;
     }
 
     /**
