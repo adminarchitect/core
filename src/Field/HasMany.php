@@ -3,7 +3,6 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Field\Traits\WorksWithModules;

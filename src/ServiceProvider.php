@@ -9,7 +9,6 @@ use Czim\Paperclip\Providers\PaperclipServiceProvider;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Pingpong\Menus\MenuFacade;
 use Pingpong\Menus\MenusServiceProvider;
-use Terranet\Administrator\Annotations\ScopeFilter;
 use Terranet\Administrator\Providers\ArtisanServiceProvider;
 use Terranet\Administrator\Providers\ContainersServiceProvider;
 use Terranet\Administrator\Providers\EventServiceProvider;

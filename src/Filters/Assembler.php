@@ -14,8 +14,6 @@ use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Form\FormElement;
-use Terranet\Translatable\Translatable;
-use function admin\db\scheme;
 
 class Assembler
 {

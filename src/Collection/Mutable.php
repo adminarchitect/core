@@ -38,8 +38,9 @@ class Mutable extends BaseCollection
      * @param $position
      * @param null|Closure $callback
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function insert($element, $position, Closure $callback = null): self
     {
@@ -223,8 +224,9 @@ class Mutable extends BaseCollection
      * @param string $id
      * @param $target
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function moveAfter(string $id, $target): self
     {
@@ -267,8 +269,9 @@ class Mutable extends BaseCollection
      * @param string $groupId
      * @param null|int|string $position
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function join(array $elements, string $groupId, $position = null): self
     {
@@ -317,8 +320,9 @@ class Mutable extends BaseCollection
      *
      * @param string $id
      *
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     public function find(string $id)
     {
@@ -338,8 +342,9 @@ class Mutable extends BaseCollection
      *
      * @param string $id
      *
-     * @return null|int|string
      * @throws Exception
+     *
+     * @return null|int|string
      */
     public function position(string $id): int
     {
@@ -362,6 +367,7 @@ class Mutable extends BaseCollection
      * @param \Closure $callback
      * @example: sortable(['title'])
      * @example: sortable(['title' => function($query) {  }])
+     *
      * @return Mutable
      */
     public function sortable($keys, \Closure $callback = null)
@@ -415,8 +421,9 @@ class Mutable extends BaseCollection
      * @param string $id
      * @param int|string $position
      *
-     * @return static
      * @throws Exception
+     *
+     * @return static
      */
     protected function toPosition(string $id, $position): self
     {

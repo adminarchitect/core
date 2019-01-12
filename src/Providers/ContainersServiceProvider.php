@@ -2,11 +2,11 @@
 
 namespace Terranet\Administrator\Providers;
 
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider;
-use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Module\Sortable;
@@ -19,7 +19,6 @@ use Terranet\Administrator\Schema;
 use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
 use Terranet\Localizer\Locale;
-use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 
 class ContainersServiceProvider extends ServiceProvider
 {
@@ -60,7 +59,7 @@ class ContainersServiceProvider extends ServiceProvider
             AnnotationRegistry::registerUniqueLoader('class_exists');
 
             $reader = new SimpleAnnotationReader();
-            $reader->addNamespace("\\Terranet\\Administrator\\Annotations");
+            $reader->addNamespace('\\Terranet\\Administrator\\Annotations');
 
             return $reader;
         });
@@ -85,8 +84,7 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class()
-            {
+            $service = new class() {
                 protected $readonly = [];
 
                 public function __construct()
@@ -271,7 +269,7 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.breadcrumbs', function ($app) {
             if (!class_exists(BreadcrumbsManager::class)) {
-                throw new Exception("Please install `davejamesmiller/laravel-breadcrumbs:^5.2` package.");
+                throw new Exception('Please install `davejamesmiller/laravel-breadcrumbs:^5.2` package.');
             }
 
             if ($module = $app['scaffold.module']) {

@@ -2,9 +2,6 @@
 
 namespace Terranet\Administrator\Filters;
 
-use Terranet\Administrator\Traits\AutoTranslatesInstances;
-use Terranet\Administrator\Traits\Collection\ElementContainer;
-
 class Scope
 {
     /** @var string */
@@ -23,7 +20,7 @@ class Scope
      * Scope constructor.
      *
      * @param string $title
-     * @param string|null $id
+     * @param null|string $id
      */
     public function __construct(string $title, string $id = null)
     {
@@ -80,6 +77,7 @@ class Scope
 
     /**
      * @param $value
+     *
      * @return $this
      */
     public function setIcon($value)

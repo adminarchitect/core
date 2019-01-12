@@ -35,6 +35,16 @@ trait HasColumns
     }
 
     /**
+     * @param Manager $dashboard
+     *
+     * @return Manager
+     */
+    public function widgets(Manager $dashboard): Manager
+    {
+        return $dashboard;
+    }
+
+    /**
      * Scaffold columns.
      *
      * @return MutableCollection
@@ -44,15 +54,6 @@ trait HasColumns
         return $this->collectColumns(
             $this->model()
         );
-    }
-
-    /**
-     * @param Manager $dashboard
-     * @return Manager
-     */
-    public function widgets(Manager $dashboard): Manager
-    {
-        return $dashboard;
     }
 
     /**

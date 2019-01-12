@@ -150,11 +150,12 @@ abstract class Filter implements Queryable
 
     /**
      * @param $model
+     *
      * @return bool
      */
     protected function shouldSearchInTranslations($model): bool
     {
         return $model instanceof Translatable
-            && in_array($this->name(), $model->getTranslatedAttributes());
+            && \in_array($this->name(), $model->getTranslatedAttributes(), true);
     }
 }

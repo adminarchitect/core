@@ -5,8 +5,8 @@ namespace Terranet\Administrator\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
-use function localizer\locale;
 use Terranet\Administrator\Contracts\Filter\Searchable;
+use function localizer\locale;
 
 class Text extends Filter implements Searchable
 {

@@ -18,12 +18,12 @@ class Enum extends Filter implements Searchable
      */
     public function setOptions($options): self
     {
-        if (!(is_array($options) || $options instanceof \Closure)) {
-            throw new \Exception("Enum accepts only `array` or `Closure` as options.");
+        if (!(\is_array($options) || $options instanceof \Closure)) {
+            throw new \Exception('Enum accepts only `array` or `Closure` as options.');
         }
 
         if ($options instanceof \Closure) {
-            $options = call_user_func_array($options, []);
+            $options = \call_user_func_array($options, []);
 
             return $this->setOptions($options);
         }

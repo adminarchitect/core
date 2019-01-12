@@ -1,4 +1,4 @@
-window.Vue = require('vue');
+const Vue = window.Vue = require('vue');
 import VueClip from 'vue-clip';
 import {Tag, Select, Option, Button, Dialog, DatePicker, TimePicker} from 'element-ui';
 

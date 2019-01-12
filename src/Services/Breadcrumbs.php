@@ -36,10 +36,11 @@ class Breadcrumbs
     /**
      * Render breadcrumbs.
      *
-     * @return string
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\InvalidBreadcrumbException
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\UnnamedRouteException
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\ViewNotSetException
+     *
+     * @return string
      */
     public function render()
     {

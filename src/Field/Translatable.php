@@ -37,11 +37,12 @@ class Translatable
      *
      * @param $method
      * @param $args
+     *
      * @return mixed
      */
     public function __call($method, $args)
     {
-        if (in_array($method, Textarea::KNOWN_EDITORS)) {
+        if (\in_array($method, Textarea::KNOWN_EDITORS, true)) {
             return new static($this->field->$method());
         }
 
@@ -90,6 +91,8 @@ class Translatable
 
     /**
      * @param Locale $language
+     *
+     * @return string
      */
     public function name(Locale $language)
     {
@@ -98,6 +101,8 @@ class Translatable
 
     /**
      * @param Locale $language
+     *
+     * @return null|mixed
      */
     public function value(Locale $language)
     {

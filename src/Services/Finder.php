@@ -4,12 +4,9 @@ namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Terranet\Administrator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
 use Terranet\Administrator\Filters\Assembler;
-use Terranet\Administrator\Filters\InputFactory;
-use Terranet\Administrator\Form\FormElement;
 
 class Finder implements FinderContract
 {

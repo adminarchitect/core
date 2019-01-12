@@ -95,7 +95,8 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * @param $method
      * @param $arguments
-     * @return mixed|null
+     *
+     * @return null|mixed
      */
     public function __call($method, $arguments)
     {

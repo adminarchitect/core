@@ -2,17 +2,11 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Terranet\Administrator\Annotations\ScopeFilter;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Filter\Text;
-use Terranet\Administrator\Filters\FilterElement;
-use Terranet\Administrator\Filters\InputFactory as FilterInputFactory;
 use Terranet\Administrator\Filters\Scope;
 use function admin\db\connection;
 use function admin\db\enum_values;
@@ -178,7 +172,7 @@ trait HasFilters
 
                 if ($info->name || $info->translate) {
                     $name = $info->name ?: trans($info->translate);
-                };
+                }
 
                 $scope = new Scope($name, str_slug($callback, '_'));
                 $scope->setQuery([$model, $callback]);

@@ -4,13 +4,22 @@ namespace Terranet\Administrator\Services;
 
 class Sorter
 {
+    /** @var array */
     protected $sortable;
 
+    /** @var null|string */
     protected $element;
 
+    /** @var null|string */
     protected $direction;
 
-    public function __construct(array $sortable = [], $sortDir = 'desc')
+    /**
+     * Sorter constructor.
+     *
+     * @param array $sortable
+     * @param string $sortDir
+     */
+    public function __construct(array $sortable = [], string $sortDir = 'desc')
     {
         $this->sortable = $sortable;
 
@@ -22,11 +31,11 @@ class Sorter
     /**
      * Build sortable url.
      *
-     * @param $element
+     * @param string $element
      *
      * @return string
      */
-    public function makeUrl($element)
+    public function makeUrl(string $element)
     {
         return \admin\helpers\qsRoute(null, [
             'sort_by' => $element,
@@ -37,9 +46,9 @@ class Sorter
     /**
      * Get current sorting direction.
      *
-     * @return mixed
+     * @return null|string
      */
-    public function direction()
+    public function direction(): ?string
     {
         return $this->direction;
     }
@@ -47,9 +56,9 @@ class Sorter
     /**
      * Get current sorting element.
      *
-     * @return mixed
+     * @return null|string
      */
-    public function element()
+    public function element(): ?string
     {
         return $this->element ?: $this->first();
     }
@@ -57,11 +66,11 @@ class Sorter
     /**
      * Check if a column is sortable.
      *
-     * @param $column
+     * @param string $column
      *
      * @return bool
      */
-    public function canSortBy($column)
+    public function canSortBy(string $column): bool
     {
         return array_key_exists($column, $this->sortable) || \in_array($column, $this->sortable, true);
     }
@@ -101,15 +110,21 @@ class Sorter
     /**
      * Reverse sorting direction.
      *
-     * @param $direction
+     * @param string $direction
      *
      * @return string
      */
-    protected function reverseDirection($direction)
+    protected function reverseDirection(string $direction)
     {
         return 'asc' === strtolower($direction) ? 'desc' : 'asc';
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     *
+     * @return mixed
+     */
     protected function input($key, $default = null)
     {
         return app('request')->input($key, $default);
