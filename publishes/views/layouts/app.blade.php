@@ -1,9 +1,7 @@
 @inject('config', 'scaffold.config')
-@inject('breadcrumbs', 'scaffold.breadcrumbs')
 @inject('module', 'scaffold.module')
-@inject('navigation', 'scaffold.navigation')
 
-    <!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head ng-app="Architector">
     <meta charset="utf-8">
@@ -72,7 +70,7 @@
             @if ($module)
                 @yield('scaffold.create')
 
-                @if ($breadcrumbs)
+                @if ($breadcrumbs = app('scaffold.breadcrumbs'))
                     <h4 class="btn-quirk">{{ $module->title() }} @yield('total')</h4>
                     {!! $breadcrumbs->render() !!}
                 @endif

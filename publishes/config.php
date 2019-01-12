@@ -46,9 +46,6 @@ return [
     // Basic user validation Rule
     'permission' => \Terranet\Administrator\Auth\SuperAdminRule::class,
 
-    // Navigation Factory
-    'menu' => \Terranet\Administrator\Navigation\Factory::class,
-
     'resource' => [
         // The custom way to resolve module name for custom resources
         // when controller missing Router's $module parameter

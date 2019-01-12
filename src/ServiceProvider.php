@@ -65,10 +65,6 @@ class ServiceProvider extends BaseServiceProvider
             ["{$baseDir}/publishes/Providers" => app_path('Providers')],
             'boilerplate'
         );
-        $this->publishes(
-            ["{$baseDir}/publishes/Navigation.php" => app_path('Http/Terranet/Administrator/Navigation.php')],
-            'navigation'
-        );
 
         $this->configureAuth();
     }

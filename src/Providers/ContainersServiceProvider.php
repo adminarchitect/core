@@ -12,6 +12,7 @@ use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Module\Sortable;
 use Terranet\Administrator\Contracts\Services\Finder;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
+use Terranet\Administrator\Dashboard\Manager;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Filter;
 use Terranet\Administrator\Schema;
@@ -37,7 +38,6 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminMagnet' => 'scaffold.magnet',
         'AdminFinder' => 'scaffold.finder',
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
-        'AdminNavigation' => 'scaffold.navigation',
         'AdminTranslations' => 'scaffold.translations',
         'AdminAnnotations' => 'scaffold.annotations',
     ];
@@ -161,7 +161,7 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.widgets', function () {
             if (($module = app('scaffold.module')) && method_exists($module, 'widgets')) {
-                return $module->widgets();
+                return $module->widgets(new Manager());
             }
 
             return new Manager();
@@ -284,15 +284,6 @@ class ContainersServiceProvider extends ServiceProvider
                 $provider = $module->breadcrumbs();
 
                 return new $provider($app->make('breadcrumbs'), $app->make('scaffold.module'));
-            }
-        });
-    }
-
-    protected function registerAdminNavigation()
-    {
-        $this->app->singleton('scaffold.navigation', function ($app) {
-            if ($factory = $app['scaffold.config']->get('menu')) {
-                return app($factory)->make();
             }
         });
     }

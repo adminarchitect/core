@@ -1,1 +1,1 @@
-{!! $navigation->render('sidebar', '\Terranet\Administrator\Navigation\Presenters\Bootstrap\SidebarMenuPresenter') !!}
+{!! app('scaffold.navigation')->render('sidebar', '\Terranet\Administrator\Navigation\Presenters\Bootstrap\SidebarMenuPresenter') !!}
