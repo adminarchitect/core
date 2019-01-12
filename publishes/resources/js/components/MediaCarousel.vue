@@ -67,7 +67,7 @@
                                    class="media-carousel__toolbar__action fa fa-random"></i>
                             </a>
 
-                            <a class="fancybox" :href="mediaUrl(item)" :rel="'media_' + id">
+                            <a class="fancybox" :href="mediaUrl(item)" :rel="'media_' + id" :data-fancybox="'media_' + id">
                                 <img :src="mediaUrl(item)"/>
                             </a>
                         </div>
@@ -92,134 +92,134 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      id: {
-        type: String,
-      },
-      media: {
-        type: Array,
-        default: [],
-      },
-      conversion: {
-        type: String,
-        default: '',
-      },
-      readonly: {
-        type: Boolean,
-        default: false,
-      },
-    },
+    export default {
+        props: {
+            id: {
+                type: String,
+            },
+            media: {
+                type: Array,
+                default: [],
+            },
+            conversion: {
+                type: String,
+                default: '',
+            },
+            readonly: {
+                type: Boolean,
+                default: false,
+            },
+        },
 
-    data() {
-      return {
-        editable: false,
-        queue: [],
-        pendingRemoval: [],
-        enabled: true,
-        active: 0,
-        loaded: 0,
-        preloading: false,
-      };
-    },
+        data() {
+            return {
+                editable: false,
+                queue: [],
+                pendingRemoval: [],
+                enabled: true,
+                active: 0,
+                loaded: 0,
+                preloading: false,
+            };
+        },
 
-    computed: {
-      ref() {
-        return 'scaffold_' + this.id;
-      },
+        computed: {
+            ref() {
+                return 'scaffold_' + this.id;
+            },
 
-      acceptedTypes() {
-        return (this.mimeTypes || []).join(', ');
-      },
+            acceptedTypes() {
+                return (this.mimeTypes || []).join(', ');
+            },
 
-      pendingCount() {
-        return `${this.pendingRemoval.length} item(s) queued for removal.`;
-      },
-    },
+            pendingCount() {
+                return `${this.pendingRemoval.length} item(s) queued for removal.`;
+            },
+        },
 
-    methods: {
-      pendingForRemoval(item) {
-        return -1 !== this.pendingRemoval.indexOf(
-            parseInt(item.id),
-        );
-      },
+        methods: {
+            pendingForRemoval(item) {
+                return -1 !== this.pendingRemoval.indexOf(
+                    parseInt(item.id),
+                );
+            },
 
-      addToQueue(event) {
-        this.input().files = event.dataTransfer.files;
+            addToQueue(event) {
+                this.input().files = event.dataTransfer.files;
 
-        this.editable = false;
-      },
+                this.editable = false;
+            },
 
-      clearQueue() {
-        if (!confirm('Are you sure?')) {
-          return false;
-        }
+            clearQueue() {
+                if (!confirm('Are you sure?')) {
+                    return false;
+                }
 
-        this.enabled = false;
+                this.enabled = false;
 
-        this.$nextTick(() => {
-          this.enabled = true;
-          this.queue = [];
-        });
-      },
+                this.$nextTick(() => {
+                    this.enabled = true;
+                    this.queue = [];
+                });
+            },
 
-      onDragEnter() {
-        this.editable = true;
-      },
+            onDragEnter() {
+                this.editable = true;
+            },
 
-      onDragLeave() {
-        this.editable = false;
-      },
+            onDragLeave() {
+                this.editable = false;
+            },
 
-      mediaUrl(item) {
-        return this.conversion ? item.conversions[this.conversion] : item.url;
-      },
+            mediaUrl(item) {
+                return this.conversion ? item.conversions[this.conversion] : item.url;
+            },
 
-      removeMedia(item) {
-        this.pendingRemoval.push(
-            parseInt(item.id),
-        );
-      },
+            removeMedia(item) {
+                this.pendingRemoval.push(
+                    parseInt(item.id),
+                );
+            },
 
-      restoreMedia(item) {
-        this.pendingRemoval.splice(
-            this.pendingRemoval.indexOf(item.id),
-            1,
-        );
-      },
+            restoreMedia(item) {
+                this.pendingRemoval.splice(
+                    this.pendingRemoval.indexOf(item.id),
+                    1,
+                );
+            },
 
-      onFilesSelected(event) {
-        this.queue = event.target.files;
-      },
+            onFilesSelected(event) {
+                this.queue = event.target.files;
+            },
 
-      input() {
-        return this.$refs[this.ref];
-      },
+            input() {
+                return this.$refs[this.ref];
+            },
 
-      setActive(index) {
-        setTimeout(() => this.active = index, 500);
-      },
-    },
+            setActive(index) {
+                setTimeout(() => this.active = index, 500);
+            },
+        },
 
-    mounted() {
-      if ((this.media || []).length) {
-        this.preloading = true;
-        this.media.forEach(item => {
-          let image = new Image;
-          image.onload = () => {
-            ++this.loaded;
-            if (this.loaded === this.media.length) {
-              this.preloading = false;
-              setTimeout(function() {
-                $('.media-carousel .fancybox').fancybox();
-              }, 50);
+        mounted() {
+            if ((this.media || []).length) {
+                this.preloading = true;
+                this.media.forEach(item => {
+                    let image = new Image;
+                    image.onload = () => {
+                        ++this.loaded;
+                        if (this.loaded === this.media.length) {
+                            this.preloading = false;
+                            setTimeout(function () {
+                                $('.media-carousel .fancybox').fancybox();
+                            }, 50);
+                        }
+                    };
+                    image.src = item.url;
+                });
             }
-          };
-          image.src = item.url;
-        });
-      }
-    },
-  };
+        },
+    };
 </script>
 
 <style lang="scss">

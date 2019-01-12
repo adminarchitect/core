@@ -70,9 +70,11 @@
             @if ($module)
                 @yield('scaffold.create')
 
-                @if ($breadcrumbs = app('scaffold.breadcrumbs'))
-                    <h4 class="btn-quirk">{{ $module->title() }} @yield('total')</h4>
+                <h4 class="btn-quirk">{{ $module->title() }} @yield('total')</h4>
+                @if ($config->get('breadcrumbs') && $breadcrumbs = app('scaffold.breadcrumbs'))
                     {!! $breadcrumbs->render() !!}
+                @else
+                    <br><br>
                 @endif
             @endif
 

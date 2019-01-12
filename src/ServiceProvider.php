@@ -5,11 +5,7 @@ namespace Terranet\Administrator;
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
 use Collective\Html\HtmlServiceProvider;
-use Creativeorange\Gravatar\Facades\Gravatar;
-use Creativeorange\Gravatar\GravatarServiceProvider;
 use Czim\Paperclip\Providers\PaperclipServiceProvider;
-use DaveJamesMiller\Breadcrumbs\Facade as BreadcrumbsFacade;
-use DaveJamesMiller\Breadcrumbs\ServiceProvider as BreadcrumbsServiceProvider;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Pingpong\Menus\MenuFacade;
 use Pingpong\Menus\MenusServiceProvider;
@@ -78,9 +74,6 @@ class ServiceProvider extends BaseServiceProvider
             ArtisanServiceProvider::class,
             ContainersServiceProvider::class,
             EventServiceProvider::class,
-            BreadcrumbsServiceProvider::class => [
-                'Breadcrumbs' => BreadcrumbsFacade::class,
-            ],
             HtmlServiceProvider::class => [
                 'Html' => HtmlFacade::class,
                 'Form' => FormFacade::class,
@@ -88,9 +81,6 @@ class ServiceProvider extends BaseServiceProvider
             PaperclipServiceProvider::class,
             MenusServiceProvider::class => [
                 'AdminNav' => MenuFacade::class,
-            ],
-            GravatarServiceProvider::class => [
-                'Gravatar' => Gravatar::class,
             ],
         ];
 

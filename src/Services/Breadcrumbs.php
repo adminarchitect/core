@@ -2,10 +2,8 @@
 
 namespace Terranet\Administrator\Services;
 
-use Closure;
-use DaveJamesMiller\Breadcrumbs\Generator;
-use DaveJamesMiller\Breadcrumbs\Manager as BreadcrumbsManager;
-use Route;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Services\Breadcrumbs\EloquentPresenter;
 
@@ -32,15 +30,16 @@ class Breadcrumbs
     public function __construct(BreadcrumbsManager $manager, Module $module)
     {
         $this->module = $module;
-
         $this->manager = $manager;
-        $this->manager->setView('administrator::partials.breadcrumbs');
     }
 
     /**
      * Render breadcrumbs.
      *
      * @return string
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\InvalidBreadcrumbException
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\UnnamedRouteException
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\ViewNotSetException
      */
     public function render()
     {
@@ -49,7 +48,7 @@ class Breadcrumbs
         // assembly breadcrumbs
         $this->assembly($action);
 
-        return $this->manager->render($action);
+        return $this->manager->view('administrator::partials.breadcrumbs', $action);
     }
 
     /**
@@ -59,7 +58,7 @@ class Breadcrumbs
      */
     protected function currentAction()
     {
-        $action = substr($action = Route::currentRouteAction(), strpos($action, '@') + 1);
+        $action = substr($action = app('router')->currentRouteAction(), strpos($action, '@') + 1);
 
         if (!method_exists($this, $action)) {
             $action = 'index';
@@ -78,11 +77,26 @@ class Breadcrumbs
         return \call_user_func_array([$this, $action], []);
     }
 
+    /**
+     * Render `Index page` breadcrumbs.
+     */
+    protected function index()
+    {
+        $this->manager->register('index', function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->push($this->module->title(), route('scaffold.index', [
+                'module' => $this->module->url(),
+            ]));
+        });
+    }
+
+    /**
+     * Render `Edit page` breadcrumbs.
+     */
     protected function edit()
     {
         $this->index();
 
-        $this->register('edit', function (Generator $breadcrumbs) {
+        $this->manager->register('edit', function (BreadcrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('index');
 
             $breadcrumbs->push(trans('administrator::module.action.edit', [
@@ -92,20 +106,14 @@ class Breadcrumbs
         });
     }
 
-    protected function index()
-    {
-        $this->register('index', function (Generator $breadcrumbs) {
-            $breadcrumbs->push($this->module->title(), route('scaffold.index', [
-                'module' => $this->module->url(),
-            ]));
-        });
-    }
-
+    /**
+     * Render `Create page` breadcrumbs.
+     */
     protected function create()
     {
         $this->index();
 
-        $this->register('create', function (Generator $breadcrumbs) {
+        $this->manager->register('create', function (BreadcrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('index');
             $breadcrumbs->push(trans('administrator::module.action.create', [
                 'resource' => $this->module->singular(),
@@ -113,11 +121,14 @@ class Breadcrumbs
         });
     }
 
+    /**
+     * Render `View page` breadcrumbs.
+     */
     protected function view()
     {
         $this->index();
 
-        $this->register('view', function (Generator $breadcrumbs) {
+        $this->manager->register('view', function (BreadcrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('index');
             $breadcrumbs->push(trans('administrator::module.action.view', [
                 'resource' => $this->module->singular(),
@@ -127,23 +138,14 @@ class Breadcrumbs
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    protected function presentEloquent()
+    protected function presentEloquent(): ?string
     {
         if (!$model = app('scaffold.model')) {
             $model = app('scaffold.module')->model();
         }
 
         return (new EloquentPresenter($model))->present();
-    }
-
-    protected function register($name, Closure $callback)
-    {
-        if (!$this->manager->exists($name)) {
-            $this->manager->register($name, $callback);
-        }
-
-        return $this;
     }
 }

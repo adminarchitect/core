@@ -32,13 +32,18 @@ return [
         'breadcrumbs' => 'Http/Terranet/Administrator/Breadcrumbs',
     ],
 
+    /**
+     * Handles breadcrumbs.
+     *
+     * @package `davejamesmiller/laravel-breadcrumbs:^5.2`
+     */
+    'breadcrumbs' => false,
+
     // Handle passwords -> Convert plain text to Hash
     'manage_passwords' => true,
 
     // Enable File Manager
     'file_manager' => false,
-
-    'gravatar' => false,
 
     // The menu item that should be used as the default landing page of the administrative section
     'home_page' => $prefix,
@@ -74,7 +79,10 @@ return [
 
     'grid' => [
         'timestamps' => [
+            // enable|disable globally
             'enabled' => false,
+
+            // enable|disable per module
             //'users' => true,
         ],
     ],

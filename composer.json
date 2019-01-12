@@ -13,13 +13,13 @@
         "laravelcollective/html": "5.*|dev-master",
         "doctrine/dbal": "~2.5",
         "doctrine/annotations": "^1.6",
-        "davejamesmiller/laravel-breadcrumbs": "5.*",
         "terranet/menus": "^2.2",
         "terranet/php-humanizer": "2.*",
         "terranet/presentable": "^1.0",
         "terranet/translatable": "^1.2",
         "terranet/localizer": "^1.0",
-        "zendframework/zend-code": "2.*|3.*"
+        "zendframework/zend-code": "2.*|3.*",
+        "laravel/laravel": "^5.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.2",

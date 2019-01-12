@@ -19,6 +19,7 @@ use Terranet\Administrator\Schema;
 use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
 use Terranet\Localizer\Locale;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 
 class ContainersServiceProvider extends ServiceProvider
 {
@@ -269,10 +270,14 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminBreadcrumbs()
     {
         $this->app->singleton('scaffold.breadcrumbs', function ($app) {
+            if (!class_exists(BreadcrumbsManager::class)) {
+                throw new Exception("Please install `davejamesmiller/laravel-breadcrumbs:^5.2` package.");
+            }
+
             if ($module = $app['scaffold.module']) {
                 $provider = $module->breadcrumbs();
 
-                return new $provider($app->make('breadcrumbs'), $app->make('scaffold.module'));
+                return new $provider($app->make(BreadcrumbsManager::class), $app->make('scaffold.module'));
             }
         });
     }
