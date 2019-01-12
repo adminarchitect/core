@@ -3,10 +3,10 @@
 namespace Terranet\Administrator\Dashboard\Panels;
 
 use DB;
-use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
-class MembersPanel extends DashboardPanel
+class MembersPanel extends Panel
 {
     use Stringify;
 

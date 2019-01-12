@@ -2,10 +2,10 @@
 
 namespace Terranet\Administrator\Dashboard\Panels;
 
-use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
-class BlankPanel extends DashboardPanel
+class BlankPanel extends Panel
 {
     use Stringify;
 

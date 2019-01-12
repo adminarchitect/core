@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider;
+use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Module\Sortable;
@@ -25,6 +26,7 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminConfig' => 'scaffold.config',
         'AdminResource' => 'scaffold.module',
         'AdminModel' => 'scaffold.model',
+        'AdminWidgets' => 'scaffold.widgets',
         'AdminSchema' => 'scaffold.schema',
         'AdminSortable' => 'scaffold.sortable',
         'AdminFilter' => 'scaffold.filter',
@@ -36,7 +38,6 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminFinder' => 'scaffold.finder',
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminNavigation' => 'scaffold.navigation',
-        'AdminDashboard' => 'scaffold.dashboard',
         'AdminTranslations' => 'scaffold.translations',
         'AdminAnnotations' => 'scaffold.annotations',
     ];
@@ -85,7 +86,8 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class() {
+            $service = new class()
+            {
                 protected $readonly = [];
 
                 public function __construct()
@@ -128,15 +130,6 @@ class ContainersServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerAdminDashboard()
-    {
-        $this->app->singleton('scaffold.dashboard', function () {
-            if ($factory = config('administrator.dashboard')) {
-                return app($factory)->make();
-            }
-        });
-    }
-
     protected function registerAdminResource()
     {
         $this->app->singleton('scaffold.module', function ($app) {
@@ -161,6 +154,17 @@ class ContainersServiceProvider extends ServiceProvider
             ) {
                 return $finder->find($id);
             }
+        });
+    }
+
+    protected function registerAdminWidgets()
+    {
+        $this->app->singleton('scaffold.widgets', function () {
+            if (($module = app('scaffold.module')) && method_exists($module, 'widgets')) {
+                return $module->widgets();
+            }
+
+            return new Manager();
         });
     }
 

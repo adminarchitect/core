@@ -4,11 +4,11 @@ namespace Terranet\Administrator\Dashboard;
 
 use Traversable;
 
-class DashboardRow implements \IteratorAggregate
+class Row implements \IteratorAggregate
 {
     protected $panels = [];
 
-    public function panel(DashboardPanel $panel)
+    public function panel(Panel $panel)
     {
         $this->panels[] = $panel;
 

@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Dashboard;
 
 use Terranet\Administrator\Contracts\Services\Widgetable;
 
-abstract class DashboardPanel implements Widgetable
+abstract class Panel implements Widgetable
 {
     protected $width = 6;
 

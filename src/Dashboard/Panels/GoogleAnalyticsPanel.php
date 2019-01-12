@@ -5,10 +5,10 @@ namespace Terranet\Administrator\Dashboard\Panels;
 use Carbon\Carbon;
 use Spatie\Analytics\AnalyticsServiceProvider;
 use Spatie\Analytics\Period;
-use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
-class GoogleAnalyticsPanel extends DashboardPanel
+class GoogleAnalyticsPanel extends Panel
 {
     use Stringify;
 

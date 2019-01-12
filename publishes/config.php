@@ -49,9 +49,6 @@ return [
     // Navigation Factory
     'menu' => \Terranet\Administrator\Navigation\Factory::class,
 
-    // Dashboard Panels Factory
-    'dashboard' => \App\Http\Terranet\Administrator\Dashboard\Factory::class,
-
     'resource' => [
         // The custom way to resolve module name for custom resources
         // when controller missing Router's $module parameter

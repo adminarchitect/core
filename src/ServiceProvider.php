@@ -62,6 +62,10 @@ class ServiceProvider extends BaseServiceProvider
             'boilerplate'
         );
         $this->publishes(
+            ["{$baseDir}/publishes/Providers" => app_path('Providers')],
+            'boilerplate'
+        );
+        $this->publishes(
             ["{$baseDir}/publishes/Navigation.php" => app_path('Http/Terranet/Administrator/Navigation.php')],
             'navigation'
         );

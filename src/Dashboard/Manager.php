@@ -7,6 +7,7 @@ use IteratorAggregate;
 
 class Manager implements IteratorAggregate
 {
+    /** @var array */
     protected $rows = [];
 
     /**
@@ -16,14 +17,17 @@ class Manager implements IteratorAggregate
      */
     public function row(Closure $callback)
     {
-        $callback($row = new DashboardRow());
+        $callback($row = new Row());
 
         $this->rows[] = $row;
 
         return $this;
     }
 
-    public function getIterator()
+    /**
+     * @return \ArrayIterator|\Traversable
+     */
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->rows);
     }

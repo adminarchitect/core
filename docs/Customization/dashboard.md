@@ -97,11 +97,11 @@ One thing you need to do, is to register your dashboard panel in Dashboard facto
 protected function registerPanels()
 {
     $this->dashboard
-        ->row(function (DashboardRow $row) {
+        ->row(function (Row $row) {
         	# consider Bootstrap 12 columns grid
         	$row->panel(new Overview)->setWidth(12);
         })
-        ->row(function(DashboardRow $row) {
+        ->row(function(Row $row) {
             $row->panel(new Registration)->setWidth(12);
         });
 

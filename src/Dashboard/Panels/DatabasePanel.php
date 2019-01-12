@@ -2,11 +2,11 @@
 
 namespace Terranet\Administrator\Dashboard\Panels;
 
-use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 use function admin\db\connection;
 
-class DatabasePanel extends DashboardPanel
+class DatabasePanel extends Panel
 {
     use Stringify;
 
