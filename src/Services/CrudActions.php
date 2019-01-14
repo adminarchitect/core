@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Services;
 
 use Czim\Paperclip\Attachment\Attachment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Terranet\Administrator\Actions\RemoveSelected;
 use Terranet\Administrator\Actions\SaveOrder;
 use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract;
@@ -122,58 +123,21 @@ class CrudActions implements CrudActionsContract
      * Determine if the user is authorized to make this request.
      *
      * @param string $method
-     * @param        $item
+     * @param        $model
      * @param null $module
      *
      * @return bool
      */
-    public function authorize($method, $item = null, $module = null)
+    public function authorize($method, $model = null, $module = null)
     {
-        if (null === $item) {
-            $item = app('scaffold.module')->model();
+        $module = $module ?: app('scaffold.module');
+        $model = $model ?: $module->model();
+        $method = camel_case($method);
+
+        if (($policy = Gate::getPolicyFor($model)) && method_exists($policy, $method)) {
+            return Gate::allows($method, $model);
         }
 
-        return $this->getCachedResponse($method, $item, $module);
-    }
-
-    /**
-     * @param $method
-     * @param $item
-     * @param null $module
-     *
-     * @return bool|mixed
-     */
-    protected function getCachedResponse($method, $item, $module = null)
-    {
-        $method = 'can'.title_case($method);
-
-        if (!$module) {
-            $module = app('scaffold.module');
-        }
-
-        $key = $method.'_'.class_basename($item).'_'.md5(json_encode($item)).'_'.class_basename($module);
-
-        if ('testing' === app()->environment() || !array_key_exists($key, static::$responses)) {
-            $response = true;
-
-            $payload = [auth('admin')->user(), $item];
-
-            // Check for custom action method.
-            if (method_exists($this, $method)) {
-                $response = \call_user_func_array([$this, $method], $payload);
-            }
-            // Check for CRUD authorizations in Scaffolding Resource.
-            elseif ($this->module->hasMethod($method)) {
-                $response = \call_user_func_array([$this->module, $method], $payload);
-            }
-            // Check for CRUD authorizations from GuardManager service.
-            elseif (($guard = $this->module->guard()) && method_exists($guard, $method)) {
-                $response = \call_user_func_array([$guard, $method], $payload);
-            }
-
-            static::$responses[$key] = $response;
-        }
-
-        return static::$responses[$key];
+        return true;
     }
 }

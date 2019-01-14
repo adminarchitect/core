@@ -124,30 +124,13 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * @return mixed
-     */
-    public function guard()
-    {
-        // set the default guard
-        if (null === $this->guard) {
-            $this->guard = config('administrator.acl.manager');
-        }
-
-        if (\is_string($this->guard)) {
-            $this->guard = new $this->guard($this);
-        }
-
-        return $this->guard;
-    }
-
-    /**
      * Disable Actions column totally for Readonly Resources.
      *
      * @return bool
      */
-    public function hasActions()
+    public function readonly()
     {
-        return true;
+        return false;
     }
 
     /**

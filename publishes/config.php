@@ -61,13 +61,6 @@ return [
         'segment' => 2,
     ],
 
-    'acl' => [
-        // Global ACL Manager, which used to control CRUD actions
-        // in the global way. Can provide optional methods:
-        // showIf, can(Index|Update|Delete|Create)
-        'manager' => null,
-    ],
-
     // main layouts
     'layouts' => [
         'app' => 'administrator::layouts.app',

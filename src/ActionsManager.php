@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator;
 
+use Illuminate\Support\Facades\Gate;
 use Terranet\Administrator\Actions\Collection;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\Module;
@@ -70,39 +71,34 @@ class ActionsManager implements ActionsManagerContract
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param string $action
+     * @param string $ability
      * @param $model
      *
      * @return bool
      */
-    public function authorize($action, $model = null)
+    public function authorize($ability, $model = null)
     {
         // for most cases it is enough to set
         // permissions in Resource object.
         if (method_exists($this->module, 'authorize')) {
-            return $this->module->authorize($action, $model);
+            return $this->module->authorize($ability, $model);
         }
 
         // Ask Actions Service for action permissions.
-        return $this->service->authorize($action, $model, $this->module);
+        return $this->service->authorize($ability, $model, $this->module);
     }
 
     /**
-     * check if resource has no Actions at all.
+     * Checks if resource has no Actions at all / Readonly mode.
      */
     public function readonly()
     {
         if (null === $this->readonly) {
             $this->readonly = false;
 
-            // check for <Resource>::hideActions() method.
+            // check for <Module>::readonly() method.
             if (method_exists($this->module, 'readonly')) {
                 $this->readonly = $this->module->readonly();
-            }
-
-            // check for <Actions>::readonly() method.
-            elseif (method_exists($this->service, 'readonly')) {
-                $this->readonly = $this->service->readonly();
             }
         }
 
