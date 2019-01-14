@@ -411,7 +411,7 @@ class Mutable extends BaseCollection
      *
      * @return MediaElement
      */
-    protected function createMediaElement($collection): MediaElement
+    protected function createMediaElement($collection)
     {
         if (is_string($collection)) {
             $collection = new MediaElement($collection);
