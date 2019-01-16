@@ -2,7 +2,9 @@
 
 namespace Terranet\Administrator;
 
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Terranet\Administrator\Actions\Collection;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\Module;
@@ -76,12 +78,19 @@ class ActionsManager implements ActionsManagerContract
      *
      * @return bool
      */
-    public function authorize($ability, $model = null)
+    public function authorize($ability, ?Model $model = null)
     {
         // for most cases it is enough to set
         // permissions in Resource object.
-        if (method_exists($this->module, 'authorize')) {
-            return $this->module->authorize($ability, $model);
+        if (method_exists($this->module, $abilityMethod = 'can'.title_case(camel_case($ability)))) {
+            $user = auth('admin')->user();
+            $cacheID = $user->getAuthIdentifier().':'.$ability.($model ? '_'.$model->getKey() : '');
+
+            return Cache::remember($cacheID, 1, function () use ($user, $ability, $model) {
+                $abilityMethod = 'can'.title_case(camel_case($ability));
+
+                return $this->module->$abilityMethod($user, $ability, $model);
+            });
         }
 
         // Ask Actions Service for action permissions.
@@ -108,12 +117,12 @@ class ActionsManager implements ActionsManagerContract
     /**
      * Call handler method.
      *
-     * @param       $method
+     * @param string $method
      * @param array $arguments
      *
      * @return mixed
      */
-    public function exec($method, array $arguments = [])
+    public function exec(string $method, array $arguments = [])
     {
         // execute custom action
         if (starts_with($method, 'action::')) {

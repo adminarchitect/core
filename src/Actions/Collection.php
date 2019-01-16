@@ -37,13 +37,16 @@ class Collection extends BaseCollection
     /**
      * Leave actions which User $user is authorized to execute.
      *
-     * @param User $user
-     * @param Model $model
+     * @param null|User $user
+     * @param null|Model $model
      *
      * @return static
      */
-    public function authorized(User $user, Model $model = null)
+    public function authorized(?User $user = null, Model $model = null)
     {
+        $user = $user ?: auth('admin')->user();
+        $model = $model ?: app('scaffold.module')->model();
+
         return $this->filter(function ($action) use ($user, $model) {
             // authorize action only if action allows it.
             if (method_exists($action, 'authorize')) {

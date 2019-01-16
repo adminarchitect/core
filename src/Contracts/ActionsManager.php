@@ -2,17 +2,19 @@
 
 namespace Terranet\Administrator\Contracts;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface ActionsManager
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @param string $method
-     * @param $model
+     * @param null|Model $model
      *
      * @return bool
      */
-    public function authorize($method, $model = null);
+    public function authorize($method, ?Model $model = null);
 
     /**
      * Parse given class for single actions.
@@ -24,10 +26,10 @@ interface ActionsManager
     /**
      * Call handler method.
      *
-     * @param       $method
+     * @param string $method
      * @param array $arguments
      *
      * @return mixed
      */
-    public function exec($method, array $arguments = []);
+    public function exec(string $method, array $arguments = []);
 }

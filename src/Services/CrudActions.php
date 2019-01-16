@@ -19,12 +19,8 @@ class CrudActions implements CrudActionsContract
 {
     use ExportsCollection;
 
-    /**
-     * @var Scaffolding
-     */
+    /** @var Scaffolding */
     protected $module;
-
-    protected static $responses = [];
 
     public function __construct($module)
     {
@@ -130,12 +126,13 @@ class CrudActions implements CrudActionsContract
      */
     public function authorize($method, $model = null, $module = null)
     {
+        $accessGate = Gate::forUser(auth('admin')->user());
         $module = $module ?: app('scaffold.module');
         $model = $model ?: $module->model();
         $method = camel_case($method);
 
-        if (($policy = Gate::getPolicyFor($model)) && method_exists($policy, $method)) {
-            return Gate::allows($method, $model);
+        if (($policy = $accessGate->getPolicyFor($model)) && method_exists($policy, $method)) {
+            return $accessGate->allows($method, $model);
         }
 
         return true;

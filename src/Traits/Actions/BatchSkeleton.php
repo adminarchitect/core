@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Traits\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Database\Eloquent\Model;
 
 trait BatchSkeleton
 {
@@ -10,12 +11,13 @@ trait BatchSkeleton
      * Check if specified user is authorized to execute this action.
      *
      * @param User $viewer
+     * @param null|Model $model
      *
      * @return bool
      */
-    public function authorize(User $viewer)
+    public function authorize(User $viewer, ?Model $model = null)
     {
-        return true;
+        return app('scaffold.actions')->authorize('remove_selected', $model);
     }
 
     /**

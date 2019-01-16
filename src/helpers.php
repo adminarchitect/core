@@ -1,6 +1,7 @@
 <?php
 
 namespace {
+
     if (!function_exists('array_build')) {
         /**
          * Build a new array using a callback (Original method was deprecetad since version 5.2).
@@ -39,6 +40,7 @@ namespace {
 }
 
 namespace admin\db {
+
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
@@ -153,15 +155,10 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
-    use Coduo\PHPHumanizer\StringHumanizer;
-    use Czim\Paperclip\Contracts\AttachableInterface;
-    use Illuminate\Database\Eloquent\Model;
+
     use Illuminate\Support\Facades\Request;
     use Illuminate\Support\Facades\Route;
-    use Terranet\Administrator\Contracts\Form\HiddenElement;
     use Terranet\Administrator\Contracts\Module\Exportable;
-    use Terranet\Presentable\PresentableInterface;
-    use Terranet\Translatable\Translatable;
 
     if (!\function_exists('html_list')) {
         /**
@@ -328,109 +325,16 @@ namespace admin\helpers {
         }
     }
 
-    if (!\function_exists('hidden_element')) {
-        function hidden_element($element)
-        {
-            return $element instanceof HiddenElement;
-        }
-    }
-
     if (!\function_exists('exportable')) {
         function exportable($module)
         {
             return $module instanceof Exportable;
         }
     }
-
-    if (!\function_exists('eloquent_attributes')) {
-        function eloquent_attributes(Model $model)
-        {
-            $fillable = $model->getFillable();
-
-            if (!empty($key = $model->getKeyName())) {
-                array_unshift($fillable, $key);
-            }
-
-            if ($model instanceof Translatable && method_exists($model, 'getTranslatedAttributes')) {
-                $fillable = array_merge($fillable, $model->getTranslatedAttributes());
-            }
-
-            $fillable = array_merge($fillable, $model->getDates());
-
-            $fillable = array_filter($fillable, function ($element) use ($model) {
-                return !\in_array($element, $model->getHidden(), true);
-            });
-
-            $data = $model->toArray();
-
-            $out = [];
-            foreach ($fillable as $column) {
-                $out[$column] = array_get($data, $column);
-            }
-
-            return $out;
-        }
-    }
-
-    if (!\function_exists('eloquent_attribute')) {
-        function eloquent_attribute(Model $object, $key)
-        {
-            if ($object instanceof AttachableInterface && array_key_exists($key, $object->getAttachedFiles())) {
-                return \admin\output\staplerImage($object->getAttribute($key));
-            }
-
-            $value = present($object, $key);
-
-            if (\is_array($value)) {
-                return !empty($value)
-                    ? highlight_string(json_encode($value, JSON_PRETTY_PRINT))
-                    : null;
-            }
-
-            return $value;
-        }
-
-        function present(Model $object, $key, $value = null)
-        {
-            $value = $value ?: $object->getAttribute($key);
-
-            if ($object instanceof PresentableInterface) {
-                if ($adminKey = has_admin_presenter($object, $key)) {
-                    return $object->present()->$adminKey($value);
-                }
-
-                if ($frontKey = has_presenter($object, $key)) {
-                    return $object->present()->$frontKey($value);
-                }
-            }
-
-            return $value;
-        }
-
-        function has_admin_presenter(PresentableInterface $object, $key)
-        {
-            return method_exists($object->present(), $adminKey = camel_case("admin_{$key}"))
-                ? $adminKey
-                : null;
-        }
-
-        function has_presenter(PresentableInterface $object, $key)
-        {
-            return method_exists($object->present(), $frontKey = camel_case($key))
-                ? $frontKey
-                : null;
-        }
-    }
-
-    if (!\function_exists('str_humanize')) {
-        function str_humanize($key)
-        {
-            return StringHumanizer::humanize($key);
-        }
-    }
 }
 
 namespace admin\output {
+
     use Closure;
 
     function boolean($value)
@@ -531,34 +435,6 @@ namespace admin\output {
         }
 
         return $items;
-    }
-
-    /**
-     * @param array $items
-     * @param null|Closure $callback
-     * @param array $attributes
-     *
-     * @return string
-     */
-    function ul($items = [], Closure $callback = null, array $attributes = [])
-    {
-        $items = _prepare_collection($items, $callback);
-
-        return '<ul '.\admin\helpers\html_attributes($attributes).'>'.'<li>'.implode('</li><li>', $items).'</li>'.'</ul>';
-    }
-
-    /**
-     * @param array $items
-     * @param null|Closure $callback
-     * @param array $attributes
-     *
-     * @return string
-     */
-    function ol($items = [], Closure $callback = null, array $attributes = [])
-    {
-        $items = _prepare_collection($items, $callback);
-
-        return '<ol '.\admin\helpers\html_attributes($attributes).'>'.'<li>'.implode('</li><li>', $items).'</li>'.'</ol>';
     }
 
     function label($label = '', $class = 'label-success')

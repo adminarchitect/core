@@ -1,4 +1,4 @@
-@if (count($batch = $actions->batch()->authorized(auth('admin')->user())))
+@if (count($batch = $actions->batch()->authorized()))
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             {{ trans('administrator::buttons.batch_actions') }}
