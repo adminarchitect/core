@@ -17,7 +17,10 @@ trait BatchSkeleton
      */
     public function authorize(User $viewer, ?Model $model = null)
     {
-        return app('scaffold.actions')->authorize('remove_selected', $model);
+        return app('scaffold.actions')->authorize(
+            snake_case(class_basename($this)),
+            $model
+        );
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Actions;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 
 trait ActionSkeleton
@@ -11,37 +11,39 @@ trait ActionSkeleton
      * Check if specified user is authorized to execute this action.
      *
      * @param User $viewer
-     * @param Eloquent $entity
+     * @param Model $model
      *
      * @return bool
      */
-    public function authorize(User $viewer, Eloquent $entity = null)
+    public function authorize(User $viewer, Model $model = null)
     {
-        return true;
+        return app('scaffold.actions')->authorize(
+            snake_case(class_basename($this)),
+            $model
+        );
     }
 
     /**
-     * @param Eloquent $entity
+     * @param Model $model
      *
      * @return string
      */
-    protected function route(Eloquent $entity = null)
+    protected function route(Model $model = null)
     {
         return route('scaffold.action', [
             'module' => app('scaffold.module'),
-            'id' => $entity ? $entity->getKey() : null,
-            'action' => $this->action($entity),
+            'id' => $model ? $model->getKey() : null,
+            'action' => $this->action($model),
         ]);
     }
 
     /**
-     * @param Eloquent $entity
+     * @param Model $model
      *
      * @return string
      */
-    protected function attributes(Eloquent $entity = null)
+    protected function attributes(Model $model = null)
     {
-        return \admin\helpers\html_attributes([
-        ]);
+        return \admin\helpers\html_attributes([]);
     }
 }
