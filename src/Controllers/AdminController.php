@@ -36,7 +36,7 @@ abstract class AdminController extends BaseController
      *
      * @return bool
      */
-    public function authorize($ability, $arguments = [])
+    public function authorize($ability, $arguments = null)
     {
         if (!$response = app('scaffold.actions')->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(

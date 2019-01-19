@@ -50,12 +50,12 @@ class AdminControllerTest extends CoreTestCase
 
         $actions->expects($this->once())
                 ->method('authorize')
-                ->with($ability = 'users.create', [])
+                ->with($ability = 'users.create', null)
                 ->willReturn(true);
 
         app()->instance('scaffold.actions', $actions);
 
-        $controller->authorize($ability, []);
+        $controller->authorize($ability, null);
     }
 
     /** @test */
@@ -77,13 +77,13 @@ class AdminControllerTest extends CoreTestCase
         $actions = $this->createPartialMock(ActionsManager::class, ['authorize']);
         $actions->expects($this->once())
                 ->method('authorize')
-                ->with($ability, [])
+                ->with($ability, null)
                 ->willReturn(false);
 
         app()->instance('scaffold.actions', $actions);
 
         $this->expectException(HttpException::class);
-        $controller->authorize($ability, []);
+        $controller->authorize($ability, null);
     }
 
     /** @test */
