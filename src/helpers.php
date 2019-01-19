@@ -336,24 +336,35 @@ namespace admin\helpers {
 namespace admin\output {
 
     use Closure;
+    use Czim\Paperclip\Attachment\Attachment;
 
+    /**
+     * @param $value
+     * @return string
+     */
     function boolean($value)
     {
         return $value ? '<i class="fa fa-fw fa-check"></i>' : '';
     }
 
-    function rank($name, $value, $key)
+    /**
+     * @param string $name
+     * @param $value
+     * @param string $key
+     * @return string
+     */
+    function rank(string $name, $value, string $key)
     {
         return '<input type="number" style="width: 50px;" value="'.$value.'" name="'.$name.'['.$key.']" />';
     }
 
     /**
-     * @param       $image
+     * @param string $image
      * @param array $attributes
      *
      * @return string
      */
-    function image($image, array $attributes = [])
+    function image(string $image, array $attributes = [])
     {
         $attributes = \admin\helpers\html_attributes($attributes);
 
@@ -363,13 +374,13 @@ namespace admin\output {
     /**
      * Output image from Paperclip attachment object.
      *
-     * @param null $attachment
-     * @param null $style
+     * @param null|Attachment $attachment
+     * @param null|string $style
      * @param array $attributes
      *
      * @return null|string
      */
-    function staplerImage($attachment = null, $style = null, $attributes = [])
+    function staplerImage(Attachment $attachment = null, string $style = null, $attributes = [])
     {
         if ($attachment && $attachment->originalFilename()) {
             $styles = $attachment->variants();
@@ -420,7 +431,12 @@ namespace admin\output {
         return null;
     }
 
-    function _prepare_collection($items, Closure $callback = null)
+    /**
+     * @param array $items
+     * @param Closure|null $callback
+     * @return array|string
+     */
+    function _prepare_collection(array $items, Closure $callback = null)
     {
         if (\is_object($items) && method_exists($items, 'toArray')) {
             $items = $items->toArray();
@@ -437,12 +453,22 @@ namespace admin\output {
         return $items;
     }
 
-    function label($label = '', $class = 'label-success')
+    /**
+     * @param string $label
+     * @param string $class
+     * @return string
+     */
+    function label(string $label = '', string $class = 'label-success')
     {
         return '<span class="label '.$class.'">'.$label.'</span>';
     }
 
-    function badge($label = '', $class = 'bg-green')
+    /**
+     * @param string $label
+     * @param string $class
+     * @return string
+     */
+    function badge(string $label = '', string $class = 'bg-green')
     {
         return '<span class="badge '.$class.'">'.$label.'</span>';
     }

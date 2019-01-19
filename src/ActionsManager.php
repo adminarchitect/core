@@ -2,7 +2,6 @@
 
 namespace Terranet\Administrator;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Terranet\Administrator\Actions\Collection;

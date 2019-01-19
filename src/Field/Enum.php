@@ -34,9 +34,12 @@ class Enum extends Generic
     /**
      * Set colors palette.
      *
-     * @param array|string $colors
-     * @param null|string $value
      * @param mixed $color
+     * @param null|string $value
+     *
+     * @throws Exception
+     *
+     * @return Enum
      */
     public function palette($color, string $value = null)
     {

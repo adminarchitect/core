@@ -2,25 +2,27 @@
 
 namespace Terranet\Administrator\Field\Traits;
 
+use Closure;
+
 trait AcceptsCustomFormat
 {
-    /** @var null\Closure */
+    /** @var null|Closure */
     protected $format;
 
     /**
      * @return bool
      */
-    public function hasFormat()
+    public function hasCustomFormat(): bool
     {
         return null !== $this->format;
     }
 
     /**
-     * @param \Closure $format
+     * @param Closure $format
      *
-     * @return BelongsTo
+     * @return self
      */
-    public function renderAs(\Closure $format): self
+    public function renderAs(Closure $format): self
     {
         $this->format = $format;
 
@@ -32,8 +34,8 @@ trait AcceptsCustomFormat
      *
      * @return mixed
      */
-    protected function callFormatter($args)
+    protected function callFormatter(...$args)
     {
-        return \call_user_func_array($this->format, $args);
+        return $this->format->call($this, ...$args);
     }
 }

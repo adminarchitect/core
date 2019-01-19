@@ -122,6 +122,7 @@ class Mutable extends BaseCollection
      * @param Closure $callback
      *
      * @return $this
+     * @throws Exception
      */
     public function update(string $id, Closure $callback): self
     {
@@ -152,9 +153,10 @@ class Mutable extends BaseCollection
     /**
      * Update many elements at once.
      *
-     * @param $ids
+     * @param array $ids
      *
      * @return $this
+     * @throws Exception
      */
     public function updateMany(array $ids = []): self
     {
@@ -203,6 +205,7 @@ class Mutable extends BaseCollection
      * @param $target
      *
      * @return $this
+     * @throws Exception
      */
     public function moveBefore(string $id, $target)
     {

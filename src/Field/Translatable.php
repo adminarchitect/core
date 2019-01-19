@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Scaffolding;
 use Terranet\Localizer\Locale;
 
 /**
@@ -68,13 +69,14 @@ class Translatable
      */
     public function render(string $page = 'index')
     {
-        if ($this->field->hasFormat()) {
-            // Each Field can define its own data for custom formatter.
-            $withData = method_exists($this, 'renderWith')
-                ? $this->renderWith()
-                : [$this->field->value(), $this->field->getModel()];
+        if (\in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
+            if ($this->field->hasCustomFormat()) {
+                return $this->field->callFormatter($this->field->getModel(), $page);
+            }
 
-            return $this->field->callFormatter($withData);
+            if ($presenter = $this->field->hasPresenter($this->field->getModel(), $this->field->id())) {
+                return $this->field->callPresenter($presenter);
+            }
         }
 
         $data = [

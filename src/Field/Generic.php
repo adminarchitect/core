@@ -9,12 +9,13 @@ use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\AppliesSorting;
+use Terranet\Administrator\Field\Traits\HasValuePresenter;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 
 abstract class Generic implements Sortable, AutoTranslatable
 {
-    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances;
+    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances, HasValuePresenter;
 
     /** @var string */
     protected $id;
@@ -147,13 +148,14 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     final public function render(string $page = 'index')
     {
-        if ($this->format) {
-            // Each Field can define its own data for custom formatter.
-            $withData = method_exists($this, 'renderWith')
-                ? $this->renderWith()
-                : [$this->value(), $this->model];
+        if (\in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
+            if ($this->hasCustomFormat()) {
+                return $this->callFormatter($this->model, $page);
+            }
 
-            return $this->callFormatter($withData);
+            if ($presenter = $this->hasPresenter($this->model, $this->id())) {
+                return $this->callPresenter($presenter);
+            }
         }
 
         $data = [
