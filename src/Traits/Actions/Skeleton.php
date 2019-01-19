@@ -16,11 +16,12 @@ trait Skeleton
     public function render(Eloquent $entity = null)
     {
         $action = app('scaffold.module')->url().'-'.$this->action($entity);
+        $icon = ($i = $this->icon($entity)) ? "<i class=\"fa {$i}\"></i>" : '';
 
         return
-<<<OUTPUT
+            <<<OUTPUT
 <a data-scaffold-action="{$action}" data-scaffold-key="{$this->entityKey($entity)}" href="{$this->route($entity)}" {$this->attributes($entity)}>
-    <i class="fa {$this->icon($entity)}"></i>&nbsp;{$this->name($entity)}
+    {$icon}<span>{$this->name($entity)}</span>
 </a>
 OUTPUT;
     }

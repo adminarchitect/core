@@ -67,3 +67,9 @@
 .nav .item-counter.pull-right {
     margin-right: 8px;
 }
+
+a[data-scaffold-action] {
+    i+span {
+        margin-left: 4px;
+    }
+}
