@@ -1,7 +1,6 @@
 <?php
 
 namespace {
-
     if (!function_exists('array_build')) {
         /**
          * Build a new array using a callback (Original method was deprecetad since version 5.2).
@@ -40,7 +39,6 @@ namespace {
 }
 
 namespace admin\db {
-
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
     use Terranet\Translatable\Translatable;
@@ -155,7 +153,6 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
-
     use Illuminate\Support\Facades\Request;
     use Illuminate\Support\Facades\Route;
     use Terranet\Administrator\Contracts\Module\Exportable;
@@ -334,12 +331,12 @@ namespace admin\helpers {
 }
 
 namespace admin\output {
-
     use Closure;
     use Czim\Paperclip\Attachment\Attachment;
 
     /**
      * @param $value
+     *
      * @return string
      */
     function boolean($value)
@@ -351,6 +348,7 @@ namespace admin\output {
      * @param string $name
      * @param $value
      * @param string $key
+     *
      * @return string
      */
     function rank(string $name, $value, string $key)
@@ -433,7 +431,8 @@ namespace admin\output {
 
     /**
      * @param array $items
-     * @param Closure|null $callback
+     * @param null|Closure $callback
+     *
      * @return array|string
      */
     function _prepare_collection(array $items, Closure $callback = null)
@@ -456,6 +455,7 @@ namespace admin\output {
     /**
      * @param string $label
      * @param string $class
+     *
      * @return string
      */
     function label(string $label = '', string $class = 'label-success')
@@ -466,6 +466,7 @@ namespace admin\output {
     /**
      * @param string $label
      * @param string $class
+     *
      * @return string
      */
     function badge(string $label = '', string $class = 'bg-green')

@@ -31,7 +31,12 @@ class Mutable extends BaseMutableCollection
     /**
      * Set rich editors.
      *
-     * @param mixed string|array $fields
+     * @param $fields
+     * @param null|string $editor
+     *
+     * @throws Exception
+     *
+     * @return Mutable
      */
     public function editors($fields, string $editor = null)
     {
@@ -54,7 +59,12 @@ class Mutable extends BaseMutableCollection
     /**
      * Set fields descriptions.
      *
-     * @param mixed string|array $fields
+     * @param $fields
+     * @param null|string $hint
+     *
+     * @throws Exception
+     *
+     * @return Mutable
      */
     public function hints($fields, string $hint = null)
     {

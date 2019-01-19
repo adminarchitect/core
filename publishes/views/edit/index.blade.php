@@ -15,7 +15,7 @@
 
             {!! Form::model($item, ['method' => 'post', 'files' => true]) !!}
             <table class="table table-striped-col">
-                @each($template->edit('row'), $form, 'field')
+                @each($template->edit('row'), $form->visibleOnPage(\Terranet\Administrator\Scaffolding::PAGE_EDIT), 'field')
 
                 @unless($actions->readonly())
                     @include($template->edit('actions'))

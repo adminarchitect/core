@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Collection;
 
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
+use Terranet\Administrator\Field\Traits\HandlesVisibility;
 use Terranet\Administrator\Traits\Collection\ElementContainer;
 
 /**
@@ -19,6 +20,8 @@ use Terranet\Administrator\Traits\Collection\ElementContainer;
  */
 class Group extends ElementContainer
 {
+    use HandlesVisibility;
+
     /**
      * @var MutableCollection
      */
@@ -57,6 +60,8 @@ class Group extends ElementContainer
 
     /**
      * @param Model $model
+     *
+     * @return Group
      */
     public function setModel(Model $model)
     {
@@ -83,6 +88,8 @@ class Group extends ElementContainer
      * Find element by ID.
      *
      * @param $id
+     *
+     * @throws \Terranet\Administrator\Exception
      *
      * @return mixed
      */

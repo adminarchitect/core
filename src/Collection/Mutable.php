@@ -111,7 +111,8 @@ class Mutable extends BaseCollection
     public function visibleOnPage(string $page)
     {
         return $this->filter(function ($item) use ($page) {
-            return ($item instanceof Group) || $item->isVisibleOnPage($page);
+            // @var Generic|Translatable $item
+            return (($item instanceof Group) || $item->isVisibleOnPage($page)) && $item->visibleWhen();
         });
     }
 
@@ -121,8 +122,9 @@ class Mutable extends BaseCollection
      * @param string $id
      * @param Closure $callback
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function update(string $id, Closure $callback): self
     {
@@ -155,8 +157,9 @@ class Mutable extends BaseCollection
      *
      * @param array $ids
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function updateMany(array $ids = []): self
     {
@@ -204,8 +207,9 @@ class Mutable extends BaseCollection
      * @param string $id
      * @param $target
      *
-     * @return $this
      * @throws Exception
+     *
+     * @return $this
      */
     public function moveBefore(string $id, $target)
     {

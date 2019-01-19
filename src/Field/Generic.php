@@ -9,13 +9,14 @@ use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\AppliesSorting;
+use Terranet\Administrator\Field\Traits\HandlesVisibility;
 use Terranet\Administrator\Field\Traits\HasValuePresenter;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 
 abstract class Generic implements Sortable, AutoTranslatable
 {
-    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances, HasValuePresenter;
+    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances, HasValuePresenter, HandlesVisibility;
 
     /** @var string */
     protected $id;
@@ -453,6 +454,18 @@ abstract class Generic implements Sortable, AutoTranslatable
         }
 
         return $key;
+    }
+
+    /**
+     * @param \Closure $condition
+     *
+     * @return self
+     */
+    public function when(\Closure $condition): self
+    {
+        $this->when = $condition;
+
+        return $this;
     }
 
     /**
