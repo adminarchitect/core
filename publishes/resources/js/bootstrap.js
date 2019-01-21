@@ -1,6 +1,21 @@
 const Vue = window.Vue = require('vue');
+
 import VueClip from 'vue-clip';
 import {Tag, Select, Option, Button, Dialog, DatePicker, TimePicker} from 'element-ui';
+import {
+    MediaManager,
+    MediaCarousel,
+    FoldersList,
+    FilesList,
+    FileInfo,
+    FileActions,
+    DropZone,
+    InstantSearch,
+    TagList,
+    DateTimePicker
+} from './components';
+import {MkDir, Move, Rename} from './components/popups';
+import {ModalHeader, ModalFooter} from './components/partials';
 
 Vue.filter('truncate', (value, length) => {
     const l = value.length;
@@ -20,25 +35,22 @@ Vue.use(Dialog);
 Vue.use(DatePicker);
 Vue.use(TimePicker);
 
-Vue.component('MediaManager', require('./components/MediaManager.vue'));
-Vue.component('MediaCarousel', require('./components/MediaCarousel.vue'));
-
-Vue.component('FoldersList', require('./components/Folders.vue'));
-Vue.component('FilesList', require('./components/Files.vue'));
-Vue.component('FileInfo', require('./components/FileInfo.vue'));
-Vue.component('FileActions', require('./components/FileActions.vue'));
-Vue.component('DropZone', require('./components/DropZone.vue'));
+Vue.component('MediaManager', MediaManager);
+Vue.component('MediaCarousel', MediaCarousel);
+Vue.component('FoldersList', FoldersList);
+Vue.component('FilesList', FilesList);
+Vue.component('FileInfo', FileInfo);
+Vue.component('FileActions', FileActions);
+Vue.component('DropZone', DropZone);
+Vue.component('InstantSearch', InstantSearch);
+Vue.component('TagList', TagList);
+Vue.component('DateTimePicker', DateTimePicker);
 
 // Popups
-Vue.component('MakeDirPopup', require('./components/popups/MkDir.vue'));
-Vue.component('MovePopup', require('./components/popups/Move.vue'));
-Vue.component('RenamePopup', require('./components/popups/Rename.vue'));
+Vue.component('MakeDirPopup', MkDir);
+Vue.component('MovePopup', Move);
+Vue.component('RenamePopup', Rename);
 
 // Partials
-Vue.component('ModalFooter', require('./components/partials/ModalFooter.vue'));
-Vue.component('ModalHeader', require('./components/partials/ModalHeader.vue'));
-
-// Components
-Vue.component('InstantSearch', require('./components/InstantSearch.vue'));
-Vue.component('TagList', require('./components/fields/many_to_many/TagList.vue'));
-Vue.component('DateTimePicker', require('./components/fields/DateTimePicker.vue'));
+Vue.component('ModalHeader', ModalHeader);
+Vue.component('ModalFooter', ModalFooter);
