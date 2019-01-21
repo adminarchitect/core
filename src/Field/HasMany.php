@@ -3,7 +3,6 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Model;
-use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Field\Traits\WorksWithModules;
 use Terranet\Administrator\Modules\Faked;
@@ -85,6 +84,7 @@ class HasMany extends Generic
 
     /**
      * @return array
+     * @throws \Terranet\Administrator\Exception
      */
     protected function onView(): array
     {
