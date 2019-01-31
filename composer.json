@@ -16,7 +16,6 @@
         "doctrine/dbal": "~2.5",
         "doctrine/annotations": "^1.6",
         "terranet/menus": "^2.2",
-        "terranet/php-humanizer": "2.*",
         "terranet/presentable": "^1.0",
         "terranet/translatable": "^1.2",
         "terranet/localizer": "^1.0",

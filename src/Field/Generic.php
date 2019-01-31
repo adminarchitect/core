@@ -2,9 +2,9 @@
 
 namespace Terranet\Administrator\Field;
 
-use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Sortable;
 use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
@@ -64,17 +64,13 @@ abstract class Generic implements Sortable, AutoTranslatable
         );
 
         if ($this->translator()->has($key = $this->translationKey())) {
-            $this->setTitle((string) $this->translator()->trans($key));
+            $this->setTitle((string)$this->translator()->trans($key));
         } else {
-            $this->setTitle(
-                'id' === $this->id
-                    ? 'ID'
-                    : StringHumanizer::humanize(str_replace(['_id', '-', '_'], ['', ' ', ' '], $this->id))
-            );
+            $this->setTitle(Architect::humanize($this->id));
         }
 
         if ($this->translator()->has($key = $this->descriptionKey())) {
-            $this->setDescription((string) $this->translator()->trans($key));
+            $this->setDescription((string)$this->translator()->trans($key));
         }
     }
 
@@ -316,7 +312,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     public function isVisibleOnPage(string $page): bool
     {
-        return (bool) $this->visibility[$page] ?? false;
+        return (bool)$this->visibility[$page] ?? false;
     }
 
     /**
@@ -326,7 +322,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     public function hideOnPages($pages): self
     {
-        return $this->setPagesVisibility((array) $pages, false);
+        return $this->setPagesVisibility((array)$pages, false);
     }
 
     /**
@@ -336,7 +332,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      */
     public function showOnPages($pages): self
     {
-        return $this->setPagesVisibility((array) $pages, true);
+        return $this->setPagesVisibility((array)$pages, true);
     }
 
     /**

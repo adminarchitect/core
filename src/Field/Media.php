@@ -3,12 +3,11 @@
 namespace Terranet\Administrator\Field;
 
 use Spatie\MediaLibrary\Models\Media as MediaModel;
-use Terranet\Administrator\Field\Traits\WorksWithModules;
+use Terranet\Administrator\Architect;
 
 class Media extends Generic
 {
-    use WorksWithModules;
-
+    /** @var string */
     protected $conversion = '';
 
     /**
@@ -29,7 +28,7 @@ class Media extends Generic
     protected function onIndex(): array
     {
         $media = $this->model->getMedia($this->id());
-        $module = $this->firstWithModel($this->model) ?: app('scaffold.module');
+        $module = Architect::resourceByEntity($this->model) ?: app('scaffold.module');
 
         return [
             'media' => $media,

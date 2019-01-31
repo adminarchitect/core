@@ -7,14 +7,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
-use Terranet\Administrator\Field\Traits\WorksWithModules;
 use Terranet\Administrator\Requests\UpdateRequest;
 use URL;
 
 class ScaffoldController extends AdminController
 {
-    use WorksWithModules;
-
     /**
      * @param        $page
      * @param Module $resource

@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Collection;
 
-use Coduo\PHPHumanizer\StringHumanizer;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
@@ -32,11 +32,7 @@ abstract class ElementContainer implements AutoTranslatable
         if ($this->translator()->has($key = $this->translationKey())) {
             $this->setTitle(trans($key));
         } else {
-            $this->setTitle(
-                'id' === $id
-                    ? 'ID'
-                    : StringHumanizer::humanize(str_replace(['_id', '-', '_'], ['', ' ', ' '], $id))
-            );
+            $this->setTitle(Architect::humanize($id));
         }
     }
 

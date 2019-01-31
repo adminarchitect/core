@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field\Traits;
 
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Module;
 
 trait HandlesRelation
@@ -21,6 +22,8 @@ trait HandlesRelation
      */
     public function relationModule(): ?Module
     {
-        return $this->firstWithModel($this->relation()->getRelated());
+        return Architect::resourceByEntity(
+            $this->relation()->getRelated()
+        );
     }
 }

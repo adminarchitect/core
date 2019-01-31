@@ -3,13 +3,13 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
-use Terranet\Administrator\Field\Traits\WorksWithModules;
 use Terranet\Administrator\Modules\Faked;
 
 class HasMany extends Generic
 {
-    use WorksWithModules, HandlesRelation;
+    use HandlesRelation;
 
     /** @var string */
     protected $icon = 'list-ul';
@@ -48,8 +48,11 @@ class HasMany extends Generic
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function sortBy(\Illuminate\Database\Eloquent\Builder $query, Model $model, string $direction): \Illuminate\Database\Eloquent\Builder
-    {
+    public function sortBy(
+        \Illuminate\Database\Eloquent\Builder $query,
+        Model $model,
+        string $direction
+    ): \Illuminate\Database\Eloquent\Builder {
         return $query->withCount($this->id())->orderBy("{$this->id()}_count", $direction);
     }
 
@@ -59,14 +62,14 @@ class HasMany extends Generic
     protected function onIndex(): array
     {
         $relation = $this->relation();
-        $module = $this->firstWithModel($related = $relation->getRelated());
+        $related = $relation->getRelated();
 
         // apply a query
         if ($this->query instanceof \Closure) {
             $relation = \call_user_func_array($this->query, [$relation]);
         }
 
-        if ($module = $this->firstWithModel($related)) {
+        if ($module = Architect::resourceByEntity($related)) {
             $url = route('scaffold.view', [
                 'module' => $module->url(),
                 $related->getKeyName() => $related->getKey(),

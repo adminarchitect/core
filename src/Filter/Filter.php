@@ -2,8 +2,8 @@
 
 namespace Terranet\Administrator\Filter;
 
-use Coduo\PHPHumanizer\StringHumanizer;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Traits\Form\ExecutesQuery;
 use Terranet\Translatable\Translatable;
@@ -29,7 +29,7 @@ abstract class Filter implements Queryable
      */
     private function __construct($title, $id = null)
     {
-        $this->title = StringHumanizer::humanize($title);
+        $this->title = Architect::humanize($title);
         $this->id = snake_case($id ?: $this->title);
     }
 

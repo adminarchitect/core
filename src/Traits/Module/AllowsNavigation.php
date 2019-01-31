@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
-use Coduo\PHPHumanizer\StringHumanizer;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Module\Navigable;
 
 trait AllowsNavigation
@@ -38,7 +38,7 @@ trait AllowsNavigation
     {
         return $this->translator()->has($key = $this->translationKey())
             ? trans($key)
-            : StringHumanizer::humanize(class_basename($this));
+            : Architect::humanize($this);
     }
 
     /**

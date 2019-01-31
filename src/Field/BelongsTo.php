@@ -4,12 +4,12 @@ namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
-use Terranet\Administrator\Field\Traits\WorksWithModules;
 
 class BelongsTo extends Generic
 {
-    use WorksWithModules, HandlesRelation;
+    use HandlesRelation;
 
     /** @var string */
     protected $column = 'name';
@@ -65,7 +65,7 @@ class BelongsTo extends Generic
     public function sortBy(Builder $query, Model $model, string $direction): Builder
     {
         $table = $model->getTable();
-        $relation = \call_user_func([$model, $this->id()]);
+        $relation = $this->relation();
         $joinTable = $relation->getRelated()->getTable();
         $alias = str_random(4);
 
@@ -74,7 +74,7 @@ class BelongsTo extends Generic
         $foreignColumn = $this->getColumn();
 
         return $query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")
-                     ->orderBy("{$alias}.{$foreignColumn}", $direction);
+            ->orderBy("{$alias}.{$foreignColumn}", $direction);
     }
 
     /**
@@ -82,14 +82,14 @@ class BelongsTo extends Generic
      */
     protected function onIndex(): array
     {
-        if ($relation = $this->model->{$this->id}) {
-            $title = $relation->getAttribute($this->getColumn());
-            $module = $this->firstWithModel($relation);
+        if ($related = $this->model->{$this->id}) {
+            $title = $related->getAttribute($this->getColumn());
+            $module = Architect::resourceByEntity($related);
         }
 
         return [
             'title' => $title ?? null,
-            'relation' => $relation ?? null,
+            'related' => $related ?? null,
             'module' => $module ?? null,
         ];
     }
@@ -110,6 +110,7 @@ class BelongsTo extends Generic
         if (method_exists($this->model, $this->id)) {
             $relation = $this->relation();
             $related = $this->model->{$this->id} ?: $relation->getRelated();
+
             $column = $this->getColumn();
 
             if ($this->searchable) {
@@ -127,6 +128,7 @@ class BelongsTo extends Generic
             'options' => $options ?? [],
             'related' => $related ?? null,
             'searchable' => $this->searchable,
+            'searchBy' => $this->column,
         ];
     }
 }
