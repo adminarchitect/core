@@ -109,6 +109,25 @@ class Resources
 
             $order = $module->order() ?: count($navigation->getChilds()) + 1;
         }
+        
+        if (method_exists($module, 'navigableParams')) {
+            $navigation->route(
+                'scaffold.index',
+                $module->title(),
+                array_merge(['module' => $module->url()], $module->navigableParams()),
+                $order,
+                array_merge(
+                    $module->linkAttributes(),
+                    [
+                        'active' => function () use ($module) {
+                            return $this->isActive($module);
+                        },
+                    ]
+                )
+            );
+ 
+            return;
+        }
 
         if (Navigable::AS_LINK === $module->showAs()) {
             $navigation->route(
