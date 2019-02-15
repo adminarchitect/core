@@ -4,7 +4,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Latest Stable Version][ico-stable]][link-stable]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status](https://travis-ci.org/adminarchitect/core.svg?branch=v1.6.3)](https://travis-ci.org/adminarchitect/core)
+[![Build Status](https://travis-ci.org/adminarchitect/core.svg)](https://travis-ci.org/adminarchitect/core)
 
 Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
