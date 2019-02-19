@@ -131,6 +131,7 @@ class Filter implements FilterContract
     public function makeScopedUrl($scope = null)
     {
         return \admin\helpers\qsRoute(null, [
+            'page' => 1,
             'scoped_to' => $scope,
         ]);
     }
