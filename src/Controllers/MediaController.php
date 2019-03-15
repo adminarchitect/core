@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Controllers;
 use DaveJamesMiller\Breadcrumbs\Generator;
 use DaveJamesMiller\Breadcrumbs\Manager;
 use Illuminate\Http\Request;
+use Illuminate\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Media\File;
@@ -29,9 +30,9 @@ class MediaController extends AdminController
      *
      * @param FileStorage $storage
      */
-    public function __construct(FileStorage $storage)
+    public function __construct(FileStorage $storage, Translator $translator)
     {
-        parent::__construct();
+        parent::__construct($translator);
 
         $this->middleware([
             ProtectMedia::class,
