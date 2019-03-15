@@ -280,7 +280,7 @@ class Mutable extends BaseCollection
      *
      * @return $this
      */
-    public function join(array $elements, string $groupId, $position = null): self
+    public function stack(array $elements, string $groupId, $position = null): self
     {
         $group = new Group($groupId);
 
