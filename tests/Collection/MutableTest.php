@@ -266,7 +266,7 @@ class MutableTest extends CoreTestCase
     public function it_joins_two_or_more_elements_into_a_group_using_literal_position()
     {
         $this->collection
-            ->join(['first', 'third'], 'group', 'after:second');
+            ->stack(['first', 'third'], 'group', 'after:second');
 
         $this->assertCount(2, $this->collection);
 
@@ -279,7 +279,7 @@ class MutableTest extends CoreTestCase
     public function it_joins_two_or_more_elements_into_a_group()
     {
         $this->collection
-            ->join(['first', 'third'], 'group');
+            ->stack(['first', 'third'], 'group');
 
         $this->assertCount(2, $this->collection);
 
