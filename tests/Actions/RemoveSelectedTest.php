@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Terranet\Administrator\Actions\RemoveSelected;
+use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Services\CrudActions;
 use Terranet\Administrator\Tests\CoreTestCase;
 
@@ -19,7 +20,9 @@ class RemoveSelectedTest extends CoreTestCase
     {
         $actions = $this->createMock(CrudActions::class);
         $actions->expects($this->once())->method('authorize')->with('delete', $user = new User());
-        app()->instance('scaffold.actions', $actions);
+
+        $module = $this->createMock(Module::class);
+        $module->method('actionsManager')->willReturn($actions);
 
         $action = $this->createMock(RemoveSelected::class);
         $this->invokeMethod($action, 'canDelete', [$user]);

@@ -1,7 +1,7 @@
+@extends($template->layout($popup ? 'popup' : 'app'))
+
 @inject('template', 'scaffold.template')
 @inject('config', 'scaffold.config')
-
-@extends($template->layout($popup ? 'popup' : 'app'))
 
 @push('scaffold.headjs')
     @include('administrator::media.scripts')

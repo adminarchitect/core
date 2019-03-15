@@ -1,4 +1,5 @@
-@inject('form', 'scaffold.form')
+@inject('module', 'scaffold.module')
+@php($form = $module->form())
 
 @if($form->hasEditors('markdown'))
     @if (file_exists(public_path('admin/editors/markdown.js')))
@@ -12,7 +13,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
         <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
         <script>
-            $(function() {
+            $(function () {
                 let elements = document.querySelectorAll('[data-editor="markdown"]');
                 elements.forEach((e) => {
                     new SimpleMDE({element: e});

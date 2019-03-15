@@ -1,5 +1,6 @@
 @inject('module', 'scaffold.module')
-@inject('actions', 'scaffold.actions')
+
+@php($actions = $module->actionsManager())
 
 @if ($actions->authorize('delete', $item))
     <div class="pull-right" style="margin-right: 15px; padding-top: 15px;">

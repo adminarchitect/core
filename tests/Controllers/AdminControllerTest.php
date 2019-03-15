@@ -7,6 +7,7 @@ use Illuminate\Routing\Redirector;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\ActionsManager;
+use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Controllers\AdminController;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
@@ -53,7 +54,8 @@ class AdminControllerTest extends CoreTestCase
                 ->with($ability = 'users.create', null)
                 ->willReturn(true);
 
-        app()->instance('scaffold.actions', $actions);
+        $module = $this->createMock(Module::class);
+        $module->method('actionsManager')->willReturn($actions);
 
         $controller->authorize($ability, null);
     }
@@ -80,7 +82,8 @@ class AdminControllerTest extends CoreTestCase
                 ->with($ability, null)
                 ->willReturn(false);
 
-        app()->instance('scaffold.actions', $actions);
+        $module = $this->createMock(Module::class);
+        $module->method('actionsManager')->willReturn($actions);
 
         $this->expectException(HttpException::class);
         $controller->authorize($ability, null);

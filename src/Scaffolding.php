@@ -3,8 +3,10 @@
 namespace Terranet\Administrator;
 
 use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
+use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
 use Terranet\Administrator\Services\Breadcrumbs;
 use Terranet\Administrator\Services\CrudActions;
@@ -40,7 +42,7 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * Service layer responsible for searching items.
      *
-     * @var \Terranet\Administrator\Contracts\Services\Finder
+     * @var FinderContract
      */
     protected $finder = Finder::class;
 
@@ -200,6 +202,20 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * @return mixed
+     */
+    public function finderInstance(): FinderContract
+    {
+        $className = $this->finder();
+
+        return once(function () use ($className) {
+//            $this->columns();
+
+            return new $className($this);
+        });
+    }
+
+    /**
      * Define the class responsive for persisting items.
      *
      * @return mixed
@@ -245,11 +261,11 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * @return ActionsManager
      * @throws Exception
      *
-     * @return ActionsManager
      */
-    public function actionsManager()
+    public function actionsManager(): ActionsManagerContract
     {
         $handler = $this->actions();
         $handler = new $handler($this);
@@ -264,9 +280,9 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * The module Eloquent model.
      *
+     * @return mixed
      * @throws \Exception
      *
-     * @return mixed
      */
     protected function getModelClass()
     {

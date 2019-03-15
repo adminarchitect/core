@@ -1,4 +1,3 @@
-@inject('columns', 'scaffold.columns')
 @inject('sortable', 'scaffold.sortable')
 
 <th style="white-space: nowrap; {{ ('id' == strtolower($column->id()) ? 'width: 70px;' : '') }};">

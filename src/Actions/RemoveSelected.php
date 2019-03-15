@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Traits\Actions\BatchSkeleton;
 use Terranet\Administrator\Traits\Actions\Skeleton;
 
@@ -22,9 +23,9 @@ class RemoveSelected
     public function handle(Model $eloquent, Request $request)
     {
         return $this->fetchForDelete($eloquent, $request)
-                    ->each(function ($item) {
-                        return $this->canDelete($item) ? $item->delete() : $item;
-                    });
+            ->each(function ($item) {
+                return $this->canDelete($item) ? $item->delete() : $item;
+            });
     }
 
     /**
@@ -36,7 +37,10 @@ class RemoveSelected
      */
     protected function canDelete(Model $eloquent)
     {
-        return app('scaffold.actions')->authorize('delete', $eloquent);
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
+        return $resource->actionsManager()->authorize('delete', $eloquent);
     }
 
     /**
@@ -48,8 +52,8 @@ class RemoveSelected
     protected function fetchForDelete(Model $eloquent, Request $request)
     {
         return $eloquent->newQueryWithoutScopes()
-                        ->whereIn('id', $request->get('collection', []))
-                        ->get();
+            ->whereIn('id', $request->get('collection', []))
+            ->get();
     }
 
     /**

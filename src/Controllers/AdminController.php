@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Translation\Translator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
 use Terranet\Administrator\Middleware\Resources;
@@ -38,7 +39,10 @@ abstract class AdminController extends BaseController
      */
     public function authorize($ability, $arguments = null)
     {
-        if (!$response = app('scaffold.actions')->authorize($ability, $arguments)) {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
+        if (!$response = $resource->actionsManager()->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
                 $this->translator->trans('administrator::errors.unauthorized')

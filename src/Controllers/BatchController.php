@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Terranet\Administrator\Scaffolding;
 
 class BatchController extends AdminController
 {
@@ -18,9 +19,11 @@ class BatchController extends AdminController
      */
     public function batch($page, Request $request)
     {
-        $this->authorize($action = $request->get('batch_action'), $model = app('scaffold.module')->model());
+        $resource = app('scaffold.module');
 
-        $response = app('scaffold.actions')->exec('batch::'.$action, [$model, $request]);
+        $this->authorize($action = $request->get('batch_action'), $model = $resource->model());
+
+        $response = $resource->actionsManager()->exec('batch::'.$action, [$model, $request]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
@@ -42,10 +45,13 @@ class BatchController extends AdminController
      */
     public function export($page, $format)
     {
-        $this->authorize('index', app('scaffold.module')->model());
+        /** @var Scaffolding $resource */
+        $resource = app('scaffold.module');
 
-        $query = app('scaffold.finder')->getQuery();
+        $this->authorize('index', $resource->model());
 
-        return app('scaffold.actions')->exec('export', [$query, $format]);
+        $query = $resource->finderInstance()->getQuery();
+
+        return $resource->scaffoldActions()->exec('export', [$query, $format]);
     }
 }

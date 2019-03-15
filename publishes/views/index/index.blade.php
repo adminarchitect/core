@@ -1,11 +1,12 @@
+@extends($template->layout())
+
 @inject('module', 'scaffold.module')
-@inject('columns', 'scaffold.columns')
-@inject('actions', 'scaffold.actions')
 @inject('filter', 'scaffold.filter')
 @inject('template', 'scaffold.template')
 @inject('sortable', 'scaffold.sortable')
 
-@extends($template->layout())
+@php($actions = $module->actionsManager())
+@php($columns = $module->columns())
 
 @section('total')
     <sup class="small">({{ $items->total() }})</sup>

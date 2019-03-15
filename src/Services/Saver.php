@@ -124,7 +124,7 @@ class Saver implements SaverContract
      */
     protected function editable()
     {
-        return app('scaffold.form');
+        return app('scaffold.module')->form();
     }
 
     /**

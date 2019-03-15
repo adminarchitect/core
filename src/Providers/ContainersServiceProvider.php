@@ -30,11 +30,7 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminSchema' => 'scaffold.schema',
         'AdminSortable' => 'scaffold.sortable',
         'AdminFilter' => 'scaffold.filter',
-        'AdminColumns' => 'scaffold.columns',
-        'AdminActions' => 'scaffold.actions',
         'AdminTemplate' => 'scaffold.template',
-        'AdminForm' => 'scaffold.form',
-        'AdminFinder' => 'scaffold.finder',
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminTranslations' => 'scaffold.translations',
         'AdminAnnotations' => 'scaffold.annotations',
@@ -70,7 +66,7 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.config', function ($app) {
             $config = $app['config']['administrator'];
 
-            return new Config((array) $config);
+            return new Config((array)$config);
         });
     }
 
@@ -84,7 +80,8 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class() {
+            $service = new class()
+            {
                 protected $readonly = [];
 
                 public function __construct()
@@ -101,7 +98,7 @@ class ContainersServiceProvider extends ServiceProvider
                  */
                 public function setReadonly(array $readonly = []): self
                 {
-                    $this->readonly = (array) $readonly;
+                    $this->readonly = (array)$readonly;
 
                     return $this;
                 }
@@ -119,7 +116,7 @@ class ContainersServiceProvider extends ServiceProvider
                         $locale = $locale->id();
                     }
 
-                    return \in_array((int) $locale, $this->readonly, true);
+                    return \in_array((int)$locale, $this->readonly, true);
                 }
             };
 
@@ -130,7 +127,8 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminResource()
     {
         $this->app->singleton('scaffold.module', function ($app) {
-            if (\in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'], true)) {
+            if (\in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'],
+                true)) {
                 return $app['scaffold.module.settings'];
             }
 
@@ -146,9 +144,8 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminModel()
     {
         $this->app->singleton('scaffold.model', function ($app) {
-            if (($finder = app('scaffold.finder'))
-                && ($id = $app['router']->current()->parameter('id'))
-            ) {
+            if (($id = $app['router']->current()->parameter('id'))
+                && ($finder = app('scaffold.module')->finderInstance())) {
                 return $finder->find($id);
             }
         });
@@ -199,24 +196,6 @@ class ContainersServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerAdminColumns()
-    {
-        $this->app->singleton('scaffold.columns', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return $module->columns();
-            }
-        });
-    }
-
-    protected function registerAdminActions()
-    {
-        $this->app->singleton('scaffold.actions', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return $module->actionsManager();
-            }
-        });
-    }
-
     protected function registerAdminTemplate()
     {
         $this->app->singleton('scaffold.template', function ($app) {
@@ -232,15 +211,6 @@ class ContainersServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerAdminForm()
-    {
-        $this->app->singleton('scaffold.form', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return $module->form();
-            }
-        });
-    }
-
     protected function registerAdminFilter()
     {
         $this->app->singleton('scaffold.filter', function ($app) {
@@ -249,26 +219,6 @@ class ContainersServiceProvider extends ServiceProvider
                 $scopes = $module instanceof Filtrable ? $module->scopes() : null;
 
                 return new Filter($app['request'], $filters, $scopes);
-            }
-        });
-    }
-
-    protected function registerAdminFinder()
-    {
-        $this->app->singleton('scaffold.finder', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                // in order to register sortable columns,
-                // resolve columns service before finder.
-                $app->make('scaffold.columns');
-
-                $finder = $module->finder();
-                $finder = new $finder($module);
-
-                if (!$finder instanceof Finder) {
-                    throw new Exception('Items Finder must implement '.Finder::class.' contract');
-                }
-
-                return $finder;
             }
         });
     }

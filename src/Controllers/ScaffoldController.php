@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
 use Illuminate\Support\Facades\URL;
+use Terranet\Administrator\Scaffolding;
 
 class ScaffoldController extends AdminController
 {
@@ -22,7 +23,7 @@ class ScaffoldController extends AdminController
     {
         $this->authorize('index', $resource->model());
 
-        $items = app('scaffold.finder')->fetchAll();
+        $items = $resource->finderInstance()->fetchAll();
 
         return view(app('scaffold.template')->index('index'), ['items' => $items]);
     }
@@ -70,15 +71,19 @@ class ScaffoldController extends AdminController
      */
     public function update($page, $id, UpdateRequest $request)
     {
+        /** @var Scaffolding $resource */
+        $resource = app('scaffold.module');
+
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
         try {
-            app('scaffold.actions')->exec('save', [$eloquent, $request]);
+            $resource->actionsManager()->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $id, $request)->with('messages', [trans('administrator::messages.update_success')]);
+        return $this->redirectTo($page, $id, $request)->with('messages',
+            [trans('administrator::messages.update_success')]);
     }
 
     /**
@@ -103,10 +108,13 @@ class ScaffoldController extends AdminController
      */
     public function store($page, UpdateRequest $request)
     {
-        $this->authorize('create', $eloquent = app('scaffold.module')->model());
+        /** @var Scaffolding $resource */
+        $resource = app('scaffold.module');
+
+        $this->authorize('create', $eloquent = $resource->model());
 
         try {
-            $eloquent = app('scaffold.actions')->exec('save', [$eloquent, $request]);
+            $eloquent = $resource->actionsManager()->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
@@ -130,7 +138,7 @@ class ScaffoldController extends AdminController
 
         $id = $eloquent->id;
 
-        app('scaffold.actions')->exec('delete', [$eloquent]);
+        $module->actionsManager()->exec('delete', [$eloquent]);
 
         $message = trans('administrator::messages.remove_success');
 
@@ -152,9 +160,12 @@ class ScaffoldController extends AdminController
      */
     public function deleteAttachment($page, $id, $attachment)
     {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
-        app('scaffold.actions')->exec('detachFile', [$eloquent, $attachment]);
+        $resource->actionsManager()->exec('detachFile', [$eloquent, $attachment]);
 
         return back()->with('messages', [trans('administrator::messages.remove_success')]);
     }
@@ -181,7 +192,7 @@ class ScaffoldController extends AdminController
 
             $instance = $eloquent
                 ->when($searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->where($searchableKey, (int) $term);
+                    return $query->where($searchableKey, (int)$term);
                 })
                 ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
                     return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");
@@ -205,9 +216,12 @@ class ScaffoldController extends AdminController
      */
     public function action($page, $id, $action)
     {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
         $this->authorize($action, $eloquent = app('scaffold.model'));
 
-        $response = app('scaffold.actions')->exec('action::'.$action, [$eloquent]);
+        $response = $resource->actionsManager()->exec('action::'.$action, [$eloquent]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
