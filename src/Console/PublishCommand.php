@@ -2,8 +2,8 @@
 
 namespace Terranet\Administrator\Console;
 
-use Artisan;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Pingpong\Menus\MenusServiceProvider;
 use Terranet\Administrator\ServiceProvider;
 use Terranet\Administrator\Traits\SessionGuardHelper;
@@ -39,6 +39,7 @@ class PublishCommand extends Command
         $this->output->title('Please select things to be published:');
 
         $published = [];
+
         if ($this->confirm('Routes?', true)) {
             Artisan::call('vendor:publish', [
                 '--provider' => ServiceProvider::class,

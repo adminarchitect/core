@@ -35,8 +35,10 @@ class ServiceProvider extends BaseServiceProvider
         $this->publishes(["{$baseDir}/publishes/config.php" => config_path('administrator.php')], 'config');
         $this->mergeConfigFrom("{$baseDir}/publishes/config.php", 'administrator');
 
+        // Publish Mix files
+        $this->publishes(["{$baseDir}/publishes/mix" => base_path('adminarchitect-mix')], 'assets');
+
         // Publish & Load views, assets
-        $this->publishes(["{$baseDir}/publishes/resources" => resource_path('assets/administrator')], 'assets');
         $this->publishes(["{$baseDir}/publishes/views" => base_path('resources/views/vendor/administrator')], 'views');
         $this->loadViewsFrom("{$baseDir}/publishes/views", 'administrator');
 

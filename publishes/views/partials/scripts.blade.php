@@ -1,3 +1,4 @@
-<script src="{{ mix('/admin/vendor.js') }}"></script>
-<script src="{{ mix('admin/app.js') }}"></script>
-<script src="{{ mix('admin/theme.js') }}"></script>
+<script src="{{ mix('manifest.js', 'admin') }}"></script>
+<script src="{{ mix('vendor.js', 'admin') }}"></script>
+<script src="{{ mix('theme.js', 'admin') }}"></script>
+<script src="{{ mix('app.js', 'admin') }}"></script>
