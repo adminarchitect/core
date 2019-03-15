@@ -19,19 +19,22 @@ trait ExportsCollection
      * @param Builder $query
      * @param         $format
      *
-     * @throws Exception
-     *
      * @return mixed
+     * @throws Exception
      */
     public function export(Builder $query, $format)
     {
         $method = 'to'.strtoupper($format);
 
-        if (!method_exists($this, $method)) {
-            throw new Exception(sprintf('Don\'t know how to export to %s format', $format));
+        if (method_exists($this, $method)) {
+            return call_user_func_array([$this, $method], [$query]);
         }
 
-        return call_user_func_array([$this, $method], [$query]);
+        if (method_exists($this->module, $method)) {
+            return call_user_func_array([$this->module, $method], [$query]);
+        }
+
+        throw new Exception(sprintf('Don\'t know how to export to %s format.', $format));
     }
 
     /**
@@ -113,6 +116,12 @@ trait ExportsCollection
         return $this->sendDownloadResponse($file, 'csv', ['Content-Type' => 'text/csv']);
     }
 
+    /**
+     * @param Builder $query
+     * @return mixed
+     * @throws Exception
+     * @throws \Throwable
+     */
     public function toPDF(Builder $query)
     {
         if (!app()->has('dompdf.wrapper')) {
@@ -134,8 +143,8 @@ trait ExportsCollection
         ])->render();
 
         return $pdf->loadHTML($html)
-                   ->setPaper('a4', 'landscape')
-                   ->download(app('scaffold.module')->url().'.pdf');
+            ->setPaper('a4', 'landscape')
+            ->download(app('scaffold.module')->url().'.pdf');
     }
 
     /**
@@ -274,6 +283,9 @@ trait ExportsCollection
             ->all();
     }
 
+    /**
+     * @return mixed
+     */
     protected function exportableView()
     {
         return app('scaffold.template')->layout('exportable');
