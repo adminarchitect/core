@@ -6,20 +6,33 @@ Vue.filter('truncate', (value, length) => {
     return value.substr(0, length) + ((l > length) ? '...' : '');
 });
 
-Vue.component('MediaManager', require('./components/MediaManager.vue'));
-Vue.component('MediaCarousel', require('./components/MediaCarousel.vue'));
+import MediaManager from './components/MediaManager';
+import MediaCarousel from './components/MediaCarousel';
+import FoldersList from './components/Folders';
+import FilesList from './components/Files';
+import FileInfo from './components/FileInfo';
+import FileActions from './components/FileActions';
+import DropZone from './components/DropZone';
+import MakeDirPopup from './components/popups/MkDir';
+import MovePopup from './components/popups/Move';
+import RenamePopup from './components/popups/Rename';
+import ModalFooter from './components/partials/ModalFooter';
+import ModalHeader from './components/partials/ModalHeader';
 
-Vue.component('FoldersList', require('./components/Folders.vue'));
-Vue.component('FilesList', require('./components/Files.vue'));
-Vue.component('FileInfo', require('./components/FileInfo.vue'));
-Vue.component('FileActions', require('./components/FileActions.vue'));
-Vue.component('DropZone', require('./components/DropZone.vue'));
+Vue.component('MediaManager', MediaManager);
+Vue.component('MediaCarousel', MediaCarousel);
+
+Vue.component('FoldersList', FoldersList);
+Vue.component('FilesList', FilesList);
+Vue.component('FileInfo', FileInfo);
+Vue.component('FileActions', FileActions);
+Vue.component('DropZone', DropZone);
 
 // Popups
-Vue.component('MakeDirPopup', require('./components/popups/MkDir.vue'));
-Vue.component('MovePopup', require('./components/popups/Move.vue'));
-Vue.component('RenamePopup', require('./components/popups/Rename.vue'));
+Vue.component('MakeDirPopup', MakeDirPopup);
+Vue.component('MovePopup', MovePopup);
+Vue.component('RenamePopup', RenamePopup);
 
 // Partials
-Vue.component('ModalFooter', require('./components/partials/ModalFooter.vue'));
-Vue.component('ModalHeader', require('./components/partials/ModalHeader.vue'));
+Vue.component('ModalFooter', ModalFooter);
+Vue.component('ModalHeader', ModalHeader);
