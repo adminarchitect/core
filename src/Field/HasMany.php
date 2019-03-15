@@ -7,7 +7,7 @@ use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Modules\Faked;
 
-class HasMany extends Generic
+class HasMany extends Field
 {
     use HandlesRelation;
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 
-class BelongsTo extends Generic
+class BelongsTo extends Field
 {
     use HandlesRelation;
 

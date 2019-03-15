@@ -2,6 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-class Text extends Generic
+class Text extends Field
 {
 }

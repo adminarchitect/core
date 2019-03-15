@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Radio extends Generic
+class Radio extends Field
 {
     /**
      * @var array

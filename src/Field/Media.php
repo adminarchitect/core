@@ -5,7 +5,7 @@ namespace Terranet\Administrator\Field;
 use Spatie\MediaLibrary\Models\Media as MediaModel;
 use Terranet\Administrator\Architect;
 
-class Media extends Generic
+class Media extends Field
 {
     /** @var string */
     protected $conversion = '';

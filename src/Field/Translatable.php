@@ -20,15 +20,15 @@ use Terranet\Localizer\Locale;
  */
 class Translatable
 {
-    /** @var Generic */
+    /** @var Field */
     protected $field;
 
     /**
      * Translatable constructor.
      *
-     * @param Generic $field
+     * @param Field $field
      */
-    protected function __construct(Generic $field)
+    protected function __construct(Field $field)
     {
         $this->field = $field;
     }
@@ -53,11 +53,11 @@ class Translatable
     }
 
     /**
-     * @param Generic $field
+     * @param Field $field
      *
      * @return Translatable
      */
-    public static function make(Generic $field)
+    public static function make(Field $field)
     {
         return new static($field);
     }

@@ -2,6 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-class Id extends Generic
+class Id extends Field
 {
 }

@@ -3,7 +3,7 @@
 namespace Terranet\Administrator\Tests\Collection;
 
 use Terranet\Administrator\Collection\Group;
-use Terranet\Administrator\Field\Generic;
+use Terranet\Administrator\Field\Field;
 use Terranet\Administrator\Tests\CreatesElement;
 use Terranet\Administrator\Tests\MocksObjects;
 
@@ -97,7 +97,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
         $group = new Group('test');
         $group->push($this->e('first'));
 
-        $group->update('first', function (Generic $e) {
+        $group->update('first', function (Field $e) {
             $e->setTitle('second');
 
             return $e;

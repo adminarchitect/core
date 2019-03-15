@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Phone extends Generic
+class Phone extends Field
 {
     /**
      * @return array

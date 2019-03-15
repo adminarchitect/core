@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Password extends Generic
+class Password extends Field
 {
     /**
      * @return array

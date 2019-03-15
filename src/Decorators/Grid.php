@@ -17,7 +17,7 @@ use Terranet\Administrator\Field\Detectors\RankableDetector;
 use Terranet\Administrator\Field\Detectors\TextareaDetector;
 use Terranet\Administrator\Field\Detectors\TextDetector;
 use Terranet\Administrator\Field\File;
-use Terranet\Administrator\Field\Generic;
+use Terranet\Administrator\Field\Field;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Text;
 use Terranet\Translatable\Translatable;
@@ -40,7 +40,7 @@ class Grid
     /**
      * @param $element
      *
-     * @return mixed|\Terranet\Administrator\Field\Generic
+     * @return mixed|\Terranet\Administrator\Field\Field
      */
     public function make($element)
     {
@@ -96,7 +96,7 @@ class Grid
     /**
      * @param $column
      *
-     * @return Generic
+     * @return Field
      */
     protected function detectField($column)
     {

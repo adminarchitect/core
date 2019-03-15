@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Email extends Generic
+class Email extends Field
 {
     /**
      * @return array

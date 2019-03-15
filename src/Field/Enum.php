@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Terranet\Administrator\Exception;
 
-class Enum extends Generic
+class Enum extends Field
 {
     protected $options = [];
 

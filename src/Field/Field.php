@@ -14,7 +14,7 @@ use Terranet\Administrator\Field\Traits\HasValuePresenter;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 
-abstract class Generic implements Sortable, AutoTranslatable
+abstract class Field implements Sortable, AutoTranslatable
 {
     use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances, HasValuePresenter, HandlesVisibility;
 
@@ -52,7 +52,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     ];
 
     /**
-     * Generic constructor.
+     * Field constructor.
      *
      * @param string $title
      * @param null|string $id
@@ -66,7 +66,7 @@ abstract class Generic implements Sortable, AutoTranslatable
         if ($this->translator()->has($key = $this->translationKey())) {
             $this->setTitle((string)$this->translator()->trans($key));
         } else {
-            $this->setTitle(Architect::humanize($this->id));
+            $this->setTitle(Architect::humanize($title));
         }
 
         if ($this->translator()->has($key = $this->descriptionKey())) {
@@ -95,7 +95,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * Create new element from another.
      *
-     * @param Generic $element
+     * @param Field $element
      *
      * @return static
      */
@@ -212,7 +212,7 @@ abstract class Generic implements Sortable, AutoTranslatable
     /**
      * @param string $name
      *
-     * @return Generic
+     * @return Field
      */
     public function setName(string $name): self
     {
@@ -369,7 +369,7 @@ abstract class Generic implements Sortable, AutoTranslatable
      *
      * @param $value
      *
-     * @return Generic
+     * @return Field
      */
     public function setValue($value): self
     {

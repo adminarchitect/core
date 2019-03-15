@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Boolean extends Generic
+class Boolean extends Field
 {
     /** @var mixed */
     protected $trueValue = 1;

@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Terranet\Administrator\Scaffolding;
 
-class Textarea extends Generic
+class Textarea extends Field
 {
     const EDITOR_TINYMCE = 'tinymce';
     const EDITOR_CKEDITOR = 'ckeditor';

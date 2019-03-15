@@ -12,16 +12,19 @@ class Architect
      *
      * @param string|Model $model
      *
+     * @param string $urlKey
      * @return mixed
      */
-    public static function resourceByEntity($model)
+    public static function resourceByEntity($model, string $urlKey = null)
     {
-        return app('scaffold.modules')->first(function ($module) use ($model) {
+        return app('scaffold.modules')->first(function ($module) use ($model, $urlKey) {
+            $urlEquals = $urlKey ? $module->url() === $urlKey : true;
+
             if (is_string($model)) {
-                return get_class($module->model()) === $model;
+                return get_class($module->model()) === $model && $urlEquals;
             }
 
-            return get_class($module->model()) === get_class($model);
+            return get_class($module->model()) === get_class($model) && $urlEquals;
         });
     }
 
@@ -37,6 +40,6 @@ class Architect
             return static::humanize(class_basename(get_class($value)));
         }
 
-        return Str::title(Str::snake($value, ' '));
+        return str_replace('_', ' ', Str::title(Str::snake($value, ' ')));
     }
 }

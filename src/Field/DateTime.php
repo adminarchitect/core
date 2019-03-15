@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Carbon\Carbon;
 
-class DateTime extends Generic
+class DateTime extends Field
 {
     /** @var string */
     protected $dateFormat = 'M j, Y';

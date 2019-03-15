@@ -2,6 +2,6 @@
 
 namespace Terranet\Administrator\Field;
 
-class Rank extends Generic
+class Rank extends Field
 {
 }

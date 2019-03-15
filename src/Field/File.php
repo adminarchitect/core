@@ -4,7 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Terranet\Administrator\Scaffolding;
 
-class File extends Generic
+class File extends Field
 {
     protected $visibility = [
         Scaffolding::PAGE_INDEX => true,

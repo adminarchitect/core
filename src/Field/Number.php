@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
-class Number extends Generic
+class Number extends Field
 {
     /**
      * @return array
