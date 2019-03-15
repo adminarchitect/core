@@ -11,7 +11,7 @@
     "require": {
         "php": ">=5.6.4",
         "laravelcollective/html": "5.*|dev-master",
-        "doctrine/dbal": "~2.5",
+        "doctrine/dbal": "2.9.*",
         "davejamesmiller/laravel-breadcrumbs": "3.0.*",
         "czim/laravel-paperclip": "2.7.*",
         "terranet/menus": "^2.2",
