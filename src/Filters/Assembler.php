@@ -71,9 +71,9 @@ class Assembler
      *
      * @param Scope $scope
      *
+     * @return $this
      * @throws \Terranet\Administrator\Exception
      *
-     * @return $this
      */
     public function scope(Scope $scope)
     {
@@ -159,9 +159,9 @@ class Assembler
      * @param $element
      * @param $direction
      *
+     * @return $this
      * @throws \Exception
      *
-     * @return $this
      */
     public function sort($element, $direction)
     {
@@ -170,11 +170,11 @@ class Assembler
             $columns = app('scaffold.module')->columns();
             $model = app('scaffold.module')->model();
 
-            $sortable = $columns->find($element);
+            $field = $columns->find($element);
 
             // Each column may apply it's own sorting policy.
-            if ($sortable instanceof Sortable) {
-                $sortable->sortBy($this->query, $model, $direction);
+            if ($field && $field instanceof Sortable) {
+                $field->sortBy($this->query, $model, $direction);
             }
         }
 
@@ -206,9 +206,9 @@ class Assembler
     /**
      * @param FormElement $element
      *
+     * @return \Illuminate\Database\Eloquent\Builder|static
      * @throws Exception
      *
-     * @return \Illuminate\Database\Eloquent\Builder|static
      */
     protected function assemblyQuery(Filter $element)
     {

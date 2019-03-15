@@ -333,15 +333,9 @@ class Mutable extends BaseCollection
      */
     public function find(string $id)
     {
-        $element = $this->first(function ($element) use ($id) {
+        return $this->first(function ($element) use ($id) {
             return $element && $element->id() === $id;
         });
-
-        if (!$element) {
-            $this->notFound($id);
-        }
-
-        return $element;
     }
 
     /**
