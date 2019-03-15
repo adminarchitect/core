@@ -13,7 +13,7 @@
         "ext-json": "*",
         "ext-dom": "*",
         "laravelcollective/html": "5.*|dev-master",
-        "doctrine/dbal": "~2.5",
+        "doctrine/dbal": "2.9.*",
         "doctrine/annotations": "^1.6",
         "czim/laravel-paperclip": "2.7.*",
         "terranet/menus": "^2.2",
