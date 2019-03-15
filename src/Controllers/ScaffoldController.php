@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
-use URL;
+use Illuminate\Support\Facades\URL;
 
 class ScaffoldController extends AdminController
 {

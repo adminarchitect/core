@@ -2,8 +2,8 @@
 
 namespace Terranet\Administrator\Controllers;
 
-use DaveJamesMiller\Breadcrumbs\Generator;
-use DaveJamesMiller\Breadcrumbs\Manager;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Illuminate\Http\Request;
 use Illuminate\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ use Terranet\Administrator\Services\FileStorage;
 class MediaController extends AdminController
 {
     /**
-     * @var Manager
+     * @var BreadcrumbsManager
      */
     protected $breadcrumbs;
 
@@ -29,6 +29,7 @@ class MediaController extends AdminController
      * MediaController constructor.
      *
      * @param FileStorage $storage
+     * @param Translator $translator
      */
     public function __construct(FileStorage $storage, Translator $translator)
     {
@@ -149,7 +150,7 @@ class MediaController extends AdminController
         // remove storage path from $directory
         $directory = implode('/', \array_slice(explode('/', $directory), 1));
 
-        $this->breadcrumbs->register('index', function (Generator $generator) use ($popup) {
+        $this->breadcrumbs->register('index', function (BreadcrumbsGenerator $generator) use ($popup) {
             $generator->push('Home', route('scaffold.media'.($popup ? '.popup' : '')));
         });
 
@@ -160,18 +161,17 @@ class MediaController extends AdminController
         foreach ($dirs as $index => $dir) {
             $tmpPath = $path;
             $path[] = $dir;
-            $this->breadcrumbs->register($section = implode('.', $path), function (Generator $generator) use (&$parent, $dir, $tmpPath, $dirs) {
+            $this->breadcrumbs->register($section = implode('.', $path), function (BreadcrumbsGenerator $generator) use (&$parent, $dir, $tmpPath, $dirs) {
                 $generator->parent($parent = implode('.', $tmpPath));
                 $generator->push($dir, route('scaffold.media', ['path' => implode('/', \array_slice($dirs, 0, -1))]));
             });
         }
 
-        return $this->breadcrumbs->render($section);
+        return $this->breadcrumbs->view('administrator::partials.breadcrumbs', $section);
     }
 
     protected function initBreadcrumbs()
     {
-        $this->breadcrumbs = app('breadcrumbs');
-        $this->breadcrumbs->setView('administrator::partials.breadcrumbs');
+        $this->breadcrumbs = app(BreadcrumbsManager::class);
     }
 }
