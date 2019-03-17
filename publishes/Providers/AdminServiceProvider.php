@@ -77,6 +77,8 @@ class AdminServiceProvider extends ServiceProvider
                 ['icon' => 'fa fa-mail-forward']
             );
         });
+
+        return $navigation;
     }
 
     /**
@@ -88,6 +90,10 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.dashboard', function () {
             return $this->dashboard(new Manager());
+        });
+
+        $this->app->singleton('scaffold.navigation', function ($app) {
+            return $this->navigation(new Menu($app['view'], $app['config']));
         });
     }
 }

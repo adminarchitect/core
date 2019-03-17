@@ -46,7 +46,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Terranet\\Administrator\\ServiceProvider"
+                "Terranet\\Administrator\\ServiceProvider",
+                "App\\Providers\\AdminServiceProvider"
             ]
         }
     }
