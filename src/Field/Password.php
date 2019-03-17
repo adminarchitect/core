@@ -11,6 +11,7 @@ class Password extends Field
     {
         return parent::getAttributes() + [
                 'placeholder' => $this->translator()->trans('administrator::hints.global.optional'),
+                'autocomplete' => 'off',
             ];
     }
 }
