@@ -5,7 +5,6 @@ namespace Terranet\Administrator;
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
 use Collective\Html\HtmlServiceProvider;
-use Czim\Paperclip\Providers\PaperclipServiceProvider;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Pingpong\Menus\MenuFacade;
 use Pingpong\Menus\MenusServiceProvider;
@@ -79,7 +78,6 @@ class ServiceProvider extends BaseServiceProvider
                 'Html' => HtmlFacade::class,
                 'Form' => FormFacade::class,
             ],
-            PaperclipServiceProvider::class,
             MenusServiceProvider::class => [
                 'AdminNav' => MenuFacade::class,
             ],
