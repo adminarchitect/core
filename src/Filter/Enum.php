@@ -8,8 +8,11 @@ use Terranet\Administrator\Contracts\Filter\Searchable;
 
 class Enum extends Filter implements Searchable
 {
+    /** @var string  */
+    protected $component = 'enum';
+
     /** @var array */
-    protected $options;
+    protected $options = [];
 
     /**
      * @param mixed array|\Closure $options

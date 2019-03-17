@@ -10,6 +10,9 @@ use function localizer\locale;
 
 class Text extends Filter implements Searchable
 {
+    /** @var string */
+    protected $component = 'text';
+
     /**
      * Whether to enable search modes or not.
      *

@@ -1,1 +1,1 @@
-{{ Form::select($field->name(), $options, $field->value(), ['class' => 'form-control']) }}
+{{ Form::select($field->name(), ['' => "&mdash;"] + ($options ?? []), $field->value(), ['class' => 'form-control']) }}

@@ -27,7 +27,7 @@ abstract class Filter implements Queryable
      * @param $title
      * @param null $id
      */
-    private function __construct($title, $id = null)
+    public function __construct($title, $id = null)
     {
         $this->title = Architect::humanize($title);
         $this->id = snake_case($id ?: $this->title);
@@ -144,7 +144,7 @@ abstract class Filter implements Queryable
     {
         return sprintf(
             'administrator::filters.%s',
-            snake_case(class_basename($this))
+            $this->component
         );
     }
 

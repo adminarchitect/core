@@ -8,6 +8,9 @@ use Terranet\Administrator\Contracts\Filter\Searchable;
 
 class Date extends Filter implements Searchable
 {
+    /** @var string  */
+    protected $component = 'date';
+
     /**
      * @param Builder $query
      * @param Model $model
