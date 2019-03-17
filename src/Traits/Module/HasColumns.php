@@ -31,7 +31,7 @@ trait HasColumns
      */
     public function viewColumns()
     {
-        return $this->scaffoldColumns();
+        return $this->columns();
     }
 
     /**
@@ -97,7 +97,8 @@ trait HasColumns
          */
         $elements = new MutableCollection($fillable);
 
-        if (property_exists($this, 'includeDateColumns') && $this->includeDateColumns && \count($dates = $model->getDates())) {
+        if (property_exists($this,
+                'includeDateColumns') && $this->includeDateColumns && \count($dates = $model->getDates())) {
             // allow setting specific timestamp: created_at
             if (\is_string($this->includeDateColumns)) {
                 $dates = array_intersect($dates, [$this->includeDateColumns]);
