@@ -79,7 +79,7 @@ class Saver implements SaverContract
 
                 $value = $this->isFile($field) ? $this->request->file($name) : $this->request->get($name);
 
-                $value = $this->isBoolean($field) ? (bool) $value : $value;
+                $value = $this->isBoolean($field) ? (bool)$value : $value;
 
                 $value = $this->handleJsonType($name, $value);
 
@@ -159,9 +159,6 @@ class Saver implements SaverContract
             'save_return',
             $this->repository->getKeyName(),
         ]);
-
-        // leave only fillable columns
-        $this->data = array_only($this->data, $this->repository->getFillable());
     }
 
     /**
@@ -222,7 +219,7 @@ class Saver implements SaverContract
     protected function saveMedia()
     {
         if ($this->repository instanceof HasMedia) {
-            $media = (array) $this->request['_media_'];
+            $media = (array)$this->request['_media_'];
 
             if (!empty($trash = array_get($media, '_trash_', []))) {
                 $this->repository->media()->whereIn(
@@ -252,7 +249,7 @@ class Saver implements SaverContract
         $keys = explode('.', $this->getQualifiedRelatedKeyName($relation));
         $key = array_pop($keys);
 
-        return array_filter((array) $values[$key], function ($value) {
+        return array_filter((array)$values[$key], function ($value) {
             return null !== $value;
         });
     }
@@ -276,7 +273,7 @@ class Saver implements SaverContract
     protected function appendTranslationsToRelations()
     {
         if (!empty($this->relations)) {
-            foreach (array_keys((array) $this->relations) as $relation) {
+            foreach (array_keys((array)$this->relations) as $relation) {
                 if ($translations = $this->input("{$relation}.translatable")) {
                     $this->relations[$relation] += $translations;
                 }
