@@ -2,7 +2,7 @@
         id="{{ $field->id() }}"
         :has-indicators="true"
         :readonly="false"
-        conversion="{{ $conversion or 'default' }}"
+        conversion="{{ $conversion ?? 'default' }}"
         :media="{{ $media }}"
         :width="320"
 ></media-carousel>

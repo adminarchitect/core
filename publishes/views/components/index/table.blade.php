@@ -1,11 +1,11 @@
 <table class="table table-responsive">
     <thead>
     <tr>
-        {{ $headers or '' }}
+        {{ $headers ?? '' }}
     </tr>
     </thead>
 
     <tbody>
-    {{ $rows or '' }}
+    {{ $rows ?? '' }}
     </tbody>
 </table>

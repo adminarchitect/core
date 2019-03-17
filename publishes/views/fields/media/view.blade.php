@@ -3,7 +3,7 @@
             id="{{ $field->id() }}"
             :has-indicators="true"
             :readonly="true"
-            conversion="{{ $conversion or 'default' }}"
+            conversion="{{ $conversion ?? 'default' }}"
             :media="{{ $media->toJson() }}"
     ></media-carousel>
 @endif

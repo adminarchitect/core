@@ -7,4 +7,4 @@
     </td>
 </tr>
 
-{{ $elements or '' }}
+{{ $elements ?? '' }}
