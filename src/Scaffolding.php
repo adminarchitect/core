@@ -209,7 +209,7 @@ class Scaffolding implements Module, AutoTranslatable
         $className = $this->finder();
 
         return once(function () use ($className) {
-//            $this->columns();
+            $this->columns();
 
             return new $className($this);
         });
