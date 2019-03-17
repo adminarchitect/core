@@ -10,7 +10,6 @@ use Illuminate\Support\ServiceProvider;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Module\Sortable;
-use Terranet\Administrator\Contracts\Services\Finder;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
 use Terranet\Administrator\Dashboard\Manager;
 use Terranet\Administrator\Exception;
@@ -66,7 +65,7 @@ class ContainersServiceProvider extends ServiceProvider
         $this->app->singleton('scaffold.config', function ($app) {
             $config = $app['config']['administrator'];
 
-            return new Config((array)$config);
+            return new Config((array) $config);
         });
     }
 
@@ -80,8 +79,7 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class()
-            {
+            $service = new class() {
                 protected $readonly = [];
 
                 public function __construct()
@@ -98,7 +96,7 @@ class ContainersServiceProvider extends ServiceProvider
                  */
                 public function setReadonly(array $readonly = []): self
                 {
-                    $this->readonly = (array)$readonly;
+                    $this->readonly = (array) $readonly;
 
                     return $this;
                 }
@@ -116,7 +114,7 @@ class ContainersServiceProvider extends ServiceProvider
                         $locale = $locale->id();
                     }
 
-                    return \in_array((int)$locale, $this->readonly, true);
+                    return \in_array((int) $locale, $this->readonly, true);
                 }
             };
 
@@ -127,8 +125,11 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminResource()
     {
         $this->app->singleton('scaffold.module', function ($app) {
-            if (\in_array($app['router']->currentRouteName(), ['scaffold.settings.edit', 'scaffold.settings.update'],
-                true)) {
+            if (\in_array(
+                $app['router']->currentRouteName(),
+                ['scaffold.settings.edit', 'scaffold.settings.update'],
+                true
+            )) {
                 return $app['scaffold.module.settings'];
             }
 

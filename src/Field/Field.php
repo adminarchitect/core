@@ -64,13 +64,13 @@ abstract class Field implements Sortable, AutoTranslatable
         );
 
         if ($this->translator()->has($key = $this->translationKey())) {
-            $this->setTitle((string)$this->translator()->trans($key));
+            $this->setTitle((string) $this->translator()->trans($key));
         } else {
             $this->setTitle(Architect::humanize($title));
         }
 
         if ($this->translator()->has($key = $this->descriptionKey())) {
-            $this->setDescription((string)$this->translator()->trans($key));
+            $this->setDescription((string) $this->translator()->trans($key));
         }
     }
 
@@ -312,7 +312,7 @@ abstract class Field implements Sortable, AutoTranslatable
      */
     public function isVisibleOnPage(string $page): bool
     {
-        return (bool)$this->visibility[$page] ?? false;
+        return (bool) $this->visibility[$page] ?? false;
     }
 
     /**
@@ -322,7 +322,7 @@ abstract class Field implements Sortable, AutoTranslatable
      */
     public function hideOnPages($pages): self
     {
-        return $this->setPagesVisibility((array)$pages, false);
+        return $this->setPagesVisibility((array) $pages, false);
     }
 
     /**
@@ -332,7 +332,7 @@ abstract class Field implements Sortable, AutoTranslatable
      */
     public function showOnPages($pages): self
     {
-        return $this->setPagesVisibility((array)$pages, true);
+        return $this->setPagesVisibility((array) $pages, true);
     }
 
     /**

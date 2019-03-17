@@ -10,9 +10,9 @@ class Architect
     /**
      * Finds first module which uses a model.
      *
-     * @param string|Model $model
-     *
+     * @param Model|string $model
      * @param string $urlKey
+     *
      * @return mixed
      */
     public static function resourceByEntity($model, string $urlKey = null)
@@ -20,11 +20,11 @@ class Architect
         return app('scaffold.modules')->first(function ($module) use ($model, $urlKey) {
             $urlEquals = $urlKey ? $module->url() === $urlKey : true;
 
-            if (is_string($model)) {
-                return get_class($module->model()) === $model && $urlEquals;
+            if (\is_string($model)) {
+                return \get_class($module->model()) === $model && $urlEquals;
             }
 
-            return get_class($module->model()) === get_class($model) && $urlEquals;
+            return \get_class($module->model()) === \get_class($model) && $urlEquals;
         });
     }
 
@@ -32,12 +32,13 @@ class Architect
      * Humanize the given value into a proper name.
      *
      * @param  string $value
+     *
      * @return string
      */
     public static function humanize($value)
     {
-        if (is_object($value)) {
-            return static::humanize(class_basename(get_class($value)));
+        if (\is_object($value)) {
+            return static::humanize(class_basename(\get_class($value)));
         }
 
         return str_replace('_', ' ', Str::title(Str::snake($value, ' ')));

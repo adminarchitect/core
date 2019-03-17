@@ -5,10 +5,10 @@ namespace Terranet\Administrator\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
-use Illuminate\Support\Facades\URL;
 use Terranet\Administrator\Scaffolding;
 
 class ScaffoldController extends AdminController
@@ -82,8 +82,10 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $id, $request)->with('messages',
-            [trans('administrator::messages.update_success')]);
+        return $this->redirectTo($page, $id, $request)->with(
+            'messages',
+            [trans('administrator::messages.update_success')]
+        );
     }
 
     /**
@@ -192,7 +194,7 @@ class ScaffoldController extends AdminController
 
             $instance = $eloquent
                 ->when($searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->where($searchableKey, (int)$term);
+                    return $query->where($searchableKey, (int) $term);
                 })
                 ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
                     return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");

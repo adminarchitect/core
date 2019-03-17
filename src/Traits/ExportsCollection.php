@@ -19,19 +19,20 @@ trait ExportsCollection
      * @param Builder $query
      * @param         $format
      *
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     public function export(Builder $query, $format)
     {
         $method = 'to'.strtoupper($format);
 
         if (method_exists($this, $method)) {
-            return call_user_func_array([$this, $method], [$query]);
+            return \call_user_func_array([$this, $method], [$query]);
         }
 
         if (method_exists($this->module, $method)) {
-            return call_user_func_array([$this->module, $method], [$query]);
+            return \call_user_func_array([$this->module, $method], [$query]);
         }
 
         throw new Exception(sprintf('Don\'t know how to export to %s format.', $format));
@@ -118,9 +119,11 @@ trait ExportsCollection
 
     /**
      * @param Builder $query
-     * @return mixed
+     *
      * @throws Exception
      * @throws \Throwable
+     *
+     * @return mixed
      */
     public function toPDF(Builder $query)
     {

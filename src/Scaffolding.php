@@ -261,9 +261,9 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * @return ActionsManager
      * @throws Exception
      *
+     * @return ActionsManager
      */
     public function actionsManager(): ActionsManagerContract
     {
@@ -280,9 +280,9 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * The module Eloquent model.
      *
-     * @return mixed
      * @throws \Exception
      *
+     * @return mixed
      */
     protected function getModelClass()
     {

@@ -86,8 +86,9 @@ class HasMany extends Field
     }
 
     /**
-     * @return array
      * @throws \Terranet\Administrator\Exception
+     *
+     * @return array
      */
     protected function onView(): array
     {
