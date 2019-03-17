@@ -13,12 +13,18 @@ mix
     .extract([
         'vue',
         'vue-clip',
-        'vue-carousel',
-        'fancybox',
         'axios',
         'element-ui',
-        'tinymce',
+        'bootstrap',
+        '@fancyapps/fancybox',
+        // 'tinymce',
+        // 'ckeditor',
     ])
+    .options({
+        fileLoaderDirs: {
+            "fonts": "admin/fonts"
+        }
+    })
     .sass('resources/sass/app.scss', 'build/app.css')
     .sass('resources/sass/vendor.scss', 'build/vendor.css')
     .less('resources/less/glyphicons.less', 'build/glyphicons.css')

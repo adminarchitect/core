@@ -3,8 +3,8 @@
 
 @if($form->hasEditors('markdown'))
     @if (file_exists(public_path('admin/editors/markdown.js')))
-        <link rel="stylesheet" href="{{ mix('admin/editors/markdown.css') }}">
-        <script src="{{ mix('admin/editors/markdown.js') }}"></script>
+        <link rel="stylesheet" href="{{ mix('editors/markdown.css', 'admin') }}">
+        <script src="{{ mix('editors/markdown.js', 'admin') }}"></script>
     @else
         /**
         * It is not working as well using npm version, so temporary decided to use cdn version.
@@ -24,14 +24,14 @@
 @endif
 
 @if($form->hasEditors('medium'))
-    <link rel="stylesheet" href="{{ mix('admin/editors/medium.css') }}">
-    <script src="{{ mix('admin/editors/medium.js') }}"></script>
+    <link rel="stylesheet" href="{{ mix('editors/medium.css', 'admin') }}">
+    <script src="{{ mix('editors/medium.js', 'admin') }}"></script>
 @endif
 
 @if($form->hasEditors('ckeditor'))
-    <script src="{{ mix('admin/editors/ckeditor.js') }}"></script>
+    <script src="{{ mix('editors/ckeditor.js', 'admin') }}"></script>
 @endif
 
 @if ($form->hasEditors('tinymce'))
-    <script src="{{ mix('admin/editors/tinymce.js') }}"></script>
+    <script src="{{ mix('editors/tinymce.js', 'admin') }}"></script>
 @endif
