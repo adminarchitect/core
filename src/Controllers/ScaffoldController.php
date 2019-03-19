@@ -85,7 +85,12 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $id, $request)->with('messages', [trans('administrator::messages.update_success')]);
+        return $this->redirectTo($page, $id, $request)
+            ->with('messages', [
+                trans('administrator::messages.update_success',
+                    ['item' => app('scaffold.module')->singular()]
+                )
+            ]);
     }
 
     /**
@@ -118,10 +123,12 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $eloquent->id, $request)->with(
-            'messages',
-            [trans('administrator::messages.create_success')]
-        );
+        return $this->redirectTo($page, $eloquent->id, $request)
+            ->with('messages', [
+                trans('administrator::messages.create_success',
+                    ['item' => app('scaffold.module')->singular()]
+                )
+            ]);
     }
 
     /**
@@ -139,7 +146,7 @@ class ScaffoldController extends AdminController
 
         app('scaffold.actions')->exec('delete', [$eloquent]);
 
-        $message = trans('administrator::messages.remove_success');
+        $message = trans('administrator::messages.remove_success', ['item' => app('scaffold.module')->singular()]);
 
         if (URL::previous() === route('scaffold.view', ['module' => $module, 'id' => $id])) {
             return back()->with('messages', [$message]);
@@ -179,7 +186,7 @@ class ScaffoldController extends AdminController
     {
         $this->authorize($action, $eloquent = app('scaffold.model'));
 
-        $response = app('scaffold.actions')->exec('action::'.$action, [$eloquent]);
+        $response = app('scaffold.actions')->exec('action::' . $action, [$eloquent]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
