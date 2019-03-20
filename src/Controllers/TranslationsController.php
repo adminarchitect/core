@@ -45,7 +45,12 @@ class TranslationsController extends AdminController
 
     public function store(Request $request)
     {
-        $redirectTo = redirect()->back()->with('messages', [trans('administrator::messages.update_success')]);
+        $redirectTo = redirect()->back()->with('messages', [
+                trans('administrator::messages.update_success',
+                    ['item' => app('scaffold.module')->singular()]
+                ),
+            ]
+        );
 
         if (empty($translation = $request->input('translation'))) {
             return $redirectTo;
