@@ -170,7 +170,8 @@ class ScaffoldController extends AdminController
 
         app('scaffold.actions')->exec('detachFile', [$eloquent, $attachment]);
 
-        return back()->with('messages', [trans('administrator::messages.remove_success')]);
+        return back()->with('messages',
+            [trans('administrator::messages.remove_success', ['item' => 'Attachment'])]);
     }
 
     /**
