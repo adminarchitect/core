@@ -12,6 +12,9 @@ Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
 [Follow the documentation.](http://docs.adminarchitect.com)
 
+### Chat
+[on Spectrum](https://spectrum.chat/adminarchitect?tab=posts)
+
 ### Donations
 
 If you have found the Admin Architect useful, you can:
