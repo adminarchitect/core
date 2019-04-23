@@ -21,7 +21,7 @@
                             <a @click.prevent="onClick(file)" :class="{'pointer': modal}">
                                 <div class="image"
                                      v-if="file.isImage"
-                                     :style="{ backgroundImage: 'url('+ file.url +')' }">
+                                     :style="{ backgroundImage: 'url('+ encodeURI(file.url) +')' }">
                                 </div>
                             </a>
                         </div>
