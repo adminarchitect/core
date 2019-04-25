@@ -28,6 +28,21 @@ class SettingsMakeCommand extends GeneratorCommand
     protected $type = 'Resource';
 
     /**
+     * Execute the console command.
+     *
+     * @return bool|null
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function handle()
+    {
+        if (!class_exists(\Terranet\Options\Manager::class, true)) {
+            $this->alert("Dependency missing. Run 'composer require adminarchitect/options'.");
+        }
+
+        parent::handle();
+    }
+
+    /**
      * Get the stub file for the generator.
      *
      * @return string

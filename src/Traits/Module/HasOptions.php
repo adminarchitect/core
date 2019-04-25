@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Terranet\Administrator\Field\Text;
 use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Administrator\Form\FormElement;
 
@@ -25,8 +26,7 @@ trait HasOptions
         $collection = new Mutable();
 
         foreach (options_fetch() as $option) {
-            $element = FormElement::text($option->key);
-            $element->getInput()->setValue($option->value);
+            $element = Text::make($option->key)->setValue($option->value);
 
             $collection->push(
                 $element

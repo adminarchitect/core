@@ -42,9 +42,6 @@ return [
     // Handle passwords -> Convert plain text to Hash
     'manage_passwords' => true,
 
-    // Enable File Manager
-    'file_manager' => false,
-
     // The menu item that should be used as the default landing page of the administrative section
     'home_page' => $prefix,
 
@@ -86,15 +83,26 @@ return [
         // 'users' => ['csv', 'pdf'],
     ],
 
+    // Manage site settings.
+    // run `php artisan administrator:resource:settings` once enabled this option.
+    'settings' => [
+        'enabled' => false,
+    ],
+
     // Manage translation files.
     // requires `terranet/localizer` package
     'translations' => [
-        'enabled' => true,
+        'enabled' => false,
         'filters' => [
             // build filters based on specific translation files
             'only' => null, // ['auth', 'validation']
             // except some translation files from filters
             'except' => null, // ['password', 'pagination']
         ],
+    ],
+
+    // Enable File Manager
+    'file_manager' => [
+        'enabled' => true
     ],
 ];

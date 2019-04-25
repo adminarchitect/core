@@ -40,13 +40,11 @@ class PublishCommand extends Command
 
         $published = [];
 
-        if ($this->confirm('Routes?', true)) {
-            Artisan::call('vendor:publish', [
-                '--provider' => ServiceProvider::class,
-                '--tag' => 'routes',
-            ]);
-            $published[] = 'app/Http/Terranet/Administrator/routes.php';
-        }
+        Artisan::call('vendor:publish', [
+            '--provider' => ServiceProvider::class,
+            '--tag' => 'routes',
+        ]);
+        $published[] = 'routes/admin.php';
 
         if ($this->confirm('Configuration?', true)) {
             Artisan::call('vendor:publish', [

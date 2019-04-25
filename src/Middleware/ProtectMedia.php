@@ -17,7 +17,7 @@ class ProtectMedia
      */
     public function handle(Request $request, Closure $next)
     {
-        abort_unless(config('administrator.file_manager'), 404, 'Route not found.');
+        abort_unless(config('administrator.file_manager.enabled'), 404, 'Route not found.');
 
         return $next($request);
     }
