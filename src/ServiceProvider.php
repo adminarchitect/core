@@ -19,16 +19,9 @@ class ServiceProvider extends BaseServiceProvider
         $baseDir = realpath(__DIR__.'/../');
 
         // Publish & Load routes
-        $packageRoutes = "{$baseDir}/publishes/routes.php";
-        $publishedRoutes = app_path('Http/Terranet/Administrator/routes.php');
-        $this->publishes([$packageRoutes => $publishedRoutes], 'routes');
-
-        if (!$this->app->routesAreCached()) {
-            $routesFile = file_exists($publishedRoutes) ? $publishedRoutes : $packageRoutes;
-
-            /** @noinspection PhpIncludeInspection */
-            require $routesFile;
-        }
+        $this->publishes([
+            "{$baseDir}/publishes/routes.php" => base_path('routes/admin.php'),
+        ], 'routes');
 
         // Publish & Load configuration
         $this->publishes(["{$baseDir}/publishes/config.php" => config_path('administrator.php')], 'config');

@@ -8,6 +8,16 @@ use Illuminate\Support\Str;
 class Architect
 {
     /**
+     * Get the AdminArchitect URI path.
+     *
+     * @return \Illuminate\Config\Repository|mixed
+     */
+    public static function path()
+    {
+        return config('administrator.prefix', 'cms');
+    }
+
+    /**
      * Finds first module which uses a model.
      *
      * @param Model|string $model
@@ -31,7 +41,7 @@ class Architect
     /**
      * Humanize the given value into a proper name.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return string
      */
@@ -42,5 +52,13 @@ class Architect
         }
 
         return str_replace('_', ' ', Str::title(Str::snake($value, ' ')));
+    }
+
+    /**
+     * @return ArchitectRoutes
+     */
+    public static function routes()
+    {
+        return new ArchitectRoutes();
     }
 }
