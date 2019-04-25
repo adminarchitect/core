@@ -1,4 +1,6 @@
-@if ($field instanceof \Terranet\Administrator\Collection\Group)
+@if ($field instanceof \Terranet\Administrator\Field\Media)
+    //
+@elseif ($field instanceof \Terranet\Administrator\Collection\Group)
     @component('administrator::components.table.group')
         @slot('title', $field->title())
         @slot('elements')

@@ -9,7 +9,7 @@ $elements = $module->viewColumns()->each->setModel($item);
             {{ (isset($title) ? $title: $module->singular()) }}
         </th>
     </tr>
-    @foreach($elements as $element)
+    @foreach($elements->filter(function($e) {return !($e instanceof \Terranet\Administrator\Field\HasMany || $e instanceof \Terranet\Administrator\Field\Media);}) as $element)
         @if ($element instanceof \Terranet\Administrator\Collection\Group)
             @component('administrator::components.table.group')
                 @slot('title', $element->title())
@@ -35,32 +35,45 @@ $elements = $module->viewColumns()->each->setModel($item);
     @endforeach
 </table>
 
-@foreach($elements as $element)
-    @if ($element instanceof \Terranet\Administrator\Field\HasMany)
-        @if ($output = $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
-            <table class="table">
-                @component('administrator::components.table.spacer')
-                @endcomponent
-                @component('administrator::components.table.header')
-                    @slot('title')
-                        {{ $element->title() }}
-                        @if ($relationModule = $element->relationModule())
-                            @php($relation = $element->relation())
-                            <div class="pull-right">
-                                <a class="btn btn-quirk btn-default"
-                                   style="padding: 4px 12px 4px;"
-                                   href="{{ route('scaffold.create', [
+@foreach($elements->whereInstanceOf(\Terranet\Administrator\Field\Media::class) as $element)
+    <table class="table" style="margin-top: 16px;">
+        @component('administrator::components.table.header')
+            @slot('title')
+                Media
+            @endslot
+        @endcomponent
+        <tr>
+            <td colspan="2">
+                {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
+            </td>
+        </tr>
+    </table>
+@endforeach
+
+@foreach($elements->whereInstanceOf(\Terranet\Administrator\Field\HasMany::class) as $element)
+    @if ($output = $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
+        <table class="table">
+            @component('administrator::components.table.spacer')
+            @endcomponent
+            @component('administrator::components.table.header')
+                @slot('title')
+                    {{ $element->title() }}
+                    @if ($relationModule = $element->relationModule())
+                        @php($relation = $element->relation())
+                        <div class="pull-right">
+                            <a class="btn btn-quirk btn-default"
+                               style="padding: 4px 12px 4px;"
+                               href="{{ route('scaffold.create', [
                                     'module' => $relationModule->url(),
                                     $relation->getForeignKeyName() => $relation->getParent()->getKey()
                                    ]) }}">
-                                    {{ trans('administrator::buttons.attach') }}
-                                </a>
-                            </div>
-                        @endif
-                    @endslot
-                @endcomponent
-            </table>
-            {!! $output !!}
-        @endif
+                                {{ trans('administrator::buttons.attach') }}
+                            </a>
+                        </div>
+                    @endif
+                @endslot
+            @endcomponent
+        </table>
+        {!! $output !!}
     @endif
 @endforeach

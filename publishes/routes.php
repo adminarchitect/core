@@ -145,6 +145,23 @@ Route::group([
             'uses' => 'ScaffoldController@deleteAttachment',
         ])->where('module', $pattern);
 
+        Route::get('{module}/{id}/media', [
+            'as' => 'scaffold.fetch_media',
+            'uses' => 'ScaffoldController@fetchMedia',
+        ])->where('module', $pattern);
+
+        // Upload media attachment
+        Route::post('{module}/{id}/media/{collection}', [
+            'as' => 'scaffold.attach_media',
+            'uses' => 'ScaffoldController@attachMedia',
+        ])->where('module', $pattern);
+
+        // Upload media attachment
+        Route::delete('{module}/{id}/media/{mediaId}', [
+            'as' => 'scaffold.attach_media',
+            'uses' => 'ScaffoldController@detachMedia',
+        ])->where('module', $pattern);
+
         // Custom method
         Route::get('{module}/{id}/{action}', [
             'as' => 'scaffold.action',

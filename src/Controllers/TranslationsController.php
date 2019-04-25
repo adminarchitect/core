@@ -11,15 +11,21 @@ ini_set('opcache.enable', 0);
 
 class TranslationsController extends AdminController
 {
+    /** @var Translator */
     protected $translator;
 
-    public function __construct(Translator $translator)
+    /**
+     * @return Translator
+     */
+    protected function translator(): ?Translator
     {
-        $this->translator = $translator->setLocales(
-            $this->locales()
-        );
+        if (null === $this->translator) {
+            $this->translator = app(Translator::class)->setLocales(
+                $this->locales()
+            );
+        }
 
-        parent::__construct();
+        return $this->translator;
     }
 
     public function index(Request $request)
@@ -28,7 +34,7 @@ class TranslationsController extends AdminController
         $term = $request->get('term');
         $only = $request->get('only');
 
-        $pagination = $this->translator->load(
+        $pagination = $this->translator()->load(
             $term,
             'all' === $only ? null : $only,
             $page,
@@ -39,7 +45,7 @@ class TranslationsController extends AdminController
 
         return view(app('scaffold.template')->translations('index'), [
             'pagination' => $pagination,
-            'scopes' => $this->translator->filters(),
+            'scopes' => $this->translator()->filters(),
         ]);
     }
 
@@ -59,7 +65,7 @@ class TranslationsController extends AdminController
             }
 
             $changed[] = $locale->iso6391();
-            $this->translator->save($translation, $locale->iso6391());
+            $this->translator()->save($translation, $locale->iso6391());
         }
 
         event(new TranslationsChanged($changed));

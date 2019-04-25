@@ -18,13 +18,18 @@
         "bootstrap": "^3.3.7",
         "cross-env": "^5.2.0",
         "element-ui": "^2.4.7",
+        "filepond": "^4.4.0",
+        "filepond-plugin-file-validate-type": "^1.2.4",
+        "filepond-plugin-image-preview": "^4.0.8",
         "font-awesome": "^4.7.0",
         "jquery": "^3.3.1",
         "laravel-mix": "^2.1.14",
+        "less": "^3.9.0",
+        "less-loader": "^4.1.0",
         "vue": "^2.5.7",
         "vue-clip": "^1.0.0",
+        "vue-filepond": "^5.1.0",
         "vuex": "^3.0.1",
-        "less": "^3.9.0",
-        "less-loader": "^4.1.0"
+        "lodash": "^4.17.11"
     }
 }

@@ -1,9 +1,10 @@
-@if ($media->count())
-    <media-carousel
-            id="{{ $field->id() }}"
-            :has-indicators="true"
-            :readonly="true"
-            conversion="{{ $conversion ?? 'default' }}"
-            :media="{{ $media->toJson() }}"
-    ></media-carousel>
-@endif
+@php($endpoint = route('scaffold.fetch_media', [
+    'module' => app('scaffold.module')->url(),
+    'id' => app('scaffold.model')->id
+]))
+
+<media-library
+        id="{{ $field->id() }}"
+        collection="{{ ($collection ?? 'default') }}"
+        endpoint="{{ $endpoint }}"
+></media-library>

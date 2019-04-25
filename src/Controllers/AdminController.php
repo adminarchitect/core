@@ -18,7 +18,7 @@ abstract class AdminController extends BaseController
      */
     protected $translator;
 
-    public function __construct(Translator $translator)
+    public function __construct()
     {
         $this->middleware([
             AuthProvider::class,
@@ -26,7 +26,7 @@ abstract class AdminController extends BaseController
             Resources::class,
         ]);
 
-        $this->translator = $translator;
+        $this->translator = app(Translator::class);
     }
 
     /**

@@ -6,10 +6,12 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
 use Terranet\Administrator\Scaffolding;
+use Terranet\Administrator\Services\MediaLibraryProvider;
 
 class ScaffoldController extends AdminController
 {
@@ -173,6 +175,68 @@ class ScaffoldController extends AdminController
     }
 
     /**
+     * @param $module
+     * @param $id
+     * @param Request $request
+     */
+    public function fetchMedia($module, $id, Request $request)
+    {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
+        $this->authorize('view', $eloquent = app('scaffold.model'));
+
+        $media = MediaLibraryProvider::forModel($eloquent)->fetch(
+            $request->get('collection', 'default'), 20
+        );
+
+        $items = collect($media->items())->map([MediaLibraryProvider::class, 'toJson']);
+
+        return response()->json(array_merge(
+            $media->toArray(),
+            ['data' => $items->toArray()]
+        ));
+    }
+
+    /**
+     * @param $page
+     * @param $id
+     * @param string $conversion
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function attachMedia($page, $id, string $collection, Request $request)
+    {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
+        $this->authorize('update', $eloquent = app('scaffold.model'));
+
+        $file = $request->file('_media_')[$collection];
+
+        $mediaItem = MediaLibraryProvider::forModel($eloquent)->attach($file, $collection);
+
+        return response()->json(MediaLibraryProvider::toJson($mediaItem));
+    }
+
+    /**
+     * @param $page
+     * @param $id
+     * @param $mediaId
+     */
+    public function detachMedia($page, $id, $mediaId)
+    {
+        /** @var Module $resource */
+        $resource = app('scaffold.module');
+
+        $this->authorize('update', $eloquent = app('scaffold.model'));
+
+        MediaLibraryProvider::forModel($eloquent)->detach($mediaId);
+
+        return response()->json([], \Illuminate\Http\Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * Search for a model(s).
      *
      * @param Request $request
@@ -194,7 +258,7 @@ class ScaffoldController extends AdminController
 
             $instance = $eloquent
                 ->when($searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->where($searchableKey, (int) $term);
+                    return $query->where($searchableKey, (int)$term);
                 })
                 ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
                     return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");

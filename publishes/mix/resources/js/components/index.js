@@ -1,5 +1,6 @@
 import MediaManager from './MediaManager.vue';
-import MediaCarousel from './MediaCarousel.vue';
+import MediaLibrary from './MediaLibrary.vue';
+import MediaPagination from './MediaPagination';
 import FoldersList from './Folders.vue';
 import FilesList from './Files.vue';
 import FileInfo from './FileInfo.vue';
@@ -11,7 +12,8 @@ import DateTimePicker from './fields/DateTimePicker.vue';
 
 export {
     MediaManager,
-    MediaCarousel,
+    MediaLibrary,
+    MediaPagination,
     FoldersList,
     FilesList,
     FileInfo,

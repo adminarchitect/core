@@ -2,13 +2,30 @@
 
 namespace Terranet\Administrator\Field;
 
-use Spatie\MediaLibrary\Models\Media as MediaModel;
 use Terranet\Administrator\Architect;
+use Terranet\Administrator\Services\MediaLibraryProvider;
 
 class Media extends Field
 {
     /** @var string */
+    protected $collection = 'default';
+
+    /** @var string */
     protected $conversion = '';
+
+    /** @var int */
+    protected $perPage = 10;
+
+    /**
+     * @param string $collection
+     * @return $this
+     */
+    public function fromCollection(string $collection)
+    {
+        $this->collection = $collection;
+
+        return $this;
+    }
 
     /**
      * @param string $conversion
@@ -27,12 +44,9 @@ class Media extends Field
      */
     protected function onIndex(): array
     {
-        $media = $this->model->getMedia($this->id());
-        $module = Architect::resourceByEntity($this->model) ?: app('scaffold.module');
-
         return [
-            'media' => $media,
-            'module' => $module,
+            'count' => MediaLibraryProvider::forModel($this->model)->count($this->collection),
+            'module' => Architect::resourceByEntity($this->model) ?: app('scaffold.module'),
         ];
     }
 
@@ -41,16 +55,8 @@ class Media extends Field
      */
     protected function onView(): array
     {
-        $media = $this->model->getMedia($this->id());
-        $media = $media->map(function ($item) {
-            return array_merge($item->toArray(), [
-                'url' => $item->getUrl(),
-                'conversions' => $this->conversions($item),
-            ]);
-        });
-
         return [
-            'media' => $media,
+            'collection' => $this->collection,
             'conversion' => $this->conversion,
         ];
     }
@@ -60,18 +66,6 @@ class Media extends Field
      */
     protected function onEdit(): array
     {
-        return $this->onView();
-    }
-
-    /**
-     * @param MediaModel $item
-     *
-     * @return array
-     */
-    protected function conversions(MediaModel $item)
-    {
-        return array_build($item->getMediaConversionNames(), function ($key, $conversion) use ($item) {
-            return [$conversion, $item->getUrl($conversion)];
-        });
+        return [];
     }
 }

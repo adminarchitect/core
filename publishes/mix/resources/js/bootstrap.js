@@ -4,7 +4,8 @@ import VueClip from 'vue-clip';
 import {Tag, Select, Option, Button, Dialog, DatePicker, TimePicker} from 'element-ui';
 import {
     MediaManager,
-    MediaCarousel,
+    MediaLibrary,
+    MediaPagination,
     FoldersList,
     FilesList,
     FileInfo,
@@ -36,7 +37,8 @@ Vue.use(DatePicker);
 Vue.use(TimePicker);
 
 Vue.component('MediaManager', MediaManager);
-Vue.component('MediaCarousel', MediaCarousel);
+Vue.component('MediaLibrary', MediaLibrary);
+Vue.component('MediaPagination', MediaPagination);
 Vue.component('FoldersList', FoldersList);
 Vue.component('FilesList', FilesList);
 Vue.component('FileInfo', FileInfo);
