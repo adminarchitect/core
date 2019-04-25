@@ -86,8 +86,10 @@ return [
         // 'users' => ['csv', 'pdf'],
     ],
 
+    // Manage translation files.
+    // requires `terranet/localizer` package
     'translations' => [
-        'enabled' => false,
+        'enabled' => true,
         'filters' => [
             // build filters based on specific translation files
             'only' => null, // ['auth', 'validation']

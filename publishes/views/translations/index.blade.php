@@ -23,7 +23,8 @@
                         <div class="form-group">
                             <label for="company_id">
                                 {{ trans('administrator::buttons.search') }}
-                                <input name="term" type="search" class="form-control" value="{{ app('request')->input('term') }}">
+                                <input name="term" type="search" class="form-control"
+                                       value="{{ app('request')->input('term') }}">
                             </label>
                         </div>
                     </div>
@@ -83,7 +84,7 @@
                                     return title_case(str_replace(['_', '-'], ' ', $part));
                                 }, explode('.', $key));
                                 ?>
-                                <span class="bold">{{ ucwords(implode(' &raquo; ', $parts)) }}</span>
+                                <span class="bold">{!! ucwords(implode(' &raquo; ', $parts)) !!}</span>
                             </td>
                             <td>
                                 <div class="translatable-item pull-left" style="width:100%">
@@ -92,10 +93,10 @@
                                              style="width:100%"
                                              data-locale="{{$locale->iso6391()}}">
                                             <textarea
-                                                {{ app('scaffold.translations')->readonly($locale) ? 'disabled="disabled"' : '' }}
-                                                class="form-control" style="width:100%"
-                                                name="translation[{{ $key }}][{{ $locale->iso6391() }}]" cols="50"
-                                                rows="2">{{ $value[$locale->iso6391()] ?? '' }}
+                                                    {{ app('scaffold.translations')->readonly($locale) ? 'disabled="disabled"' : '' }}
+                                                    class="form-control" style="width:100%"
+                                                    name="translation[{{ $key }}][{{ $locale->iso6391() }}]" cols="50"
+                                                    rows="2">{{ $value[$locale->iso6391()] ?? '' }}
                                             </textarea>
                                         </div>
                                     @endforeach()
@@ -105,9 +106,9 @@
                                 <div class="btn-group">
                                     @foreach($locales as $locale)
                                         <button
-                                            type="button"
-                                            class="btn btn-default btn-sm {{ ($locale->isDefault() ? 'active' : '') }}"
-                                            data-locale="{{ $locale->iso6391() }}"
+                                                type="button"
+                                                class="btn btn-default btn-sm {{ ($locale->isDefault() ? 'active' : '') }}"
+                                                data-locale="{{ $locale->iso6391() }}"
                                         >
                                             {{ $locale->iso6391() }}
                                         </button>

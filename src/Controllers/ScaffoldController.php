@@ -187,7 +187,8 @@ class ScaffoldController extends AdminController
         $this->authorize('view', $eloquent = app('scaffold.model'));
 
         $media = MediaLibraryProvider::forModel($eloquent)->fetch(
-            $request->get('collection', 'default'), 20
+            $request->get('collection', 'default'),
+            20
         );
 
         $items = collect($media->items())->map([MediaLibraryProvider::class, 'toJson']);

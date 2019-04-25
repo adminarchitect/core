@@ -4,29 +4,33 @@ namespace Terranet\Administrator\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Terranet\Administrator\Services\Translations\Reader;
 use Zend\Code\Generator\ValueGenerator;
 
-class Translator
+class TranslationsManager
 {
-    /**
-     * @var Collection
-     */
+    /** @var Collection */
     protected $locales;
 
+    /** @var Translations\Reader */
     protected $reader;
 
+    /** @var Filesystem */
+    protected $filesystem;
+
     /**
-     * @var Filesystem
+     * TranslationsManager constructor.
      */
-    protected $fs;
-
-    public function __construct()
+    public function __construct(Reader $translationsReader, Filesystem $filesystem)
     {
-        $this->reader = new Translations\Reader();
-
-        $this->fs = app('files');
+        $this->reader = $translationsReader;
+        $this->filesystem = $filesystem;
     }
 
+    /**
+     * @param Collection $locales
+     * @return $this
+     */
     public function setLocales(Collection $locales)
     {
         $this->locales = $locales;
@@ -34,19 +38,25 @@ class Translator
         return $this;
     }
 
+    /**
+     * @param null $term
+     * @param null $only
+     * @param int $page
+     * @param int $perPage
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
     public function load($term = null, $only = null, $page = 1, $perPage = 20)
     {
-        $files = $this->files($only);
-
         return (new Translations\Finder())->find(
-            $this->reader->read($files, $this->locales()),
-            $term,
-            $page,
-            $perPage
+            $this->reader->read($this->files($only), $this->locales()),
+            $term, $page, $perPage
         );
     }
 
-    public function export()
+    /**
+     * @return Translations\Exporter
+     */
+    public function exporter()
     {
         return new Translations\Exporter();
     }
@@ -71,6 +81,10 @@ class Translator
         return $filters;
     }
 
+    /**
+     * @param $translation
+     * @param $locale
+     */
     public function save($translation, $locale)
     {
         $translations = [];
@@ -88,10 +102,14 @@ class Translator
 
             $content = '<?php'.str_repeat(PHP_EOL, 2).'return '.$this->arrayToString($data).';';
 
-            $this->fs->put($translations['path'], $content, true);
+            $this->filesystem->put($translations['path'], $content, true);
         }
     }
 
+    /**
+     * @param null $only
+     * @return Collection
+     */
     protected function files($only = null): Collection
     {
         static $files = null;
@@ -113,6 +131,11 @@ class Translator
         });
     }
 
+    /**
+     * @param $file
+     * @param $locale
+     * @return array
+     */
     protected function loadTranslationFile($file, $locale)
     {
         if (!file_exists($path = $this->reader->pathToFile($file, $locale))) {
@@ -125,19 +148,29 @@ class Translator
         ];
     }
 
+    /**
+     * @param $file
+     * @param $locale
+     */
     protected function makeFile($file, $locale)
     {
         $directoryTranslationsPath = resource_path('lang'.\DIRECTORY_SEPARATOR.$locale);
 
-        if (!$this->fs->exists($directoryTranslationsPath)) {
-            $this->fs->makeDirectory($directoryTranslationsPath);
+        if (!$this->filesystem->exists($directoryTranslationsPath)) {
+            $this->filesystem->makeDirectory($directoryTranslationsPath);
         }
 
         $content = '<?php'.str_repeat(PHP_EOL, 2).'return [];';
 
-        $this->fs->put($directoryTranslationsPath.\DIRECTORY_SEPARATOR.$file.'.php', $content, true);
+        $this->filesystem->put($directoryTranslationsPath.\DIRECTORY_SEPARATOR.$file.'.php', $content, true);
     }
 
+    /**
+     * @param $arr
+     * @param $path
+     * @param $value
+     * @param string $separator
+     */
     protected function keyToArray(&$arr, $path, $value, $separator = '.')
     {
         foreach ($keys = explode($separator, $path) as $key) {
@@ -146,6 +179,10 @@ class Translator
         $arr = $value;
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
     protected function arrayToString($data): string
     {
         $generator = new ValueGenerator($data, ValueGenerator::TYPE_ARRAY_SHORT);
@@ -154,6 +191,9 @@ class Translator
         return $generator->generate();
     }
 
+    /**
+     * @return Collection
+     */
     protected function locales(): Collection
     {
         return collect($this->locales);

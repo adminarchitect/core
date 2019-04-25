@@ -16,7 +16,7 @@ abstract class AdminController extends BaseController
     /**
      * @var null|\Illuminate\Translation\Translator
      */
-    protected $translator;
+    protected $translationsManager;
 
     public function __construct()
     {
