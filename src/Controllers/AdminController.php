@@ -18,7 +18,7 @@ abstract class AdminController extends BaseController
      */
     protected $translator = null;
 
-    public function __construct(Translator $translator)
+    public function __construct(Translator $translator = null)
     {
         $this->middleware([
             AuthProvider::class,
