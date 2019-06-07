@@ -99,6 +99,8 @@ trait ExportsCollection
             $file = $this->getFilename(),
             'a+'
         );
+        fputs($out, $bom = (chr(0xEF).chr(0xBB).chr(0xBF)));
+        
         $headersPrinted = false;
 
         foreach ($this->each($query, 100) as $item) {
