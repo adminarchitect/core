@@ -148,10 +148,6 @@ class ScaffoldController extends AdminController
 
         $message = trans('administrator::messages.remove_success', ['item' => app('scaffold.module')->singular()]);
 
-        if (URL::previous() === route('scaffold.view', ['module' => $module, 'id' => $id])) {
-            return back()->with('messages', [$message]);
-        }
-
         return redirect()->to(route('scaffold.index', ['module' => $module]))->with('messages', [$message]);
     }
 
