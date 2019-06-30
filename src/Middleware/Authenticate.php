@@ -50,7 +50,7 @@ class Authenticate
             auth('admin')->logout();
 
             return response()
-                ->redirectGuest($this->loginUrl)
+                ->redirectTo($this->loginUrl)
                 ->with('redirect', $request->url());
         }
 
