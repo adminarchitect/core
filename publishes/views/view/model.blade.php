@@ -60,12 +60,13 @@ $elements = $module->viewColumns()->each->setModel($item);
                     {{ $element->title() }}
                     @if ($relationModule = $element->relationModule())
                         @php($relation = $element->relation())
+                        @php($key = method_exists($relation, 'getForeignPivotKeyName') ? $relation->getForeignPivotKeyName() : $relation->getForeignKeyName())
                         <div class="pull-right">
                             <a class="btn btn-quirk btn-default"
                                style="padding: 4px 12px 4px;"
                                href="{{ route('scaffold.create', [
                                     'module' => $relationModule->url(),
-                                    $relation->getForeignPivotKeyName() => $relation->getParent()->getKey()
+                                    $key => $relation->getParent()->getKey()
                                    ]) }}">
                                 {{ trans('administrator::buttons.attach') }}
                             </a>

@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
@@ -10,28 +11,22 @@ use Terranet\Administrator\Filters\Assembler;
 
 class Finder implements FinderContract
 {
-    /**
-     * @var Module
-     */
+    /** @var Module */
     protected $module;
 
-    /**
-     * @var
-     */
+    /** @var Model */
     protected $model;
 
-    /**
-     * @var Builder
-     */
+    /** @var Builder */
     protected $query;
 
-    /**
-     * Query assembler.
-     *
-     * @var
-     */
+    /** @var Assembler */
     protected $assembler;
 
+    /**
+     * Finder constructor.
+     * @param Module $module
+     */
     public function __construct(Module $module)
     {
         $this->module = $module;
@@ -62,8 +57,9 @@ class Finder implements FinderContract
         // prevent duplicated execution
         if (null === $this->query && $this->model) {
             $this->initQuery()
-                 ->applyFilters()
-                 ->applySorting();
+                ->applyFilters()
+                ->applyRelationalFilters()
+                ->applySorting();
 
             $this->query = $this->assembler()->getQuery();
         }
@@ -91,7 +87,7 @@ class Finder implements FinderContract
      *
      * @return Assembler
      */
-    protected function assembler()
+    protected function assembler(): Assembler
     {
         if (null === $this->assembler) {
             $this->assembler = (new Assembler($this->model));
@@ -100,7 +96,10 @@ class Finder implements FinderContract
         return $this->assembler;
     }
 
-    protected function initQuery()
+    /**
+     * @return $this
+     */
+    protected function initQuery(): FinderContract
     {
         if (method_exists($this->module, 'query')) {
             $this->assembler()->applyQueryCallback([$this->module, 'query']);
@@ -109,7 +108,13 @@ class Finder implements FinderContract
         return $this;
     }
 
-    protected function applyFilters()
+    /**
+     * Apply query string filters.
+     *
+     * @return FinderContract
+     * @throws \Terranet\Administrator\Exception
+     */
+    protected function applyFilters(): FinderContract
     {
         if ($filter = app('scaffold.filter')) {
             if ($filters = $filter->filters()) {
@@ -118,9 +123,7 @@ class Finder implements FinderContract
 
             if ($scopes = $filter->scopes()) {
                 if (($scope = $filter->scope()) && ($found = $scopes->find($scope))) {
-                    $this->assembler()->scope(
-                        $found
-                    );
+                    $this->assembler()->scope($found);
                 }
             }
         }
@@ -129,9 +132,25 @@ class Finder implements FinderContract
     }
 
     /**
-     * Extend query with Order By Statement.
+     * Apply relation filters: cross-links to other
+     *
+     * @return $this
      */
-    protected function applySorting()
+    protected function applyRelationalFilters(): FinderContract
+    {
+        if (($relation = request('viaResource')) && ($value = request('viaResourceId'))) {
+            $this->assembler()->relations($relation, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Extend query with Order By Statement.
+     *
+     * @return FinderContract
+     */
+    protected function applySorting(): FinderContract
     {
         $sortable = app('scaffold.sortable');
         $element = $sortable->element();
@@ -146,7 +165,12 @@ class Finder implements FinderContract
         return $this;
     }
 
-    protected function perPage()
+    /**
+     * Items per page.
+     *
+     * @return int
+     */
+    protected function perPage(): int
     {
         return method_exists($this->module, 'perPage')
             ? $this->module->perPage()

@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Modules\Faked;
@@ -70,10 +71,13 @@ class HasMany extends Field
         }
 
         if ($module = Architect::resourceByEntity($related)) {
-            $url = route('scaffold.view', [
+            $url = route('scaffold.index', [
                 'module' => $module->url(),
                 $related->getKeyName() => $related->getKey(),
-                $this->getForeignKey($relation) => $this->model->getKey(),
+                'viaResource' => is_a($this, BelongsToMany::class)
+                    ? app('scaffold.module')->url()
+                    : Str::singular(app('scaffold.module')->url()),
+                'viaResourceId' => $this->model->getKey(),
             ]);
         }
 
@@ -86,9 +90,9 @@ class HasMany extends Field
     }
 
     /**
+     * @return array
      * @throws \Terranet\Administrator\Exception
      *
-     * @return array
      */
     protected function onView(): array
     {

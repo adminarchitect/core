@@ -6,17 +6,22 @@ use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
 use Terranet\Administrator\Contracts\Sortable;
+use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Form\FormElement;
 
 class Assembler
 {
+    use HandlesRelation;
+
     /**
      * @var Model model
      */
@@ -38,6 +43,10 @@ class Assembler
         }
     }
 
+    /**
+     * @param $callback
+     * @return $this
+     */
     public function applyQueryCallback($callback)
     {
         $this->query = $callback($this->query);
@@ -71,9 +80,9 @@ class Assembler
      *
      * @param Scope $scope
      *
+     * @return $this
      * @throws \Terranet\Administrator\Exception
      *
-     * @return $this
      */
     public function scope(Scope $scope)
     {
@@ -154,14 +163,38 @@ class Assembler
     }
 
     /**
+     * @param string $viaResource
+     * @param int|null $viaResourceId
+     */
+    public function relations(string $viaResource, int $viaResourceId)
+    {
+        $relation = $this->model->{$viaResource}();
+
+        if (is_a($relation, BelongsToMany::class) || is_a($relation, BelongsTo::class)) {
+            $keys = [
+                BelongsToMany::class => 'getRelatedPivotKeyName',
+                BelongsTo::class => 'getForeignKeyName',
+            ];
+            return $this->query->whereHas($viaResource, function (Builder $query) use ($relation, $viaResourceId, $keys) {
+                $method = $keys[get_class($relation)];
+                return $query->where(
+                    $relation->$method(), $viaResourceId
+                );
+            });
+        }
+
+        return $this->query;
+    }
+
+    /**
      * Apply ordering.
      *
      * @param $element
      * @param $direction
      *
+     * @return $this
      * @throws \Exception
      *
-     * @return $this
      */
     public function sort($element, $direction)
     {
@@ -206,9 +239,9 @@ class Assembler
     /**
      * @param FormElement $element
      *
+     * @return \Illuminate\Database\Eloquent\Builder|static
      * @throws Exception
      *
-     * @return \Illuminate\Database\Eloquent\Builder|static
      */
     protected function assemblyQuery(Filter $element)
     {
