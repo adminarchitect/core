@@ -14,11 +14,14 @@ use Terranet\Administrator\Field\HasOne;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
+use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Requests\UpdateRequest;
 use function admin\db\scheme;
 
 class Saver implements SaverContract
 {
+    use HandlesRelation;
+
     /**
      * Data collected during saving process.
      *
@@ -73,13 +76,13 @@ class Saver implements SaverContract
                     continue;
                 }
 
-                if ($this->isRelation($field)) {
+                if ($isRelation = $this->isRelation($field)) {
                     $this->relations[$name] = $field;
                 }
 
                 $value = $this->isFile($field) ? $this->request->file($name) : $this->request->get($name);
 
-                $value = $this->isBoolean($field) ? (bool)$value : $value;
+                $value = $this->isBoolean($field) ? (bool) $value : $value;
 
                 $value = $this->handleJsonType($name, $value);
 
@@ -99,17 +102,7 @@ class Saver implements SaverContract
             | Save main data
             |-------------------------------------------------------
             */
-            $this->save();
-
-            /*
-            |-------------------------------------------------------
-            | Relationships
-            |-------------------------------------------------------
-            | Save related data, fetched by "relation" from related tables
-            */
-            $this->saveRelations();
-
-            $this->saveMedia();
+            $this->process();
 
             Model::reguard();
         });
@@ -159,18 +152,27 @@ class Saver implements SaverContract
             'save_return',
             $this->repository->getKeyName(),
         ]);
+
+        // clean from relationable fields.
+        $this->data = array_diff_key($this->data, $this->relations);
     }
 
     /**
      * Persist data.
      */
-    protected function save()
+    protected function process()
     {
         $this->nullifyEmptyNullables($this->repository->getTable());
 
         $this->repository->fill(
             $this->protectAgainstNullPassword()
-        )->save();
+        );
+
+        $this->saveRelations();
+
+        $this->repository->save();
+
+        $this->saveMedia();
     }
 
     /**
@@ -178,38 +180,34 @@ class Saver implements SaverContract
      */
     protected function saveRelations()
     {
-        if (!empty($this->relations)) {
-            foreach ($this->relations as $name => $field) {
-                $relation = \call_user_func([$this->repository, $name]);
+        foreach ($this->relations as $name => $field) {
+            $relation = \call_user_func([$this->repository, $name]);
 
-                switch (\get_class($field)) {
-                    case BelongsTo::class:
-                        // @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
-                        $relation->associate(
-                            $this->request->get($relation->getForeignKey())
-                        );
+            switch (\get_class($field)) {
+                case BelongsTo::class:
+                    // @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
+                    $relation->associate(
+                        $this->request->get($this->getForeignKey($relation))
+                    );
 
-                        break;
-                    case HasOne::class:
-                        /** @var \Illuminate\Database\Eloquent\Relations\HasOne $relation */
-                        $related = $relation->getResults();
+                    break;
+                case HasOne::class:
+                    /** @var \Illuminate\Database\Eloquent\Relations\HasOne $relation */
+                    $related = $relation->getResults();
 
-                        $related && $related->exists
-                            ? $relation->update($this->request->get($name))
-                            : $relation->create($this->request->get($name));
+                    $related && $related->exists
+                        ? $relation->update($this->request->get($name))
+                        : $relation->create($this->request->get($name));
 
-                        break;
-                    case BelongsToMany::class:
-                        $values = array_map('intval', $this->request->get($name, []));
-                        $relation->sync($values);
+                    break;
+                case BelongsToMany::class:
+                    $values = array_map('intval', $this->request->get($name, []));
+                    $relation->sync($values);
 
-                        break;
-                    default:
-                        break;
-                }
+                    break;
+                default:
+                    break;
             }
-
-            $this->repository->save();
         }
     }
 
@@ -219,7 +217,7 @@ class Saver implements SaverContract
     protected function saveMedia()
     {
         if ($this->repository instanceof HasMedia) {
-            $media = (array)$this->request['_media_'];
+            $media = (array) $this->request['_media_'];
 
             if (!empty($trash = array_get($media, '_trash_', []))) {
                 $this->repository->media()->whereIn(
@@ -249,7 +247,7 @@ class Saver implements SaverContract
         $keys = explode('.', $this->getQualifiedRelatedKeyName($relation));
         $key = array_pop($keys);
 
-        return array_filter((array)$values[$key], function ($value) {
+        return array_filter((array) $values[$key], function ($value) {
             return null !== $value;
         });
     }
@@ -273,7 +271,7 @@ class Saver implements SaverContract
     protected function appendTranslationsToRelations()
     {
         if (!empty($this->relations)) {
-            foreach (array_keys((array)$this->relations) as $relation) {
+            foreach (array_keys((array) $this->relations) as $relation) {
                 if ($translations = $this->input("{$relation}.translatable")) {
                     $this->relations[$relation] += $translations;
                 }

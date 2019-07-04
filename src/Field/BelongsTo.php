@@ -52,7 +52,9 @@ class BelongsTo extends Field
      */
     public function name(): string
     {
-        return $this->model->{$this->id}()->getForeignKey();
+        return $this->getForeignKey(
+            $this->model->{$this->id}()
+        );
     }
 
     /**
@@ -70,7 +72,7 @@ class BelongsTo extends Field
         $alias = str_random(4);
 
         $ownerKey = $relation->getOwnerKey();
-        $foreignKey = $relation->getForeignKey();
+        $foreignKey = $this->getForeignKey($relation);
         $foreignColumn = $this->getColumn();
 
         return $query->leftJoin("{$joinTable} as {$alias}", "{$table}.{$foreignKey}", '=', "{$alias}.{$ownerKey}")

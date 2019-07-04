@@ -1,5 +1,5 @@
 @if ($field instanceof \Terranet\Administrator\Field\Media)
-    //
+    <!-- Skip media on edit -->
 @elseif ($field instanceof \Terranet\Administrator\Collection\Group)
     @component('administrator::components.table.group')
         @slot('title', $field->title())

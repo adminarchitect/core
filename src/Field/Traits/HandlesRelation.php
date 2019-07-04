@@ -26,4 +26,21 @@ trait HandlesRelation
             $this->relation()->getRelated()
         );
     }
+
+    /**
+     * @param $relation
+     * @return mixed
+     */
+    public function getForeignKey($relation)
+    {
+        if (method_exists($relation, 'getForeignKey')) {
+            return $relation->getForeignKey();
+        }
+
+        if (method_exists($relation, 'getForeignKeyName')) {
+            return $relation->getForeignKeyName();
+        }
+
+        throw new Exception("Unable to resolve foreign key.");
+    }
 }
