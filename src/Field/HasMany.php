@@ -73,7 +73,7 @@ class HasMany extends Field
             $url = route('scaffold.view', [
                 'module' => $module->url(),
                 $related->getKeyName() => $related->getKey(),
-                $relation->getForeignKeyName() => $this->model->getKey(),
+                $this->getForeignKey($relation) => $this->model->getKey(),
             ]);
         }
 

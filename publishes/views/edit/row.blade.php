@@ -9,7 +9,7 @@
     @endcomponent
 @else
     @component('administrator::components.table.row', [
-        'section' => $field instanceof \Terranet\Administrator\Field\HasOne
+        'section' => $field instanceof \Terranet\Administrator\Field\HasOne || $field instanceof \Terranet\Administrator\Field\BelongsToMany
     ])
         @slot('label', Form::label($field->id(), $field->title()))
         @slot('description', $field->getDescription())

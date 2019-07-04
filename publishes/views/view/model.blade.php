@@ -65,7 +65,7 @@ $elements = $module->viewColumns()->each->setModel($item);
                                style="padding: 4px 12px 4px;"
                                href="{{ route('scaffold.create', [
                                     'module' => $relationModule->url(),
-                                    $relation->getForeignKeyName() => $relation->getParent()->getKey()
+                                    $relation->getForeignPivotKeyName() => $relation->getParent()->getKey()
                                    ]) }}">
                                 {{ trans('administrator::buttons.attach') }}
                             </a>

@@ -1,12 +1,3 @@
-@component('administrator::components.table.spacer')
-@endcomponent
-
-@component('administrator::components.table.header')
-    @slot('title')
-        {{ $field->title() }}
-    @endslot
-@endcomponent
-
 <tr>
     <td colspan="2">
         @if (\Terranet\Administrator\Field\BelongsToMany::MODE_TAGS === $editMode)
@@ -32,6 +23,3 @@
         @endif
     </td>
 </tr>
-
-@component('administrator::components.table.spacer')
-@endcomponent

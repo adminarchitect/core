@@ -7,6 +7,8 @@
     <tr>
         {!! $input ?? '' !!}
     </tr>
+    @component('administrator::components.table.spacer')
+    @endcomponent
 @else
     <tr>
         <td style="width: 20%; min-width: 200px;">

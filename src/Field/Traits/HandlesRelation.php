@@ -41,6 +41,10 @@ trait HandlesRelation
             return $relation->getForeignKeyName();
         }
 
-        throw new Exception("Unable to resolve foreign key.");
+        if (method_exists($relation, 'getForeignPivotKeyName')) {
+            return $relation->getForeignPivotKeyName();
+        }
+
+        throw new \Exception("Unable to resolve foreign key.");
     }
 }
