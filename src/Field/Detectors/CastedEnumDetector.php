@@ -2,14 +2,10 @@
 
 namespace Terranet\Administrator\Field\Detectors;
 
-use BenSampo\Enum\Traits\CastsEnums;
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Types\BooleanType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Terranet\Administrator\Field\Boolean;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Enum;
-use Zend\Code\Reflection\ClassReflection;
 
 class CastedEnumDetector extends AbstractDetector
 {
@@ -24,7 +20,7 @@ class CastedEnumDetector extends AbstractDetector
      */
     protected function authorize(string $column, Column $metadata, Model $model): bool
     {
-        return Arr::has(class_uses($model), CastsEnums::class) && $model->hasEnumCast($column);
+        return Architect::castedEnumType($model, $column, !$metadata->getNotnull());
     }
 
     /**
@@ -38,17 +34,8 @@ class CastedEnumDetector extends AbstractDetector
      */
     protected function detect(string $column, Column $metadata, Model $model)
     {
-        $reflection = new ClassReflection($model);
-
-        $property = tap($reflection->getProperty('enumCasts'))->setAccessible(true);
-
-        $enum = $property->getValue(new $model)[$column];
-
-        $values = $enum::getKeys();
-        if (!$metadata->getNotNull()) {
-            $values = ['' => '----'] + $values;
-        }
-
-        return Enum::make($column)->setOptions($values);
+        return Enum::make($column)->setOptions(
+            Architect::castedEnumValues($model, $column, !$metadata->getNotNull())
+        );
     }
 }

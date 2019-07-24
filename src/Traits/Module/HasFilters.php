@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Traits\Module;
 
 use Terranet\Administrator\Annotations\ScopeFilter;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
@@ -33,7 +34,7 @@ trait HasFilters
     /**
      * Register a filter.
      *
-     * @param Filter $filter
+     * @param  Filter  $filter
      *
      * @return $this
      */
@@ -47,7 +48,7 @@ trait HasFilters
     /**
      * Register a scope.
      *
-     * @param Scope $scope
+     * @param  Scope  $scope
      *
      * @return $this
      */
@@ -116,14 +117,18 @@ trait HasFilters
 
                         break;
                     case 'BooleanType':
+                        $values = [
+                            '' => trans('administrator::buttons.any'),
+                            1 => trans('administrator::buttons.yes'),
+                            0 => trans('administrator::buttons.no'),
+                        ];
+
+                        if (Architect::castedEnumType($model, $column)) {
+                            $values = Architect::castedEnumValues($model, $column, true);
+                        }
+
                         $this->addFilter(
-                            Enum::make($column, $column)->setOptions(
-                                [
-                                    '' => trans('administrator::buttons.any'),
-                                    1 => trans('administrator::buttons.yes'),
-                                    0 => trans('administrator::buttons.no'),
-                                ]
-                            )
+                            Enum::make($column, $column)->setOptions($values)
                         );
 
                         break;

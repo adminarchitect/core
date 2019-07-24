@@ -2,8 +2,11 @@
 
 namespace Terranet\Administrator;
 
+use BenSampo\Enum\Traits\CastsEnums;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Zend\Code\Reflection\ClassReflection;
 
 class Architect
 {
@@ -20,8 +23,8 @@ class Architect
     /**
      * Finds first module which uses a model.
      *
-     * @param Model|string $model
-     * @param string $urlKey
+     * @param  Model|string  $model
+     * @param  string  $urlKey
      *
      * @return mixed
      */
@@ -41,7 +44,7 @@ class Architect
     /**
      * Humanize the given value into a proper name.
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return string
      */
@@ -60,5 +63,42 @@ class Architect
     public static function routes()
     {
         return new ArchitectRoutes();
+    }
+
+    /**
+     * Ensure the column is of type Enum.
+     *
+     * @param  Model  $model
+     * @param  string  $column
+     * @return bool
+     */
+    public static function castedEnumType(Model $model, string $column)
+    {
+        return Arr::has(class_uses($model), CastsEnums::class) && $model->hasEnumCast($column);
+    }
+
+    /**
+     * Extract values from Casted Enum type.
+     *
+     * @param  Model  $model
+     * @param  string  $column
+     * @param  bool  $nullable
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function castedEnumValues(Model $model, string $column, bool $nullable = false)
+    {
+        $reflection = new ClassReflection($model);
+
+        $property = tap($reflection->getProperty('enumCasts'))->setAccessible(true);
+
+        $enum = $property->getValue(new $model)[$column];
+
+        $values = $enum::getKeys();
+        if ($nullable) {
+            $values = ['' => '----'] + $values;
+        }
+
+        return $values;
     }
 }

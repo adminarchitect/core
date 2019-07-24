@@ -20,75 +20,29 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * Dashboard panels registration.
      *
-     * @param Manager $dashboard
+     * @param  Manager  $dashboard
      * @return Manager
      */
     protected function dashboard(Manager $dashboard)
     {
         return $dashboard
-            ->row(function (Row $row) {
-                $row->panel(new BlankPanel)->setWidth(12);
+            ->row(static function (Row $row) {
+                $row->panel(new BlankPanel())->setWidth(12);
             })
-            ->row(function (Row $row) {
-                $row->panel(new MembersPanel)->setWidth(6);
-                $row->panel(new DatabasePanel)->setWidth(6);
+            ->row(static function (Row $row) {
+                $row->panel(new MembersPanel())->setWidth(6);
+                $row->panel(new DatabasePanel())->setWidth(6);
             });
     }
 
     /**
-     * @param Menu $navigation
+     * @param  Menu  $navigation
      * @return Menu
      */
     protected function navigation(Menu $navigation)
     {
-        $navigation->create(Navigable::MENU_SIDEBAR, function (MenuBuilder $sidebar) {
-            // Dashboard
-            $sidebar->route('scaffold.dashboard', trans('administrator::module.dashboard'), [], 1, [
-                'id' => 'dashboard',
-                'icon' => 'fa fa-home',
-                'active' => str_is(request()->route()->getName(), 'scaffold.dashboard'),
-            ]);
-
-            // Create "resources" group
-            $sidebar->dropdown(trans('administrator::module.groups.resources'), function (MenuItem $sub) {
-            }, 2, ['id' => 'groups', 'icon' => 'fa fa-qrcode']);
-        });
-
-        $navigation->create(Navigable::MENU_TOOLS, function (MenuBuilder $tools) {
-            if (config('administrator.file_manager.enabled')) {
-                $tools->url(
-                    route('scaffold.media'),
-                    trans('administrator::buttons.media'),
-                    1,
-                    ['icon' => 'fa fa-file-text-o']
-                );
-            }
-
-            if (config('administrator.settings.enabled') && class_exists(OptionsManager::class, true)) {
-                $tools->url(
-                    route('scaffold.settings.edit'),
-                    trans('administrator::module.resources.settings'),
-                    2,
-                    ['icon' => 'fa fa-gears']
-                );
-            }
-
-            if (config('administrator.translations.enabled')) {
-                $tools->url(
-                    route('scaffold.translations.index'),
-                    trans('administrator::buttons.translations'),
-                    3,
-                    ['icon' => 'fa fa-globe']
-                );
-            }
-
-            $tools->url(
-                route('scaffold.logout'),
-                trans('administrator::buttons.logout'),
-                100,
-                ['icon' => 'fa fa-mail-forward']
-            );
-        });
+        $this->initSidebar($navigation)
+            ->initToolbar($navigation);
 
         return $navigation;
     }
@@ -130,9 +84,120 @@ class AdminServiceProvider extends ServiceProvider
             ->withMediaRoutes()
             ->withSettingRoutes()
             ->withExtraRoutes(function () {
-                if (file_exists($path = base_path('routes/admin.php'))) {
+                $path = base_path('routes/admin.php');
+
+                if (file_exists($path)) {
                     $this->loadRoutesFrom($path);
                 }
             });
+    }
+
+    /**
+     * @param  Menu  $navigation
+     * @return AdminServiceProvider
+     */
+    protected function initSidebar(Menu $navigation): self
+    {
+        $navigation->create(Navigable::MENU_SIDEBAR, function (MenuBuilder $sidebar) {
+            $this->withDashboard($sidebar);
+
+            // Create "resources" group
+            $sidebar->dropdown(trans('administrator::module.groups.resources'), static function (MenuItem $sub) {
+                // $sub->route();
+            }, 2, ['id' => 'groups', 'icon' => 'fa fa-qrcode']);
+        });
+
+        return $this;
+    }
+
+    /**
+     * @param  Menu  $navigation
+     * @return AdminServiceProvider
+     */
+    protected function initToolbar(Menu $navigation): self
+    {
+        $navigation->create(Navigable::MENU_TOOLS, function (MenuBuilder $tools) {
+            $this->withMedia($tools)
+                ->withSettings($tools)
+                ->withTranslations($tools);
+
+            $tools->url(
+                route('scaffold.logout'),
+                trans('administrator::buttons.logout'),
+                100,
+                ['icon' => 'fa fa-mail-forward']
+            );
+        });
+
+        return $this;
+    }
+
+    /**
+     * @param  MenuBuilder  $sidebar
+     * @return $this
+     */
+    public function withDashboard(MenuBuilder $sidebar): self
+    {
+        $sidebar->route('scaffold.dashboard', trans('administrator::module.dashboard'), [], 1, [
+            'id' => 'dashboard',
+            'icon' => 'fa fa-home',
+            'active' => str_is(request()->route()->getName(), 'scaffold.dashboard'),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param  MenuBuilder  $tools
+     * @return $this
+     */
+    protected function withMedia(MenuBuilder $tools): self
+    {
+        if (config('administrator.file_manager.enabled')) {
+            $tools->url(
+                route('scaffold.media'),
+                trans('administrator::buttons.media'),
+                1,
+                ['icon' => 'fa fa-file-text-o']
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  MenuBuilder  $tools
+     * @return $this
+     */
+    protected function withSettings(MenuBuilder $tools): self
+    {
+        if (config('administrator.settings.enabled') && class_exists(OptionsManager::class, true)) {
+            $tools->url(
+                route('scaffold.settings.edit'),
+                trans('administrator::module.resources.settings'),
+                2,
+                ['icon' => 'fa fa-gears']
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  MenuBuilder  $tools
+     * @return $this
+     */
+    protected function withTranslations(MenuBuilder $tools): self
+    {
+        if (config('administrator.translations.enabled')) {
+            $tools->url(
+                route('scaffold.translations.index'),
+                trans('administrator::buttons.translations'),
+                3,
+                ['icon' => 'fa fa-globe']
+            );
+        }
+
+        return $this;
     }
 }
