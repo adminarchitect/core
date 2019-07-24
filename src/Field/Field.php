@@ -54,8 +54,8 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Field constructor.
      *
-     * @param string $title
-     * @param null|string $id
+     * @param  string  $title
+     * @param  null|string  $id
      */
     private function __construct(string $title, string $id = null)
     {
@@ -76,8 +76,8 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param $title
-     * @param null $id
-     * @param \Closure $callback
+     * @param  null  $id
+     * @param  \Closure  $callback
      *
      * @return static
      */
@@ -95,7 +95,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Create new element from another.
      *
-     * @param Field $element
+     * @param  Field  $element
      *
      * @return static
      */
@@ -107,7 +107,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Switch to a new element type.
      *
-     * @param string $className
+     * @param  string  $className
      *
      * @return mixed
      */
@@ -117,7 +117,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      *
      * @return static
      */
@@ -139,7 +139,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Render Element.
      *
-     * @param string $page
+     * @param  string  $page
      *
      * @return mixed
      */
@@ -210,7 +210,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return Field
      */
@@ -222,7 +222,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param string $id
+     * @param  string  $id
      *
      * @return static
      */
@@ -252,7 +252,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return static
      */
@@ -264,7 +264,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param null|string $description
+     * @param  null|string  $description
      *
      * @return static
      */
@@ -286,7 +286,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param bool $showLabel
+     * @param  bool  $showLabel
      *
      * @return static
      */
@@ -316,7 +316,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param array|string $pages
+     * @param  array|string  $pages
      *
      * @return static
      */
@@ -326,7 +326,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param array|string $pages
+     * @param  array|string  $pages
      *
      * @return static
      */
@@ -338,7 +338,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Make column sortable.
      *
-     * @param null|\Closure $callback
+     * @param  null|\Closure  $callback
      *
      * @return static
      */
@@ -393,13 +393,19 @@ abstract class Field implements Sortable, AutoTranslatable
             return null;
         }
 
-        return $this->model->getAttribute($this->id);
+        $value = $this->model->getAttribute($this->id);
+
+        if ($value instanceof \BenSampo\Enum\Enum) {
+            return $value->value;
+        }
+
+        return $value;
     }
 
     /**
      * @param $key
-     * @param null $value
-     * @param mixed $attribute
+     * @param  null  $value
+     * @param  mixed  $attribute
      *
      * @return static
      */
@@ -453,7 +459,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param \Closure $condition
+     * @param  \Closure  $condition
      *
      * @return self
      */
@@ -465,8 +471,8 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param mixed $pages
-     * @param bool $visibility
+     * @param  mixed  $pages
+     * @param  bool  $visibility
      *
      * @return $this
      */
@@ -482,8 +488,8 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param string $page
-     * @param string $field
+     * @param  string  $page
+     * @param  string  $field
      *
      * @return string
      */

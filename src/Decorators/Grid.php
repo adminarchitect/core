@@ -6,6 +6,7 @@ use Czim\Paperclip\Contracts\AttachableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Chain;
 use Terranet\Administrator\Field\Detectors\BooleanDetector;
+use Terranet\Administrator\Field\Detectors\CastedEnumDetector;
 use Terranet\Administrator\Field\Detectors\DateTimeDetector;
 use Terranet\Administrator\Field\Detectors\EmailDetector;
 use Terranet\Administrator\Field\Detectors\EnumDetector;
@@ -104,9 +105,10 @@ class Grid
             new PrimaryKeyDetector(),
             new RankableDetector(),
             new DateTimeDetector(),
+            new CastedEnumDetector(),
+            new EnumDetector(),
             new BooleanDetector(),
             new TextareaDetector(),
-            new EnumDetector(),
             new PasswordDetector(),
             new EmailDetector(),
             new LinkDetector(),
