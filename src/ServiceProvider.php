@@ -8,6 +8,7 @@ use Collective\Html\HtmlServiceProvider;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Pingpong\Menus\MenuFacade;
 use Pingpong\Menus\MenusServiceProvider;
+use App\Providers\AdminServiceProvider;
 use Terranet\Administrator\Providers\ArtisanServiceProvider;
 use Terranet\Administrator\Providers\ContainersServiceProvider;
 use Terranet\Administrator\Providers\EventServiceProvider;
@@ -63,7 +64,14 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $dependencies = [
+        $dependencies = [];
+
+        // Ensure the ServiceProvider has been published
+        if (file_exists(app_path("Providers/AdminServiceProvider.php"))) {
+            $dependencies[] = AdminServiceProvider::class;
+        }
+
+        $dependencies = array_merge($dependencies, [
             ArtisanServiceProvider::class,
             ContainersServiceProvider::class,
             EventServiceProvider::class,
@@ -74,7 +82,7 @@ class ServiceProvider extends BaseServiceProvider
             MenusServiceProvider::class => [
                 'AdminNav' => MenuFacade::class,
             ],
-        ];
+        ]);
 
         array_walk($dependencies, function ($package, $provider) {
             if (\is_string($package) && is_numeric($provider)) {
