@@ -61,7 +61,7 @@ trait ValidatesForm
         $rules = [];
 
         if ('password' === $column->getName()) {
-            return ['nullable', 'min:8'];
+            return ['nullable', 'min:6'];
         }
 
         if ((($this->fillable($column->getName(), $eloquent) || $this->isForeignKey($column, $eloquent))
