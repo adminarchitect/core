@@ -76,7 +76,6 @@ class HasOne extends BelongsTo
             );
         });
 
-        dd('edit',$columns);
         return [
             'columns' => $columns,
         ];

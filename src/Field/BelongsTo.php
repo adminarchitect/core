@@ -18,7 +18,7 @@ class BelongsTo extends Field
     protected $searchable = true;
 
     /**
-     * @param string $column
+     * @param  string  $column
      *
      * @return self
      */
@@ -58,9 +58,9 @@ class BelongsTo extends Field
     }
 
     /**
-     * @param Builder $query
-     * @param Model $model
-     * @param string $direction
+     * @param  Builder  $query
+     * @param  Model  $model
+     * @param  string  $direction
      *
      * @return Builder
      */
@@ -129,6 +129,7 @@ class BelongsTo extends Field
         return [
             'options' => $options ?? [],
             'related' => $related ?? null,
+            'searchIn' => $related ? get_class($related) : null,
             'searchable' => $this->searchable,
             'searchBy' => $this->column,
         ];
