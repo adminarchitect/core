@@ -5,10 +5,10 @@ namespace Terranet\Administrator\Field;
 class Boolean extends Field
 {
     /** @var mixed */
-    protected $trueValue = 1;
+    protected $trueValue = true;
 
     /** @var mixed */
-    protected $falseValue = 0;
+    protected $falseValue = false;
 
     /**
      * @param $value

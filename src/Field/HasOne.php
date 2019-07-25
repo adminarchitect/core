@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Traits\Module\HasColumns;
 
@@ -15,8 +16,33 @@ class HasOne extends BelongsTo
     /** @var null|array */
     protected $except;
 
+    /** @var null|\Closure */
+    protected $withColumnsCallback;
+
+    /** @var null|Mutable */
+    protected $columns;
+
     /**
-     * @param array $only
+     * Fetch related columns.
+     *
+     * @return null|Mutable
+     */
+    protected function getColumns(): ?Mutable
+    {
+        if (null === $this->columns) {
+            $relation = $this->model->{$this->id()}();
+
+            $this->columns = $this->applyColumnsCallback(
+                $this->relatedColumns($related = $relation->getRelated())
+                    ->each->setModel($this->model->{$this->id()} ?: $related)
+            );
+        }
+
+        return $this->columns;
+    }
+
+    /**
+     * @param  array  $only
      *
      * @return self
      */
@@ -28,7 +54,7 @@ class HasOne extends BelongsTo
     }
 
     /**
-     * @param array $except
+     * @param  array  $except
      *
      * @return self
      */
@@ -44,15 +70,13 @@ class HasOne extends BelongsTo
      */
     protected function onEdit(): array
     {
-        $relation = $this->model->{$this->id()}();
+        $columns = $this->getColumns()->each(function ($field) {
+            $field->setId(
+                "{$this->id()}.{$field->id()}"
+            );
+        });
 
-        $columns = $this->relatedColumns($relation->getRelated())
-                        ->each(function ($field) {
-                            $field->setId(
-                                "{$this->id()}.{$field->id()}"
-                            );
-                        });
-
+        dd('edit',$columns);
         return [
             'columns' => $columns,
         ];
@@ -63,15 +87,23 @@ class HasOne extends BelongsTo
      */
     protected function onIndex(): array
     {
-        $relation = $this->model->{$this->id()}();
-
-        $columns = $this->relatedColumns($relation->getRelated())
-                        ->filter(function ($field) {
-                            return !$field instanceof Textarea;
-                        });
+        $columns = $this->getColumns()->filter(function ($field) {
+            return !$field instanceof Textarea;
+        });
 
         return [
             'columns' => $columns,
+            'related' => $this->model->{$this->id()},
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function onView(): array
+    {
+        return [
+            'columns' => $this->getColumns(),
             'related' => $this->model->{$this->id()},
         ];
     }
@@ -84,7 +116,48 @@ class HasOne extends BelongsTo
     protected function relatedColumns($related): Mutable
     {
         return $this->collectColumns($related)
-                    ->except(array_merge([$related->getKeyName()], $this->except ?? []))
-                    ->only($this->only);
+            ->except(array_merge([$related->getKeyName()], $this->except ?? []))
+            ->only($this->only);
+    }
+
+    /**
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function withColumns(\Closure $callback): self
+    {
+        $this->withColumnsCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Apply callback function to all columns, including those added during callback execution.
+     *
+     * @param  Mutable  $collection
+     * @return mixed|Mutable
+     */
+    protected function applyColumnsCallback(Mutable $collection)
+    {
+        if ($this->withColumnsCallback) {
+            $collection = call_user_func($this->withColumnsCallback, $collection);
+        }
+
+        $this->assignModel(
+            $collection,
+            $this->model->{$this->id()} ?: $this->model->{$this->id()}()->getRelated()
+        );
+
+        return $collection;
+    }
+
+    /**
+     * @param  Mutable  $collection
+     * @param $model
+     * @return mixed
+     */
+    protected function assignModel(Mutable $collection, $model)
+    {
+        return $collection->each->setModel($model);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Terranet\Administrator\Exception;
 
 class Enum extends Field
@@ -13,12 +14,16 @@ class Enum extends Field
     protected $palette = [];
 
     /**
-     * @param array $options
+     * @param iterable $options
      *
      * @return self
      */
-    public function setOptions(array $options): self
+    public function setOptions(iterable $options): self
     {
+        if ($options instanceof Arrayable) {
+            $options = $options->toArray();
+        }
+
         $i = 0;
         foreach ($options as $key => $value) {
             if (!array_has($this->palette, $key)) {

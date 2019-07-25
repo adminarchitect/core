@@ -25,6 +25,11 @@ $elements = $module->viewColumns()->each->setModel($item);
             @endcomponent
         @elseif ($element instanceof \Terranet\Administrator\Field\HasMany)
             @continue
+        @elseif ($element instanceof \Terranet\Administrator\Field\HasOne)
+            @component('administrator::components.table.group')
+                @slot('title', $element->title())
+            @endcomponent
+            {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
         @else
             @component('administrator::components.table.row')
                 @slot('label', Form::label($element->id(), $element->title()))

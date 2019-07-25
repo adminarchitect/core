@@ -60,7 +60,7 @@ abstract class Field implements Sortable, AutoTranslatable
     private function __construct(string $title, string $id = null)
     {
         $this->setId(
-            snake_case($id ?: $title)
+            $id ?: snake_case($title)
         );
 
         if ($this->translator()->has($key = $this->translationKey())) {
