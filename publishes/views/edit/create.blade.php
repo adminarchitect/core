@@ -1,5 +1,5 @@
 @unless($actions->readonly())
-    @if (isset($item))
+    @if ($item && $item->exists)
         <div class="btn-group pull-right mt10">
             @if ($actions->authorize('view', $item))
                 <a href="{{ route('scaffold.view', ['module' => $module, 'id' => $item->getKey()]) }}"

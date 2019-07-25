@@ -16,6 +16,11 @@
             @php($form->each->setModel($item))
 
             {!! Form::model($item, ['method' => 'post', 'files' => true]) !!}
+            @foreach($form->visibleOnPage(\Terranet\Administrator\Scaffolding::PAGE_EDIT)->filter(function($item) {
+                return $item instanceof \Terranet\Administrator\Field\Hidden;
+            }) as $hidden)
+                {!! $hidden->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT) !!}
+            @endforeach
             <table class="table table-striped-col">
                 @each($template->edit('row'), $form->visibleOnPage(\Terranet\Administrator\Scaffolding::PAGE_EDIT), 'field')
 

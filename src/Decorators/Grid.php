@@ -11,6 +11,7 @@ use Terranet\Administrator\Field\Detectors\DateTimeDetector;
 use Terranet\Administrator\Field\Detectors\EmailDetector;
 use Terranet\Administrator\Field\Detectors\EnumDetector;
 use Terranet\Administrator\Field\Detectors\LinkDetector;
+use Terranet\Administrator\Field\Detectors\NumberDetector;
 use Terranet\Administrator\Field\Detectors\PasswordDetector;
 use Terranet\Administrator\Field\Detectors\PhoneDetector;
 use Terranet\Administrator\Field\Detectors\PrimaryKeyDetector;
@@ -113,6 +114,7 @@ class Grid
             new EmailDetector(),
             new LinkDetector(),
             new PhoneDetector(),
+            new NumberDetector(),
             new TextDetector(),
         ])($column, $this->fetchTablesColumns()[$column], $this->model);
     }

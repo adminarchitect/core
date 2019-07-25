@@ -3,6 +3,8 @@
 namespace Terranet\Administrator\Traits\Module;
 
 use Doctrine\DBAL\Schema\Column;
+use Illuminate\Validation\Rule;
+use Terranet\Administrator\Architect;
 use Terranet\Rankable\Rankable;
 use function admin\db\scheme;
 
@@ -52,7 +54,7 @@ trait ValidatesForm
      * Build a list of validators for a column.
      *
      * @param        $eloquent
-     * @param Column $column
+     * @param  Column  $column
      *
      * @return array
      */
@@ -135,7 +137,7 @@ trait ValidatesForm
     }
 
     /**
-     * @param Column $column
+     * @param  Column  $column
      * @param        $eloquent
      *
      * @return array
@@ -154,7 +156,7 @@ trait ValidatesForm
     /**
      * Make required rule.
      *
-     * @param Column $column
+     * @param  Column  $column
      * @param        $eloquent
      *
      * @return string
@@ -167,7 +169,7 @@ trait ValidatesForm
     /**
      * Make numeric rule.
      *
-     * @param Column $column
+     * @param  Column  $column
      * @param        $eloquent
      *
      * @return array
@@ -180,7 +182,7 @@ trait ValidatesForm
     /**
      * Make unsigned rule.
      *
-     * @param Column $column
+     * @param  Column  $column
      * @param        $eloquent
      *
      * @return array
@@ -191,17 +193,25 @@ trait ValidatesForm
     }
 
     /**
-     * @return array
+     * @param  Column  $column
+     * @param $eloquent
+     * @return Rule
+     * @throws \ReflectionException
      */
-    protected function makeBooleanRule()
+    protected function makeBooleanRule(Column $column, $eloquent)
     {
-        return 'in:0,1';
+        $values = [0, 1];
+        if (Architect::castedEnumType($eloquent, $column->getName())) {
+            $values = array_keys(Architect::castedEnumValues($eloquent, $column->getName()));
+        }
+
+        return Rule::in($values);
     }
 
     /**
      * Parse foreign keys for column presence.
      *
-     * @param Column $column
+     * @param  Column  $column
      * @param        $eloquent
      *
      * @return array
