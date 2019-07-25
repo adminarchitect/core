@@ -20,11 +20,6 @@ mix
         // 'tinymce',
         // 'ckeditor',
     ])
-    .options({
-        fileLoaderDirs: {
-            "fonts": "admin/fonts"
-        }
-    })
     .sass('resources/sass/app.scss', 'build/app.css')
     .sass('resources/sass/vendor.scss', 'build/vendor.css')
     .less('resources/less/glyphicons.less', 'build/glyphicons.css')
