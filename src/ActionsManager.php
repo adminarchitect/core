@@ -42,6 +42,12 @@ class ActionsManager implements ActionsManagerContract
      */
     protected $readonly;
 
+    /**
+     * ActionsManager constructor.
+     *
+     * @param  CrudActions  $service
+     * @param  Module  $module
+     */
     public function __construct(CrudActions $service, Module $module)
     {
         $this->service = $service;
