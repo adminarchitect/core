@@ -68,7 +68,14 @@ class AdminArchitect {
                 return false;
             }
 
-            $('#batch_action').val($target.data('action'));
+            let dataAction;
+            if ($target.is('a[data-action]')) {
+                dataAction = $target.data('action');
+            } else {
+                dataAction = $target.closest('a[data-action]').data('action');
+            }
+
+            $('#batch_action').val(dataAction);
             $('#collection').submit();
 
             return false;
