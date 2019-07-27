@@ -142,7 +142,11 @@ class ScaffoldController extends AdminController
 
         $id = $eloquent->id;
 
-        $module->actionsManager()->exec('delete', [$eloquent]);
+        try {
+            $module->actionsManager()->exec('delete', [$eloquent]);
+        } catch (\Exception $e) {
+            return back()->withErrors([$e->getMessage()]);
+        }
 
         $message = trans('administrator::messages.remove_success');
 
@@ -169,7 +173,12 @@ class ScaffoldController extends AdminController
 
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
-        $resource->actionsManager()->exec('detachFile', [$eloquent, $attachment]);
+        try {
+            $resource->actionsManager()->exec('detachFile', [$eloquent, $attachment]);
+        } catch (\Exception $e) {
+            return back()->withErrors([$e->getMessage()]);
+        }
+        
 
         return back()->with('messages', [trans('administrator::messages.remove_success')]);
     }
