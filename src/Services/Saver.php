@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Terranet\Administrator\Contracts\Services\Saver as SaverContract;
-use Terranet\Administrator\Form\RendersTranslatableElement;
+use Terranet\Administrator\Traits\Form\RendersTranslatableElement;
 use Terranet\Administrator\Form\Type\Boolean;
 use Terranet\Administrator\Form\Type\File;
 use Terranet\Administrator\Form\Type\Image;
@@ -209,7 +209,7 @@ class Saver implements SaverContract
 
     protected function saveMedia()
     {
-        if ($this->repository instanceof HasMedia || $this->repository instanceof HasMediaConversions) {
+        if ($this->repository instanceof HasMedia || $this->repository instanceof HasMediaTrait) {
             $media = (array) $this->request['_media_'];
 
             if (!empty($trash = array_get($media, '_trash_', []))) {
