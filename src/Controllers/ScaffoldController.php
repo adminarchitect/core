@@ -144,7 +144,11 @@ class ScaffoldController extends AdminController
 
         $id = $eloquent->id;
 
-        app('scaffold.actions')->exec('delete', [$eloquent]);
+        try {
+            app('scaffold.actions')->exec('delete', [$eloquent]);
+        } catch (\Exception $e) {
+            return back()->withErrors([$e->getMessage()]);
+        }
 
         $message = trans('administrator::messages.remove_success', ['item' => app('scaffold.module')->singular()]);
 
