@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Form\Type;
 
-use Spatie\MediaLibrary\Media as MediaItem;
+use Spatie\MediaLibrary\Models\Media as MediaItem;
 use Terranet\Administrator\Form\Element;
 use Terranet\Administrator\Traits\HasMediaOptions;
 
