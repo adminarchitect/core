@@ -4,7 +4,7 @@ $elements = $filter->filters();
 $resetUrl = method_exists($module, 'defaultRoute') ? $module->defaultRoute() : route('scaffold.index', ['module' => $module]);
 
 $filled = $elements ? $elements->reduce(function ($filled, $element) {
-    if ($element->getInput()->getValue()) {
+    if ((string) $element->getInput()->getValue() !== '') {
         ++$filled;
     }
 
