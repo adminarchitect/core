@@ -33,7 +33,10 @@ class Schema
                 return array_merge($indexedColumns, $index->getColumns());
             }, []);
 
-            return array_unique($indexedColumns);
+            $indexedColumns = array_unique($indexedColumns);
+            sort($indexedColumns);
+
+            return $indexedColumns;
         });
     }
 
@@ -98,7 +101,7 @@ class Schema
     /**
      * Cache lifetime.
      *
-     * @param int $seconds
+     * @param  int  $seconds
      *
      * @return DateTime
      */
