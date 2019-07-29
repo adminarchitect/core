@@ -20,12 +20,18 @@ mix
         // 'tinymce',
         // 'ckeditor',
     ])
+    .options({
+        fileLoaderDirs: {
+            "fonts": "../fonts"
+        }
+    })
     .sass('resources/sass/app.scss', 'build/app.css')
     .sass('resources/sass/vendor.scss', 'build/vendor.css')
     .less('resources/less/glyphicons.less', 'build/glyphicons.css')
     .editors('Medium')
     .copy('build', '../public/admin')
     .copy('resources/images', '../public/admin/images')
+    .copy('fonts', '../public/fonts')
     .disableSuccessNotifications()
     .sourceMaps()
     .webpackConfig({
