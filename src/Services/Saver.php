@@ -52,7 +52,7 @@ class Saver implements SaverContract
      * Saver constructor.
      *
      * @param               $eloquent
-     * @param UpdateRequest $request
+     * @param  UpdateRequest  $request
      */
     public function __construct($eloquent, UpdateRequest $request)
     {
@@ -97,11 +97,6 @@ class Saver implements SaverContract
 
             Model::unguard();
 
-            /*
-            |-------------------------------------------------------
-            | Save main data
-            |-------------------------------------------------------
-            */
             $this->process();
 
             Model::reguard();
@@ -122,7 +117,6 @@ class Saver implements SaverContract
 
     /**
      * @param $field
-     *
      * @return bool
      */
     protected function isKey($field)
@@ -132,7 +126,6 @@ class Saver implements SaverContract
 
     /**
      * @param $field
-     *
      * @return bool
      */
     protected function isFile($field)
@@ -158,21 +151,21 @@ class Saver implements SaverContract
     }
 
     /**
-     * Persist data.
+     * Persist main eloquent model including relations & media.
      */
     protected function process()
     {
         $this->nullifyEmptyNullables($this->repository->getTable());
 
-        $this->repository->fill(
-            $this->protectAgainstNullPassword()
-        );
+        \DB::transaction(function () {
+            $this->repository->fill(
+                $this->protectAgainstNullPassword()
+            )->save();
 
-        $this->saveRelations();
+            $this->saveRelations();
 
-        $this->repository->save();
-
-        $this->saveMedia();
+            $this->saveMedia();
+        });
     }
 
     /**
@@ -196,8 +189,8 @@ class Saver implements SaverContract
                     $related = $relation->getResults();
 
                     $related && $related->exists
-                        ? $relation->update($this->request->get($name))
-                        : $relation->create($this->request->get($name));
+                        ? $related->update($this->request->get($name))
+                        : $this->repository->{$name}()->create($this->request->get($name));
 
                     break;
                 case BelongsToMany::class:
@@ -239,7 +232,6 @@ class Saver implements SaverContract
      *
      * @param $relation
      * @param $values
-     *
      * @return array
      */
     protected function forgetNullValues($relation, $values)
@@ -282,7 +274,6 @@ class Saver implements SaverContract
     /**
      * @param $name
      * @param $value
-     *
      * @return mixed
      */
     protected function handleJsonType($name, $value)
@@ -320,8 +311,7 @@ class Saver implements SaverContract
      * Retrieve request input value.
      *
      * @param $key
-     * @param null $default
-     *
+     * @param  null  $default
      * @return mixed
      */
     protected function input($key, $default = null)
@@ -365,7 +355,6 @@ class Saver implements SaverContract
 
     /**
      * @param $field
-     *
      * @return bool
      */
     protected function isBoolean($field)
@@ -375,7 +364,6 @@ class Saver implements SaverContract
 
     /**
      * @param $field
-     *
      * @return bool
      */
     protected function isMediaFile($field)
