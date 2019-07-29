@@ -94,7 +94,7 @@ class Architect
 
         $enum = $property->getValue(new $model)[$column];
 
-        $values = $enum::getKeys();
+        $values = $enum::toSelectArray();
         if ($nullable) {
             $values = ['' => '----'] + $values;
         }
