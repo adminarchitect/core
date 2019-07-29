@@ -19,7 +19,6 @@ class BelongsTo extends Field
 
     /**
      * @param  string  $column
-     *
      * @return self
      */
     public function useForTitle(string $column): self
@@ -38,11 +37,12 @@ class BelongsTo extends Field
     }
 
     /**
+     * @param  bool  $flag
      * @return $this
      */
-    public function searchable()
+    public function searchable(bool $flag = false)
     {
-        $this->searchable = true;
+        $this->searchable = (bool) $flag;
 
         return $this;
     }
@@ -61,7 +61,6 @@ class BelongsTo extends Field
      * @param  Builder  $query
      * @param  Model  $model
      * @param  string  $direction
-     *
      * @return Builder
      */
     public function sortBy(Builder $query, Model $model, string $direction): Builder
@@ -129,7 +128,7 @@ class BelongsTo extends Field
         return [
             'options' => $options ?? [],
             'related' => $related ?? null,
-            'searchIn' => $related ? get_class($related) : null,
+            'searchIn' => isset($related) ? get_class($related) : null,
             'searchable' => $this->searchable,
             'searchBy' => $this->column,
         ];
