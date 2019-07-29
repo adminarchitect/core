@@ -13,9 +13,8 @@ class Mutable extends BaseCollection
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed $element
-     * @param null|Closure $callback
-     *
+     * @param  mixed  $element
+     * @param  null|Closure  $callback
      * @return $this
      */
     public function push($element, Closure $callback = null): self
@@ -36,11 +35,9 @@ class Mutable extends BaseCollection
      *
      * @param $element
      * @param $position
-     * @param null|Closure $callback
-     *
-     * @throws Exception
-     *
+     * @param  null|Closure  $callback
      * @return $this
+     * @throws Exception
      */
     public function insert($element, $position, Closure $callback = null): self
     {
@@ -80,8 +77,7 @@ class Mutable extends BaseCollection
     /**
      * Get all items except for those with the specified keys.
      *
-     * @param  array|mixed|string $keys
-     *
+     * @param  array|mixed|string  $keys
      * @return static
      */
     public function except($keys)
@@ -104,8 +100,7 @@ class Mutable extends BaseCollection
     /**
      * Retrieve only visible items.
      *
-     * @param string $page
-     *
+     * @param  string  $page
      * @return Mutable
      */
     public function visibleOnPage(string $page)
@@ -119,12 +114,10 @@ class Mutable extends BaseCollection
     /**
      * Update elements behaviour.
      *
-     * @param string $id
-     * @param Closure $callback
-     *
-     * @throws Exception
-     *
+     * @param  string  $id
+     * @param  Closure  $callback
      * @return $this
+     * @throws Exception
      */
     public function update(string $id, Closure $callback): self
     {
@@ -153,13 +146,28 @@ class Mutable extends BaseCollection
     }
 
     /**
+     * Replace the field.
+     *
+     * @param  mixed  $id
+     * @param $value
+     * @return $this|BaseCollection
+     * @throws Exception
+     */
+    public function switch($id, $value)
+    {
+        if ($position = $this->position($id)) {
+            $this->offsetSet($position, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Update many elements at once.
      *
-     * @param array $ids
-     *
-     * @throws Exception
-     *
+     * @param  array  $ids
      * @return $this
+     * @throws Exception
      */
     public function updateMany(array $ids = []): self
     {
@@ -174,12 +182,9 @@ class Mutable extends BaseCollection
      * Move element.
      *
      * @param $id
-     * @param int|mixed|string $position
-     *
-     * @throws Exception
-     *
+     * @param  int|mixed|string  $position
      * @return static
-     *
+     * @throws Exception
      * @example: move('user_id', 4);
      * @example: move('user_id', 'before:name");
      * @example: move('user_id', 'after:id");
@@ -204,12 +209,10 @@ class Mutable extends BaseCollection
     /**
      * Move element before another one.
      *
-     * @param string $id
+     * @param  string  $id
      * @param $target
-     *
-     * @throws Exception
-     *
      * @return $this
+     * @throws Exception
      */
     public function moveBefore(string $id, $target)
     {
@@ -228,12 +231,10 @@ class Mutable extends BaseCollection
     /**
      * Move element after another one.
      *
-     * @param string $id
+     * @param  string  $id
      * @param $target
-     *
-     * @throws Exception
-     *
      * @return $this
+     * @throws Exception
      */
     public function moveAfter(string $id, $target): self
     {
@@ -253,9 +254,8 @@ class Mutable extends BaseCollection
     /**
      * Add a new elements group.
      *
-     * @param string $id
-     * @param Closure $callback
-     *
+     * @param  string  $id
+     * @param  Closure  $callback
      * @return $this
      */
     public function group(string $id, Closure $callback): self
@@ -272,13 +272,11 @@ class Mutable extends BaseCollection
     /**
      * Join existing elements to a group.
      *
-     * @param array $elements
-     * @param string $groupId
-     * @param null|int|string $position
-     *
-     * @throws Exception
-     *
+     * @param  array  $elements
+     * @param  string  $groupId
+     * @param  null|int|string  $position
      * @return $this
+     * @throws Exception
      */
     public function stack(array $elements, string $groupId, $position = null): self
     {
@@ -304,7 +302,6 @@ class Mutable extends BaseCollection
      * Build a collection.
      *
      * @param $decorator
-     *
      * @return static
      */
     public function build($decorator)
@@ -325,11 +322,9 @@ class Mutable extends BaseCollection
     /**
      * Find an element.
      *
-     * @param string $id
-     *
-     * @throws Exception
-     *
+     * @param  string  $id
      * @return mixed
+     * @throws Exception
      */
     public function find(string $id)
     {
@@ -341,11 +336,9 @@ class Mutable extends BaseCollection
     /**
      * Find an element position.
      *
-     * @param string $id
-     *
-     * @throws Exception
-     *
+     * @param  string  $id
      * @return null|int|string
+     * @throws Exception
      */
     public function position(string $id): int
     {
@@ -364,12 +357,11 @@ class Mutable extends BaseCollection
     /**
      * Make elements sortable.
      *
-     * @param mixed string|array $keys
-     * @param \Closure $callback
-     * @example: sortable(['title'])
-     * @example: sortable(['title' => function($query) {  }])
-     *
+     * @param  mixed string|array $keys
+     * @param  \Closure  $callback
      * @return Mutable
+     * @example: sortable(['title' => function($query) {  }])
+     * @example: sortable(['title'])
      */
     public function sortable($keys, \Closure $callback = null)
     {
@@ -396,8 +388,7 @@ class Mutable extends BaseCollection
     /**
      * Remove column from Sortable collection.
      *
-     * @param array|string $keys
-     *
+     * @param  array|string  $keys
      * @return self
      */
     public function disableSorting($keys): self
@@ -419,12 +410,10 @@ class Mutable extends BaseCollection
     /**
      * Move an element to a position.
      *
-     * @param string $id
-     * @param int|string $position
-     *
-     * @throws Exception
-     *
+     * @param  string  $id
+     * @param  int|string  $position
      * @return static
+     * @throws Exception
      */
     protected function toPosition(string $id, $position): self
     {
@@ -436,8 +425,7 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * @param string $id
-     *
+     * @param  string  $id
      * @throws Exception
      */
     protected function notFound(string $id)
@@ -449,7 +437,6 @@ class Mutable extends BaseCollection
      * Create element object from string.
      *
      * @param $element
-     *
      * @return mixed
      */
     protected function createElement($element)
