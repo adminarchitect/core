@@ -8,6 +8,7 @@ use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Filter\Enum;
 use Terranet\Administrator\Filter\Filter;
 use Terranet\Administrator\Filter\Text;
+use Terranet\Administrator\Filter\DateRange;
 use Terranet\Administrator\Filters\Scope;
 use function admin\db\connection;
 use function admin\db\enum_values;
