@@ -43,7 +43,6 @@ class HasOne extends BelongsTo
 
     /**
      * @param  array  $only
-     *
      * @return self
      */
     public function only(array $only): self
@@ -55,7 +54,6 @@ class HasOne extends BelongsTo
 
     /**
      * @param  array  $except
-     *
      * @return self
      */
     public function except(array $except): self
@@ -90,9 +88,12 @@ class HasOne extends BelongsTo
             return !$field instanceof Textarea;
         });
 
+        if ($model = $this->model->{$this->id()}) {
+            $columns->each->setModel($model);
+        };
+
         return [
             'columns' => $columns,
-            'related' => $this->model->{$this->id()},
         ];
     }
 
@@ -109,7 +110,6 @@ class HasOne extends BelongsTo
 
     /**
      * @param $related
-     *
      * @return \Terranet\Administrator\Collection\Mutable
      */
     protected function relatedColumns($related): Mutable
@@ -139,7 +139,7 @@ class HasOne extends BelongsTo
     protected function applyColumnsCallback(Mutable $collection)
     {
         if ($this->withColumnsCallback) {
-            $collection = call_user_func($this->withColumnsCallback, $collection);
+            $collection = call_user_func_array($this->withColumnsCallback, [$collection, $this->model]);
         }
 
         $this->assignModel(
