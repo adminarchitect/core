@@ -7,15 +7,30 @@ use Terranet\Administrator\Exception;
 
 class Enum extends Field
 {
+    /** @var array */
     protected $options = [];
 
+    /** @var array */
     protected $colors = ['#777777', '#2574ab', '#259dab', '#5bc0de', '#e6ad5c', '#d9534f'];
 
+    /** @var array */
     protected $palette = [];
 
+    /** @var bool */
+    protected $useColors = true;
+
     /**
-     * @param iterable $options
-     *
+     * @return $this
+     */
+    public function disableColors()
+    {
+        $this->useColors = false;
+
+        return $this;
+    }
+
+    /**
+     * @param  iterable  $options
      * @return self
      */
     public function setOptions(iterable $options): self
@@ -39,12 +54,10 @@ class Enum extends Field
     /**
      * Set colors palette.
      *
-     * @param mixed $color
-     * @param null|string $value
-     *
-     * @throws Exception
-     *
+     * @param  mixed  $color
+     * @param  null|string  $value
      * @return Enum
+     * @throws Exception
      */
     public function palette($color, string $value = null)
     {
@@ -72,7 +85,7 @@ class Enum extends Field
     {
         return [
             'options' => $this->options ?: [],
-            'palette' => $this->palette,
+            'color' => $this->useColors ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
         ];
     }
 

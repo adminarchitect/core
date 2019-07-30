@@ -1,3 +1,3 @@
-<span class="label" style="background-color: {{ $palette[$field->value()] }}">
+<span {!! ($color ? "class=\"label\" style=\"background-color: $color\"" : "" ) !!} >
     {{ $options[$field->value()] }}
 </span>
