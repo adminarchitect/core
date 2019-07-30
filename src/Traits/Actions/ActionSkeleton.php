@@ -11,9 +11,8 @@ trait ActionSkeleton
     /**
      * Check if specified user is authorized to execute this action.
      *
-     * @param User $viewer
-     * @param Model $model
-     *
+     * @param  User  $viewer
+     * @param  Model  $model
      * @return bool
      */
     public function authorize(User $viewer, Model $model = null)
@@ -28,11 +27,10 @@ trait ActionSkeleton
     }
 
     /**
-     * @param Model $model
-     *
+     * @param  Model  $model
      * @return string
      */
-    protected function route(Model $model = null)
+    public function route(Model $model = null)
     {
         return route('scaffold.action', [
             'module' => app('scaffold.module'),
@@ -42,12 +40,46 @@ trait ActionSkeleton
     }
 
     /**
-     * @param Model $model
+     * Confirmation message, if required.
      *
+     * @return mixed null|string
+     */
+    protected function confirmationMessage(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Hide an action from index page.
+     *
+     * @return bool
+     */
+    public function hideFromIndex(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Hide an action from view page.
+     *
+     * @return bool
+     */
+    public function hideFromView(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @param  Model  $model
      * @return string
      */
     protected function attributes(Model $model = null)
     {
-        return \admin\helpers\html_attributes([]);
+        $attributes = [];
+        if ($msg = $this->confirmationMessage()) {
+            $attributes["onclick"] = "return window.confirm('{$msg}')";
+        }
+
+        return \admin\helpers\html_attributes($attributes);
     }
 }

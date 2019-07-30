@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 trait Skeleton
 {
     /**
+     * @return string
+     */
+    protected function type(): string
+    {
+        return 'primary';
+    }
+
+    /**
      * Render action button.
      *
-     * @param Eloquent $entity
-     *
+     * @param  Eloquent  $entity
      * @return string
      */
     public function render(Eloquent $entity = null)
@@ -27,11 +34,29 @@ OUTPUT;
     }
 
     /**
-     * @param Eloquent $entity
+     * Render action button.
      *
+     * @param  Eloquent  $entity
      * @return string
      */
-    protected function action(Eloquent $entity = null)
+    public function renderBtn(Eloquent $entity = null)
+    {
+        $action = app('scaffold.module')->url().'-'.$this->action($entity);
+        $icon = ($i = $this->icon($entity)) ? "<i class=\"fa {$i}\"></i>" : '';
+
+        return
+            <<<OUTPUT
+<a class="btn btn-{$this->type()}" data-scaffold-action="{$action}" data-scaffold-key="{$this->entityKey($entity)}" href="{$this->route($entity)}" {$this->attributes($entity)}>
+    {$icon}<span>{$this->name($entity)}</span>
+</a>
+OUTPUT;
+    }
+
+    /**
+     * @param  Eloquent  $entity
+     * @return string
+     */
+    public function action(Eloquent $entity = null)
     {
         return snake_case(class_basename($this));
     }
@@ -39,8 +64,7 @@ OUTPUT;
     /**
      * Action name.
      *
-     * @param Eloquent $entity
-     *
+     * @param  Eloquent  $entity
      * @return string
      */
     protected function name(Eloquent $entity = null)
@@ -51,8 +75,7 @@ OUTPUT;
     }
 
     /**
-     * @param Eloquent $entity
-     *
+     * @param  Eloquent  $entity
      * @return string
      */
     protected function icon(Eloquent $entity = null)
@@ -63,7 +86,7 @@ OUTPUT;
     /**
      * @return string
      */
-    protected function translationKey()
+    protected function translationKey(): string
     {
         $key = sprintf('administrator::actions.%s.%s', app('scaffold.module')->url(), snake_case(class_basename($this)));
 
@@ -74,7 +97,11 @@ OUTPUT;
         return $key;
     }
 
-    protected function entityKey($entity = null)
+    /**
+     * @param  null  $entity
+     * @return string
+     */
+    protected function entityKey($entity = null): string
     {
         return $entity ? $entity->getKey() : 'empty';
     }

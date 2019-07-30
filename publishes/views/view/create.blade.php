@@ -1,5 +1,11 @@
 @unless($actions->readonly())
     <div class="btn-group pull-right mt10">
+        @foreach($actions->actions()->authorized(auth('admin')->user()) as $action)
+            @unless ($action->hideFromView())
+                {!! $action->renderBtn() !!}
+            @endunless
+        @endforeach
+
         @if ($actions->authorize('update', $item))
             <a href="{{ route('scaffold.edit', ['module' => $module, 'id' => $item->getKey()]) }}"
                class="btn btn-primary btn-quirk">
