@@ -1,8 +1,8 @@
 @unless($actions->readonly())
     <div class="btn-group pull-right mt10">
-        @foreach($actions->actions()->authorized(auth('admin')->user()) as $action)
+        @foreach($actions->actions()->authorized(auth('admin')->user(), $item) as $action)
             @unless ($action->hideFromView())
-                {!! $action->renderBtn() !!}
+                {!! $action->renderBtn($item) !!}
             @endunless
         @endforeach
 

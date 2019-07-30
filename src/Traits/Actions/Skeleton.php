@@ -67,7 +67,7 @@ OUTPUT;
      * @param  Eloquent  $entity
      * @return string
      */
-    protected function name(Eloquent $entity = null)
+    public function name(Eloquent $entity = null)
     {
         return app('translator')->has($key = $this->translationKey())
             ? trans($key)
