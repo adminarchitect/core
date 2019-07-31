@@ -49,7 +49,6 @@ trait HasForm
 
     /**
      * @param $eloquent
-     *
      * @return array
      */
     protected function scaffoldTranslatable($eloquent)

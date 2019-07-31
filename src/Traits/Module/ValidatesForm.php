@@ -55,7 +55,6 @@ trait ValidatesForm
      *
      * @param        $eloquent
      * @param  Column  $column
-     *
      * @return array
      */
     protected function proposeColumnRules($eloquent, Column $column)
@@ -88,6 +87,10 @@ trait ValidatesForm
         if (\in_array($classname, ['IntegerType', 'DecimalType'], true)) {
             $rules[] = 'numeric';
 
+            if (false === $column->getNotnull()) {
+                $rules[] = 'nullable';
+            }
+
             if ($column->getUnsigned()) {
                 $rules[] = 'unsigned';
             }
@@ -109,7 +112,6 @@ trait ValidatesForm
      *
      * @param            $column
      * @param            $eloquent
-     *
      * @return bool
      */
     protected function fillable($column, $eloquent)
@@ -122,7 +124,6 @@ trait ValidatesForm
      *
      * @param $column
      * @param $eloquent
-     *
      * @return bool
      */
     protected function isForeignKey($column, $eloquent)
@@ -139,7 +140,6 @@ trait ValidatesForm
     /**
      * @param  Column  $column
      * @param        $eloquent
-     *
      * @return array
      */
     protected function isUnique(Column $column, $eloquent)
@@ -158,7 +158,6 @@ trait ValidatesForm
      *
      * @param  Column  $column
      * @param        $eloquent
-     *
      * @return string
      */
     protected function makeRequiredRule(Column $column, $eloquent)
@@ -171,7 +170,6 @@ trait ValidatesForm
      *
      * @param  Column  $column
      * @param        $eloquent
-     *
      * @return array
      */
     protected function makeNumericRule(Column $column, $eloquent)
@@ -184,7 +182,6 @@ trait ValidatesForm
      *
      * @param  Column  $column
      * @param        $eloquent
-     *
      * @return array
      */
     protected function makeUnsignedRule(Column $column, $eloquent)
@@ -213,7 +210,6 @@ trait ValidatesForm
      *
      * @param  Column  $column
      * @param        $eloquent
-     *
      * @return array
      */
     protected function makeForeignRule(Column $column, $eloquent)
@@ -225,6 +221,11 @@ trait ValidatesForm
         return "exists:{$foreignTable},{$foreignKey}";
     }
 
+    /**
+     * @param $column
+     * @param $eloquent
+     * @return string
+     */
     protected function makeUniqueRule($column, $eloquent)
     {
         if (\is_object($key = $this->routeParam('id')) && method_exists($key, 'getKey')) {
@@ -234,6 +235,21 @@ trait ValidatesForm
         return "unique:{$eloquent->getTable()},{$column->getName()}".($key ? ",{$key}" : '');
     }
 
+    /**
+     * @param $column
+     * @param $eloquent
+     * @return string
+     */
+    protected function makeNullableRule($column, $eloquent)
+    {
+        return 'nullable';
+    }
+
+    /**
+     * @param $name
+     * @param  null  $default
+     * @return mixed
+     */
     protected function routeParam($name, $default = null)
     {
         return \Route::current()->parameter($name, $default);
