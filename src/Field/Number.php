@@ -4,20 +4,20 @@ namespace Terranet\Administrator\Field;
 
 class Number extends Field
 {
-    /** @var int */
+    /** @var min|float */
     protected $min = 0;
 
-    /** @var null|int */
+    /** @var null|float */
     protected $max = null;
 
-    /** @var int|double */
+    /** @var null|double */
     protected $step = 1;
 
     /**
-     * @param  int  $min
+     * @param  float  $min
      * @return $this
      */
-    public function min(int $min): self
+    public function min(float $min): self
     {
         $this->min = $min;
 
@@ -25,10 +25,10 @@ class Number extends Field
     }
 
     /**
-     * @param  null|int  $max
+     * @param  null|float  $max
      * @return $this
      */
-    public function max(?int $max): self
+    public function max(?float $max): self
     {
         $this->max = $max;
 
@@ -36,10 +36,10 @@ class Number extends Field
     }
 
     /**
-     * @param  float|int  $step
+     * @param  float  $step
      * @return $this
      */
-    public function step($step): self
+    public function step(float $step): self
     {
         $this->step = $step;
 
