@@ -3,6 +3,7 @@
 namespace Terranet\Administrator;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
@@ -84,20 +85,24 @@ class Scaffolding implements Module, AutoTranslatable
     /** @var array */
     protected static $methods = [];
 
+    /** @var Request */
+    protected $request;
+
     /**
      * Scaffolding constructor.
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         if (null === $this->includeDateColumns) {
             $this->includeDateColumns = $this->defaultIncludeDateColumnsValue();
         }
+
+        $this->request = $request;
     }
 
     /**
      * @param $method
      * @param $arguments
-     *
      * @return null|mixed
      */
     public function __call($method, $arguments)
@@ -115,7 +120,6 @@ class Scaffolding implements Module, AutoTranslatable
      *
      * @param $name
      * @param $closure
-     *
      * @throws Exception
      */
     public static function addMethod($name, $closure)
@@ -139,7 +143,6 @@ class Scaffolding implements Module, AutoTranslatable
      * Check if method exists.
      *
      * @param $name
-     *
      * @return bool
      */
     public function hasMethod($name)
@@ -177,7 +180,6 @@ class Scaffolding implements Module, AutoTranslatable
 
     /**
      * @param $model
-     *
      * @return $this
      */
     public function setModel($model)
@@ -199,6 +201,14 @@ class Scaffolding implements Module, AutoTranslatable
         }
 
         return $this->finder;
+    }
+
+    /**
+     * @return Request
+     */
+    public function request()
+    {
+        return $this->request;
     }
 
     /**
@@ -261,9 +271,8 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * @throws Exception
-     *
      * @return ActionsManager
+     * @throws Exception
      */
     public function actionsManager(): ActionsManagerContract
     {
@@ -280,9 +289,8 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * The module Eloquent model.
      *
-     * @throws \Exception
-     *
      * @return mixed
+     * @throws \Exception
      */
     protected function getModelClass()
     {
@@ -293,7 +301,6 @@ class Scaffolding implements Module, AutoTranslatable
      * Get the full path to class of special type.
      *
      * @param $type
-     *
      * @return string
      */
     protected function getQualifiedClassNameOfType($type)

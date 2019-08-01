@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
@@ -23,6 +24,9 @@ class Finder implements FinderContract
     /** @var Assembler */
     protected $assembler;
 
+    /** @var Request */
+    protected $request;
+
     /**
      * Finder constructor.
      * @param Module $module
@@ -31,6 +35,7 @@ class Finder implements FinderContract
     {
         $this->module = $module;
         $this->model = $module->model();
+        $this->request = $module->request();
     }
 
     /**
