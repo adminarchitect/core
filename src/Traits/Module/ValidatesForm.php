@@ -87,10 +87,6 @@ trait ValidatesForm
         if (\in_array($classname, ['IntegerType', 'DecimalType'], true)) {
             $rules[] = 'numeric';
 
-            if (false === $column->getNotnull()) {
-                $rules[] = 'nullable';
-            }
-
             if ($column->getUnsigned()) {
                 $rules[] = 'unsigned';
             }
@@ -98,6 +94,10 @@ trait ValidatesForm
 
         if ($this->isForeignKey($column, $eloquent)) {
             $rules[] = 'foreign';
+        }
+
+        if (in_array($column->getName(), $eloquent->getFillable()) && false === $column->getNotnull()) {
+            $rules[] = 'nullable';
         }
 
         return array_map(function ($rule) use ($column, $eloquent) {
