@@ -9,7 +9,7 @@
 
     <title>{{ strip_tags($config->get('title')) }} &raquo; {{ trans('administrator::module.login') }}</title>
 
-    <link rel="stylesheet" href="{{ asset('admin/app.css') }}">
+    @include('administrator::partials.styles')
 </head>
 <body class="signwrapper">
 
@@ -53,5 +53,7 @@
             {!! Form::close() !!}
         </div>
     </div>
+    <script src="{{ mix('manifest.js', 'admin') }}"></script>
+    <script src="{{ mix('vendor.js', 'admin') }}"></script>
 </body>
 </html>
