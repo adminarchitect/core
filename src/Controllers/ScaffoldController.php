@@ -17,8 +17,7 @@ class ScaffoldController extends AdminController
 {
     /**
      * @param        $page
-     * @param Module $resource
-     *
+     * @param  Module  $resource
      * @return \Illuminate\View\View
      */
     public function index($page, Module $resource)
@@ -35,7 +34,6 @@ class ScaffoldController extends AdminController
      *
      * @param $page
      * @param $id
-     *
      * @return \Illuminate\View\View
      */
     public function view($page, $id)
@@ -52,7 +50,6 @@ class ScaffoldController extends AdminController
      *
      * @param $page
      * @param $id
-     *
      * @return \Illuminate\View\View
      */
     public function edit($page, $id)
@@ -67,8 +64,7 @@ class ScaffoldController extends AdminController
     /**
      * @param                    $page
      * @param                    $id
-     * @param null|UpdateRequest $request
-     *
+     * @param  null|UpdateRequest  $request
      * @return RedirectResponse
      */
     public function update($page, $id, UpdateRequest $request)
@@ -86,7 +82,7 @@ class ScaffoldController extends AdminController
 
         return $this->redirectTo($page, $id, $request)->with(
             'messages',
-            [trans('administrator::messages.update_success')]
+            [$this->translatedMessage('update_success', $resource)]
         );
     }
 
@@ -106,8 +102,7 @@ class ScaffoldController extends AdminController
      * Store new item.
      *
      * @param                    $page
-     * @param null|UpdateRequest $request
-     *
+     * @param  null|UpdateRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store($page, UpdateRequest $request)
@@ -123,17 +118,13 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-        return $this->redirectTo($page, $eloquent->id, $request)->with(
-            'messages',
-            [trans('administrator::messages.create_success')]
-        );
+        return $this->redirectTo($page, $eloquent->id, $request)->with('messages', [$this->translatedMessage('create_success', $resource)]);
     }
 
     /**
      * Destroy item.
      *
-     * @param Module $module
-     *
+     * @param  Module  $module
      * @return \Illuminate\Http\RedirectResponse
      */
     public function delete(Module $module)
@@ -148,7 +139,7 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-        $message = trans('administrator::messages.remove_success');
+        $message = $this->translatedMessage('remove_success', $module);
 
         if (URL::previous() === route('scaffold.view', ['module' => $module, 'id' => $id])) {
             return back()->with('messages', [$message]);
@@ -163,7 +154,6 @@ class ScaffoldController extends AdminController
      * @param $page
      * @param $id
      * @param $attachment
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteAttachment($page, $id, $attachment)
@@ -178,15 +168,15 @@ class ScaffoldController extends AdminController
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
-        
 
-        return back()->with('messages', [trans('administrator::messages.remove_success')]);
+
+        return back()->with('messages', [$this->translatedMessage('attachment_remove_success', $resource)]);
     }
 
     /**
      * @param $module
      * @param $id
-     * @param Request $request
+     * @param  Request  $request
      */
     public function fetchMedia($module, $id, Request $request)
     {
@@ -211,8 +201,8 @@ class ScaffoldController extends AdminController
     /**
      * @param $page
      * @param $id
-     * @param string $conversion
-     * @param Request $request
+     * @param  string  $conversion
+     * @param  Request  $request
      * @return RedirectResponse
      */
     public function attachMedia($page, $id, string $collection, Request $request)
@@ -249,8 +239,7 @@ class ScaffoldController extends AdminController
     /**
      * Search for a model(s).
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function search(Request $request): \Illuminate\Http\JsonResponse
@@ -268,7 +257,7 @@ class ScaffoldController extends AdminController
 
             $instance = $eloquent
                 ->when($searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->where($searchableKey, (int)$term);
+                    return $query->where($searchableKey, (int) $term);
                 })
                 ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
                     return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");
@@ -287,7 +276,6 @@ class ScaffoldController extends AdminController
      * @param $page
      * @param $id
      * @param $action
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function action($page, $id, $action)
@@ -303,9 +291,20 @@ class ScaffoldController extends AdminController
             return $response;
         }
 
-        return back()->with(
-            'messages',
-            [trans('administrator::messages.action_success')]
-        );
+        return back()->with('messages', [$this->translatedMessage('action_success', $resource)]);
+    }
+
+    /**
+     * Generate action message.
+     *
+     * @param  string  $action
+     * @param  Module  $resource
+     * @return string
+     */
+    protected function translatedMessage(string $action, $resource): string
+    {
+        return $this->translator->has($key = sprintf('administrator::messages.%s.%s', $resource->url(), $action))
+            ? trans($key)
+            : trans(sprintf('administrator::messages.%s', $action));
     }
 }
