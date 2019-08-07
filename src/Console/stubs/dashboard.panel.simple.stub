@@ -2,10 +2,10 @@
 
 namespace DummyRootNamespaceHttp\Terranet\Administrator\Dashboard;
 
-use Terranet\Administrator\Dashboard\DashboardPanel;
+use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
-class DummyClass extends DashboardPanel
+class DummyClass extends Panel
 {
     use Stringify;
 
