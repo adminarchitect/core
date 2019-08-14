@@ -19,9 +19,6 @@ class HasOne extends BelongsTo
     /** @var null|\Closure */
     protected $withColumnsCallback;
 
-    /** @var null|Mutable */
-    protected $columns;
-
     /**
      * Fetch related columns.
      *
@@ -29,16 +26,12 @@ class HasOne extends BelongsTo
      */
     protected function getColumns(): ?Mutable
     {
-        if (null === $this->columns) {
-            $relation = $this->model->{$this->id()}();
+        $relation = $this->model->{$this->id()}();
 
-            $this->columns = $this->applyColumnsCallback(
-                $this->relatedColumns($related = $relation->getRelated())
-                    ->each->setModel($this->model->{$this->id()} ?: $related)
-            );
-        }
-
-        return $this->columns;
+        return $this->applyColumnsCallback(
+            $this->relatedColumns($related = $relation->getRelated())
+                ->each->setModel($this->model->{$this->id()} ?: $related)
+        );
     }
 
     /**
