@@ -21,8 +21,7 @@ trait HasSortable
      * Register a Sortable element.
      *
      * @param $element
-     * @param null|Closure $callback
-     *
+     * @param  null|Closure  $callback
      * @return $this
      */
     public function addSortable($element, Closure $callback = null)
@@ -42,7 +41,6 @@ trait HasSortable
      * Remove an element from Sortable collection.
      *
      * @param $element
-     *
      * @return null|array
      */
     public function removeSortable($element)
@@ -75,9 +73,11 @@ trait HasSortable
             $sortable = (array) $this->excludeUnSortable(
                 array_intersect(
                     $sortable,
-                    array_merge($this->model()->getFillable(), [$this->model()->getKeyName()])
+                    $this->model()->getFillable()
                 )
             );
+
+            array_unshift($sortable, $this->model()->getKeyName());
 
             $this->sortable = $sortable;
         }
@@ -87,7 +87,6 @@ trait HasSortable
 
     /**
      * @param $indexedColumns
-     *
      * @return array
      */
     protected function excludeUnSortable($indexedColumns)
