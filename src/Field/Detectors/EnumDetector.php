@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field\Detectors;
 
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\StringType;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Field\Enum;
 use function admin\db\connection;
@@ -15,9 +16,8 @@ class EnumDetector extends AbstractDetector
     protected $values = [];
 
     /**
-     * @param string $column
-     * @param Model $model
-     *
+     * @param  string  $column
+     * @param  Model  $model
      * @return mixed
      */
     protected function enumValues(string $column, Model $model)
@@ -28,24 +28,25 @@ class EnumDetector extends AbstractDetector
     /**
      * Authorize execution.
      *
-     * @param string $column
-     * @param Column $metadata
-     * @param Model $model
-     *
+     * @param  string  $column
+     * @param  Column  $metadata
+     * @param  Model  $model
      * @return bool
      */
     protected function authorize(string $column, Column $metadata, Model $model): bool
     {
-        return connection('mysql') && 0 === (int) $metadata->getLength() && !empty($this->enumValues($column, $model));
+        return connection('mysql')
+            && $metadata->getType() instanceof StringType
+            && 0 === (int) $metadata->getLength()
+            && !empty($this->enumValues($column, $model));
     }
 
     /**
      * Detect field class.
      *
-     * @param string $column
-     * @param Column $metadata
-     * @param Model $model
-     *
+     * @param  string  $column
+     * @param  Column  $metadata
+     * @param  Model  $model
      * @return mixed
      */
     protected function detect(string $column, Column $metadata, Model $model)

@@ -1,13 +1,13 @@
 <?php
 
 namespace {
+
     if (!function_exists('array_build')) {
         /**
          * Build a new array using a callback (Original method was deprecetad since version 5.2).
          *
-         * @param array $array
-         * @param callable $callback
-         *
+         * @param  array  $array
+         * @param  callable  $callback
          * @return array
          */
         function array_build($array, callable $callback)
@@ -39,8 +39,10 @@ namespace {
 }
 
 namespace admin\db {
+
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Str;
     use Terranet\Translatable\Translatable;
 
     if (!\function_exists('scheme')) {
@@ -98,8 +100,7 @@ namespace admin\db {
         /**
          * Check if we are on desired connection or get the current connection name.
          *
-         * @param string $name
-         *
+         * @param  string  $name
          * @return mixed string|boolean
          */
         function connection($name = null)
@@ -115,23 +116,29 @@ namespace admin\db {
     if (!\function_exists('enum_values')) {
         function enum_values($table, $column)
         {
-            $columns = DB::select("SHOW COLUMNS FROM `{$table}` LIKE '{$column}'");
-            $values = [];
-            if (preg_match('/^enum\((.*)\)$/', $columns[0]->Type, $matches)) {
-                foreach (explode(',', $matches[1]) as $value) {
-                    $value = trim($value, "'");
-                    $values[$value] = title_case($value);
+            static $hashMap = [];
+
+            if (!array_key_exists($key = Str::slug("{$table}.{$column}", '_'), $hashMap)) {
+                $columns = DB::select("SHOW COLUMNS FROM `{$table}` LIKE '{$column}'");
+                $values = [];
+                if (preg_match('/^enum\((.*)\)$/', $columns[0]->Type, $matches)) {
+                    foreach (explode(',', $matches[1]) as $value) {
+                        $value = trim($value, "'");
+                        $values[$value] = title_case($value);
+                    }
                 }
+
+                dd($hashMap);
+                $hashMap[$key] = $values;
             }
 
-            return $values;
+            return $hashMap[$key];
         }
 
         /**
          * @param $values
          * @param $column
-         * @param mixed $namespace
-         *
+         * @param  mixed  $namespace
          * @return array
          */
         function translated_values($values, $namespace, $column)
@@ -153,6 +160,7 @@ namespace admin\db {
 }
 
 namespace admin\helpers {
+
     use Illuminate\Support\Facades\Request;
     use Illuminate\Support\Facades\Route;
     use Terranet\Administrator\Contracts\Module\Exportable;
@@ -161,10 +169,9 @@ namespace admin\helpers {
         /**
          * Fetch key => value pairs from an Eloquent model.
          *
-         * @param mixed $model
-         * @param string $labelAttribute
-         * @param string $keyAttribute
-         *
+         * @param  mixed  $model
+         * @param  string  $labelAttribute
+         * @param  string  $keyAttribute
          * @return array
          */
         function html_list($model, $labelAttribute = 'name', $keyAttribute = 'id')
@@ -182,8 +189,7 @@ namespace admin\helpers {
          * Generate route with query string.
          *
          * @param       $route
-         * @param array $params
-         *
+         * @param  array  $params
          * @return string
          */
         function qsRoute($route = null, array $params = [])
@@ -287,8 +293,7 @@ namespace admin\helpers {
          * Ensures that the contents of a <<pre>>...<</pre>> HTML block are not
          * converted into paragraphs or line-breaks.
          *
-         * @param array|string $matches The array or string
-         *
+         * @param  array|string  $matches  The array or string
          * @return string the pre block without paragraph/line-break conversion
          */
         function clean_pre($matches)
@@ -309,12 +314,10 @@ namespace admin\helpers {
         /**
          * Newline preservation help function for wpautop.
          *
-         * @since  3.1.0
-         *
-         * @param array $matches preg_replace_callback matches array
+         * @param  array  $matches  preg_replace_callback matches array
          * @returns string
-         *
          * @return mixed
+         * @since  3.1.0
          */
         function autop_newline_preservation_helper($matches)
         {
@@ -331,12 +334,12 @@ namespace admin\helpers {
 }
 
 namespace admin\output {
+
     use Closure;
     use Czim\Paperclip\Attachment\Attachment;
 
     /**
      * @param $value
-     *
      * @return string
      */
     function boolean($value)
@@ -345,10 +348,9 @@ namespace admin\output {
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @param $value
-     * @param string $key
-     *
+     * @param  string  $key
      * @return string
      */
     function rank(string $name, $value, string $key)
@@ -357,9 +359,8 @@ namespace admin\output {
     }
 
     /**
-     * @param string $image
-     * @param array $attributes
-     *
+     * @param  string  $image
+     * @param  array  $attributes
      * @return string
      */
     function image(string $image, array $attributes = [])
@@ -372,10 +373,9 @@ namespace admin\output {
     /**
      * Output image from Paperclip attachment object.
      *
-     * @param null|Attachment $attachment
-     * @param null|string $style
-     * @param array $attributes
-     *
+     * @param  null|Attachment  $attachment
+     * @param  null|string  $style
+     * @param  array  $attributes
      * @return null|string
      */
     function staplerImage(Attachment $attachment = null, string $style = null, $attributes = [])
@@ -430,9 +430,8 @@ namespace admin\output {
     }
 
     /**
-     * @param array $items
-     * @param null|Closure $callback
-     *
+     * @param  array  $items
+     * @param  null|Closure  $callback
      * @return array|string
      */
     function _prepare_collection(array $items, Closure $callback = null)
@@ -453,9 +452,8 @@ namespace admin\output {
     }
 
     /**
-     * @param string $label
-     * @param string $class
-     *
+     * @param  string  $label
+     * @param  string  $class
      * @return string
      */
     function label(string $label = '', string $class = 'label-success')
@@ -464,9 +462,8 @@ namespace admin\output {
     }
 
     /**
-     * @param string $label
-     * @param string $class
-     *
+     * @param  string  $label
+     * @param  string  $class
      * @return string
      */
     function badge(string $label = '', string $class = 'bg-green')
