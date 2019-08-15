@@ -4,12 +4,16 @@ namespace Terranet\Administrator\Contracts\Module;
 
 interface Navigable
 {
+    /** @var string */
     const MENU_SIDEBAR = 'sidebar';
 
+    /** @var string */
     const MENU_TOOLS = 'tools';
 
+    /** @var string */
     const AS_LINK = 'link';
 
+    /** @var string */
     const AS_HEADER = 'header';
 
     /**
@@ -19,6 +23,14 @@ interface Navigable
      * @return mixed
      */
     public function navigableIn();
+
+    /**
+     * Append default params to navigation link.
+     * Useful for default filters, scopes, etc...
+     *
+     * @return array
+     */
+    public function navigableParams(): array;
 
     /**
      * Add resource to navigation if condition accepts.

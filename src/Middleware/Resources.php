@@ -121,7 +121,7 @@ class Resources
             $navigation->route(
                 'scaffold.index',
                 $module->title(),
-                ['module' => $module->url()],
+                array_merge(['module' => $module->url()], $module->navigableParams()),
                 $order,
                 array_merge(
                     $module->linkAttributes(),

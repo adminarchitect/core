@@ -43,7 +43,6 @@ trait AllowsNavigation
 
     /**
      * Navigation container which Resource belongs to.
-     *
      * Available: sidebar, tools
      *
      * @return mixed
@@ -51,6 +50,17 @@ trait AllowsNavigation
     public function navigableIn()
     {
         return Navigable::MENU_SIDEBAR;
+    }
+
+    /**
+     * Append default params to navigation link.
+     * Useful for default filters, scopes, etc...
+     *
+     * @return array
+     */
+    public function navigableParams(): array
+    {
+        return [];
     }
 
     /**
