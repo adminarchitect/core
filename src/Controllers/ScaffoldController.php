@@ -303,6 +303,10 @@ class ScaffoldController extends AdminController
      */
     protected function translatedMessage(string $action, $resource): string
     {
+        if (method_exists($resource, 'flashMessage')) {
+            return $resource->flashMessage(request(), $action);
+        }
+
         return $this->translator->has($key = sprintf('administrator::messages.%s.%s', $resource->url(), $action))
             ? trans($key)
             : trans(sprintf('administrator::messages.%s', $action));
