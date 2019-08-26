@@ -94,11 +94,14 @@ trait FormControl
      */
     public function setValue($value = null)
     {
-        if (is_callable($value)) {
+        if (is_callable($value) && !is_string($value)) {
             $value = call_user_func($value);
         }
 
-        $value = $this->handleJsonType($value);
+        // In tests, scaffold.model is not bound, and handleJsonType() raises error.
+        if (app()->bound('scaffold.model')) {
+            $value = $this->handleJsonType($value);
+        }
 
         $this->value = $value;
 
