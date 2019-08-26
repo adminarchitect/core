@@ -106,4 +106,13 @@ class FormElementTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('data-type', $attributes = $search->getInput()->getAttributes());
         $this->assertSame('livesearch', $attributes['data-type']);
     }
+
+    /** @test */
+    public function it_prevents_function_calling_by_database_value()
+    {
+        $text = FormElement::text('text');
+        $text->setValue('time');
+
+        $this->assertSame('time', $text->getInput()->getValue());
+    }
 }
