@@ -94,7 +94,7 @@ trait FormControl
      */
     public function setValue($value = null)
     {
-        if (is_callable($value) && !is_string($value)) {
+        if ($value instanceof \Closure) {
             $value = call_user_func($value);
         }
 
