@@ -15,9 +15,9 @@ use Terranet\Administrator\Field\HasOne;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
+use Terranet\Administrator\Field\Translatable;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Requests\UpdateRequest;
-use Terranet\Translatable\Translatable;
 use function admin\db\scheme;
 
 class Saver implements SaverContract
