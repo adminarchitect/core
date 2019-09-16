@@ -16,6 +16,7 @@ use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Requests\UpdateRequest;
+use Terranet\Translatable\Translatable;
 use function admin\db\scheme;
 
 class Saver implements SaverContract
@@ -72,11 +73,11 @@ class Saver implements SaverContract
                 // get original HTML input
                 $name = $field->id();
 
-                if ($this->isKey($field) || $this->isMediaFile($field)) {
+                if ($this->isKey($field) || $this->isMediaFile($field) || $this->isTranslatable($field)) {
                     continue;
                 }
 
-                if ($isRelation = $this->isRelation($field)) {
+                if ($this->isRelation($field)) {
                     $this->relations[$name] = $field;
                 }
 
@@ -369,5 +370,14 @@ class Saver implements SaverContract
     protected function isMediaFile($field)
     {
         return $field instanceof Media;
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    protected function isTranslatable($field)
+    {
+        return $field instanceof Translatable;
     }
 }
