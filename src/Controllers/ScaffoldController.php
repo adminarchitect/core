@@ -3,10 +3,11 @@
 namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use Spatie\MediaLibrary\Models\Media;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Requests\UpdateRequest;
@@ -18,7 +19,7 @@ class ScaffoldController extends AdminController
     /**
      * @param        $page
      * @param  Module  $resource
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function index($page, Module $resource)
     {
@@ -34,7 +35,7 @@ class ScaffoldController extends AdminController
      *
      * @param $page
      * @param $id
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function view($page, $id)
     {
@@ -50,9 +51,9 @@ class ScaffoldController extends AdminController
      *
      * @param $page
      * @param $id
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function edit($page, $id)
+    public function edit($page, $id): View
     {
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
@@ -89,7 +90,7 @@ class ScaffoldController extends AdminController
     /**
      * Create new item.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -103,7 +104,7 @@ class ScaffoldController extends AdminController
      *
      * @param                    $page
      * @param  null|UpdateRequest  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store($page, UpdateRequest $request)
     {
@@ -125,13 +126,11 @@ class ScaffoldController extends AdminController
      * Destroy item.
      *
      * @param  Module  $module
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete(Module $module)
     {
         $this->authorize('delete', $eloquent = app('scaffold.model'));
-
-        $id = $eloquent->id;
 
         try {
             $module->actionsManager()->exec('delete', [$eloquent]);
@@ -150,7 +149,7 @@ class ScaffoldController extends AdminController
      * @param $page
      * @param $id
      * @param $attachment
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAttachment($page, $id, $attachment)
     {
@@ -165,7 +164,6 @@ class ScaffoldController extends AdminController
             return back()->withErrors([$e->getMessage()]);
         }
 
-
         return back()->with('messages', [$this->translatedMessage('attachment_remove_success', $resource)]);
     }
 
@@ -173,12 +171,10 @@ class ScaffoldController extends AdminController
      * @param $module
      * @param $id
      * @param  Request  $request
+     * @return JsonResponse
      */
     public function fetchMedia($module, $id, Request $request)
     {
-        /** @var Module $resource */
-        $resource = app('scaffold.module');
-
         $this->authorize('view', $eloquent = app('scaffold.model'));
 
         $media = MediaLibraryProvider::forModel($eloquent)->fetch(
@@ -197,15 +193,12 @@ class ScaffoldController extends AdminController
     /**
      * @param $page
      * @param $id
-     * @param  string  $conversion
+     * @param  string  $collection
      * @param  Request  $request
      * @return RedirectResponse
      */
     public function attachMedia($page, $id, string $collection, Request $request)
     {
-        /** @var Module $resource */
-        $resource = app('scaffold.module');
-
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
         $file = $request->file('_media_')[$collection];
@@ -219,12 +212,10 @@ class ScaffoldController extends AdminController
      * @param $page
      * @param $id
      * @param $mediaId
+     * @return JsonResponse
      */
     public function detachMedia($page, $id, $mediaId)
     {
-        /** @var Module $resource */
-        $resource = app('scaffold.module');
-
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
         MediaLibraryProvider::forModel($eloquent)->detach($mediaId);
@@ -236,31 +227,26 @@ class ScaffoldController extends AdminController
      * Search for a model(s).
      *
      * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function search(Request $request): \Illuminate\Http\JsonResponse
+    public function search(Request $request): JsonResponse
     {
-        $eloquent = $request->get('searchable');
-        $column = $request->get('field');
         $term = $request->get('query');
+        $eloquent = $request->get('searchable');
 
         $items = [];
 
-        if ($eloquent && $column) {
+        if ($eloquent) {
+            $column = $request->get('field');
             $eloquent = new $eloquent();
-            $searchByKey = is_numeric($term);
-            $searchableKey = $searchByKey ? $eloquent->getKeyName() : $column;
 
-            $instance = $eloquent
-                ->when($searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->where($searchableKey, (int) $term);
-                })
-                ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
-                    return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");
-                })
-                ->get(["{$eloquent->getKeyName()} as id", "{$column} as name"]);
+            $query = method_exists($eloquent, 'searchableQuery')
+                ? $eloquent->searchableQuery($term)
+                : $this->searchableQuery($term, $eloquent, $column);
 
-            $items = $instance->toArray();
+            $items = $query
+                ->get(["{$eloquent->getKeyName()} as id", "{$column} as name"])
+                ->toArray();
         }
 
         return response()->json(['items' => $items]);
@@ -272,7 +258,7 @@ class ScaffoldController extends AdminController
      * @param $page
      * @param $id
      * @param $action
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function action($page, $id, $action)
     {
@@ -306,5 +292,25 @@ class ScaffoldController extends AdminController
         return $this->translator->has($key = sprintf('administrator::messages.%s.%s', $resource->url(), $action))
             ? trans($key)
             : trans(sprintf('administrator::messages.%s', $action));
+    }
+
+    /**
+     * @param $term
+     * @param $eloquent
+     * @param $column
+     * @return mixed
+     */
+    protected function searchableQuery($term, $eloquent, $column): Builder
+    {
+        $searchByKey = is_numeric($term);
+        $searchableKey = $searchByKey ? $eloquent->getKeyName() : $column;
+
+        return $eloquent->newQuery()
+            ->when($searchByKey, function ($query) use ($searchableKey, $term) {
+                return $query->where($searchableKey, (int) $term);
+            })
+            ->when(!$searchByKey, function ($query) use ($searchableKey, $term) {
+                return $query->orWhere($searchableKey, 'LIKE', "%{$term}%");
+            });
     }
 }
