@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SanitizePaths
 {
@@ -65,7 +66,7 @@ class SanitizePaths
      */
     protected function guardedPaths(Request $request)
     {
-        return array_only(
+        return Arr::only(
             $request->all(),
             ['path', 'basedir', 'directories', 'from', 'to', 'name']
         );
