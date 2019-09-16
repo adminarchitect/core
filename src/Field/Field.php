@@ -3,7 +3,9 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Sortable;
@@ -60,7 +62,7 @@ abstract class Field implements Sortable, AutoTranslatable
     private function __construct(string $title, string $id = null)
     {
         $this->setId(
-            $id ?: snake_case($title)
+            $id ?: Str::snake($title)
         );
 
         if ($this->translator()->has($key = $this->translationKey())) {
@@ -161,7 +163,7 @@ abstract class Field implements Sortable, AutoTranslatable
             'attributes' => $this->getAttributes(),
         ];
 
-        if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
+        if (method_exists($this, $dataGetter = 'on'.Str::title($page))) {
             $data += \call_user_func([$this, $dataGetter]);
         }
 
@@ -193,7 +195,7 @@ abstract class Field implements Sortable, AutoTranslatable
             $parts = explode('.', $this->id());
 
             if (\count($parts) > 1) {
-                $first = array_first($parts);
+                $first = Arr::first($parts);
                 $other = \array_slice($parts, 1);
 
                 $other = array_map(function ($part) {
@@ -497,7 +499,7 @@ abstract class Field implements Sortable, AutoTranslatable
     {
         return sprintf(
             'administrator::fields.%s.%s',
-            snake_case($field ?? class_basename($this)),
+            Str::snake($field ?? class_basename($this)),
             $page
         );
     }

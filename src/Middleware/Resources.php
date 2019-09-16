@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Pingpong\Menus\Menu;
 use Pingpong\Menus\MenuBuilder;
 use Terranet\Administrator\Contracts\Module;
@@ -201,7 +202,7 @@ class Resources
                 'module' => config('administrator.prefix')."/{$module}",
             ]);
 
-            $checked[$module] = starts_with($urls['current'], $urls['module']) && ($urls['current'] !== $urls['create']);
+            $checked[$module] = Str::startsWith($urls['current'], $urls['module']) && ($urls['current'] !== $urls['create']);
         }
 
         return $checked[$module];

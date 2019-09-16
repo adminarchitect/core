@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Actions;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 
 class Collection extends BaseCollection
 {
@@ -30,7 +31,7 @@ class Collection extends BaseCollection
     public function find($name)
     {
         return $this->first(function ($action) use ($name) {
-            return class_basename($action) === studly_case($name);
+            return class_basename($action) === Str::studly($name);
         });
     }
 

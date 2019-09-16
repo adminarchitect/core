@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Field;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 
@@ -49,6 +50,7 @@ class BelongsTo extends Field
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function name(): string
     {
@@ -62,13 +64,14 @@ class BelongsTo extends Field
      * @param  Model  $model
      * @param  string  $direction
      * @return Builder
+     * @throws \Exception
      */
     public function sortBy(Builder $query, Model $model, string $direction): Builder
     {
         $table = $model->getTable();
         $relation = $this->relation();
         $joinTable = $relation->getRelated()->getTable();
-        $alias = str_random(4);
+        $alias = Str::random(4);
 
         $ownerKey = $relation->getOwnerKey();
         $foreignKey = $this->getForeignKey($relation);
@@ -112,16 +115,16 @@ class BelongsTo extends Field
             $relation = $this->relation();
             $related = $this->model->{$this->id} ?: $relation->getRelated();
 
-            $column = $this->getColumn();
+            $field = $this->getColumn();
 
             if ($this->searchable) {
                 if ($value = $this->value()) {
                     $options = [
-                        $value->getKey() => $value->getAttribute($column),
+                        $value->getKey() => $value->getAttribute($field),
                     ];
                 }
             } else {
-                $options = $related::pluck($column, $related->getKeyName())->toArray();
+                $options = $related::pluck($field, $related->getKeyName())->toArray();
             }
         }
 

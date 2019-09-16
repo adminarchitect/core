@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Dashboard\Panels;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Spatie\Analytics\AnalyticsServiceProvider;
 use Spatie\Analytics\Period;
 use Terranet\Administrator\Dashboard\Panel;
@@ -69,7 +70,7 @@ OUT;
      */
     protected function dependencyInstalled()
     {
-        return array_has(
+        return Arr::has(
             app()->getLoadedProviders(),
             AnalyticsServiceProvider::class
         );

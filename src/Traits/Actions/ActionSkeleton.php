@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Traits\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Contracts\Module;
 
 trait ActionSkeleton
@@ -21,7 +22,7 @@ trait ActionSkeleton
         $resource = app('scaffold.module');
 
         return $resource->actionsManager()->authorize(
-            snake_case(class_basename($this)),
+            Str::snake(class_basename($this)),
             $model
         );
     }

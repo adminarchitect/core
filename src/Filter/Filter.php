@@ -2,7 +2,9 @@
 
 namespace Terranet\Administrator\Filter;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Traits\Form\ExecutesQuery;
@@ -30,7 +32,7 @@ abstract class Filter implements Queryable
     public function __construct($title, $id = null)
     {
         $this->title = Architect::humanize($title);
-        $this->id = snake_case($id ?: $this->title);
+        $this->id = Str::snake($id ?: $this->title);
     }
 
     /**
@@ -71,7 +73,7 @@ abstract class Filter implements Queryable
         $parts = explode('.', $this->id());
 
         if (\count($parts) > 1) {
-            $first = array_first($parts);
+            $first = Arr::first($parts);
             $other = \array_slice($parts, 1);
 
             $other = array_map(function ($part) {

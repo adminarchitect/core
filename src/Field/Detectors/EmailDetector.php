@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Field\Detectors;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\StringType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Field\Email;
 
 class EmailDetector extends AbstractDetector
@@ -20,7 +21,7 @@ class EmailDetector extends AbstractDetector
      */
     protected function authorize(string $column, Column $metadata, Model $model): bool
     {
-        return $metadata->getType() instanceof StringType && str_contains($column, 'email');
+        return $metadata->getType() instanceof StringType && Str::contains($column, 'email');
     }
 
     /**

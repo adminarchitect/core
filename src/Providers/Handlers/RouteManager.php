@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Providers\Handlers;
 
 use Illuminate\Routing\Events\RouteMatched;
+use Illuminate\Support\Arr;
 
 class RouteManager
 {
@@ -41,7 +42,7 @@ class RouteManager
     protected function isAdminArea(RouteMatched $event)
     {
         if ($action = $event->route->getAction()) {
-            return config('administrator.prefix') === array_get($action, 'prefix');
+            return config('administrator.prefix') === Arr::get($action, 'prefix');
         }
 
         return false;

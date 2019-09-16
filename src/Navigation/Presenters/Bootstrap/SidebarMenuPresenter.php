@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Navigation\Presenters\Bootstrap;
 
+use Illuminate\Support\Arr;
 use Pingpong\Menus\Presenters\Presenter;
 
 class SidebarMenuPresenter extends Presenter
@@ -119,12 +120,13 @@ class SidebarMenuPresenter extends Presenter
      * Appends Items count to a title if needed.
      *
      * @param $item
+     * @return
      */
     protected function handleItemsCount($item)
     {
         if ($item->route
-            && 'scaffold.index' === array_get($item->route, 0)
-            && $module = array_get($item->route, '1.module')
+            && 'scaffold.index' === Arr::get($item->route, 0)
+            && $module = Arr::get($item->route, '1.module')
         ) {
             $module = app('scaffold.module.'.$module);
 

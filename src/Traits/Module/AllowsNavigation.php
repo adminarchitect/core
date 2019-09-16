@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Module\Navigable;
 
@@ -26,7 +27,7 @@ trait AllowsNavigation
      */
     public function singular()
     {
-        return str_singular($this->title());
+        return Str::singular($this->title());
     }
 
     /**
@@ -132,7 +133,7 @@ trait AllowsNavigation
      */
     public function url()
     {
-        return snake_case(class_basename($this));
+        return Str::snake(class_basename($this));
     }
 
     public function translationKey()

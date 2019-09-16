@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Media;
 
+use Illuminate\Support\Arr;
+
 class Icons
 {
     protected static $table = [
@@ -24,6 +26,6 @@ class Icons
 
     public function icon($group)
     {
-        return array_get(static::$table, $group, 'fa fa-file-text-o');
+        return Arr::get(static::$table, $group, 'fa fa-file-text-o');
     }
 }

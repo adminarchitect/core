@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Media;
 
+use Illuminate\Support\Str;
 use SplFileInfo;
 use Terranet\Administrator\Exception;
 
@@ -33,7 +34,7 @@ class MimeType
 
     public function is($type)
     {
-        $method = 'is'.studly_case($type);
+        $method = 'is'.Str::studly($type);
 
         return $this->$method();
     }

@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Providers\Handlers;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Routing\Events\RouteMatched;
+use Illuminate\Support\Arr;
 use Terranet\Administrator\Traits\SessionGuardHelper;
 
 class PasswordsManager
@@ -54,7 +55,7 @@ class PasswordsManager
     protected function isAdminArea(RouteMatched $event)
     {
         if ($action = $event->route->getAction()) {
-            return config('administrator.prefix') === array_get($action, 'prefix');
+            return config('administrator.prefix') === Arr::get($action, 'prefix');
         }
 
         return false;

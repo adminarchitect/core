@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Field\Detectors;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\StringType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Field\Password;
 
 class PasswordDetector extends AbstractDetector
@@ -20,7 +21,7 @@ class PasswordDetector extends AbstractDetector
      */
     protected function authorize(string $column, Column $metadata, Model $model): bool
     {
-        return $metadata->getType() instanceof StringType && str_contains($column, 'password');
+        return $metadata->getType() instanceof StringType && Str::contains($column, 'password');
     }
 
     /**

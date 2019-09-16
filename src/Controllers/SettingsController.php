@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Controllers;
 
+use Illuminate\Support\Arr;
 use Terranet\Administrator\Requests\UpdateRequest;
 
 class SettingsController extends AdminController
@@ -31,7 +32,7 @@ class SettingsController extends AdminController
     {
         $this->authorize('update', $eloquent = app('scaffold.model'));
 
-        options_save(array_except(
+        options_save(Arr::except(
             $request->all(),
             ['_token', 'save']
         ));

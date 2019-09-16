@@ -38,7 +38,7 @@
             @slot('checkboxes')
                 @if($actions->batch()->count() && !$actions->readonly())
                     <th width="10">
-                        <label for="toggle_collection_{{ $key = mb_strtolower(str_random(5)) }}">
+                        <label for="toggle_collection_{{ $key = mb_strtolower(\Illuminate\Support\Str::random(5)) }}">
                             <input type="checkbox"
                                    class="simple toggle-collection"
                                    id="toggle_collection_{{ $key }}"

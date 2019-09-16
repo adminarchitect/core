@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Traits\Actions;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Str;
 
 trait Skeleton
 {
@@ -58,7 +59,7 @@ OUTPUT;
      */
     public function action(Eloquent $entity = null)
     {
-        return snake_case(class_basename($this));
+        return Str::snake(class_basename($this));
     }
 
     /**
@@ -71,7 +72,7 @@ OUTPUT;
     {
         return app('translator')->has($key = $this->translationKey())
             ? trans($key)
-            : title_case(str_replace('_', ' ', snake_case(class_basename($this))));
+            : Str::title(str_replace('_', ' ', Str::snake(class_basename($this))));
     }
 
     /**
@@ -88,10 +89,10 @@ OUTPUT;
      */
     protected function translationKey(): string
     {
-        $key = sprintf('administrator::actions.%s.%s', app('scaffold.module')->url(), snake_case(class_basename($this)));
+        $key = sprintf('administrator::actions.%s.%s', app('scaffold.module')->url(), Str::snake(class_basename($this)));
 
         if (!app('translator')->has($key)) {
-            $key = sprintf('administrator::actions.global.%s', snake_case(class_basename($this)));
+            $key = sprintf('administrator::actions.global.%s', Str::snake(class_basename($this)));
         }
 
         return $key;

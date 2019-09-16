@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Filter;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\Filter\Searchable;
@@ -15,14 +16,14 @@ class Enum extends Filter implements Searchable
     protected $options = [];
 
     /**
-     * @param mixed array|\Closure $options
-     *
+     * @param  mixed array|\Closure $options
      * @return self
+     * @throws Exception
      */
     public function setOptions($options): self
     {
         if (!(\is_array($options) || $options instanceof \Closure)) {
-            throw new \Exception('Enum accepts only `array` or `Closure` as options.');
+            throw new Exception('Enum accepts only `array` or `Closure` as options.');
         }
 
         if ($options instanceof \Closure) {

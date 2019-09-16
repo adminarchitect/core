@@ -41,6 +41,7 @@ namespace {
 namespace admin\db {
 
     use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Support\Arr;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Str;
     use Terranet\Translatable\Translatable;
@@ -59,24 +60,24 @@ namespace admin\db {
 
             $table = $model->getTable();
 
-            if (!array_has($data, $table)) {
+            if (!Arr::has($data, $table)) {
                 $columns = scheme()->columns($table);
 
                 if ($withTranslated && $model instanceof Translatable && method_exists($model, 'getTranslationModel')) {
                     $related = $model->getTranslationModel()->getTable();
                     $columns = array_merge(
                         $columns,
-                        array_except(
+                        Arr::except(
                             scheme()->columns($related),
                             array_keys($columns)
                         )
                     );
                 }
 
-                array_set($data, $table, $columns);
+                Arr::set($data, $table, $columns);
             }
 
-            return array_get($data, $table, []);
+            return Arr::get($data, $table, []);
         }
     }
 
@@ -124,7 +125,7 @@ namespace admin\db {
                 if (preg_match('/^enum\((.*)\)$/', $columns[0]->Type, $matches)) {
                     foreach (explode(',', $matches[1]) as $value) {
                         $value = trim($value, "'");
-                        $values[$value] = title_case($value);
+                        $values[$value] = Str::title($value);
                     }
                 }
 
@@ -337,6 +338,8 @@ namespace admin\output {
 
     use Closure;
     use Czim\Paperclip\Attachment\Attachment;
+    use Illuminate\Support\Arr;
+    use Illuminate\Support\Str;
 
     /**
      * @param $value
@@ -388,8 +391,8 @@ namespace admin\output {
                 $origStyle = 'original';
 
                 // in case then style dimensions are less than predefined, adjust width & height to style's
-                $aWidth = (int) array_get($attributes, 'width');
-                $aHeight = (int) array_get($attributes, 'height');
+                $aWidth = (int) Arr::get($attributes, 'width');
+                $aHeight = (int) Arr::get($attributes, 'height');
 
                 if (($aWidth || $aHeight) && $firstStyle) {
                     $size = array_filter($styles, function ($style) use ($firstStyle) {
@@ -397,13 +400,13 @@ namespace admin\output {
                     });
 
                     if (($size = array_shift($size))) {
-                        $dimensions = array_get($attachment->getConfig(), "variants.{$size}");
+                        $dimensions = Arr::get($attachment->getConfig(), "variants.{$size}");
 
                         if (\is_array($dimensions)) {
-                            $dimensions = array_get($dimensions, 'resize.dimensions');
+                            $dimensions = Arr::get($dimensions, 'resize.dimensions');
                         }
 
-                        if ($dimensions && str_contains($dimensions, 'x')) {
+                        if ($dimensions && Str::contains($dimensions, 'x')) {
                             [$width, $height] = explode('x', $dimensions);
 
                             if ($aWidth > $width) {

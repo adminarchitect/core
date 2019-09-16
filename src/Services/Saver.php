@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Terranet\Administrator\Contracts\Services\Saver as SaverContract;
 use Terranet\Administrator\Field\BelongsTo;
@@ -139,7 +140,7 @@ class Saver implements SaverContract
      */
     protected function cleanData()
     {
-        $this->data = array_except($this->data, [
+        $this->data = Arr::except($this->data, [
             '_token',
             'save',
             'save_create',
@@ -213,14 +214,14 @@ class Saver implements SaverContract
         if ($this->repository instanceof HasMedia) {
             $media = (array) $this->request['_media_'];
 
-            if (!empty($trash = array_get($media, '_trash_', []))) {
+            if (!empty($trash = Arr::get($media, '_trash_', []))) {
                 $this->repository->media()->whereIn(
                     'id',
                     $trash
                 )->delete();
             }
 
-            foreach (array_except($media, '_trash_') as $collection => $objects) {
+            foreach (Arr::except($media, '_trash_') as $collection => $objects) {
                 foreach ($objects as $uploadedFile) {
                     $this->repository->addMedia($uploadedFile)->toMediaCollection($collection);
                 }
@@ -279,7 +280,7 @@ class Saver implements SaverContract
      */
     protected function handleJsonType($name, $value)
     {
-        if ($cast = array_get($this->repository->getCasts(), $name)) {
+        if ($cast = Arr::get($this->repository->getCasts(), $name)) {
             if (\in_array($cast, ['array', 'json'], true)) {
                 $value = json_decode($value);
             }
@@ -347,7 +348,7 @@ class Saver implements SaverContract
      */
     protected function protectAgainstNullPassword(): array
     {
-        if (array_has($this->data, 'password') && empty($this->data['password'])) {
+        if (Arr::has($this->data, 'password') && empty($this->data['password'])) {
             unset($this->data['password']);
         }
 

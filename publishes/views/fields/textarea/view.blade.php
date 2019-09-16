@@ -1,5 +1,5 @@
 @if (!empty($value = $field->value()))
-    @php($preview = str_limit(strip_tags($value), 200))
+    @php($preview = \Illuminate\Support\Str::limit(strip_tags($value), 200))
     @php($full = strip_tags($value))
     <div class="preview">{!! nl2br($preview) !!}</div>
     @if (mb_strlen($full) !== mb_strlen($preview))

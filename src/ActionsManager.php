@@ -4,6 +4,7 @@ namespace Terranet\Administrator;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Actions\Collection;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\Module;
@@ -87,12 +88,12 @@ class ActionsManager implements ActionsManagerContract
     {
         // for most cases it is enough to set
         // permissions in Resource object.
-        if (method_exists($this->module, $abilityMethod = 'can'.title_case(camel_case($ability)))) {
+        if (method_exists($this->module, $abilityMethod = 'can'.Str::title(Str::camel($ability)))) {
             $user = auth('admin')->user();
             $cacheID = $user->getAuthIdentifier().':'.$ability.($model ? '_'.$model->getKey() : '');
 
             return Cache::remember($cacheID, 1, function () use ($user, $ability, $model) {
-                $abilityMethod = 'can'.title_case(camel_case($ability));
+                $abilityMethod = 'can'.Str::title(Str::camel($ability));
 
                 return $this->module->$abilityMethod($user, $ability, $model);
             });
@@ -130,7 +131,7 @@ class ActionsManager implements ActionsManagerContract
     public function exec(string $method, array $arguments = [])
     {
         // execute custom action
-        if (starts_with($method, 'action::')) {
+        if (Str::startsWith($method, 'action::')) {
             $handler = $this->scaffoldActions()->find(
                 str_replace('action::', '', $method)
             );
@@ -139,7 +140,7 @@ class ActionsManager implements ActionsManagerContract
         }
 
         // Execute batch action
-        if (starts_with($method, 'batch::')) {
+        if (Str::startsWith($method, 'batch::')) {
             $handler = $this->scaffoldBatch()->find(
                 str_replace('batch::', '', $method)
             );

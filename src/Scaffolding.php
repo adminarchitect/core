@@ -4,6 +4,7 @@ namespace Terranet\Administrator;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Module;
@@ -108,7 +109,7 @@ class Scaffolding implements Module, AutoTranslatable
     public function __call($method, $arguments)
     {
         // Call user-defined method if exists.
-        if ($closure = array_get(static::$methods, $method)) {
+        if ($closure = Arr::get(static::$methods, $method)) {
             return \call_user_func_array($closure, $arguments);
         }
 
@@ -147,7 +148,7 @@ class Scaffolding implements Module, AutoTranslatable
      */
     public function hasMethod($name)
     {
-        return method_exists($this, $name) || array_has(static::$methods, $name);
+        return method_exists($this, $name) || Arr::has(static::$methods, $name);
     }
 
     /**

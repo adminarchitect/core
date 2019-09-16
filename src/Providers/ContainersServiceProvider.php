@@ -6,6 +6,7 @@ use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
@@ -135,9 +136,9 @@ class ContainersServiceProvider extends ServiceProvider
 
             if (($router = $app['router']->current()) &&
                 ($module = $router->parameter('module')) &&
-                array_has($app, $key = "scaffold.module.{$module}")
+                Arr::has($app, $key = "scaffold.module.{$module}")
             ) {
-                return array_get($app, $key);
+                return Arr::get($app, $key);
             }
         });
     }

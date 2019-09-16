@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Localizer\Locale;
 
@@ -84,7 +85,7 @@ class Translatable
             'model' => $this->field->getModel(),
         ];
 
-        if (method_exists($this, $dataGetter = 'on'.title_case($page))) {
+        if (method_exists($this, $dataGetter = 'on'.Str::title($page))) {
             $data += \call_user_func([$this, $dataGetter]);
         }
 

@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Filters;
 
+use Illuminate\Support\Str;
+
 class Scope
 {
     /** @var string */
@@ -27,8 +29,8 @@ class Scope
         if (null === $id) {
             $id = $title;
         }
-        $this->id = snake_case($id);
-        $this->title = title_case($title);
+        $this->id = Str::snake($id);
+        $this->title = Str::title($title);
     }
 
     /**
@@ -82,11 +84,11 @@ class Scope
      */
     public function setIcon($value)
     {
-        if (starts_with($value, 'fa-')) {
+        if (Str::startsWith($value, 'fa-')) {
             $value = "fa {$value}";
         }
 
-        if (starts_with($value, 'glyphicon-')) {
+        if (Str::startsWith($value, 'glyphicon-')) {
             $value = "glyphicon {$value}";
         }
 

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Contracts\Filter\Searchable;
 use Terranet\Administrator\Contracts\Form\Queryable;
 use Terranet\Administrator\Contracts\QueryBuilder;
@@ -118,7 +119,7 @@ class Assembler
              *
              * @example: (new Scope('name'))->addQuery("User@active")
              */
-            if (str_contains($callable, '@')) {
+            if (Str::contains($callable, '@')) {
                 [$object, $method] = explode('@', $callable);
 
                 $this->query = app($object)->$method($this->query);

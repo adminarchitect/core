@@ -45,7 +45,7 @@
                 @foreach($scopes->prepend('all') as $filter)
                     <a class="btn btn-link {{ app('request')->input('only') === $filter ? 'active' : '' }}"
                        href="{{ route('scaffold.translations.index', ['only' => $filter, 'term' => request('term')], false) }}">
-                        {{ title_case($filter) }}
+                        {{ \Illuminate\Support\Str::title($filter) }}
                     </a>
                 @endforeach
             </div>
@@ -81,7 +81,7 @@
                             <td>
                                 <?php
                                 $parts = array_map(function ($part) {
-                                    return title_case(str_replace(['_', '-'], ' ', $part));
+                                    return \Illuminate\Support\Str::title(str_replace(['_', '-'], ' ', $part));
                                 }, explode('.', $key));
                                 ?>
                                 <span class="bold">{!! ucwords(implode(' &raquo; ', $parts)) !!}</span>

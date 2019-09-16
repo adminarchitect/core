@@ -3,11 +3,11 @@
         <a href="{{ route('scaffold.view', ['module' => $module->url(), $related->getKeyName() => $related->getKey()]) }}"
            title="{{ $title }}"
         >
-            {{ str_limit($title, 25) }}
+            {{ \Illuminate\Support\Str::limit($title, 25) }}
         </a>
     @else
         <span title="{{ $title }}">
-            {{ str_limit($title, 25) }}
+            {{ \Illuminate\Support\Str::limit($title, 25) }}
         </span>
     @endif
 @endif

@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Traits\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Contracts\Module;
 
 trait BatchSkeleton
@@ -22,7 +23,7 @@ trait BatchSkeleton
         $resource = app('scaffold.module');
 
         return $resource->actionsManager()->authorize(
-            snake_case(class_basename($this)),
+            Str::snake(class_basename($this)),
             $model
         );
     }

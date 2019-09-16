@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Services\Translations;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Str;
 
 class Finder
 {
@@ -22,8 +23,8 @@ class Finder
         $keys = [];
         foreach ($translations as $key => $translation) {
             foreach ($translation as $lang => $value) {
-                if (empty($term) || str_contains(strtoupper($value), strtoupper($term))
-                    || str_contains(strtoupper($key), strtoupper($term))) {
+                if (empty($term) || Str::contains(strtoupper($value), strtoupper($term))
+                    || Str::contains(strtoupper($key), strtoupper($term))) {
                     $keys[$key] = $translation;
 
                     continue;

@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Terranet\Presentable\PresentableInterface;
 
 trait HasValuePresenter
@@ -40,6 +41,6 @@ trait HasValuePresenter
      */
     public function presenterMethod(string $fieldName): string
     {
-        return 'admin'.title_case(camel_case($fieldName));
+        return 'admin'.Str::title(Str::camel($fieldName));
     }
 }

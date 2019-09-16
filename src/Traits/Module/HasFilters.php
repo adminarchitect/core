@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Illuminate\Support\Str;
+use ReflectionMethod;
 use Terranet\Administrator\Annotations\ScopeFilter;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Collection\Mutable;
@@ -36,7 +38,6 @@ trait HasFilters
      * Register a filter.
      *
      * @param  Filter  $filter
-     *
      * @return $this
      */
     public function addFilter(Filter $filter)
@@ -50,7 +51,6 @@ trait HasFilters
      * Register a scope.
      *
      * @param  Scope  $scope
-     *
      * @return $this
      */
     public function addScope(Scope $scope)
@@ -64,6 +64,7 @@ trait HasFilters
      * Default list of filters.
      *
      * @return mixed
+     * @throws \ReflectionException
      */
     public function filters()
     {
@@ -80,6 +81,7 @@ trait HasFilters
 
     /**
      * @return Mutable
+     * @throws \ReflectionException
      */
     protected function scaffoldFilters()
     {
@@ -94,16 +96,14 @@ trait HasFilters
 
                 switch (class_basename($data->getType())) {
                     case 'StringType':
-                        if (connection('mysql') && !$data->getLength()) {
-                            if ($values = enum_values($model->getTable(), $column)) {
-                                $values = translated_values($values, $this->url(), $column);
+                        if (connection('mysql') && !$data->getLength() && ($values = enum_values($model->getTable(), $column))) {
+                            $values = translated_values($values, $this->url(), $column);
 
-                                $this->addFilter(
-                                    Enum::make($column, $column)->setOptions(['' => '----'] + $values)
-                                );
+                            $this->addFilter(
+                                Enum::make($column, $column)->setOptions(['' => '----'] + $values)
+                            );
 
-                                break;
-                            }
+                            break;
                         }
 
                         $this->addFilter(
@@ -144,6 +144,7 @@ trait HasFilters
      * Find all public scopes in current model.
      *
      * @return Mutable
+     * @throws \ReflectionException
      */
     protected function scaffoldScopes()
     {
@@ -162,6 +163,7 @@ trait HasFilters
      * Parse the model for scopes.
      *
      * @param $model
+     * @throws \ReflectionException
      */
     protected function fetchModelScopes($model)
     {
@@ -169,34 +171,35 @@ trait HasFilters
 
         foreach ($reflection->getMethods() as $method) {
             /** @var ScopeFilter $info */
-            if ($info = app('scaffold.annotations')->getMethodAnnotation($method, ScopeFilter::class)) {
-                if ($this->isDynamicScope($method) || 'scopeTranslated' === $method->getName()) {
-                    continue;
-                }
-
-                $name = $callback = str_replace('scope', '', $method->getName());
-
-                if ($info->name || $info->translate) {
-                    $name = $info->name ?: trans($info->translate);
-                }
-
-                $scope = new Scope($name, str_slug($callback, '_'));
-                $scope->setQuery([$model, $callback]);
-                if ($info->icon) {
-                    $scope->setIcon($info->icon);
-                }
-
-                $this->addScope($scope);
+            if (!$info = app('scaffold.annotations')->getMethodAnnotation($method, ScopeFilter::class)) {
+                continue;
             }
+
+            if ($this->isDynamicScope($method) || 'scopeTranslated' === $method->getName()) {
+                continue;
+            }
+
+            $name = $callback = str_replace('scope', '', $method->getName());
+
+            if ($info->name || $info->translate) {
+                $name = $info->name ?: trans($info->translate);
+            }
+
+            $scope = new Scope($name, Str::slug($callback, '_'));
+            $scope->setQuery([$model, $callback]);
+            if ($info->icon) {
+                $scope->setIcon($info->icon);
+            }
+
+            $this->addScope($scope);
         }
     }
 
     /**
-     * @param $method
-     *
+     * @param  ReflectionMethod  $method
      * @return int
      */
-    protected function isDynamicScope($method)
+    protected function isDynamicScope(ReflectionMethod $method)
     {
         return \count($method->getParameters()) > 1;
     }

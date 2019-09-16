@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Traits\Module;
 
 use Closure;
+use Illuminate\Support\Arr;
 use function admin\db\scheme;
 
 trait HasSortable
@@ -45,12 +46,12 @@ trait HasSortable
      */
     public function removeSortable($element)
     {
-        if (array_has($this->sortable, $element)) {
-            return $this->sortable = array_except($this->sortable, $element);
+        if (Arr::has($this->sortable, $element)) {
+            return $this->sortable = Arr::except($this->sortable, $element);
         }
 
         if (\in_array($element, $this->sortable(), true)) {
-            return $this->sortable = array_except(
+            return $this->sortable = Arr::except(
                 $this->sortable,
                 array_search($element, $this->sortable, true)
             );

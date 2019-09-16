@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Collection;
 
 use Closure;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Contracts\Module\Sortable;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Field\Text;
@@ -121,7 +122,7 @@ class Mutable extends BaseCollection
      */
     public function update(string $id, Closure $callback): self
     {
-        if (str_contains($id, ',')) {
+        if (Str::contains($id, ',')) {
             collect(explode(',', $id))
                 ->map('trim')
                 ->each(function ($element) use ($callback) {
@@ -195,11 +196,11 @@ class Mutable extends BaseCollection
             return $this->toPosition($id, $position);
         }
 
-        if (starts_with($position, 'before:')) {
+        if (Str::startsWith($position, 'before:')) {
             return $this->moveBefore($id, substr($position, 7));
         }
 
-        if (starts_with($position, 'after:')) {
+        if (Str::startsWith($position, 'after:')) {
             return $this->moveAfter($id, substr($position, 6));
         }
 

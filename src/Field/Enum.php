@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Field;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use Terranet\Administrator\Exception;
 
 class Enum extends Field
@@ -41,7 +42,7 @@ class Enum extends Field
 
         $i = 0;
         foreach ($options as $key => $value) {
-            if (!array_has($this->palette, $key)) {
+            if (!Arr::has($this->palette, $key)) {
                 $this->palette[$key] = $this->colors[$i % \count($this->colors)];
                 ++$i;
             }

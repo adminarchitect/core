@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Services;
 use Czim\Paperclip\Attachment\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Actions\RemoveSelected;
 use Terranet\Administrator\Actions\SaveOrder;
 use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract;
@@ -129,7 +130,7 @@ class CrudActions implements CrudActionsContract
         $accessGate = Gate::forUser(auth('admin')->user());
         $module = $module ?: app('scaffold.module');
         $model = $model ?: $module->model();
-        $method = camel_case($method);
+        $method = Str::camel($method);
 
         if (($policy = $accessGate->getPolicyFor($model)) && method_exists($policy, $method)) {
             return $accessGate->allows($method, $model);

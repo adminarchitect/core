@@ -2,21 +2,24 @@
 
 namespace Terranet\Administrator;
 
+use Illuminate\Support\Arr;
+
 class Chain
 {
     /**
      * Create chain of responsibility.
      *
-     * @param array $queue
+     * @param  array  $queue
+     * @return mixed
      */
     public static function make(array $queue = [])
     {
         foreach ($queue as $i => &$instance) {
-            if ($next = array_get($queue, $i + 1)) {
+            if ($next = Arr::get($queue, $i + 1)) {
                 $instance->setNext($next);
             }
         }
 
-        return array_first($queue);
+        return Arr::first($queue);
     }
 }

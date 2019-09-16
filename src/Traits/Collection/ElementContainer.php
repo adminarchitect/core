@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Traits\Collection;
 
+use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Scaffolding;
@@ -117,7 +118,7 @@ abstract class ElementContainer implements AutoTranslatable
     {
         $parts = explode('.', $id);
         $parts = array_map(function ($part) {
-            return str_slug($part, '_');
+            return Str::slug($part, '_');
         }, $parts);
 
         return implode('.', $parts);
