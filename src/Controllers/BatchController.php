@@ -4,27 +4,25 @@ namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Terranet\Administrator\Scaffolding;
+use Terranet\Administrator\AdminRequest;
 
 class BatchController extends AdminController
 {
     /**
      * Perform a batch action against selected collection.
      *
-     * @param         $page
-     * @param Request $request
-     *
+     * @param  AdminRequest  $request
+     * @param  string  $page
      * @return RedirectResponse
      */
-    public function batch($page, Request $request)
+    public function batch(AdminRequest $request, string $page)
     {
-        $resource = app('scaffold.module');
+        $resource = $request->resource();
 
         $this->authorize($action = $request->get('batch_action'), $model = $resource->model());
 
-        $response = $resource->actionsManager()->exec('batch::'.$action, [$model, $request]);
+        $response = $resource->actions()->exec('batch::'.$action, [$model, $request]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;
@@ -39,20 +37,20 @@ class BatchController extends AdminController
     /**
      * Export collection.
      *
-     * @param $page
-     * @param $format
+     * @param  AdminRequest  $request
+     * @param  string  $page
+     * @param  string  $format
      * @return mixed
      * @throws \Exception
      */
-    public function export($page, $format)
+    public function export(AdminRequest $request, string $page, string $format)
     {
-        /** @var Scaffolding $resource */
-        $resource = app('scaffold.module');
+        $resource = $request->resource();
 
         $this->authorize('index', $resource->model());
 
         $query = $resource->finder()->getQuery();
 
-        return $resource->scaffoldActions()->exec('export', [$query, $format]);
+        return $resource->actions()->exec('export', [$query, $format]);
     }
 }
