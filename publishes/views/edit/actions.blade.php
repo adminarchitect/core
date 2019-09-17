@@ -8,7 +8,7 @@
             <i class="fa fa-rotate-left"></i>
             {{ trans('administrator::buttons.save_return') }}
         </button>
-        @if ($actions->authorize('create'))
+        @if ($resource->actions()->authorize('create'))
             <button name="save_create" class="btn btn-primary btn-quirk">
                 <i class="fa fa-rotate-right"></i>
                 {{ trans('administrator::buttons.save_create') }}

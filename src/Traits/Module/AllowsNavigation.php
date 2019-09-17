@@ -33,9 +33,9 @@ trait AllowsNavigation
     /**
      * The module title.
      *
-     * @return mixed
+     * @return string
      */
-    public function title()
+    public function title(): string
     {
         return $this->translator()->has($key = $this->translationKey())
             ? trans($key)
@@ -129,9 +129,9 @@ trait AllowsNavigation
     /**
      * The module url.
      *
-     * @return mixed
+     * @return string
      */
-    public function url()
+    public function url(): string
     {
         return Str::snake(class_basename($this));
     }

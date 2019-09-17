@@ -1,6 +1,4 @@
-@extends($template->layout())
-
-@inject('template', 'scaffold.template')
+@extends($resource->template()->layout())
 
 @section('content')
     <div class="error-page">

@@ -5,10 +5,7 @@ namespace Terranet\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Terranet\Administrator\Contracts\Module;
-use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Services\Finder;
-use Terranet\Administrator\Contracts\Services\TemplateProvider;
-use Terranet\Administrator\Services\Template;
 
 class AdminRequest extends FormRequest
 {
@@ -33,13 +30,15 @@ class AdminRequest extends FormRequest
 
     public function resolveModel($id): ?Model
     {
-        /** @var Finder $finder */
-        $finder = $this->resource()->finder();
+        return once(function () use ($id) {
+            /** @var Finder $finder */
+            $finder = $this->resource()->finder();
 
-        if ($finder) {
-            abort_unless($item = $finder->find($id), 404);
-        }
+            if ($finder) {
+                abort_unless($item = $finder->find($id), 404);
+            }
 
-        return $item ?? null;
+            return $item ?? null;
+        });
     }
 }

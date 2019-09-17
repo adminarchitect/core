@@ -109,7 +109,7 @@ class HasMany extends Field
             $module = Faked::make($related);
         }
         $columns = $module->columns()->each->disableSorting();
-        $actions = $module->actionsManager();
+        $actions = $module->actions();
 
         return [
             'module' => $module ?? null,

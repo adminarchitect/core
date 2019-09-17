@@ -21,7 +21,7 @@ trait ActionSkeleton
         /** @var Module $resource */
         $resource = app('scaffold.module');
 
-        return $resource->actionsManager()->authorize(
+        return $resource->actions()->authorize(
             Str::snake(class_basename($this)),
             $model
         );

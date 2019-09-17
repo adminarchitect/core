@@ -7,7 +7,6 @@ use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Collection\Mutable as MutableCollection;
 use Terranet\Administrator\Dashboard\Manager;
 use Terranet\Administrator\Decorators\Grid as GridDecorator;
-use Terranet\Administrator\Form\Collection\Mutable;
 use Terranet\Translatable\Translatable;
 
 trait HasColumns
@@ -17,7 +16,7 @@ trait HasColumns
      *
      * @return MutableCollection
      */
-    public function columns()
+    public function columns(): MutableCollection
     {
         return $this->scaffoldColumns();
     }
@@ -25,33 +24,31 @@ trait HasColumns
     /**
      * Define the list of attributes visible on View model page.
      *
-     * @param Model $model
-     *
-     * @return Mutable
+     * @return MutableCollection
      */
-    public function viewColumns()
+    public function viewColumns(): MutableCollection
     {
-        return $this->columns();
+        return $this->scaffoldColumns();
     }
 
     /**
-     * @param Manager $widgets
+     * List of widgets.
      *
      * @return Manager
      */
-    public function widgets(Manager $widgets): Manager
+    public function widgets(): Manager
     {
-        return $widgets;
+        return new Manager();
     }
 
     /**
-     * @param Manager $cards
+     * List of cards.
      *
      * @return Manager
      */
-    public function cards(Manager $cards): Manager
+    public function cards(): Manager
     {
-        return $cards;
+        return new Manager();
     }
 
     /**
@@ -59,7 +56,7 @@ trait HasColumns
      *
      * @return MutableCollection
      */
-    protected function scaffoldColumns()
+    protected function scaffoldColumns(): MutableCollection
     {
         return $this->collectColumns(
             $this->model()
@@ -71,7 +68,7 @@ trait HasColumns
      *
      * @return MutableCollection
      */
-    protected function collectColumns(Model $model = null)
+    protected function collectColumns(Model $model = null): MutableCollection
     {
         if (!$model) {
             return new MutableCollection([]);
@@ -80,7 +77,7 @@ trait HasColumns
         $pk = $model->getKeyName();
 
         $fillable = array_merge(
-            \is_array($pk) ? $pk : [$pk],
+            is_array($pk) ? $pk : [$pk],
             $model->getFillable()
         );
         $hidden = $model->getHidden();
@@ -96,9 +93,9 @@ trait HasColumns
 
         if (property_exists($this, 'includeDateColumns')
             && $this->includeDateColumns
-            && \count($dates = $model->getDates())) {
+            && count($dates = $model->getDates())) {
             // allow setting specific timestamp: created_at
-            if (\is_string($this->includeDateColumns)) {
+            if (is_string($this->includeDateColumns)) {
                 $dates = array_intersect($dates, [$this->includeDateColumns]);
 
                 $elements = $elements->merge($dates);

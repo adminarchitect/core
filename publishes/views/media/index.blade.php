@@ -1,6 +1,5 @@
-@extends($template->layout($popup ? 'popup' : 'app'))
+@extends($resource->template()->layout($popup ? 'popup' : 'app'))
 
-@inject('template', 'scaffold.template')
 @inject('config', 'scaffold.config')
 
 @push('scaffold.headjs')

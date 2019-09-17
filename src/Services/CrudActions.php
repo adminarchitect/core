@@ -68,12 +68,7 @@ class CrudActions implements CrudActionsContract
      */
     public function save($eloquent, UpdateRequest $request)
     {
-        $saver = app('scaffold.module')->saver();
-        $saver = new $saver($eloquent, $request);
-
-        if (!$saver instanceof Saver) {
-            throw new Exception('Saver must implement '.Saver::class.' contract');
-        }
+        $saver = $this->module->saver($eloquent, $request);
 
         return $saver->sync();
     }

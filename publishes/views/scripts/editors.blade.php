@@ -1,5 +1,4 @@
-@inject('module', 'scaffold.module')
-@php($form = $module->form())
+@php($form = $resource->form())
 
 @if($form->hasEditors('markdown'))
     @if (file_exists(public_path('admin/editors/markdown.js')))

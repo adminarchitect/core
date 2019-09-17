@@ -2,8 +2,13 @@
 
 namespace Terranet\Administrator\Contracts;
 
+use Illuminate\Database\Eloquent\Model;
+use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Contracts\Services\Finder;
+use Terranet\Administrator\Contracts\Services\Saver;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
+use Terranet\Administrator\Requests\UpdateRequest;
+use Terranet\Administrator\Services\Breadcrumbs;
 
 interface Module
 {
@@ -17,23 +22,23 @@ interface Module
     /**
      * The module title.
      *
-     * @return mixed
+     * @return string
      */
-    public function title();
+    public function title(): string;
 
     /**
      * The module url.
      *
-     * @return mixed
+     * @return string
      */
-    public function url();
+    public function url(): string;
 
     /**
      * Define the list of columns to show.
      *
-     * @return mixed
+     * @return Mutable
      */
-    public function columns();
+    public function columns(): Mutable;
 
     /**
      * Define the class responsive for fetching items.
@@ -45,30 +50,25 @@ interface Module
     /**
      * Breadcrumbs provider.
      *
-     * @return mixed
+     * @return null|Breadcrumbs
      */
-    public function breadcrumbs();
+    public function breadcrumbs(): ?Breadcrumbs;
 
     /**
      * Define the class responsive for persisting items.
      *
-     * @return mixed
+     * @param  Model  $eloquent
+     * @param  UpdateRequest  $request
+     * @return Saver
      */
-    public function saver();
-
-    /**
-     * Actions handler.
-     *
-     * @return mixed
-     */
-    public function actions();
+    public function saver(Model $eloquent, UpdateRequest $request): Saver;
 
     /**
      * Actions handler.
      *
      * @return ActionsManager
      */
-    public function actionsManager(): ActionsManager;
+    public function actions(): ActionsManager;
 
     /**
      * The module Templates manager.

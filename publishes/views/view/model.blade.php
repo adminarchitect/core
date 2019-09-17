@@ -1,12 +1,10 @@
-@inject('module', 'scaffold.module')
-
 <?php
-$elements = $module->viewColumns()->each->setModel($item);
+$elements = $resource->viewColumns()->each->setModel($item);
 ?>
 <table class="table table-striped-col">
     <tr>
         <th colspan="2" class="btn-quirk">
-            {{ (isset($title) ? $title: $module->singular()) }}
+            {{ (isset($title) ? $title: $resource->singular()) }}
         </th>
     </tr>
     @foreach($elements->filter(function($e) {return !($e instanceof \Terranet\Administrator\Field\HasMany || $e instanceof \Terranet\Administrator\Field\Media);}) as $element)

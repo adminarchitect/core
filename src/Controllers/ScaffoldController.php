@@ -52,10 +52,14 @@ class ScaffoldController extends AdminController
      */
     public function view(AdminRequest $request, string $page, $id)
     {
+        /** @var Scaffolding $resource */
+        $resource = $request->resource();
+
         $this->authorize('view', $eloquent = $request->resolveModel($id));
 
         return view($request->resource()->template()->view('index'), [
             'item' => $eloquent,
+            'resource' => $resource,
         ]);
     }
 
@@ -70,10 +74,14 @@ class ScaffoldController extends AdminController
      */
     public function edit(AdminRequest $request, string $page, $id): View
     {
+        /** @var Scaffolding $resource */
+        $resource = $request->resource();
+
         $this->authorize('update', $eloquent = $request->resolveModel($id));
 
-        return view($request->resource()->template()->edit('index'), [
+        return view($resource->template()->edit('index'), [
             'item' => $eloquent,
+            'resource' => $resource,
         ]);
     }
 
@@ -91,7 +99,7 @@ class ScaffoldController extends AdminController
         $this->authorize('update', $eloquent = $request->resolveModel($id));
 
         try {
-            $resource->actionsManager()->exec('save', [$eloquent, $request]);
+            $resource->actions()->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
@@ -107,13 +115,19 @@ class ScaffoldController extends AdminController
      *
      * @param  AdminRequest  $request
      * @return View
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(AdminRequest $request)
     {
-        $this->authorize('create', $eloquent = $request->resource()->model());
+        /** @var Scaffolding $resource */
+        $resource = $request->resource();
 
-        return view($request->resource()->template()->edit('index'), ['item' => $eloquent]);
+        $this->authorize('create', $eloquent = $resource->model());
+
+        return view($request->resource()->template()->edit('index'), [
+            'item' => $eloquent,
+            'resource' => $resource,
+        ]);
     }
 
     /**
@@ -132,7 +146,7 @@ class ScaffoldController extends AdminController
         $this->authorize('create', $eloquent = $resource->model());
 
         try {
-            $eloquent = $resource->actionsManager()->exec('save', [$eloquent, $request]);
+            $eloquent = $resource->actions()->exec('save', [$eloquent, $request]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
@@ -156,7 +170,7 @@ class ScaffoldController extends AdminController
         $this->authorize('delete', $eloquent = $request->resolveModel($id));
 
         try {
-            $module->actionsManager()->exec('delete', [$eloquent]);
+            $module->actions()->exec('delete', [$eloquent]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
@@ -183,7 +197,7 @@ class ScaffoldController extends AdminController
         $this->authorize('update', $eloquent = $request->resolveModel($id));
 
         try {
-            $resource->actionsManager()->exec('detachFile', [$eloquent, $attachment]);
+            $resource->actions()->exec('detachFile', [$eloquent, $attachment]);
         } catch (\Exception $e) {
             return back()->withErrors([$e->getMessage()]);
         }
@@ -301,7 +315,7 @@ class ScaffoldController extends AdminController
 
         $this->authorize($action, $eloquent = $request->resolveModel($id));
 
-        $response = $resource->actionsManager()->exec('action::'.$action, [$eloquent]);
+        $response = $resource->actions()->exec('action::'.$action, [$eloquent]);
 
         if ($response instanceof Response || $response instanceof Renderable) {
             return $response;

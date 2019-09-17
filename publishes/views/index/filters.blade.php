@@ -1,7 +1,6 @@
-@inject('module', 'scaffold.module')
 <?php
 $elements = $filter->filters();
-$resetUrl = method_exists($module, 'defaultRoute') ? $module->defaultRoute() : route('scaffold.index', ['module' => $module]);
+$resetUrl = method_exists($resource, 'defaultRoute') ? $resource->defaultRoute() : route('scaffold.index', ['module' => $resource]);
 
 $filled = $elements ? $elements->reduce(function ($filled, $element) {
     if ($element->value()) {
@@ -22,8 +21,8 @@ $hasFilters = ($resetUrl !== request()->fullUrl()) && $filled;
         </div>
         <div class="panel-body">
             <form action="" data-id="filter-form" class="form">
-                <input type="hidden" name="sort_by" value="{{ $sortable->element() }}"/>
-                <input type="hidden" name="sort_dir" value="{{ $sortable->direction() }}"/>
+                <input type="hidden" name="sort_by" value="{{ $resource->sortableManager()->element() }}"/>
+                <input type="hidden" name="sort_dir" value="{{ $resource->sortableManager()->direction() }}"/>
                 @if ($scope = $filter->scope())
                     <input type="hidden" name="scoped_to" value="{{ $scope }}"/>
                 @endif

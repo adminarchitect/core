@@ -30,7 +30,8 @@ class Finder implements FinderContract
 
     /**
      * Finder constructor.
-     * @param Module $module
+     *
+     * @param  Module  $module
      */
     public function __construct(Module $module)
     {
@@ -57,10 +58,10 @@ class Finder implements FinderContract
     /**
      * Build Scaffolding Index page query.
      *
-     * @return mixed
+     * @return Builder
      * @throws Exception
      */
-    public function getQuery()
+    public function getQuery(): Builder
     {
         // prevent duplicated execution
         if (null === $this->query && $this->model) {
@@ -79,8 +80,7 @@ class Finder implements FinderContract
      * Find a record by id or fail.
      *
      * @param       $key
-     * @param array $columns
-     *
+     * @param  array  $columns
      * @return mixed
      */
     public function find($key, $columns = ['*'])
@@ -124,15 +124,17 @@ class Finder implements FinderContract
      */
     protected function applyFilters(): FinderContract
     {
-        if ($filter = $this->module->filter()) {
-            if ($filters = $filter->filters()) {
-                $this->assembler()->filters($filters);
-            }
+        if (!$filter = $this->module->filter()) {
+            return $this;
+        }
 
-            if ($scopes = $filter->scopes()) {
-                if (($scope = $filter->scope()) && ($found = $scopes->find($scope))) {
-                    $this->assembler()->scope($found);
-                }
+        if ($filters = $filter->filters()) {
+            $this->assembler()->filters($filters);
+        }
+
+        if ($scopes = $filter->scopes()) {
+            if (($scope = $filter->scope()) && ($found = $scopes->find($scope))) {
+                $this->assembler()->scope($found);
             }
         }
 
@@ -161,14 +163,14 @@ class Finder implements FinderContract
      */
     protected function applySorting(): FinderContract
     {
-        $sortable = app('scaffold.sortable');
+        /** @var Sorter $sortable */
+        $sortable = $this->module->sortableManager();
+
         $element = $sortable->element();
         $direction = $sortable->direction();
 
-        if ($element && $direction) {
-            if (\is_string($element)) {
-                $this->assembler()->sort($element, $direction);
-            }
+        if ($element && $direction && is_string($element)) {
+            $this->assembler()->sort($element, $direction);
         }
 
         return $this;

@@ -1,5 +1,4 @@
 @inject('config', 'scaffold.config')
-@inject('module', 'scaffold.module')
 
         <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +9,7 @@
 
     <title>
         {{ strip_tags($config->get('title')) }}
-        @if ($module && ($title = $module->title()))
+        @if ($resource && ($title = $resource->title()))
         &raquo; {{ $title }}
         @endif
     </title>
@@ -45,7 +44,7 @@
 
                 <div class="header-right">
                     <ul class="headermenu">
-                        @include($template->menu('tools'))
+                        @include($resource->template()->menu('tools'))
                     </ul>
                 </div>
             </div>
@@ -69,18 +68,18 @@
 
     <div class="mainpanel">
         <div class="contentpanel">
-            @if ($module)
+            @if ($resource)
                 @yield('scaffold.create')
 
-                <h4 class="btn-quirk">{{ $module->title() }} @yield('total')</h4>
-                @if ($config->get('breadcrumbs') && $breadcrumbs = app('scaffold.breadcrumbs'))
+                <h4 class="btn-quirk">{{ $resource->title() }} @yield('total')</h4>
+                @if ($config->get('breadcrumbs') && $breadcrumbs = $resource->breadcrumbs())
                     {!! $breadcrumbs->render() !!}
                 @else
                     <br><br>
                 @endif
             @endif
 
-            @include($template->partials('messages'))
+            @include($resource->template()->partials('messages'))
 
             @yield('scaffold.cards')
 

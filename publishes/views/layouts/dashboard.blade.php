@@ -1,6 +1,4 @@
-@extends($template->layout())
-
-@inject('template', 'scaffold.template')
+@extends($resource->template()->layout())
 
 @section('scaffold.content')
     @include('administrator::dashboard.widgets', ['widgets' => app('scaffold.dashboard')])
