@@ -29,7 +29,6 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminWidgets' => 'scaffold.widgets',
         'AdminSchema' => 'scaffold.schema',
         'AdminSortable' => 'scaffold.sortable',
-        'AdminFilter' => 'scaffold.filter',
         'AdminTemplate' => 'scaffold.template',
         'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminTranslations' => 'scaffold.translations',
@@ -43,10 +42,10 @@ class ContainersServiceProvider extends ServiceProvider
 
             \call_user_func_array([$this, $method], []);
         }
-
-        $this->app->bind(Module::class, function ($app) {
-            return $app['scaffold.module'];
-        });
+//
+//        $this->app->bind(Module::class, function ($app) {
+//            return $app['scaffold.module'];
+//        });
     }
 
     protected function registerAdminAnnotations()
@@ -210,18 +209,6 @@ class ContainersServiceProvider extends ServiceProvider
             }
 
             return $handler;
-        });
-    }
-
-    protected function registerAdminFilter()
-    {
-        $this->app->singleton('scaffold.filter', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                $filters = $module instanceof Filtrable ? $module->filters() : null;
-                $scopes = $module instanceof Filtrable ? $module->scopes() : null;
-
-                return new Filter($app['request'], $filters, $scopes);
-            }
         });
     }
 

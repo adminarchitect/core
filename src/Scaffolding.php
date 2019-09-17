@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Terranet\Administrator\Contracts\ActionsManager as ActionsManagerContract;
 use Terranet\Administrator\Contracts\AutoTranslatable;
+use Terranet\Administrator\Contracts\Filter as FiltersManagerContract;
 use Terranet\Administrator\Contracts\Module;
+use Terranet\Administrator\Contracts\Module\Filtrable;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
 use Terranet\Administrator\Services\Breadcrumbs;
@@ -91,8 +93,10 @@ class Scaffolding implements Module, AutoTranslatable
 
     /**
      * Scaffolding constructor.
+     *
+     * @param  AdminRequest  $request
      */
-    public function __construct(Request $request)
+    public function __construct(AdminRequest $request)
     {
         if (null === $this->includeDateColumns) {
             $this->includeDateColumns = $this->defaultIncludeDateColumnsValue();
@@ -156,7 +160,7 @@ class Scaffolding implements Module, AutoTranslatable
      *
      * @return string
      */
-    public function template()
+    protected function templateClassName(): string
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Templates'))) {
             return $file;
@@ -165,8 +169,22 @@ class Scaffolding implements Module, AutoTranslatable
         return $this->template;
     }
 
+    public function template(): TemplateProvider
+    {
+        // check for resource template
+        $handler = $this->templateClassName();
+        $handler = new $handler();
+
+        if (!$handler instanceof TemplateProvider) {
+            throw new Exception('Templates handler must implement '.TemplateProvider::class.' contract');
+        }
+
+        return $handler;
+    }
+
     /**
      * @return Model
+     * @throws \Exception
      */
     public function model()
     {
@@ -191,11 +209,19 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * @return Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
      * Define the class responsive for fetching items.
      *
-     * @return mixed
+     * @return string
      */
-    public function finder()
+    protected function finderClassName(): string
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Finders'))) {
             return $file;
@@ -205,19 +231,11 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
-     * @return Request
-     */
-    public function request()
-    {
-        return $this->request;
-    }
-
-    /**
      * @return mixed
      */
-    public function finderInstance(): FinderContract
+    public function finder(): FinderContract
     {
-        $className = $this->finder();
+        $className = $this->finderClassName();
 
         return once(function () use ($className) {
             $this->columns();
@@ -227,11 +245,28 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * Filters & Scopes manager.
+     *
+     * @return Filter
+     */
+    public function filter(): FiltersManagerContract
+    {
+        $filters = $scopes = null;
+
+        if ($this instanceof Filtrable) {
+            $filters = $this->filters();
+            $scopes = $this->scopes();
+        }
+
+        return new Filter($this->request(), $filters, $scopes);
+    }
+
+    /**
      * Define the class responsive for persisting items.
      *
-     * @return mixed
+     * @return string
      */
-    public function saver()
+    public function saver(): string
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Savers'))) {
             return $file;

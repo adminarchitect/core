@@ -1,4 +1,4 @@
-@if (\admin\helpers\exportable($module) && !empty($formats = $module->formats()))
+@if (\admin\helpers\exportable($resource) && !empty($formats = $resource->formats()))
     <?php
     foreach ($formats as $format => $title) {
         if (is_numeric($format)) {
@@ -6,7 +6,7 @@
             $title = str_replace('_', ' ', $format);
         }
         $title = mb_strtoupper($title);
-        $links[] = link_to($module->makeExportableUrl($format), $title);
+        $links[] = link_to($resource->makeExportableUrl($format), $title);
     }
     ?>
     <div class="export-collection" style="padding: 10px 0;">

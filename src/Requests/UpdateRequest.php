@@ -3,9 +3,10 @@
 namespace Terranet\Administrator\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Terranet\Administrator\AdminRequest;
 use Terranet\Administrator\Contracts\Module\Validable;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends AdminRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -13,11 +13,6 @@ use Terranet\Administrator\Middleware\Resources;
 
 abstract class AdminController extends BaseController
 {
-    /**
-     * @var null|\Illuminate\Translation\Translator
-     */
-    protected $translationsManager;
-
     public function __construct()
     {
         $this->middleware([
@@ -25,8 +20,6 @@ abstract class AdminController extends BaseController
             Authenticate::class,
             Resources::class,
         ]);
-
-        $this->translator = app(Translator::class);
     }
 
     /**
@@ -45,7 +38,7 @@ abstract class AdminController extends BaseController
         if (!$response = $resource->actionsManager()->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
-                $this->translator->trans('administrator::errors.unauthorized')
+                $this->translator()->trans('administrator::errors.unauthorized')
             );
         }
 
@@ -85,5 +78,10 @@ abstract class AdminController extends BaseController
         $message = sprintf($message.' [%s]', $ability);
 
         return new HttpException(403, $message, $previousException);
+    }
+
+    public function translator()
+    {
+        return app(Translator::class);
     }
 }

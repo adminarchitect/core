@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
+use Terranet\Administrator\Exception;
 use Terranet\Administrator\Filters\Assembler;
 
 class Finder implements FinderContract
@@ -42,6 +43,7 @@ class Finder implements FinderContract
      * Fetch all items from repository.
      *
      * @return mixed
+     * @throws Exception
      */
     public function fetchAll()
     {
@@ -56,6 +58,7 @@ class Finder implements FinderContract
      * Build Scaffolding Index page query.
      *
      * @return mixed
+     * @throws Exception
      */
     public function getQuery()
     {
@@ -117,11 +120,11 @@ class Finder implements FinderContract
      * Apply query string filters.
      *
      * @return FinderContract
-     * @throws \Terranet\Administrator\Exception
+     * @throws Exception
      */
     protected function applyFilters(): FinderContract
     {
-        if ($filter = app('scaffold.filter')) {
+        if ($filter = $this->module->filter()) {
             if ($filters = $filter->filters()) {
                 $this->assembler()->filters($filters);
             }
@@ -154,6 +157,7 @@ class Finder implements FinderContract
      * Extend query with Order By Statement.
      *
      * @return FinderContract
+     * @throws \Exception
      */
     protected function applySorting(): FinderContract
     {
