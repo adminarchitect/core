@@ -2,23 +2,21 @@
 
 namespace Terranet\Administrator\Contracts\Module;
 
+use Terranet\Administrator\Collection\Mutable;
+
 interface Filtrable
 {
     /**
      * Declare scaffold filters.
      *
-     * @example: return filter_text("Name");
-     *
-     * @return array
+     * @return Mutable
      */
     public function filters();
 
     /**
-     * Declare scaffold filters.
+     * Declare scaffold scopes.
      *
-     * @example: return filter_text("Name");
-     *
-     * @return array
+     * @return Mutable
      */
     public function scopes();
 }

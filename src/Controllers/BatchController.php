@@ -50,7 +50,7 @@ class BatchController extends AdminController
 
         $this->authorize('index', $resource->model());
 
-        $query = $resource->finderInstance()->getQuery();
+        $query = $resource->finder()->getQuery();
 
         return $resource->scaffoldActions()->exec('export', [$query, $format]);
     }

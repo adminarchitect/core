@@ -19,7 +19,7 @@
 
     @unless($actions->readonly())
         <td class="actions">
-            @include('administrator::index.row_actions', ['actions' => $actions, 'module' => $module])
+            @include('administrator::index.row_actions', ['actions' => $actions, 'module' => $resource])
         </td>
     @endunless
 </tr>

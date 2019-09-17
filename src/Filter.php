@@ -25,7 +25,7 @@ class Filter implements FilterContract
     /**
      * Scopes collection.
      *
-     * @var
+     * @var null|Collection
      */
     protected $scopes;
 

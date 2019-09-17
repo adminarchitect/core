@@ -1,12 +1,10 @@
 @extends($template->layout())
 
-@inject('module', 'scaffold.module')
-@inject('filter', 'scaffold.filter')
 @inject('template', 'scaffold.template')
 @inject('sortable', 'scaffold.sortable')
 
-@php($actions = $module->actionsManager())
-@php($columns = $module->columns())
+@php($actions = $resource->actionsManager())
+@php($columns = $resource->columns())
 
 @section('total')
     <sup class="small">({{ $items->total() }})</sup>
@@ -34,7 +32,7 @@
 
 @section('scaffold.content')
     @if ($columns->count())
-        @component('administrator::components.index.index', ['module' => $module, 'items' => $items])
+        @component('administrator::components.index.index', ['module' => $resource, 'items' => $items])
             @slot('checkboxes')
                 @if($actions->batch()->count() && !$actions->readonly())
                     <th width="10">
@@ -65,7 +63,7 @@
             @endslot
 
             @slot('exportable')
-                @if ($exportable = method_exists($module, 'formats') && $module->formats())
+                @if ($exportable = method_exists($resource, 'formats') && $resource->formats())
                     @include($template->index('export'))
                 @endif
             @endslot
@@ -77,15 +75,15 @@
             @endslot
 
             @slot('gridBefore')
-                {!! $module->gridBefore() !!}
+                {!! $resource->gridBefore() !!}
             @endslot
 
             @slot('gridAfter')
-                {!! $module->gridAfter() !!}
+                {!! $resource->gridAfter() !!}
             @endslot
         @endcomponent
     @else
-        @component('administrator::components.index.index', ['module' => $module, 'items' => []])
+        @component('administrator::components.index.index', ['module' => $resource, 'items' => []])
             @slot('rows')
                 Can not generate table. Not enough data.
             @endslot

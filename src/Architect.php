@@ -25,7 +25,6 @@ class Architect
      *
      * @param  Model|string  $model
      * @param  string  $urlKey
-     *
      * @return mixed
      */
     public static function resourceByEntity($model, string $urlKey = null)
@@ -42,10 +41,22 @@ class Architect
     }
 
     /**
+     * Finds resource by a key.
+     *
+     * @param  string  $url
+     * @return mixed
+     */
+    public static function resourceForKey(string $url)
+    {
+        return app('scaffold.modules')->first(function ($module) use ($url) {
+            return $module->url() === $url;
+        });
+    }
+
+    /**
      * Humanize the given value into a proper name.
      *
      * @param  string  $value
-     *
      * @return string
      */
     public static function humanize($value)

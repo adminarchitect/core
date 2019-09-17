@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Contracts;
 
 use Terranet\Administrator\Contracts\Services\Finder;
+use Terranet\Administrator\Contracts\Services\TemplateProvider;
 
 interface Module
 {
@@ -37,16 +38,9 @@ interface Module
     /**
      * Define the class responsive for fetching items.
      *
-     * @return mixed
+     * @return null|Finder
      */
-    public function finder();
-
-    /**
-     * Define the class responsive for fetching items.
-     *
-     * @return mixed
-     */
-    public function finderInstance(): Finder;
+    public function finder(): ?Finder;
 
     /**
      * Breadcrumbs provider.
@@ -79,7 +73,14 @@ interface Module
     /**
      * The module Templates manager.
      *
-     * @return string
+     * @return null|TemplateProvider
      */
-    public function template();
+    public function template(): ?TemplateProvider;
+
+    /**
+     * Filters & Scopes handler.
+     *
+     * @return null|Filter
+     */
+    public function filter(): ?Filter;
 }
