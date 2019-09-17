@@ -19,6 +19,11 @@ class AdminRequest extends FormRequest
         return [];
     }
 
+    /**
+     * Resolve resource based on router parameters.
+     *
+     * @return null|Module
+     */
     public function resource(): ?Module
     {
         return once(function () {
@@ -28,6 +33,12 @@ class AdminRequest extends FormRequest
         });
     }
 
+    /**
+     * Resolve current model.
+     *
+     * @param $id
+     * @return null|Model
+     */
     public function resolveModel($id): ?Model
     {
         return once(function () use ($id) {
