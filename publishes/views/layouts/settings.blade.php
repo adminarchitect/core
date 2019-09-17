@@ -1,14 +1,11 @@
-@extends($template->layout())
-
-@inject('module', 'scaffold.module')
-@inject('template', 'scaffold.template')
+@extends($resource->template()->layout())
 
 @section('module_header')
-    {{ app('scaffold.module')->title() }}
+    {{ $resource->title() }}
 @stop
 
 @section('scaffold.content')
-    @php($form = $module->form())
+    @php($form = $resource->form())
     {!! Form::open() !!}
     <table class="table">
         @foreach($form as $field)

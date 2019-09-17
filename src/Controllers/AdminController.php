@@ -35,7 +35,7 @@ abstract class AdminController extends BaseController
         /** @var Module $resource */
         $resource = app('scaffold.module');
 
-        if (!$response = $resource->actionsManager()->authorize($ability, $arguments)) {
+        if (!$response = $resource->actions()->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
                 $this->translator()->trans('administrator::errors.unauthorized')

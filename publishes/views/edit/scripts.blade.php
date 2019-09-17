@@ -1,3 +1,3 @@
 @push('scaffold.js')
-    @include($template->scripts('editors'))
+    @include($resource->template()->scripts('editors'))
 @endpush

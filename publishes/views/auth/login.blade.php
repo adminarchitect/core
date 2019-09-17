@@ -1,5 +1,5 @@
 @inject('config', 'scaffold.config')
-@inject('template', 'scaffold.template')
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +22,7 @@
             <h4 class="panel-title">{{ $config->get('welcome') }}</h4>
         </div>
         <div class="panel-body">
-            @include($template->partials('messages'))
+            @include($resource->template()->partials('messages'))
 
             {!! Form::open() !!}
             <div class="form-group mb10">

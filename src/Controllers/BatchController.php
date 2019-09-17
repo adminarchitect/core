@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Terranet\Administrator\Scaffolding;
@@ -15,7 +16,7 @@ class BatchController extends AdminController
      * @param         $page
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function batch($page, Request $request)
     {
@@ -40,8 +41,8 @@ class BatchController extends AdminController
      *
      * @param $page
      * @param $format
-     *
      * @return mixed
+     * @throws \Exception
      */
     public function export($page, $format)
     {

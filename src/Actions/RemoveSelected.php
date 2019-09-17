@@ -40,7 +40,7 @@ class RemoveSelected
         /** @var Module $resource */
         $resource = app('scaffold.module');
 
-        return $resource->actionsManager()->authorize('delete', $eloquent);
+        return $resource->actions()->authorize('delete', $eloquent);
     }
 
     /**

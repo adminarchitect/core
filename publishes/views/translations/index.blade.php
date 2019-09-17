@@ -1,7 +1,6 @@
-@extends($template->layout())
+@extends($resource->template()->layout())
 
 @inject('config', 'scaffold.config')
-@inject('template', 'scaffold.template')
 
 @section('scaffold.content')
     <h4>

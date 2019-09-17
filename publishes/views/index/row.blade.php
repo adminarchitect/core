@@ -1,5 +1,5 @@
 <tr>
-    @if ($actions->batch()->count() && !$actions->readonly())
+    @if ($resource->actions()->batch()->count() && !$resource->actions()->readonly())
         <th>
             <label for="collection_{{$item->getKey()}}">
                 <input type="checkbox"
@@ -17,9 +17,9 @@
         </td>
     @endforeach
 
-    @unless($actions->readonly())
+    @unless($resource->actions()->readonly())
         <td class="actions">
-            @include('administrator::index.row_actions', ['actions' => $actions, 'module' => $resource])
+            @include('administrator::index.row_actions', ['actions' => $resource->actions(), 'module' => $resource])
         </td>
     @endunless
 </tr>

@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator;
 
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -10,12 +11,15 @@ use Terranet\Administrator\Contracts\AutoTranslatable;
 use Terranet\Administrator\Contracts\Filter as FiltersManagerContract;
 use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Contracts\Module\Filtrable;
+use Terranet\Administrator\Contracts\Module\Sortable;
 use Terranet\Administrator\Contracts\Services\Finder as FinderContract;
 use Terranet\Administrator\Contracts\Services\TemplateProvider;
+use Terranet\Administrator\Requests\UpdateRequest;
 use Terranet\Administrator\Services\Breadcrumbs;
 use Terranet\Administrator\Services\CrudActions;
 use Terranet\Administrator\Services\Finder;
 use Terranet\Administrator\Services\Saver;
+use Terranet\Administrator\Services\Sorter;
 use Terranet\Administrator\Services\Template;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
 use Terranet\Administrator\Traits\Module\AllowsNavigation;
@@ -53,7 +57,7 @@ class Scaffolding implements Module, AutoTranslatable
     /**
      * Service layer responsible for persisting request.
      *
-     * @var \Terranet\Administrator\Contracts\Services\Saver
+     * @var Contracts\Services\Saver
      */
     protected $saver = Saver::class;
 
@@ -171,15 +175,17 @@ class Scaffolding implements Module, AutoTranslatable
 
     public function template(): TemplateProvider
     {
-        // check for resource template
-        $handler = $this->templateClassName();
-        $handler = new $handler();
+        return once(function () {
+            // check for resource template
+            $handler = $this->templateClassName();
+            $handler = new $handler();
 
-        if (!$handler instanceof TemplateProvider) {
-            throw new Exception('Templates handler must implement '.TemplateProvider::class.' contract');
-        }
+            if (!$handler instanceof TemplateProvider) {
+                throw new Exception('Templates handler must implement '.TemplateProvider::class.' contract');
+            }
 
-        return $handler;
+            return $handler;
+        });
     }
 
     /**
@@ -262,11 +268,24 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * @return Sorter
+     */
+    public function sortableManager(): Sorter
+    {
+        return once(function () {
+            return new Sorter(
+                $this instanceof Sortable ? $this->sortable() : [],
+                method_exists($this, 'sortDirection') ? $this->sortDirection() : 'desc'
+            );
+        });
+    }
+
+    /**
      * Define the class responsive for persisting items.
      *
      * @return string
      */
-    public function saver(): string
+    protected function saverClassName(): string
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Savers'))) {
             return $file;
@@ -276,12 +295,32 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * Define the class responsive for persisting items.
+     *
+     * @param  Model  $eloquent
+     * @param  UpdateRequest  $request
+     * @return Contracts\Services\Saver
+     * @throws Exception
+     */
+    public function saver(Model $eloquent, UpdateRequest $request): Contracts\Services\Saver
+    {
+        $className = $this->saverClassName();
+        $instance = new $className($eloquent, $request);
+
+        if (!$instance instanceof Contracts\Services\Saver) {
+            throw new Exception('Saver must implement '.Saver::class.' contract');
+        }
+
+        return $instance;
+    }
+
+    /**
      * Breadcrumbs provider
      * First parse Module doc block for provider declaration.
      *
      * @return mixed
      */
-    public function breadcrumbs()
+    public function breadcrumbsClassName()
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Breadcrumbs'))) {
             return $file;
@@ -291,13 +330,32 @@ class Scaffolding implements Module, AutoTranslatable
     }
 
     /**
+     * Breadcrumbs service.
+     *
+     * @return Breadcrumbs
+     * @throws Exception
+     */
+    public function breadcrumbs(): Breadcrumbs
+    {
+        if (!class_exists(BreadcrumbsManager::class)) {
+            throw new Exception('Please install `davejamesmiller/laravel-breadcrumbs:^5.2` package.');
+        }
+
+        $provider = $this->breadcrumbsClassName();
+
+        return new $provider(
+            app(BreadcrumbsManager::class), $this
+        );
+    }
+
+    /**
      * Define the Actions provider - object responsive for
      * CRUD operations, Export, etc...
      * as like as checks action permissions.
      *
      * @return mixed
      */
-    public function actions()
+    public function actionsClassName()
     {
         if (class_exists($file = $this->getQualifiedClassNameOfType('Actions'))) {
             return $file;
@@ -310,9 +368,9 @@ class Scaffolding implements Module, AutoTranslatable
      * @return ActionsManager
      * @throws Exception
      */
-    public function actionsManager(): ActionsManagerContract
+    public function actions(): ActionsManagerContract
     {
-        $handler = $this->actions();
+        $handler = $this->actionsClassName();
         $handler = new $handler($this);
 
         if (!$handler instanceof CrudActions) {

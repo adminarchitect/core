@@ -1,16 +1,11 @@
-@extends($template->layout())
-
-@inject('module', 'scaffold.module')
-@inject('template', 'scaffold.template')
-
-@php($actions = $module->actionsManager())
+@extends($resource->template()->layout())
 
 @section('scaffold.create')
-    @include($template->edit('create'))
+    @include($resource->template()->edit('create'))
 @endsection
 
 @section('scaffold.content')
-    @php($form = $module->form())
+    @php($form = $resource->form())
     <div class="panel">
         <div class="panel-body">
             @php($form->each->setModel($item))
@@ -22,10 +17,10 @@
                 {!! $hidden->render(\Terranet\Administrator\Scaffolding::PAGE_EDIT) !!}
             @endforeach
             <table class="table table-striped-col">
-                @each($template->edit('row'), $form->visibleOnPage(\Terranet\Administrator\Scaffolding::PAGE_EDIT), 'field')
+                @each($resource->template()->edit('row'), $form->visibleOnPage(\Terranet\Administrator\Scaffolding::PAGE_EDIT), 'field')
 
-                @unless($actions->readonly())
-                    @include($template->edit('actions'))
+                @unless($resource->actions()->readonly())
+                    @include($resource->template()->edit('actions'))
                 @endunless
             </table>
             {!! Form::close() !!}
@@ -33,4 +28,4 @@
     </div>
 @stop
 
-@include($template->edit('scripts'))
+@include($resource->template()->edit('scripts'))

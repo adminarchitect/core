@@ -25,7 +25,7 @@ $style = [
 ?>
 
 <table class="exportable" style="{{ $style['table'] }}">
-    <caption style="{{ $style['caption'] }}">{{ config('app.name') }} - {{ ucwords($module) }} / {{ $time->toFormattedDateString() }}</caption>
+    <caption style="{{ $style['caption'] }}">{{ config('app.name') }} - {{ ucwords($resource) }} / {{ $time->toFormattedDateString() }}</caption>
 
     @foreach($items as $item)
         @if ($loop->first)

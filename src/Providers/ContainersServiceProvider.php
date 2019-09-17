@@ -2,22 +2,12 @@
 
 namespace Terranet\Administrator\Providers;
 
-use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
-use Terranet\Administrator\Contracts\Module;
-use Terranet\Administrator\Contracts\Module\Filtrable;
-use Terranet\Administrator\Contracts\Module\Sortable;
-use Terranet\Administrator\Contracts\Services\TemplateProvider;
-use Terranet\Administrator\Dashboard\Manager;
-use Terranet\Administrator\Exception;
-use Terranet\Administrator\Filter;
 use Terranet\Administrator\Schema;
-use Terranet\Administrator\Services\Sorter;
-use Terranet\Administrator\Services\Template;
 use Terranet\Localizer\Locale;
 
 class ContainersServiceProvider extends ServiceProvider
@@ -26,11 +16,7 @@ class ContainersServiceProvider extends ServiceProvider
         'AdminConfig' => 'scaffold.config',
         'AdminResource' => 'scaffold.module',
         'AdminModel' => 'scaffold.model',
-        'AdminWidgets' => 'scaffold.widgets',
         'AdminSchema' => 'scaffold.schema',
-        'AdminSortable' => 'scaffold.sortable',
-        'AdminTemplate' => 'scaffold.template',
-        'AdminBreadcrumbs' => 'scaffold.breadcrumbs',
         'AdminTranslations' => 'scaffold.translations',
         'AdminAnnotations' => 'scaffold.annotations',
     ];
@@ -79,7 +65,7 @@ class ContainersServiceProvider extends ServiceProvider
         // Making locale(s) Readonly remains for Dev's side: the recommended way - use a custom Middleware.
         // ex.: app('scaffold.translations')->setReadonly([1, 2, 3])
         $this->app->singleton('scaffold.translations', function ($app) {
-            $service = new class() {
+            return new class() {
                 protected $readonly = [];
 
                 public function __construct()
@@ -90,8 +76,7 @@ class ContainersServiceProvider extends ServiceProvider
                 /**
                  * Set ReadOnly locales.
                  *
-                 * @param array $readonly
-                 *
+                 * @param  array  $readonly
                  * @return self
                  */
                 public function setReadonly(array $readonly = []): self
@@ -105,7 +90,6 @@ class ContainersServiceProvider extends ServiceProvider
                  * Check if a Locale is ReadOnly.
                  *
                  * @param $locale
-                 *
                  * @return bool
                  */
                 public function readonly($locale)
@@ -117,8 +101,6 @@ class ContainersServiceProvider extends ServiceProvider
                     return \in_array((int) $locale, $this->readonly, true);
                 }
             };
-
-            return $service;
         });
     }
 
@@ -146,28 +128,9 @@ class ContainersServiceProvider extends ServiceProvider
     {
         $this->app->singleton('scaffold.model', function ($app) {
             if (($id = $app['router']->current()->parameter('id'))
-                && ($finder = app('scaffold.module')->finderInstance())) {
+                && ($finder = app('scaffold.module')->finder())) {
                 return $finder->find($id);
             }
-        });
-    }
-
-    protected function registerAdminWidgets()
-    {
-        $this->app->singleton('scaffold.widgets', function () {
-            if (($module = app('scaffold.module'))) {
-                return $module->widgets(new Manager());
-            }
-
-            return new Manager();
-        });
-
-        $this->app->singleton('scaffold.cards', function () {
-            if (($module = app('scaffold.module'))) {
-                return $module->cards(new Manager());
-            }
-
-            return new Manager();
         });
     }
 
@@ -181,48 +144,6 @@ class ContainersServiceProvider extends ServiceProvider
                 $platform->registerDoctrineTypeMapping('set', 'string');
 
                 return new Schema($schema);
-            }
-        });
-    }
-
-    protected function registerAdminSortable()
-    {
-        $this->app->singleton('scaffold.sortable', function ($app) {
-            if ($module = $app['scaffold.module']) {
-                return new Sorter(
-                    $module instanceof Sortable ? $module->sortable() : [],
-                    method_exists($module, 'sortDirection') ? $module->sortDirection() : 'desc'
-                );
-            }
-        });
-    }
-
-    protected function registerAdminTemplate()
-    {
-        $this->app->singleton('scaffold.template', function ($app) {
-            // check for resource template
-            $handler = ($module = $app['scaffold.module']) ? $module->template() : Template::class;
-            $handler = new $handler();
-
-            if (!$handler instanceof TemplateProvider) {
-                throw new Exception('Templates handler must implement '.TemplateProvider::class.' contract');
-            }
-
-            return $handler;
-        });
-    }
-
-    protected function registerAdminBreadcrumbs()
-    {
-        $this->app->singleton('scaffold.breadcrumbs', function ($app) {
-            if (!class_exists(BreadcrumbsManager::class)) {
-                throw new Exception('Please install `davejamesmiller/laravel-breadcrumbs:^5.2` package.');
-            }
-
-            if ($module = $app['scaffold.module']) {
-                $provider = $module->breadcrumbs();
-
-                return new $provider($app->make(BreadcrumbsManager::class), $app->make('scaffold.module'));
             }
         });
     }
