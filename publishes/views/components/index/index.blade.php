@@ -1,6 +1,6 @@
 <div class="panel">
     <div class="panel-body">
-        <form method="post" id="collection" action="{{ route('scaffold.batch', ['page' => $resource]) }}">
+        <form method="post" id="collection" action="{{ route('scaffold.batch', ['module' => $resource->url()]) }}">
             <?php echo Form::hidden('batch_action', null, ['id' => 'batch_action']); ?>
             <?php echo Form::token(); ?>
 
