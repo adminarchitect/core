@@ -33,8 +33,7 @@ class BelongsToMany extends HasMany
     }
 
     /**
-     * @param string $column
-     *
+     * @param  string  $column
      * @return BelongsToMany
      */
     public function useAsTitle(string $column): self
