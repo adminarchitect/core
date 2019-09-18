@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Events\TranslationsChanged;
 use Terranet\Administrator\Services\TranslationsManager;
 
@@ -27,7 +28,7 @@ class TranslationsController extends AdminController
 
         $pagination->appends(compact('term', 'only'));
 
-        return view(app('scaffold.template')->translations('index'), [
+        return view(Architect::template()->translations('index'), [
             'pagination' => $pagination,
             'scopes' => $this->manager()->filters(),
         ]);

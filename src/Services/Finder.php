@@ -48,8 +48,8 @@ class Finder implements FinderContract
      */
     public function fetchAll()
     {
-        if ($query = $this->getQuery()) {
-            return $query->paginate($this->perPage());
+        if ($builder = $this->getQuery()) {
+            return $builder->paginate($this->perPage());
         }
 
         return new LengthAwarePaginator([], 0, 10, 1);
@@ -85,9 +85,9 @@ class Finder implements FinderContract
      */
     public function find($key, $columns = ['*'])
     {
-        $this->model = $this->model->newQueryWithoutScopes()->findOrFail($key, $columns);
-
-        return $this->model;
+        return $this->model = once(function () use ($key, $columns) {
+            return $this->model->newQueryWithoutScopes()->findOrFail($key, $columns);
+        });
     }
 
     /**
@@ -132,10 +132,13 @@ class Finder implements FinderContract
             $this->assembler()->filters($filters);
         }
 
-        if ($scopes = $filter->scopes()) {
-            if (($scope = $filter->scope()) && ($found = $scopes->find($scope))) {
-                $this->assembler()->scope($found);
-            }
+        if (empty($scopes = $filter->scopes())) {
+            return $this;
+        }
+
+        $scope = $filter->scope();
+        if ($scope && $found = $scopes->find($scope)) {
+            $this->assembler()->scope($found);
         }
 
         return $this;

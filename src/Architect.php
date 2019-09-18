@@ -6,6 +6,7 @@ use BenSampo\Enum\Traits\CastsEnums;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Terranet\Administrator\Services\Template;
 use Zend\Code\Reflection\ClassReflection;
 
 class Architect
@@ -111,5 +112,10 @@ class Architect
         }
 
         return $values;
+    }
+
+    public static function template()
+    {
+        return new Template();
     }
 }

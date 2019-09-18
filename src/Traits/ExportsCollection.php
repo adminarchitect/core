@@ -8,6 +8,7 @@ use Generator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Exception;
 use Terranet\Translatable\Translatable;
 
@@ -293,6 +294,6 @@ trait ExportsCollection
      */
     protected function exportableView()
     {
-        return app('scaffold.template')->layout('exportable');
+        return Architect::template()->layout('exportable');
     }
 }

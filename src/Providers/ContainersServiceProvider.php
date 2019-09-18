@@ -4,9 +4,13 @@ namespace Terranet\Administrator\Providers;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Illuminate\Config\Repository as Config;
-use Illuminate\Support\Arr;
+use Illuminate\Foundation\Application;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use Terranet\Administrator\Architect;
+use Terranet\Administrator\Contracts\Services\Finder;
 use Terranet\Administrator\Schema;
 use Terranet\Localizer\Locale;
 
@@ -28,10 +32,6 @@ class ContainersServiceProvider extends ServiceProvider
 
             \call_user_func_array([$this, $method], []);
         }
-//
-//        $this->app->bind(Module::class, function ($app) {
-//            return $app['scaffold.module'];
-//        });
     }
 
     protected function registerAdminAnnotations()
@@ -106,29 +106,29 @@ class ContainersServiceProvider extends ServiceProvider
 
     protected function registerAdminResource()
     {
-        $this->app->singleton('scaffold.module', function ($app) {
-            if (\in_array(
-                $app['router']->currentRouteName(),
-                ['scaffold.settings.edit', 'scaffold.settings.update'],
-                true
-            )) {
-                return $app['scaffold.module.settings'];
+        $this->app->singleton('scaffold.module', function (Application $app) {
+            /** @var Router $router */
+            $router = $app['router']->current();
+
+            if (in_array($router->getName(), ['scaffold.settings.edit', 'scaffold.settings.update'], true)) {
+                return Architect::resourceForKey('settings');
             }
 
-            if (($router = $app['router']->current()) &&
-                ($module = $router->parameter('module')) &&
-                Arr::has($app, $key = "scaffold.module.{$module}")
-            ) {
-                return Arr::get($app, $key);
+            if ($key = $router->parameter('module')) {
+                return Architect::resourceForKey($key);
             }
         });
     }
 
     protected function registerAdminModel()
     {
-        $this->app->singleton('scaffold.model', function ($app) {
-            if (($id = $app['router']->current()->parameter('id'))
-                && ($finder = app('scaffold.module')->finder())) {
+        $this->app->singleton('scaffold.model', function (Application $app) {
+            /** @var int $id */
+            $id = (int) $app['router']->current()->parameter('id');
+
+            /** @var Finder $finder */
+            $finder = app('scaffold.module')->finder();
+            if ($id && $finder) {
                 return $finder->find($id);
             }
         });
@@ -136,7 +136,8 @@ class ContainersServiceProvider extends ServiceProvider
 
     protected function registerAdminSchema()
     {
-        $this->app->singleton('scaffold.schema', function ($app) {
+        $this->app->singleton('scaffold.schema', function (Application $app) {
+            /** @var AbstractSchemaManager $schema */
             if ($schema = $app['db']->connection()->getDoctrineSchemaManager()) {
                 // fix dbal missing types
                 $platform = $schema->getDatabasePlatform();

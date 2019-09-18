@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Support\Arr;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Requests\UpdateRequest;
 
 class SettingsController extends AdminController
@@ -16,7 +17,7 @@ class SettingsController extends AdminController
     {
         $this->authorize('index', $eloquent = app('scaffold.model'));
 
-        return view(app('scaffold.template')->layout('settings'), [
+        return view(Architect::template()->layout('settings'), [
             'settings' => options_fetch(),
         ]);
     }

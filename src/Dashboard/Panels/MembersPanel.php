@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Dashboard\Panels;
 
 use DB;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
@@ -25,7 +26,7 @@ class MembersPanel extends Panel
                                  ->select([DB::raw('COUNT(id) AS cnt'), DB::raw('DATE(created_at) as dt')])
                                  ->groupBy('dt')->pluck('cnt', 'dt');
 
-        return view(app('scaffold.template')->dashboard('members'), [
+        return view(Architect::template()->dashboard('members'), [
             'total' => $total,
             'signed' => [
                 'lastWeek' => $signedLastWeek,
