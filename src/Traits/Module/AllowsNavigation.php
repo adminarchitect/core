@@ -37,7 +37,7 @@ trait AllowsNavigation
      */
     public function title(): string
     {
-        return $this->translator()->has($key = $this->translationKey())
+        return trans()->has($key = $this->translationKey())
             ? trans($key)
             : Architect::humanize($this);
     }

@@ -337,7 +337,7 @@ class ScaffoldController extends AdminController
             return $resource->flashMessage(request(), $action);
         }
 
-        return $this->translator()->has($key = sprintf('administrator::messages.%s.%s', $resource->url(), $action))
+        return trans()->has($key = sprintf('administrator::messages.%s.%s', $resource->url(), $action))
             ? trans($key)
             : trans(sprintf('administrator::messages.%s', $action));
     }

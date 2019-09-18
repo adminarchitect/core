@@ -10,7 +10,7 @@ class Password extends Field
     public function getAttributes(): array
     {
         return parent::getAttributes() + [
-                'placeholder' => $this->translator()->trans('administrator::hints.global.optional'),
+                'placeholder' => trans('administrator::hints.global.optional'),
                 'autocomplete' => 'off',
             ];
     }

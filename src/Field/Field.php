@@ -65,14 +65,14 @@ abstract class Field implements Sortable, AutoTranslatable
             $id ?: Str::snake($title)
         );
 
-        if ($this->translator()->has($key = $this->translationKey())) {
-            $this->setTitle((string) $this->translator()->trans($key));
+        if (trans()->has($key = $this->translationKey())) {
+            $this->setTitle((string) trans()->get($key));
         } else {
             $this->setTitle(Architect::humanize($title));
         }
 
-        if ($this->translator()->has($key = $this->descriptionKey())) {
-            $this->setDescription((string) $this->translator()->trans($key));
+        if (trans()->has($key = $this->descriptionKey())) {
+            $this->setDescription((string) trans()->get($key));
         }
     }
 
@@ -425,7 +425,7 @@ abstract class Field implements Sortable, AutoTranslatable
     {
         $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
 
-        if (!$this->translator()->has($key)) {
+        if (!trans()->has($key)) {
             $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
         }
 
@@ -439,7 +439,7 @@ abstract class Field implements Sortable, AutoTranslatable
     {
         $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
 
-        if (!$this->translator()->has($key)) {
+        if (!trans()->has($key)) {
             $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
         }
 

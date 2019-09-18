@@ -30,7 +30,7 @@ abstract class ElementContainer implements AutoTranslatable
     {
         $this->setId($id);
 
-        if ($this->translator()->has($key = $this->translationKey())) {
+        if (trans()->has($key = $this->translationKey())) {
             $this->setTitle(trans($key));
         } else {
             $this->setTitle(Architect::humanize($id));
@@ -95,7 +95,7 @@ abstract class ElementContainer implements AutoTranslatable
     {
         $key = sprintf('administrator::columns.%s.%s', $this->module()->url(), $this->id);
 
-        if (!$this->translator()->has($key)) {
+        if (!trans()->has($key)) {
             $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
         }
 
