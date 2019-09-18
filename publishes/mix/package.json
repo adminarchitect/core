@@ -23,17 +23,14 @@
         "filepond-plugin-image-preview": "^4.0.8",
         "font-awesome": "^4.7.0",
         "jquery": "^3.3.1",
-        "laravel-mix": "^4.1",
+        "laravel-mix": "^2.1",
         "less": "^3.9.0",
         "less-loader": "^4.1.0",
         "lodash": "^4.17.11",
+        "tinymce": "^4.6.4",
         "vue": "^2.5.7",
         "vue-clip": "^1.0.0",
         "vue-filepond": "^5.1.0",
-        "vuex": "^3.0.1",
-        "resolve-url-loader": "^3.1.0",
-        "sass": "^1.22.12",
-        "sass-loader": "^7.3.1",
-        "vue-template-compiler": "^2.6.10"
+        "vuex": "^3.0.1"
     }
 }
