@@ -2,19 +2,21 @@
 
 namespace Terranet\Administrator\Controllers;
 
-use App\Http\Controllers\Controller as BaseController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View;
+use Terranet\Administrator\Architect;
+use Illuminate\Support\Facades\Redirect;
 use Terranet\Administrator\Requests\LoginRequest;
+use Illuminate\Contracts\View\View as ViewContract;
+use App\Http\Controllers\Controller as BaseController;
 
 class AuthController extends BaseController
 {
     /**
-     * @param LoginRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  LoginRequest  $request
+     * @return RedirectResponse
      */
     public function postLogin(LoginRequest $request)
     {
@@ -47,17 +49,17 @@ class AuthController extends BaseController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return ViewContract
      */
-    public function getLogin()
+    public function getLogin(): ViewContract
     {
         return View::make(
-            app('scaffold.template')->auth('login')
+            Architect::template()->auth('login')
         );
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function getLogout()
     {

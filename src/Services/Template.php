@@ -102,6 +102,10 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
+    /**
+     * @param  string  $partial
+     * @return array|string
+     */
     public function menu($partial = 'sidebar')
     {
         $partials = $this->map('menus', [Navigable::MENU_SIDEBAR, Navigable::MENU_TOOLS]);
@@ -109,6 +113,10 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
+    /**
+     * @param  string  $partial
+     * @return array|string
+     */
     public function partials($partial = 'messages')
     {
         $partials = $this->map('partials', ['messages', 'breadcrumbs']);
@@ -116,6 +124,10 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
+    /**
+     * @param  string  $partial
+     * @return array|string
+     */
     public function scripts($partial = null)
     {
         $partials = $this->map('scripts', ['listeners', 'editors']);
@@ -123,6 +135,10 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
+    /**
+     * @param  string  $partial
+     * @return array|string
+     */
     public function auth($partial = 'login')
     {
         $partials = $this->map('auth', ['login']);
@@ -130,6 +146,10 @@ class Template implements TemplateProvider
         return null === $partial ? $partials : $partials[$partial];
     }
 
+    /**
+     * @param  string  $partial
+     * @return array|string
+     */
     public function dashboard($partial = null)
     {
         $partials = $this->map('dashboard', ['database', 'members', 'google_analytics']);

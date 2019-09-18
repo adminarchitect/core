@@ -51,7 +51,6 @@ class AuthControllerTest extends CoreTestCase
                  ->method('auth')
                  ->with('login')
                  ->willReturn('login.view');
-        app()->instance('scaffold.template', $template);
 
         View::shouldReceive('make')->once()->with('login.view');
 

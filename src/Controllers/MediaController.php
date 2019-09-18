@@ -7,6 +7,7 @@ use DaveJamesMiller\Breadcrumbs\BreadcrumbsManager;
 use Illuminate\Http\Request;
 use Illuminate\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Exception;
 use Terranet\Administrator\Media\File;
 use Terranet\Administrator\Middleware\ProtectMedia;
@@ -65,7 +66,7 @@ class MediaController extends AdminController
         $breadcrumbs = $this->breadcrumbs($directory, $popup);
 
         return view(
-            app('scaffold.template')->media('index'),
+            Architect::template()->media('index'),
             compact('files', 'path', 'breadcrumbs', 'popup')
         );
     }

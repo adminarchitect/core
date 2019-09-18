@@ -2,10 +2,12 @@
 
 namespace Terranet\Administrator\Controllers;
 
+use Terranet\Administrator\Architect;
+
 class DashboardController extends AdminController
 {
     public function index()
     {
-        return view(app('scaffold.template')->layout('dashboard'));
+        return view(Architect::template()->layout('dashboard'));
     }
 }

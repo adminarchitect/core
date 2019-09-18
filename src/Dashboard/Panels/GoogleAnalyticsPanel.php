@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Spatie\Analytics\AnalyticsServiceProvider;
 use Spatie\Analytics\Period;
+use Terranet\Administrator\Architect;
 use Terranet\Administrator\Dashboard\Panel;
 use Terranet\Administrator\Traits\Stringify;
 
@@ -32,7 +33,7 @@ class GoogleAnalyticsPanel extends Panel
 
         $labels = $this->dateLabels($dailyStats);
 
-        return view(app('scaffold.template')->dashboard('google_analytics'))->with(compact(
+        return view(Architect::template()->dashboard('google_analytics'))->with(compact(
             'dailyStats',
             'labels',
             'visitors',

@@ -9,7 +9,7 @@
 
     <title>
         {{ strip_tags($config->get('title')) }}
-        @if ($resource && ($title = $resource->title()))
+        @if (isset($resource) && ($title = $resource->title()))
         &raquo; {{ $title }}
         @endif
     </title>
@@ -44,7 +44,7 @@
 
                 <div class="header-right">
                     <ul class="headermenu">
-                        @include($resource->template()->menu('tools'))
+                        @include(\Terranet\Administrator\Architect::template()->menu('tools'))
                     </ul>
                 </div>
             </div>
@@ -68,7 +68,7 @@
 
     <div class="mainpanel">
         <div class="contentpanel">
-            @if ($resource)
+            @if (isset($resource))
                 @yield('scaffold.create')
 
                 <h4 class="btn-quirk">{{ $resource->title() }} @yield('total')</h4>
@@ -79,7 +79,7 @@
                 @endif
             @endif
 
-            @include($resource->template()->partials('messages'))
+            @include(\Terranet\Administrator\Architect::template()->partials('messages'))
 
             @yield('scaffold.cards')
 

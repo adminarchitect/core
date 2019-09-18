@@ -22,7 +22,7 @@
             <h4 class="panel-title">{{ $config->get('welcome') }}</h4>
         </div>
         <div class="panel-body">
-            @include($resource->template()->partials('messages'))
+            @include(\Terranet\Administrator\Architect::template()->partials('messages'))
 
             {!! Form::open() !!}
             <div class="form-group mb10">

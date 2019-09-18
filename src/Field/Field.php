@@ -80,7 +80,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * @param $title
      * @param  null  $id
      * @param  \Closure  $callback
-     *
      * @return static
      */
     public static function make($title, $id = null, \Closure $callback = null): self
@@ -98,7 +97,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * Create new element from another.
      *
      * @param  Field  $element
-     *
      * @return static
      */
     public static function makeFrom(self $element): self
@@ -110,7 +108,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * Switch to a new element type.
      *
      * @param  string  $className
-     *
      * @return mixed
      */
     public function switchTo(string $className)
@@ -120,7 +117,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  Model  $model
-     *
      * @return static
      */
     public function setModel(Model $model): self
@@ -142,7 +138,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * Render Element.
      *
      * @param  string  $page
-     *
      * @return mixed
      */
     final public function render(string $page = 'index')
@@ -213,7 +208,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  string  $name
-     *
      * @return Field
      */
     public function setName(string $name): self
@@ -225,7 +219,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  string  $id
-     *
      * @return static
      */
     public function setId(string $id): self
@@ -255,7 +248,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  string  $title
-     *
      * @return static
      */
     public function setTitle(string $title): self
@@ -267,7 +259,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  null|string  $description
-     *
      * @return static
      */
     public function setDescription(?string $description): self
@@ -288,8 +279,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param  bool  $showLabel
-     *
+     * @param  bool  $hideLabel
      * @return static
      */
     public function hideLabel(bool $hideLabel): self
@@ -310,6 +300,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * string $page.
      *
+     * @param  string  $page
      * @return bool
      */
     public function isVisibleOnPage(string $page): bool
@@ -319,7 +310,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  array|string  $pages
-     *
      * @return static
      */
     public function hideOnPages($pages): self
@@ -329,7 +319,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  array|string  $pages
-     *
      * @return static
      */
     public function showOnPages($pages): self
@@ -341,7 +330,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * Make column sortable.
      *
      * @param  null|\Closure  $callback
-     *
      * @return static
      */
     public function sortable(\Closure $callback = null): self
@@ -370,7 +358,6 @@ abstract class Field implements Sortable, AutoTranslatable
      * Set value.
      *
      * @param $value
-     *
      * @return Field
      */
     public function setValue($value): self
@@ -395,20 +382,19 @@ abstract class Field implements Sortable, AutoTranslatable
             return null;
         }
 
-        $value = $this->model->getAttribute($this->id);
+        $val = $this->model->getAttribute($this->id);
 
-        if ($value instanceof \BenSampo\Enum\Enum) {
-            return $value->value;
+        if ($val instanceof \BenSampo\Enum\Enum) {
+            $val = $val->value;
         }
 
-        return $value;
+        return $val;
     }
 
     /**
      * @param $key
      * @param  null  $value
      * @param  mixed  $attribute
-     *
      * @return static
      */
     public function setAttribute($attribute, $value = null): self
@@ -462,7 +448,6 @@ abstract class Field implements Sortable, AutoTranslatable
 
     /**
      * @param  \Closure  $condition
-     *
      * @return self
      */
     public function when(\Closure $condition): self
@@ -475,7 +460,6 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * @param  mixed  $pages
      * @param  bool  $visibility
-     *
      * @return $this
      */
     protected function setPagesVisibility($pages, bool $visibility): self
@@ -492,7 +476,6 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * @param  string  $page
      * @param  string  $field
-     *
      * @return string
      */
     protected function template(string $page, string $field = null): string
