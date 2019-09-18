@@ -6,6 +6,7 @@ use App\Http\Terranet\Administrator\Dashboard\BlankPanel;
 use App\Http\Terranet\Administrator\Dashboard\DatabasePanel;
 use App\Http\Terranet\Administrator\Dashboard\MembersPanel;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Pingpong\Menus\Menu;
 use Pingpong\Menus\MenuBuilder;
 use Pingpong\Menus\MenuItem;
@@ -141,7 +142,7 @@ class AdminServiceProvider extends ServiceProvider
         $sidebar->route('scaffold.dashboard', trans('administrator::module.dashboard'), [], 1, [
             'id' => 'dashboard',
             'icon' => 'fa fa-home',
-            'active' => str_is(request()->route()->getName(), 'scaffold.dashboard'),
+            'active' => Str::is(request()->route()->getName(), 'scaffold.dashboard'),
         ]);
 
         return $this;

@@ -1,4 +1,4 @@
-@extends($resource->template()->layout($popup ? 'popup' : 'app'))
+@extends(\Terranet\Administrator\Architect::template()->layout($popup ? 'popup' : 'app'))
 
 @inject('config', 'scaffold.config')
 
