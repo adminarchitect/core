@@ -19,9 +19,9 @@ class Settings extends Scaffolding implements Navigable, Editable, Validable
     /**
      * The module url
      *
-     * @return mixed
+     * @return string
      */
-    public function url()
+    public function url(): string
     {
         return 'settings';
     }
@@ -29,9 +29,9 @@ class Settings extends Scaffolding implements Navigable, Editable, Validable
     /**
      * The module title
      *
-     * @return mixed
+     * @return string
      */
-    public function title()
+    public function title(): string
     {
         return trans("administrator::module.resources.settings");
     }

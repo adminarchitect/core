@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Controllers;
 
 use Illuminate\Support\Arr;
+use Terranet\Administrator\AdminRequest;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Requests\UpdateRequest;
 
@@ -13,25 +14,27 @@ class SettingsController extends AdminController
      *
      * @return $this
      */
-    public function edit()
+    public function edit(AdminRequest $request)
     {
-        $this->authorize('index', $eloquent = app('scaffold.model'));
+        $resource = $request->resource();
+        $this->authorize('index', $eloquent = $resource->model());
 
         return view(Architect::template()->layout('settings'), [
             'settings' => options_fetch(),
+            'resource' => $resource,
         ]);
     }
 
     /**
      * Save settings per page.
      *
-     * @param UpdateRequest $request
-     *
+     * @param  UpdateRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(AdminRequest $request)
     {
-        $this->authorize('update', $eloquent = app('scaffold.model'));
+        $resource = $request->resource();
+        $this->authorize('update', $eloquent = $resource->model());
 
         options_save(Arr::except(
             $request->all(),
@@ -41,9 +44,14 @@ class SettingsController extends AdminController
         return back()->with('messages', ['Settings saved successfully']);
     }
 
-    public function index()
+    /**
+     * @param  AdminRequest  $request
+     * @return $this
+     */
+    public function index(AdminRequest $request)
     {
-        $this->authorize('index', $eloquent = app('scaffold.model'));
+        $resource = $request->resource();
+        $this->authorize('index', $eloquent = $resource->model());
 
         return $this->edit();
     }
