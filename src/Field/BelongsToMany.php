@@ -52,7 +52,9 @@ class BelongsToMany extends HasMany
         $relation = $this->relation();
 
         if (static::MODE_CHECKBOXES === $this->editMode && $this->completeList) {
-            $values = $relation->getRelated()->all();
+            $values = $this->query
+                ? call_user_func_array($this->query, [$relation->getRelated()->query()])
+                : $relation->getRelated()->all();
         } else {
             $values = $this->value();
         }
