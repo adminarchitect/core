@@ -144,14 +144,14 @@ namespace admin\db {
          */
         function translated_values($values, $namespace, $column)
         {
-            $translator = app('translator');
+            $translator = trans();
 
             foreach ($values as $value => &$label) {
                 $trKey = "administrator::enums.{$namespace}.{$column}.{$value}";
                 if ($translator->has($trKey)) {
-                    $label = $translator->trans($trKey);
+                    $label = $translator->get($trKey);
                 } elseif ($translator->has($trKey = "administrator::enums.global.{$column}.{$value}")) {
-                    $label = $translator->trans($trKey);
+                    $label = $translator->get($trKey);
                 }
             }
 

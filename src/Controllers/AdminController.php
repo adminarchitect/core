@@ -25,9 +25,8 @@ abstract class AdminController extends BaseController
     /**
      * Authorize a given action against a set of arguments.
      *
-     * @param mixed $ability
-     * @param array|mixed $arguments
-     *
+     * @param  mixed  $ability
+     * @param  array|mixed  $arguments
      * @return bool
      */
     public function authorize($ability, $arguments = null)
@@ -38,7 +37,7 @@ abstract class AdminController extends BaseController
         if (!$response = $resource->actions()->authorize($ability, $arguments)) {
             throw $this->createGateUnauthorizedException(
                 $ability,
-                $this->translator()->trans('administrator::errors.unauthorized')
+                trans('administrator::errors.unauthorized')
             );
         }
 
@@ -64,10 +63,9 @@ abstract class AdminController extends BaseController
     /**
      * Throw an unauthorized exception based on gate results.
      *
-     * @param  string $ability
-     * @param  string $message
-     * @param  \Exception $previousException
-     *
+     * @param  string  $ability
+     * @param  string  $message
+     * @param  \Exception  $previousException
      * @return \Symfony\Component\HttpKernel\Exception\HttpException
      */
     protected function createGateUnauthorizedException(

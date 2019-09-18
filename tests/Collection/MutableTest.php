@@ -114,8 +114,6 @@ class MutableTest extends CoreTestCase
     public function it_can_update_a_collection_value()
     {
         $this->collection->update('first,second', function (Text $element) {
-            $element->setTranslator($this->mockTranslator());
-
             return $element->setTitle('First Element');
         });
 
