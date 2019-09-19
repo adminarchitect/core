@@ -129,7 +129,6 @@ namespace admin\db {
                     }
                 }
 
-                dd($hashMap);
                 $hashMap[$key] = $values;
             }
 
