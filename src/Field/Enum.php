@@ -86,7 +86,7 @@ class Enum extends Field
     {
         return [
             'options' => $this->options ?: [],
-            'color' => $this->useColors ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
+            'color' => $this->useColors && $this->value() ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
         ];
     }
 

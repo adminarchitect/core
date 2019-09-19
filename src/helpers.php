@@ -125,7 +125,7 @@ namespace admin\db {
                 if (preg_match('/^enum\((.*)\)$/', $columns[0]->Type, $matches)) {
                     foreach (explode(',', $matches[1]) as $value) {
                         $value = trim($value, "'");
-                        $values[$value] = Str::title($value);
+                        $values[$value] = Str::title(strtr($value, ['-' => ' ', '_' => ' ']));
                     }
                 }
 

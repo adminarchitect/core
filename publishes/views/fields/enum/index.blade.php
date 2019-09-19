@@ -1,3 +1,3 @@
 <span {!! ($color ? "class=\"label\" style=\"background-color: $color\"" : "" ) !!} >
-    {{ $options[$field->value()] }}
+    {{ ($field->value() ? \Illuminate\Support\Arr::get($options, $field->value()) : '---') }}
 </span>
