@@ -218,7 +218,13 @@ trait ValidatesForm
         $foreignTable = $foreign->getForeignTableName();
         $foreignKey = head($foreign->getForeignColumns());
 
-        return "exists:{$foreignTable},{$foreignKey}";
+        $rules = "exists:{$foreignTable},{$foreignKey}";
+
+        if (!$column->getNotnull()) {
+            $rules = "nullable|{$rules}";
+        }
+
+        return $rules;
     }
 
     /**
