@@ -180,10 +180,10 @@ class Saver implements SaverContract
 
             switch (\get_class($field)) {
                 case BelongsTo::class:
-                    // @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation
+                    /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo $relation */
                     $relation->associate(
                         $this->request->get($this->getForeignKey($relation))
-                    );
+                    )->save();
 
                     break;
                 case HasOne::class:
