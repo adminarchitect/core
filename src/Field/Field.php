@@ -382,7 +382,8 @@ abstract class Field implements Sortable, AutoTranslatable
             return null;
         }
 
-        $val = $this->model->getAttribute($this->id);
+        $property = last(explode('.', $this->id));
+        $val = $this->model->getAttribute($property);
 
         if ($val instanceof \BenSampo\Enum\Enum) {
             $val = $val->value;
