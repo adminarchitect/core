@@ -161,7 +161,9 @@ class Saver implements SaverContract
 
         \DB::transaction(function () {
             $this->repository->fill(
-                $this->protectAgainstNullPassword()
+                $this->excludeUnfillable(
+                    $this->protectAgainstNullPassword()
+                )
             )->save();
 
             $this->saveRelations();
@@ -339,6 +341,32 @@ class Saver implements SaverContract
                 $value = null;
             }
         }
+    }
+
+    /**
+     * Exclude unfillable columns.
+     *
+     * @param  array  $data
+     * @return array
+     */
+    protected function excludeUnfillable(array $data): array
+    {
+        $fillable = array_merge(
+            $this->repository->getFillable(),
+            scheme()->columns($this->repository->getTable())
+        );
+
+        foreach ($data as $key => $value) {
+            /**
+             * @note `is_string` verification is required to filter only string-based keys,
+             * but leave `translatable` keys untouched
+             */
+            if (is_string($key) && !in_array($key, $fillable)) {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
     }
 
     /**
