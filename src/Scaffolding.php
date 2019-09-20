@@ -371,7 +371,7 @@ class Scaffolding implements Module, AutoTranslatable
     public function actions(): ActionsManagerContract
     {
         $handler = $this->actionsClassName();
-        $handler = new $handler($this);
+        $handler = new $handler($this, $this->request());
 
         if (!$handler instanceof CrudActions) {
             throw new Exception('Actions handler must implement '.CrudActions::class.' contract');
