@@ -79,7 +79,7 @@ OUTPUT;
      * @param  Eloquent  $entity
      * @return string
      */
-    protected function icon(Eloquent $entity = null)
+    public function icon(Eloquent $entity = null): string
     {
         return 'fa-circle-thin';
     }
