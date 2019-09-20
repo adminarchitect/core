@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Actions\RemoveSelected;
 use Terranet\Administrator\Actions\SaveOrder;
+use Terranet\Administrator\AdminRequest;
 use Terranet\Administrator\Contracts\Services\CrudActions as CrudActionsContract;
 use Terranet\Administrator\Contracts\Services\Saver;
 use Terranet\Administrator\Exception;
@@ -23,9 +24,19 @@ class CrudActions implements CrudActionsContract
     /** @var Scaffolding */
     protected $module;
 
-    public function __construct($module)
+    /** @var AdminRequest */
+    protected $request;
+
+    /**
+     * CrudActions constructor.
+     *
+     * @param $module
+     * @param  AdminRequest  $request
+     */
+    public function __construct($module, AdminRequest $request)
     {
         $this->module = $module;
+        $this->request = $request;
     }
 
     /**
@@ -122,8 +133,8 @@ class CrudActions implements CrudActionsContract
      */
     public function authorize($method, $model = null, $module = null)
     {
-        $accessGate = Gate::forUser(auth('admin')->user());
-        $module = $module ?: app('scaffold.module');
+        $accessGate = Gate::forUser($user = $this->request->user());
+        $module = $module ?: $this->module;
         $model = $model ?: $module->model();
         $method = Str::camel($method);
 
