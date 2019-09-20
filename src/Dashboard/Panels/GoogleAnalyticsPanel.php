@@ -24,7 +24,7 @@ class GoogleAnalyticsPanel extends Panel
         $period = $this->period();
 
         $dailyStats = $this->dependencyInstalled() && config('analytics.view_id')
-            ? Analytics::fetchTotalVisitorsAndPageViews($period)
+            ? \Analytics::fetchTotalVisitorsAndPageViews($period)
             : $dailyStats = $this->fakeData($period);
 
         $visitors = $dailyStats->sum('visitors');
