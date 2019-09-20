@@ -35,11 +35,12 @@
             </div>
         </div>
 
-        <canvas id="dailyStats-chart" style="width: auto; max-height: 400px;"></canvas>
+        <canvas id="dailyStats-chart" style="width: auto; max-height: 600px;"></canvas>
     </div>
 </div>
 
 @push('scaffold.js')
+    <script src="https://momentjs.com/downloads/moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>
         $(function() {
@@ -70,7 +71,7 @@
                 data: data,
                 options: {
                     legend: {
-                        display: false,
+                        display: true,
                     },
                     scales: {
                         xAxes: [
