@@ -83,7 +83,7 @@ trait HasFilters
      * @return Mutable
      * @throws \ReflectionException
      */
-    protected function scaffoldFilters()
+    protected function scaffoldFilters(): Mutable
     {
         $this->filters = new Mutable();
 
