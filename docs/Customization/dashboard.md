@@ -5,8 +5,6 @@
 Dashboard probably is the most-visited by administrators page of every admin panel! 
 And Admin Architect doesn't want to be an exception.
 
-The main dashboard template is located at `resources/views/vendor/administrator/layouts/dashboard.blade.php`
-
 You decide the number of widgets, their position and their content...
 
 It may be a simple Counter or a complex Graph - it doesn't mater...
@@ -17,7 +15,7 @@ Admin Architect provides an easy way to add new widget:
 php artisan administrator:panel Overview
 ```
 
-Where the `Overview` panel is a simple class that implements `Widgetable` contract with the single method `render()`:
+Where the `Overview` panel is a simple class that implements `Terranet\Administrator\Dashboard\Panel` contract with the single required method `render()`:
 
 ```php
 class Overview implements Widgetable
@@ -93,19 +91,18 @@ class Registrations implements Widgetable
 One thing you need to do, is to register your dashboard panel in Dashboard factory:
 
 ```php
-### \App\Http\Terranet\Administrator\Dashboard\Factory
-protected function registerPanels()
+### App\Providers\AdminServiceProvider
+protected function dashboard(Manager $dashboard)
 {
-    $this->dashboard
+    return $dashboard
         ->row(function (Row $row) {
         	# consider Bootstrap 12 columns grid
         	$row->panel(new Overview)->setWidth(12);
         })
         ->row(function(Row $row) {
-            $row->panel(new Registration)->setWidth(12);
+            $row->panel(new Registrations)->setWidth(6);
+            $row->panel(new ReturningVisitors)->setWidth(6);
         });
-
-    return $this->dashboard;
 }
 ```
 

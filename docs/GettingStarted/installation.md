@@ -1,4 +1,4 @@
-## Installation
+# Installation
 
 As you always do, install composer package:
 
@@ -6,8 +6,8 @@ As you always do, install composer package:
 composer require adminarchitect/core
 ```
 
-### Registering 
-_[Skip for Laravel 5.5]_
+## Registering 
+_[Skip for Laravel 5.5+]_
 
 Once the package installed, register its service provider in config/app.php file.
 
@@ -18,48 +18,45 @@ Once the package installed, register its service provider in config/app.php file
 	...
 ]
 ```
-### Publishing
+
+## Publishing
 
 Publish package's assets, translation and configuration by running:
 
 ```bash
 php artisan administrator:publish
 ```
-Answer few questions about configuration steps.
-It will copy adminarchitect's assets to a resources/assets/administrator directory.
-All views will be copied to a resources/views/vendor/administrator directory.
 
-### Assets
-AdminArchitect assets are provided in ES6 and less/sass formats, so to convert them to a js/css there is a NPM package `@adminarchitect/mix`.
+Answer few questions about configuration steps.
+It will copy adminarchitect's assets to a `<project-dir>/administrator-mix` directory.
+Views & translations files will be copied to a corresponding locations: `resources/{views,lang}/vendor/administrator` directories.
+
+## Assets
+AdminArchitect assets are provided in ES6 and less/sass formats, so to convert them to a js/css, enter the `adminarchitect-mix` directory and run:
 
 ```bash
-yarn -D @adminarchitect/mix
-OR
-mpm i @adminarchitect/mix --save-dev
+npm i
+mpm run [dev|production|watch]
 ```
 
-Next step is to register AdminMix tasks, so add these lines to your `webpack.mix.js`:
+## Editors
 
-```js
-const AdminMix = require('@adminarchitect/mix');
-(new AdminMix).handle();
-```
+AdminArchitect comes with 4 visual editors: TinyMce, CkEditor, Medium & Markdown.
+In order to connect editor of your choice - follow the instructions from `adminarchitect-mix/webpack.mix.js` file.
 
 then you can run any of these commands, to build assets:
-```bash
-yarn run [dev|production|watch]
-```
 
 All generated assets will be placed to `public/admin` directory.
 
-### Migrations
+## Migrations
+
 if you're running a fresh Laravel installation, run:
 
 ```bash
 php artisan migrate
 ```
 
-### Create administrator
+## Create administrator
 
 Now let's create a new administrator account:
 
@@ -67,7 +64,7 @@ Now let's create a new administrator account:
 php artisan administrator:create
 ```
 
-### Enjoy
+## Enjoy
 
 Now you can access the Admin Architect by opening a `/cms` url. 
 So for `php artisan serve` command, it will: [http://localhost:8000/cms](http://localhost:8000/cms)
