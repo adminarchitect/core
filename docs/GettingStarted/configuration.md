@@ -71,13 +71,7 @@ If you find this feature unnecessary - just set it to `false`.
 ```
 Enable File Manager by setting its option to `true`;
 
-#### Factories
-There are few factories (containers) you might be interested in.
+#### Service Provider
 
-```php
-# Navigation factory
-'menu' => \Terranet\Administrator\Navigation\Factory::class,
-
-# Dashboard panels factory
-'dashboard' => \App\Http\Terranet\Administrator\Dashboard\Factory::class,
-```
+AdminArchitect will publish its own service provide into `App\Providers\AdminServiceProvider`.
+By default it contains the routing & navigation registrations.

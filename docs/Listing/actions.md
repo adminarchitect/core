@@ -1,4 +1,4 @@
-## Actions
+# Actions
 
 Admin Architect provides 2 action types: 
 - Single (applied to every single element in a collection) 
@@ -6,11 +6,11 @@ Admin Architect provides 2 action types:
 
 To understand better, here are some examples:
 * Edit/Delete/View - are examples of single actions.
-* Check More && Delete Selected Items - is a batch action.
+* Check All && Delete Selected Items - is a batch action.
 
 * * *
 
-### Single (Row-Based) Actions
+## Single (Row-Based) Actions
 
 ![Admin Architect - Single actions](http://docs.adminarchitect.com/images/index/single_actions.jpg)
 
@@ -22,158 +22,43 @@ Sometimes you'll need to have something more then just CRUD actions, or maybe yo
 
 For instance: maybe you'll wish to `activate` or `lock` specific users, view project reports, report emails as spam, etc...
 
-Admin Architect gives you ability to create the action containers (collections) which receive as a callback parameter selected model, at this moment you are free to use the model in the way you need.
+Admin Architect gives you ability to create the action containers which receive as a callback parameter selected model, at this moment you are free to use the model in the way you need.
 
-### CRUD Authorisation
+## CRUD Authorisation
 
 Admin Architect provides a simple way to organize authorization logic and control access to resources.
 We'll review few use cases of how you can organize your Authorization logic.
 
-#### Abilities
+### Abilities
 
-The very first way to determine if a user may perform a given CRUD action is to define an "ability" declaring the `can` method.
+AdminArchitect is fully compatible with Laravel's Policy.
 
-Within our `abilities`, we will determine if the logged in user has the ability to delete, update, view post:
+So in order to control the ability to list (index), view, create, update or delete - define the corresponding method in your Policy Class.
 
 For this purpose we'll need to have the these `abilities` defined in our `Actions` service (See [Create Actions](/Listing/actions?id=create-actions) section).
 
 ```php
-# Actions\Posts::class
+# App\Policy\Post::class
 
-/**
- * @param $user - Logged in user
- * @param $entity - Eloquent model you're going to Delete/Update/View/etc...
- */
-public function canDelete($user, $entity)
+public function delete($user, $entity)
 {
     return $user->isSuperAdmin() || $user->isOwnerOf($entity);
 }
 
-public function canUpdate($user, $entity)
+public function update($user, $entity)
 {
-    return $this->canDelete($user, $entity);
+    return $this->delete($user, $entity);
 }
 
-public function canView($user, $entity)
+public function view($user, $entity)
 {
-    return $this->canDelete($user, $entity);
+    return $this->delete($user, $entity);
 }
 ```
 
-#### ACL Manager 
+*Note!* If you do not define a policy method - AdminArchitect will consider the permission as enabled, it means if you do not have the `delete` method defined in model's policy class - logged user will be able to delete any corresponding record.
 
-The second and more general & powerful method is to create a `GuardManager` class and register it in the `config/administrator.php`...
-
-Let's see an example:
-
-```php
-# administrator.php
-'acl' => [
-    'manager' => \App\Services\GuardManager::class, 
-],
-```
-
-```php
-# App\Services\GuardManager.php
-
-namespace App\Services;
-
-use Illuminate\Contracts\Auth\Authenticatable;
-use Terranet\Administrator\Scaffolding;
-
-class GuardManager
-{
-    protected $module = null;
-
-    public function __construct(Scaffolding $module)
-    {
-        $this->module = $module;
-    }
-
-    public function canCreate(Authenticatable $user)
-    {
-        return $user->can(
-            $this->permission('create')
-        );
-    }
-
-    public function canUpdate(Authenticatable $user, $eloquent)
-    {
-        return $user->can(
-            $this->permission('update'),
-            $eloquent
-        );
-    }
-
-    public function canDelete(Authenticatable $user, $eloquent)
-    {
-        return $user->can(
-            $this->permission('delete'),
-            $eloquent
-        );
-    }
-
-    public function canView(Authenticatable $user, $eloquent)
-    {
-        return in_array($this->module->url(), ['users', 'offers']);
-    }
-
-    public function canIndex(Authenticatable $user)
-    {
-        return $user->can(
-            $this->permission('index')
-        );
-    }
-
-    public function showIf()
-    {
-        return $this->canIndex(
-            $this->user()
-        );
-    }
-
-    protected function user(): Authenticatable
-    {
-        return auth('admin')->user();
-    }
-
-    protected function permission($permission)
-    {
-        return $this->module->url() . '.' . $permission;
-    }
-}
-
-# Authenticable::can() method can realize any logic inside, it can have the `zizaco/entrust` logic or something similar or more complex, it just must return true or false (does user can perform the action or not).
-# $permission - string representation of <module>.<action>, like: users.index, users.create, users.edit
-# it also receives a current $eloquent model as a second argument.
-```
-
-#### Alternative way
-
-As an alternative way, to enable/disable CRUD action in a global aspect, there is a simple tricky way: 
-open your `AppServiceProvider` and add this to `boot()` method:
-
-```php
-# available CRUD actions: canView, canDelete, canUpdate, canCreate
-Scaffolding::addMethod('canView', function ($user, $eloquent) {
-    # let's enable View action for Users module
-    if (in_array(app('scaffold.module')->url(), ['users'])) {
-        return true;
-    }
-
-    # and disable for others
-    return false;
-});
-
-# Ex.: Only Admins and Managers are able to Update some row.
-# @param $user - logged in user
-# @param $eloquent - the model you try to update
-Scaffolding::addMethod('canUpdate', function($user, $eloquent) {
-    return $user->hasRole(['admin', 'manager']);
-});
-```
-
-### Create Actions
+## Create Actions
 
 As we said you can add your own actions, for this you have to create a `Actions Container`:
 
@@ -260,7 +145,7 @@ class ToggleActiveStatus
 }
 ```
 
-### Batch Actions
+## Batch Actions
 
 ![Admin Architect - Batch actions](http://docs.adminarchitect.com/images/index/batch_actions.jpg)
 

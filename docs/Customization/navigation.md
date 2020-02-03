@@ -1,6 +1,6 @@
 ## Navigation
 
-By default any new resource is auto Navigable.
+By default any new resource is auto `Navigable`.
 
 To change the way how it appears in the navigation there is a set of methods provided out of the box, like:
 
@@ -95,42 +95,40 @@ To disable the resource from being displayed in the global navigation just don't
 
 For more details about how to customize the resource appearance in the navigation please checkout the [Resources Navigation](http://docs.adminarchitect.com/Resources) documentation section.
 
-To change default navigation structure, checkout `App\Http\Terranet\Administrator\Navigation` class.
+To change default navigation structure, checkout `App\Providers\AdminServiceProvider::navigation` method.
 
 There is a navigation skeleton you might customise for your needs:
 
 ```php
-protected function makeSidebar()
+protected function initSidebar(Menu $navigation): self
 {
-	$this->navigation->create(Navigable::MENU_SIDEBAR, function (MenuBuilder $sidebar) {
-		// Dashboard
-		$sidebar->route('scaffold.dashboard', trans('administrator::module.dashboard'), [], 1, [
-			'id' => 'dashboard',
-			'icon' => 'fa fa-dashboard',
-		]);
+	$navigation->create(Navigable::MENU_SIDEBAR, function (MenuBuilder $sidebar) {
+		$this->withDashboard($sidebar);
 
-		// Create new users group
-		$sidebar->dropdown(trans('administrator::module.groups.users'), function (MenuItem $sub) {
-			if (auth('admin')->user()->canAdmin('admin.users.create')) {
-				$sub->route(
-					'scaffold.create',
-					trans('administrator::buttons.create_item', ['resource' => 'User']),
-					['module' => 'users'], 1, []
-				);
-			}
-		}, 2, ['id' => 'groups', 'icon' => 'fa fa-group']);
+		// Create "resources" group
+		$sidebar->dropdown(trans('administrator::module.groups.resources'), static function (MenuItem $sub) {
+			// $sub->route();
+		}, 2, ['id' => 'groups', 'icon' => 'fa fa-qrcode']);
 	});
+
+	return $this;
 }
 
-protected function makeTools()
+protected function initToolbar(Menu $navigation): self
 {
-	$this->navigation->create(Navigable::MENU_TOOLS, function (MenuBuilder $tools) {
+	$navigation->create(Navigable::MENU_TOOLS, function (MenuBuilder $tools) {
+		$this->withMedia($tools)
+			->withSettings($tools)
+			->withTranslations($tools);
+
 		$tools->url(
 			route('scaffold.logout'),
 			trans('administrator::buttons.logout'),
 			100,
-			['icon' => 'glyphicon glyphicon-log-out']
+			['icon' => 'fa fa-mail-forward']
 		);
 	});
+
+	return $this;
 }
 ```

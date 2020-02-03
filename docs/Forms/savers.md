@@ -1,13 +1,14 @@
-## Savers
+# Savers
 
 Admin Architect does a huge work to persist your model, presented by a Form.
-It also handles Images, Files, RelationShips, etc...
+
+It also handles Images, Files, RelationShips, Translations, Media, etc...
 
 But somethimes it is not enough, you need a way to store your form data differently.
 
 For these cases we provide a Resource-dedicated service called: `Saver`
 
-### Create saver
+## Create saver
 
 Let's store our users differently
 
@@ -20,7 +21,7 @@ There is one single public method `sync()` and a bunch of protected methods you 
 
 Let's say, we need to create a log record, once a User were saved:
 
-Note! Yes, we know, there is a better way to do it (using events, etc...), but just for a demonstration purpose, let's do it here...
+Note! Yes, we know, there is a better way to do it (using events, queued jobs, etc...), but just for a demonstration purpose, let's do it this way...
 
 ```php
 public function sync()
