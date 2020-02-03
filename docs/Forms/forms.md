@@ -10,76 +10,25 @@ You can extend default form by adding columns or changing the column settings:
 
 For models, each field should be one of your model's SQL columns or one of its Eloquent relationships or any custom field (assuming you define the mechanism to handle and save it).
 
-```
+```php
 public function form()
 {
-    return $this
-	->scaffoldForm()
-
-	# Update existing column
-	->update('user_id', function ($element) {
-		# Set a different input type
-		$element->setInput(
-			new Select('user_id')
-		);
-
-		# set dropdown options
-		$element->getInput()->setOptions(
-			User::pluck('name', 'id')->toArray()
-		);
-
-		return $element;
-	})
-
-	# add a new Relation meta.keywords
-	->create('meta.keywords', 'text')
-
-	# add another Relation meta.description
-	->create(
-		FormElement::textarea('meta.description'),
-		function ($description) {
-			# Like titles, hints translations are auto-discovered by
-			# asking Translator for keys:
-			# 1. administrator::hints.<module>.<column>
-			# 2. administrator::hints.global.<column>
-			$element->setDescription('Element description');
-
-			return $description->setTitle('Meta description');
-		}
-	);
+    return $this->scaffoldForm()
+        ->update('description', function (TranslatableField $field) {
+            return $field->tinymce();
+        })
+        ->push(CustomField::make('custom_view'))
+        ->push(HasOne::make('Place Details', 'details'))
+        ->push(BelongsTo::make('Belongs to City', 'city')->searchable(false))
+        ->push(BelongsToMany::make('Belongs to Tags', 'tags')->tagList())
+        ;
 }
 ```
-`.dot` notation points to a relationship,
-in case of `meta.` - it points to a HasOne relationship `Post::meta()`,
-
+=
 ### Supported form controls
-The complete list (updates constantly) of supported controls:
 
- * @method static FormElement text(string $name)
- * @method static FormElement view(string $name)
- * @method static FormElement search(string $name)
- * @method static FormElement textarea(string $name)
- * @method static FormElement medium(string $name)
- * @method static FormElement tinymce(string $name)
- * @method static FormElement ckeditor(string $name)
- * @method static FormElement boolean(string $name)
- * @method static FormElement radio(string $name, array $attributes, array $options)
- * @method static FormElement multiCheckbox(string $name, array $attributes = [], array $options = [])
- * @method static FormElement datalist(string $name, array $attributes = [], array $options = [])
- * @method static FormElement date(string $name)
- * @method static FormElement daterange(string $name)
- * @method static FormElement datetime(string $name)
- * @method static FormElement time(string $name)
- * @method static FormElement email(string $name)
- * @method static FormElement file(string $name)
- * @method static FormElement hidden(string $name)
- * @method static FormElement image(string $name)
- * @method static FormElement key(string $name)
- * @method static FormElement markdown(string $name)
- * @method static FormElement number(string $name)
- * @method static FormElement password(string $name)
- * @method static FormElement select(string $name, array $attributes, array $options)
- * @method static FormElement tel(string $name)
+For complete list of supported fields please review the `Terranet\Administrator\Field` directory:
+
 
 ### Files & Images
 Files & Images are handled by `czim/laravel-paperclip` library.
@@ -130,18 +79,20 @@ Then in your resource you can call method `media` to add a `media` control to ed
 ```php
 # Ex.: app/Http/Terranet/Administrator/Modules/Users.php
 
-public function form()
+// if you want to view the status on index page
+public function columns(): Mutable
 {
-    return $this->scaffoldForm()
-                ->media('galaxy', function (FormElement $element) {
-                    /** @var $media MediaElement */
-                    $media = $element->getInput();
-                    $media->hasArrows(true)             # [optional] if it should have navigation arrows
-                          ->hasIndicators(true)         # [optional] if it should have navigation bullets
-                          ->convertedTo('thumbnail')    # [optional] show specific conversion
-                          ->autoPlay(2)                 # [optional] set auto play duration (sec) - doesn't work for forms (only in columns) 
-                          ->maxWidth(200);              # [optional] set max width
-                });
+    return $this->scaffoldColumns()
+        ->push(Media::make('images'))
+        ;
+}
+
+// to allow adding media files on Item Detail page
+public function viewColumns(): Mutable
+{
+    return $this->scaffoldColumns()
+        ->push(Media::make('images'))
+        ;
 }
 ```
 

@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Services\Translations;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Terranet\Localizer\Locale;
 
@@ -22,7 +23,7 @@ class Reader
                 if (file_exists($path = $this->pathToFile($file, $locale))) {
                     $content[$file] = include_once $path;
 
-                    foreach (array_dot($content) as $key => $value) {
+                    foreach (Arr::dot($content) as $key => $value) {
                         $translations[$key][$locale->iso6391()] = $value ? $value : '';
                     }
                 }

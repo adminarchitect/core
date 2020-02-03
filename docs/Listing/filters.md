@@ -2,7 +2,7 @@
 
 Filtering and listing resources is one of the most important tasks for administering a web application.
 
-All of Admin Architect resources out of the box does support scopes & filters.
+All AdminArchitect resources out of the box does support scopes & filters.
 
 Admin Architect provides a set of default tools for you to build a compelling interface into your data for the admin staff.
 
@@ -27,95 +27,83 @@ public function filters()
 	->scaffoldFilters()
 
 	# optionaly remove unnecessary
-	->without(['column 1', 'column x'])
+	->except(['column 1', 'column x'])
 
 	# let's filter our collection by user_id column
 	->push(
-		FilterElement::select('user_id', [], $this->users())
+		Enum::select('user_id', [], ['' => '--Any--'] + User::pluck('name', 'id'))
 	)
 
 	# optionaly for foreign columns (not existing in database, aggregated or joined, etc...) 
 	# we can define a custom query
-	->update('phone', function ($control) {
-		$control->getInput()
-			# when called, function will receive 2 arguments
-			# 1. original query
-			# 2. requested value
-			->setQuery(function ($query, $value) {
-				# created in Finder::getQuery()
-				return $query 
-						->join('user_profile as p', 'p.user_id', '=', 'users.id')
-						->where('p.phone', $value);
-			});
-
-		return $control;
-	});
-}
-
-protected function users()
-{
-    return ['' => '--Any--'] + User::pluck('name', 'id')->toArray();
+	->push(Text::make('Phone')->setQuery(function (Builder $builder, $value) {
+		return $builder
+			->join('place_details as pd', 'pd.place_id', '=', 'places.id')
+			->where('phone', $value);
+	}));
 }
 ```
 
-Supported filter HTML types:
-`text`, `select`, `datalist`, `date`, `daterange`, `search`, `number`.
+Supported filters can be found in `Terranet\Administrator\Filter` location:
 
-As you might see, for complex filters that require more control while fetching resources, you are able to define an optional \Closure $query attribute via setQuery() method.
+As you might see, for complex filters that require more control while fetching resources, you are able to define an optional `\Closure` $query attribute via `setQuery()` method.
 
 To disable filters for specific resource - remove Filtrable interface from Resource's `implements` section or just return an empty collection:
 
-### Scopes
+## Scopes
 
 ![Admin Architect - Scopes](http://docs.adminarchitect.com/images/index/scopes.jpg)
 
-As like as for filters feature, if Resource implements interface `Filtrable` it will parse the Eloquent model for any available scopes (having no dynamic arguments).
-
-Use scopes to create sections of mutually exclusive resources for quick navigation and reporting.
+AdminArchitect uses scopes to create sections of mutually exclusive resources for quick navigation and reporting.
 
 This will add a `tab` bar above the index table to quickly filter your collection on pre-defined scopes.
 
-In addition, if your model implements `SoftDeletes` contract, useful scopes like `withTrashed`, `onlyTrashed` will be available too.
-
-To hide a scope just add it to Resource `$hiddenScopes` array:
+If you want an Eloquent scope to be a part of AdminArchitect scopes, just annotate it using built-in `@ScopeFilter` annotation.
 
 ```php
-protected $hiddenScopes = ['active'];
+/**
+ * @ScopeFilter()
+ * @param  Builder  $query
+ * @return Builder
+ */
+public function scopeActive(Builder $query)
+{
+	return $query->where('active', true);
+}
+
+/**
+ * @ScopeFilter()
+ * @param  Builder  $query
+ * @return Builder
+ */
+public function scopeInactive(Builder $query)
+{
+	return $query->where('active', false);
+}
+
+/**
+ * @ScopeFilter(name="Callable", icon="fa-phone")
+ * @param  Builder  $query
+ * @return Builder|\Illuminate\Database\Query\Builder
+ */
+public function scopeHavingPhone(Builder $query)
+{
+	return $query->join('place_details as pd', 'pd.place_id', '=', 'places.id')
+		->whereNotNull('pd.phone');
+}
 ```
+
+In addition, if your model implements `SoftDeletes` contract, useful scopes like `withTrashed`, `onlyTrashed` will be available too.
 
 If for some reason you don't want to create new Model's scope you are able to define isolated, Resource-related scopes, like so:
 
 ```php
 public function scopes()
 {
-    return $this->scaffoldScopes()
-        ->push(
-            (new Scope('active'))
-				# Like columns and hints, scopes are auto-translatable
-				# parsed keys are:
-				# 1. administrator::scopes.<module>.<scope_id>
-				# 2. administrator::scopes.global.<scope_id>
-				# but you always can use this method like so:
-				->setTitle('Scope title')
-				->setQuery(function ($query) {
-					return $query->whereActive(1);
-				})
-        );
+	return $this->scaffoldScopes()->push(
+		(new Scope('name'))->setQuery(function($query) { 
+			$query->where('updated_at', '>=', Carbon::today()->subWeek());
+		});
+	);
 }
-```
-
-_Hint: Few different ways to add a scope._
-
-```php
-# Queryable class (should have query() method)
-(new Scope('name'))->setQuery(Queryable::class);
-
-# Class@method syntax
-(new Scope('name'))->setQuery("User@active");
-
-# Standard, Closure style
-(new Scope('name'))->setQuery(function($query) { return $this->modify(); });
-
-# Callable instance
-(new Scope('name'))->setQuery([SomeClass::class, "queryMethod"]);
 ```

@@ -13,13 +13,6 @@ Missing Laravel Administration Framework. It's like ActiveAdmin for Laravel.
 
 [Follow the documentation.](http://docs.adminarchitect.com)
 
-### Donation
-
-If you have found the Admin Architect useful, you can:
-
-[![Buy me a coffee](http://docs.adminarchitect.com/images/bmc-button.png)](https://www.buymeacoffee.com/TerziEduard)
-
-
 ### License
 
 The Admin Architect is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
