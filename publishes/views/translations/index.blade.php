@@ -1,4 +1,4 @@
-@extends($resource->template()->layout())
+@extends(\Terranet\Administrator\Architect::template()->layout())
 
 @inject('config', 'scaffold.config')
 

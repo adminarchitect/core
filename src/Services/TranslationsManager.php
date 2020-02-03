@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Terranet\Administrator\Services\Translations\Reader;
 use Zend\Code\Generator\ValueGenerator;
 
@@ -122,7 +123,7 @@ class TranslationsManager
             );
 
             $files = $files->map(function ($file) {
-                return str_replace_last('.php', '', basename($file));
+                return Str::replaceLast('.php', '', basename($file));
             }, $files);
         }
 
