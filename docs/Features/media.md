@@ -1,4 +1,4 @@
-## File Manager
+## File Manager (Experimental)
 
 ![Admin Architect - Media](http://docs.adminarchitect.com/images/plugins/media.png)
 
