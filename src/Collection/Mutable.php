@@ -14,15 +14,17 @@ class Mutable extends BaseCollection
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed  $element
-     * @param  null|Closure  $callback
+     * @param mixed $values [optional]
      * @return $this
      */
-    public function push($element, Closure $callback = null): self
+    public function push(...$values)
     {
+        $element = $values[0] ?? null;
+        $callback = $values[1] ?? null;
+
         $element = $this->createElement($element);
 
-        if ($callback) {
+        if ($callback instanceof Closure) {
             $callback($element);
         }
 

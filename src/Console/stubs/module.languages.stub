@@ -35,7 +35,7 @@ class Languages extends Scaffolding implements Navigable, Filtrable, Editable, V
      *
      * @return mixed
      */
-    public function title()
+    public function title(): string
     {
         return trans("administrator::module.resources.languages");
     }
