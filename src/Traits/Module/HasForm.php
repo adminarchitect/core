@@ -19,6 +19,13 @@ trait HasForm
     }
 
     /**
+     * @return bool
+     */
+    public function formIdentifier(): bool {
+        return true;
+    }
+
+    /**
      * Build editable columns based on table columns metadata.
      *
      * @return Mutable
@@ -29,7 +36,7 @@ trait HasForm
 
         if ($eloquent = $this->model()) {
             $editable = $editable
-                ->merge([$eloquent->getKeyName()])
+                ->merge($this->formIdentifier() ? [$eloquent->getKeyName()] : [])
                 ->merge($translatable = $this->scaffoldTranslatable($eloquent))
                 ->merge($eloquent->getFillable());
 
