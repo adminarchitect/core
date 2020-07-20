@@ -12,23 +12,21 @@ use Terranet\Administrator\Field\Text;
 class Mutable extends BaseCollection
 {
     /**
-     * Push an item onto the end of the collection.
+     * Add an element to the collection.
      *
-     * @param mixed $values [optional]
+     * @param mixed $element
+     * @param Closure $callback
      * @return $this
      */
-    public function push(...$values)
+    public function add($element, Closure $callback = null)
     {
-        $element = $values[0] ?? null;
-        $callback = $values[1] ?? null;
-
         $element = $this->createElement($element);
 
-        if ($callback instanceof Closure) {
+        if ($callback) {
             $callback($element);
         }
 
-        parent::push($element);
+        parent::add($element);
 
         return $this;
     }
@@ -51,13 +49,13 @@ class Mutable extends BaseCollection
         }
 
         if (\is_string($position)) {
-            $this->push($element);
+            $this->add($element);
 
             return $this->move($element->id(), $position);
         }
 
         if ($position >= $this->count()) {
-            return $this->push($element);
+            return $this->add($element);
         }
 
         if (0 === $position) {
@@ -267,7 +265,7 @@ class Mutable extends BaseCollection
 
         $callback($group);
 
-        $this->push($group);
+        $this->add($group);
 
         return $this;
     }
@@ -295,7 +293,7 @@ class Mutable extends BaseCollection
         if ($position) {
             $this->insert($group, $position);
         } else {
-            $this->push($group);
+            $this->add($group);
         }
 
         return $this;
