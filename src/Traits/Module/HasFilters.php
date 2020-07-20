@@ -42,7 +42,7 @@ trait HasFilters
      */
     public function addFilter(Filter $filter)
     {
-        $this->filters->push($filter);
+        $this->filters->add($filter);
 
         return $this;
     }
@@ -55,7 +55,7 @@ trait HasFilters
      */
     public function addScope(Scope $scope)
     {
-        $this->scopes->push($scope);
+        $this->scopes->add($scope);
 
         return $this;
     }

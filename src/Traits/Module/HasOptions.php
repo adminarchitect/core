@@ -27,10 +27,7 @@ trait HasOptions
 
         foreach (options_fetch() as $option) {
             $element = Text::make($option->key)->setValue($option->value);
-
-            $collection->push(
-                $element
-            );
+            $collection->add($element);
         }
 
         return $collection;

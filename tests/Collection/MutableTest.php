@@ -45,7 +45,7 @@ class MutableTest extends CoreTestCase
     /** @test */
     public function it_pushes_an_element()
     {
-        $this->collection->push('test', function ($e) {
+        $this->collection->add('test', function ($e) {
             return $e;
         });
 
@@ -293,8 +293,8 @@ class MutableTest extends CoreTestCase
         $collection = (new Mutable());
 
         return $collection
-            ->push($this->e('first'))
-            ->push($this->e('second'))
-            ->push($this->e('third'));
+            ->add($this->e('first'))
+            ->add($this->e('second'))
+            ->add($this->e('third'));
     }
 }

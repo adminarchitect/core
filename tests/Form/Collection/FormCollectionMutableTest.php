@@ -23,7 +23,7 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
     public function it_creates_a_form_element_from_string_id()
     {
         $collection = new Mutable();
-        $collection->push('title');
+        $collection->add('title');
 
         $this->assertCount(1, $collection->all());
         $this->assertInstanceOf(Text::class, $collection->find('title'));
@@ -60,8 +60,8 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
         $collection = new Mutable();
 
         $collection
-            ->push($title = Text::make('title'))
-            ->push($body = Textarea::make('body'));
+            ->add($title = Text::make('title'))
+            ->add($body = Textarea::make('body'));
 
         $this->assertCount(2, $collection->all());
         $this->assertSame([$title, $body], $collection->all());
@@ -79,7 +79,7 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
      */
     public function it_allows_editing_of_new_created_element($collection)
     {
-        $collection->push(
+        $collection->add(
             $desc = Textarea::make('description'),
             function (Textarea $element) {
                 $element->setTitle('New description');
