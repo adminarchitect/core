@@ -1,5 +1,5 @@
 @if (!$searchable)
-    @include('administrator::fields.enum.edit')
+    {!! Form::select($field->name(), $options, optional($field->value())->getKey(), $attributes) !!}
 @endif
 
 @if ($searchable && $searchIn)
