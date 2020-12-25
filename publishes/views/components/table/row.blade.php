@@ -11,12 +11,14 @@
     @endcomponent
 @else
     <tr>
-        <td style="width: 20%; min-width: 200px;">
-            {!! $label ?? '' !!}
-            @if (isset($description) && !empty($description))
-                <p class="small">{!! $description !!}</p>
-            @endif
-        </td>
-        <td>{!! $input ?? '' !!}</td>
+        @if(!empty($label))
+            <td style="width: 20%; min-width: 200px;">
+                {!! $label ?? '' !!}
+                @if (isset($description) && !empty($description))
+                    <p class="small">{!! $description !!}</p>
+                @endif
+            </td>
+        @endif
+        <td {!! (!empty($label) ? '' : 'colspan="2"') !!}>{!! $input ?? '' !!}</td>
     </tr>
 @endif

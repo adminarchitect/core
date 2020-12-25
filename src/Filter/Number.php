@@ -19,6 +19,6 @@ class Number extends Filter implements Searchable
      */
     public function searchBy(Builder $query, Model $model): Builder
     {
-        return $query->where("{$table->getTable()}.{$this->id()}", '=', (int) $this->value());
+        return $query->where("{$model->getTable()}.{$this->id()}", '=', (int) $this->value());
     }
 }

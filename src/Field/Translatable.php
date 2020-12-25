@@ -2,10 +2,13 @@
 
 namespace Terranet\Administrator\Field;
 
+use Closure;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Localizer\Locale;
+use function localizer\locale;
+use function localizer\locales;
 
 /**
  * Class Translatable.
@@ -16,13 +19,13 @@ use Terranet\Localizer\Locale;
  * @method markdown()
  * @method medium()
  * @method hideLabel()
- * @method sortable(\Closure $callback = null)
+ * @method sortable(Closure $callback = null)
  * @method disableSorting()
  */
 class Translatable
 {
     /** @var Field */
-    protected $field;
+    public $field;
 
     /**
      * Translatable constructor.
@@ -44,12 +47,12 @@ class Translatable
      */
     public function __call($method, $args)
     {
-        if (\in_array($method, Textarea::KNOWN_EDITORS, true)) {
+        if (in_array($method, Textarea::KNOWN_EDITORS, true)) {
             return new static($this->field->$method());
         }
 
         if (method_exists($this->field, $method)) {
-            return \call_user_func_array([$this->field, $method], $args);
+            return call_user_func_array([$this->field, $method], $args);
         }
     }
 
@@ -58,7 +61,7 @@ class Translatable
      *
      * @return Translatable
      */
-    public static function make(Field $field)
+    public static function make(Field $field): self
     {
         return new static($field);
     }
@@ -70,7 +73,7 @@ class Translatable
      */
     public function render(string $page = 'index')
     {
-        if (\in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
+        if (in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
             if ($this->field->hasCustomFormat()) {
                 return $this->field->callFormatter($this->field->getModel(), $page);
             }
@@ -86,7 +89,7 @@ class Translatable
         ];
 
         if (method_exists($this, $dataGetter = 'on'.Str::title($page))) {
-            $data += \call_user_func([$this, $dataGetter]);
+            $data += call_user_func([$this, $dataGetter]);
         }
 
         return View::make('administrator::fields.translatable.'.$page, $data);
@@ -97,7 +100,7 @@ class Translatable
      *
      * @return string
      */
-    public function name(Locale $language)
+    public function name(Locale $language): string
     {
         return "translatable[{$language->id()}][{$this->field->id()}]";
     }
@@ -121,8 +124,8 @@ class Translatable
     protected function onEdit(): array
     {
         return [
-            'languages' => \localizer\locales(),
-            'locale' => \localizer\locale(),
+            'languages' => locales(),
+            'locale' => locale(),
             'container' => $this,
             'translations' => app('scaffold.translations'),
         ];

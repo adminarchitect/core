@@ -270,8 +270,7 @@ class MutableTest extends CoreTestCase
 
         $this->assertSame($e, $this->collection->get(1));
 
-        $this->expectException(\Exception::class);
-        $this->collection->find('not-exist');
+        $this->assertNull($this->collection->find('not-exist'));
     }
 
     /** @test */

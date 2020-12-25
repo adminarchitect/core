@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Tests\Auth;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory;

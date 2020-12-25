@@ -7,13 +7,13 @@ use Carbon\Carbon;
 class DateTime extends Field
 {
     /** @var string */
-    protected $dateFormat = 'M j, Y';
+    public $dateFormat = 'M j, Y';
 
     /** @var string */
-    protected $timeFormat = 'g:i A';
+    public $timeFormat = 'g:i A';
 
     /** @var string */
-    protected $dateTimeFormat = 'M j, Y g:i A';
+    public $dateTimeFormat = 'M j, Y g:i A';
 
     /**
      * @return array
@@ -24,7 +24,7 @@ class DateTime extends Field
             self::class => $this->dateTimeFormat,
             Date::class => $this->dateFormat,
             Time::class => $this->timeFormat,
-        ][\get_class($this)];
+        ][get_class($this)];
 
         $formattedValue = Carbon::parse($this->value())->format($format);
 
@@ -48,7 +48,7 @@ class DateTime extends Field
      */
     public function setDateTimeFormat(string $format): self
     {
-        $this->$dateTimeFormat = $format;
+        $this->dateTimeFormat = $format;
 
         return $this;
     }

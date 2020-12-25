@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Contracts\Module;
 
+use Illuminate\Http\Request;
+
 interface Navigable
 {
     /** @var string */
@@ -37,7 +39,7 @@ interface Navigable
      *
      * @return mixed
      */
-    public function showIf();
+    public function showIf(Request $request);
 
     /**
      * Add resource to navigation as link or header.

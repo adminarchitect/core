@@ -5,17 +5,17 @@ namespace Terranet\Administrator\Field;
 class Boolean extends Field
 {
     /** @var mixed */
-    protected $trueValue = true;
+    public $trueValue = true;
 
     /** @var mixed */
-    protected $falseValue = false;
+    public $falseValue = false;
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function trueValue($value)
+    public function trueValue($value): self
     {
         $this->trueValue = $value;
 
@@ -27,7 +27,7 @@ class Boolean extends Field
      *
      * @return $this
      */
-    public function falseValue($value)
+    public function falseValue($value): self
     {
         $this->falseValue = $value;
 
@@ -37,7 +37,7 @@ class Boolean extends Field
     /**
      * @return bool
      */
-    public function isTrue()
+    public function isTrue(): bool
     {
         return $this->value() === $this->trueValue;
     }
@@ -45,7 +45,7 @@ class Boolean extends Field
     /**
      * @return array
      */
-    public function onIndex()
+    public function onIndex(): array
     {
         return ['isTrue' => $this->isTrue()];
     }
@@ -53,7 +53,7 @@ class Boolean extends Field
     /**
      * @return array
      */
-    public function onView()
+    public function onView(): array
     {
         return $this->onIndex();
     }

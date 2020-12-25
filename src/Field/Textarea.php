@@ -19,13 +19,13 @@ class Textarea extends Field
     ];
 
     /** @var array */
-    protected $visibility = [
+    public $visibility = [
         Scaffolding::PAGE_INDEX => false,
         Scaffolding::PAGE_EDIT => true,
         Scaffolding::PAGE_VIEW => true,
     ];
 
-    protected $editor = false;
+    public $editor = false;
 
     /**
      * @param $editor

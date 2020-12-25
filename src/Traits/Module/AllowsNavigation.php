@@ -2,6 +2,8 @@
 
 namespace Terranet\Administrator\Traits\Module;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Module\Navigable;
@@ -69,7 +71,7 @@ trait AllowsNavigation
      *
      * @return mixed
      */
-    public function showIf()
+    public function showIf(Request $request)
     {
         return ($guard = $this->guard()) && method_exists($guard, 'showIf')
             ? $guard->showIf()
@@ -79,7 +81,7 @@ trait AllowsNavigation
     /**
      * Appends count of items to a navigation.
      *
-     * @return bool
+     * @return int
      */
     public function appendCount()
     {

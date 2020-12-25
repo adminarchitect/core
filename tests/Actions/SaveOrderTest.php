@@ -2,7 +2,7 @@
 
 namespace Tests\Actions;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Terranet\Administrator\Actions\SaveOrder;
 use Terranet\Administrator\Tests\CoreTestCase;

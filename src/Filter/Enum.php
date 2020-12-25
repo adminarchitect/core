@@ -6,44 +6,16 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Contracts\Filter\Searchable;
+use Terranet\Administrator\Traits\Form\SupportsListTypes;
 
 class Enum extends Filter implements Searchable
 {
-    /** @var string  */
-    protected $component = 'enum';
+    use SupportsListTypes;
 
     /** @var array */
-    protected $options = [];
-
-    /**
-     * @param  mixed array|\Closure $options
-     * @return self
-     * @throws Exception
-     */
-    public function setOptions($options): self
-    {
-        if (!(\is_array($options) || $options instanceof \Closure)) {
-            throw new Exception('Enum accepts only `array` or `Closure` as options.');
-        }
-
-        if ($options instanceof \Closure) {
-            $options = \call_user_func_array($options, []);
-
-            return $this->setOptions($options);
-        }
-
-        $this->options = $options;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
+    public $options = [];
+    /** @var string */
+    protected $component = 'enum';
 
     /**
      * @param Builder $query
@@ -63,10 +35,30 @@ class Enum extends Filter implements Searchable
     /**
      * @return array
      */
-    protected function renderWith()
+    public function getOptions()
     {
-        return [
-            'options' => $this->getOptions(),
-        ];
+        return $this->options;
+    }
+
+    /**
+     * @param mixed array|\Closure $options
+     * @return self
+     * @throws Exception
+     */
+    public function setOptions($options): self
+    {
+        if (!(\is_array($options) || $options instanceof \Closure)) {
+            throw new Exception('Enum accepts only `array` or `Closure` as options.');
+        }
+
+        if ($options instanceof \Closure) {
+            $options = \call_user_func_array($options, []);
+
+            return $this->setOptions($options);
+        }
+
+        $this->options = $options;
+
+        return $this;
     }
 }

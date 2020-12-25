@@ -2,16 +2,16 @@
 
 namespace Terranet\Administrator\Tests\Collection;
 
+use PHPUnit\Framework\TestCase;
 use Terranet\Administrator\Collection\Group;
-use Terranet\Administrator\Field\Field;
 use Terranet\Administrator\Tests\CreatesElement;
 use Terranet\Administrator\Tests\MocksObjects;
 
-class GroupTest extends \PHPUnit\Framework\TestCase
+class GroupTest extends TestCase
 {
     use CreatesElement, MocksObjects;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
     public function it_excludes_stop_words_from_the_title()
     {
         $group = new Group('group_id');
-        $this->assertSame('Group', $group->title());
+        $this->assertSame('Group Id', $group->title());
     }
 
     /** @test */

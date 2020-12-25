@@ -10,7 +10,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Terranet\Administrator\Architect;
-use Terranet\Administrator\Contracts\Services\Finder;
 use Terranet\Administrator\Schema;
 use Terranet\Localizer\Locale;
 
@@ -76,7 +75,7 @@ class ContainersServiceProvider extends ServiceProvider
                 /**
                  * Set ReadOnly locales.
                  *
-                 * @param  array  $readonly
+                 * @param array $readonly
                  * @return self
                  */
                 public function setReadonly(array $readonly = []): self
@@ -123,12 +122,9 @@ class ContainersServiceProvider extends ServiceProvider
     protected function registerAdminModel()
     {
         $this->app->singleton('scaffold.model', function (Application $app) {
-            /** @var int $id */
             $id = (int) $app['router']->current()->parameter('id');
 
-            /** @var Finder $finder */
-            $finder = app('scaffold.module')->finder();
-            if ($id && $finder) {
+            if ($id && ($finder = app('scaffold.module')->finder())) {
                 return $finder->find($id);
             }
         });

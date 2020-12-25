@@ -55,7 +55,7 @@ class AdminControllerTest extends CoreTestCase
                 ->willReturn(true);
 
         $module = $this->createMock(Module::class);
-        $module->method('actionsManager')->willReturn($actions);
+        $module->method('actions')->willReturn($actions);
 
         $controller->authorize($ability, null);
     }
@@ -83,7 +83,7 @@ class AdminControllerTest extends CoreTestCase
                 ->willReturn(false);
 
         $module = $this->createMock(Module::class);
-        $module->method('actionsManager')->willReturn($actions);
+        $module->method('actions')->willReturn($actions);
 
         $this->expectException(HttpException::class);
         $controller->authorize($ability, null);

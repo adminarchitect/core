@@ -20,6 +20,27 @@ class AdminRequest extends FormRequest
     }
 
     /**
+     * Resolve current model.
+     *
+     * @param $id
+     * @return null|Model
+     */
+    public function resolveModel($id): ?Model
+    {
+        return once(function () use ($id) {
+            if ($item = app('scaffold.model')) {
+                return $item;
+            }
+
+            if ($finder = $this->resource()->finder()) {
+                abort_unless($item = $finder->find($id), 404);
+            }
+
+            return $item ?? null;
+        });
+    }
+
+    /**
      * Resolve resource based on router parameters.
      *
      * @return null|Module
@@ -30,26 +51,6 @@ class AdminRequest extends FormRequest
             return tap(Architect::resourceForKey($this->route()->parameter('module')), function ($resource) {
                 abort_if(is_null($resource), 404);
             });
-        });
-    }
-
-    /**
-     * Resolve current model.
-     *
-     * @param $id
-     * @return null|Model
-     */
-    public function resolveModel($id): ?Model
-    {
-        return once(function () use ($id) {
-            /** @var Finder $finder */
-            $finder = $this->resource()->finder();
-
-            if ($finder) {
-                abort_unless($item = $finder->find($id), 404);
-            }
-
-            return $item ?? null;
         });
     }
 }

@@ -8,16 +8,16 @@ class BelongsToMany extends HasMany
     const MODE_CHECKBOXES = 'checkboxes';
 
     /** @var string */
-    protected $icon = 'random';
+    public $icon = 'random';
 
     /** @var string */
-    protected $titleField = 'name';
+    public $titleField = 'name';
 
     /** @var string */
-    protected $editMode = self::MODE_CHECKBOXES;
+    public $editMode = self::MODE_CHECKBOXES;
 
     /** @var bool */
-    protected $completeList = true;
+    public $completeList = true;
 
     /**
      * Show editable controls as checkboxes.

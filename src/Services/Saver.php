@@ -5,6 +5,7 @@ namespace Terranet\Administrator\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Terranet\Administrator\Collection\Group;
 use Terranet\Administrator\Contracts\Services\Saver as SaverContract;
 use Terranet\Administrator\Field\BelongsTo;
 use Terranet\Administrator\Field\BelongsToMany;
@@ -15,8 +16,8 @@ use Terranet\Administrator\Field\HasOne;
 use Terranet\Administrator\Field\Id;
 use Terranet\Administrator\Field\Image;
 use Terranet\Administrator\Field\Media;
-use Terranet\Administrator\Field\Translatable;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
+use Terranet\Administrator\Field\Translatable;
 use Terranet\Administrator\Requests\UpdateRequest;
 use function admin\db\scheme;
 
@@ -54,7 +55,7 @@ class Saver implements SaverContract
      * Saver constructor.
      *
      * @param               $eloquent
-     * @param  UpdateRequest  $request
+     * @param UpdateRequest $request
      */
     public function __construct($eloquent, UpdateRequest $request)
     {
@@ -70,26 +71,7 @@ class Saver implements SaverContract
     public function sync()
     {
         $this->connection()->transaction(function () {
-            foreach ($this->editable() as $field) {
-                // get original HTML input
-                $name = $field->id();
-
-                if ($this->isKey($field) || $this->isMediaFile($field) || $this->isTranslatable($field)) {
-                    continue;
-                }
-
-                if ($this->isRelation($field)) {
-                    $this->relations[$name] = $field;
-                }
-
-                $value = $this->isFile($field) ? $this->request->file($name) : $this->request->get($name);
-
-                $value = $this->isBoolean($field) ? (bool) $value : $value;
-
-                $value = $this->handleJsonType($name, $value);
-
-                $this->data[$name] = $value;
-            }
+            $this->collectData($this->editable());
 
             $this->cleanData();
 
@@ -108,13 +90,42 @@ class Saver implements SaverContract
     }
 
     /**
-     * Fetch editable fields.
+     * Get database connection.
      *
-     * @return mixed
+     * @return \Illuminate\Foundation\Application|mixed
      */
-    protected function editable()
+    protected function connection()
     {
-        return app('scaffold.module')->form();
+        return app('db');
+    }
+
+    protected function collectData($fields): void
+    {
+        foreach ($fields as $field) {
+            if ($field instanceof Group) {
+                $this->collectData($field->elements());
+                continue;
+            }
+
+            // get original HTML input
+            $name = $field->id();
+
+            if ($this->isKey($field) || $this->isMediaFile($field) || $this->isTranslatable($field)) {
+                continue;
+            }
+
+            if ($this->isRelation($field)) {
+                $this->relations[$name] = $field;
+            }
+
+            $value = $this->isFile($field) ? $this->request->file($name) : $this->request->get($name);
+
+            $value = $this->isBoolean($field) ? (bool) $value : $value;
+
+            $value = $this->handleJsonType($name, $value);
+
+            $this->data[$name] = $value;
+        }
     }
 
     /**
@@ -130,9 +141,75 @@ class Saver implements SaverContract
      * @param $field
      * @return bool
      */
+    protected function isMediaFile($field)
+    {
+        return $field instanceof Media;
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    protected function isTranslatable($field)
+    {
+        return $field instanceof Translatable;
+    }
+
+    /**
+     * Collect relations for saving.
+     *
+     * @param $field
+     */
+    protected function isRelation($field)
+    {
+        return ($field instanceof BelongsTo)
+            || ($field instanceof HasOne)
+            || ($field instanceof HasMany)
+            || ($field instanceof BelongsToMany);
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
     protected function isFile($field)
     {
         return $field instanceof File || $field instanceof Image;
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    protected function isBoolean($field)
+    {
+        return $field instanceof Boolean;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @return mixed
+     */
+    protected function handleJsonType($name, $value)
+    {
+        if ($cast = Arr::get($this->repository->getCasts(), $name)) {
+            if (\in_array($cast, ['array', 'json'], true)) {
+                $value = json_decode($value);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Fetch editable fields.
+     *
+     * @return mixed
+     */
+    protected function editable()
+    {
+        return app('scaffold.module')->form();
     }
 
     /**
@@ -153,6 +230,42 @@ class Saver implements SaverContract
     }
 
     /**
+     * Collect translations.
+     */
+    protected function collectTranslatable()
+    {
+        foreach ($this->request->get('translatable', []) as $key => $value) {
+            $this->data[$key] = $value;
+        }
+    }
+
+    /**
+     * @param $this
+     */
+    protected function appendTranslationsToRelations()
+    {
+        if (!empty($this->relations)) {
+            foreach (array_keys((array) $this->relations) as $relation) {
+                if ($translations = $this->input("{$relation}.translatable")) {
+                    $this->relations[$relation] += $translations;
+                }
+            }
+        }
+    }
+
+    /**
+     * Retrieve request input value.
+     *
+     * @param $key
+     * @param null $default
+     * @return mixed
+     */
+    protected function input($key, $default = null)
+    {
+        return app('request')->input($key, $default);
+    }
+
+    /**
      * Persist main eloquent model including relations & media.
      */
     protected function process()
@@ -170,6 +283,66 @@ class Saver implements SaverContract
 
             $this->saveMedia();
         });
+    }
+
+    /**
+     * Set empty "nullable" values to null.
+     *
+     * @param $table
+     */
+    protected function nullifyEmptyNullables($table)
+    {
+        $columns = scheme()->columns($table);
+
+        foreach ($this->data as $key => &$value) {
+            if (!array_key_exists($key, $columns)) {
+                continue;
+            }
+
+            if (!$columns[$key]->getNotnull() && empty($value)) {
+                $value = null;
+            }
+        }
+    }
+
+    /**
+     * Exclude unfillable columns.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function excludeUnfillable(array $data): array
+    {
+        $fillable = array_merge(
+            $this->repository->getFillable(),
+            scheme()->columns($this->repository->getTable())
+        );
+
+        foreach ($data as $key => $value) {
+            /**
+             * @note `is_string` verification is required to filter only string-based keys,
+             * but leave `translatable` keys untouched
+             */
+            if (is_string($key) && !in_array($key, $fillable)) {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Ignore empty password from being saved.
+     *
+     * @return array
+     */
+    protected function protectAgainstNullPassword(): array
+    {
+        if (Arr::has($this->data, 'password') && empty($this->data['password'])) {
+            unset($this->data['password']);
+        }
+
+        return $this->data;
     }
 
     /**
@@ -246,167 +419,5 @@ class Saver implements SaverContract
         return array_filter((array) $values[$key], function ($value) {
             return null !== $value;
         });
-    }
-
-    /**
-     * Collect relations for saving.
-     *
-     * @param $field
-     */
-    protected function isRelation($field)
-    {
-        return ($field instanceof BelongsTo)
-            || ($field instanceof HasOne)
-            || ($field instanceof HasMany)
-            || ($field instanceof BelongsToMany);
-    }
-
-    /**
-     * @param $this
-     */
-    protected function appendTranslationsToRelations()
-    {
-        if (!empty($this->relations)) {
-            foreach (array_keys((array) $this->relations) as $relation) {
-                if ($translations = $this->input("{$relation}.translatable")) {
-                    $this->relations[$relation] += $translations;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @return mixed
-     */
-    protected function handleJsonType($name, $value)
-    {
-        if ($cast = Arr::get($this->repository->getCasts(), $name)) {
-            if (\in_array($cast, ['array', 'json'], true)) {
-                $value = json_decode($value);
-            }
-        }
-
-        return $value;
-    }
-
-    /**
-     * Collect translations.
-     */
-    protected function collectTranslatable()
-    {
-        foreach ($this->request->get('translatable', []) as $key => $value) {
-            $this->data[$key] = $value;
-        }
-    }
-
-    /**
-     * Get database connection.
-     *
-     * @return \Illuminate\Foundation\Application|mixed
-     */
-    protected function connection()
-    {
-        return app('db');
-    }
-
-    /**
-     * Retrieve request input value.
-     *
-     * @param $key
-     * @param  null  $default
-     * @return mixed
-     */
-    protected function input($key, $default = null)
-    {
-        return app('request')->input($key, $default);
-    }
-
-    /**
-     * Set empty "nullable" values to null.
-     *
-     * @param $table
-     */
-    protected function nullifyEmptyNullables($table)
-    {
-        $columns = scheme()->columns($table);
-
-        foreach ($this->data as $key => &$value) {
-            if (!array_key_exists($key, $columns)) {
-                continue;
-            }
-
-            if (!$columns[$key]->getNotnull() && empty($value)) {
-                $value = null;
-            }
-        }
-    }
-
-    /**
-     * Exclude unfillable columns.
-     *
-     * @param  array  $data
-     * @return array
-     */
-    protected function excludeUnfillable(array $data): array
-    {
-        $fillable = array_merge(
-            $this->repository->getFillable(),
-            scheme()->columns($this->repository->getTable())
-        );
-
-        foreach ($data as $key => $value) {
-            /**
-             * @note `is_string` verification is required to filter only string-based keys,
-             * but leave `translatable` keys untouched
-             */
-            if (is_string($key) && !in_array($key, $fillable)) {
-                unset($data[$key]);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Ignore empty password from being saved.
-     *
-     * @return array
-     */
-    protected function protectAgainstNullPassword(): array
-    {
-        if (Arr::has($this->data, 'password') && empty($this->data['password'])) {
-            unset($this->data['password']);
-        }
-
-        return $this->data;
-    }
-
-    /**
-     * @param $field
-     * @return bool
-     */
-    protected function isBoolean($field)
-    {
-        return $field instanceof Boolean;
-    }
-
-    /**
-     * @param $field
-     * @return bool
-     */
-    protected function isMediaFile($field)
-    {
-        return $field instanceof Media;
-    }
-
-    /**
-     * @param $field
-     * @return bool
-     */
-    protected function isTranslatable($field)
-    {
-        return $field instanceof Translatable;
     }
 }

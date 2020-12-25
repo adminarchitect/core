@@ -8,13 +8,13 @@ use Terranet\Administrator\Services\MediaLibraryProvider;
 class Media extends Field
 {
     /** @var string */
-    protected $collection = 'default';
+    public $collection = 'default';
 
     /** @var string */
-    protected $conversion = '';
+    public $conversion = '';
 
     /** @var int */
-    protected $perPage = 10;
+    public $perPage = 10;
 
     /**
      * @param string $collection
@@ -39,33 +39,11 @@ class Media extends Field
         return $this;
     }
 
-    /**
-     * @return array
-     */
     protected function onIndex(): array
     {
         return [
             'count' => MediaLibraryProvider::forModel($this->model)->count($this->collection),
             'module' => Architect::resourceByEntity($this->model) ?: app('scaffold.module'),
         ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function onView(): array
-    {
-        return [
-            'collection' => $this->collection,
-            'conversion' => $this->conversion,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function onEdit(): array
-    {
-        return [];
     }
 }
