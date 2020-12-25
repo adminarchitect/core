@@ -2,7 +2,7 @@
 
 namespace Tests\Actions;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -22,7 +22,7 @@ class RemoveSelectedTest extends CoreTestCase
         $actions->expects($this->once())->method('authorize')->with('delete', $user = new User());
 
         $module = $this->createMock(Module::class);
-        $module->method('actionsManager')->willReturn($actions);
+        $module->method('actions')->willReturn($actions);
 
         $action = $this->createMock(RemoveSelected::class);
         $this->invokeMethod($action, 'canDelete', [$user]);

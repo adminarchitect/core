@@ -472,4 +472,11 @@ namespace admin\output {
     {
         return '<span class="badge '.$class.'">'.$label.'</span>';
     }
+
+    function label_case($key, $upper = false)
+    {
+        $key = str_replace('_', ' ', preg_replace('~_id$~si', '', $key));
+
+        return $upper ? mb_strtoupper($key) : Str::title($key);
+    }
 }

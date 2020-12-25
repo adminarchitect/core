@@ -38,9 +38,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="pull-right">
-                    <a href="#">Forgot password?</a>
-                </div>
                 <div class="pull-left">
                     <input name="remember_me" type="hidden" value="0"/>
                     <input type="checkbox" name="remember_me" value="1"/> {{ trans('administrator::buttons.remember_me') }}

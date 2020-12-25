@@ -5,23 +5,26 @@ namespace Terranet\Administrator\Filter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\This;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Contracts\Form\Queryable;
+use Terranet\Administrator\Field\Traits\SupportsMultipleValues;
 use Terranet\Administrator\Traits\Form\ExecutesQuery;
+use Terranet\Administrator\Traits\Form\HasHtmlAttributes;
 use Terranet\Translatable\Translatable;
 
 abstract class Filter implements Queryable
 {
-    use ExecutesQuery;
+    use ExecutesQuery, HasHtmlAttributes, SupportsMultipleValues;
 
     /** @var string */
-    protected $id;
+    public $id;
 
     /** @var string */
-    protected $title;
+    public $title;
 
     /** @var mixed */
-    protected $value;
+    public $value;
 
     /**
      * Generic constructor.
@@ -54,13 +57,88 @@ abstract class Filter implements Queryable
     }
 
     /**
-     * Return Element ID.
+     * Return Element title.
      *
      * @return string
      */
-    public function id(): string
+    public function title(): string
     {
-        return $this->id;
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return self
+     */
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function value()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set Filter value.
+     *
+     * @param $value
+     *
+     * @return self
+     */
+    public function setValue($value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function render()
+    {
+        return View::make($this->template(), [
+                'field' => $this,
+                'attributes' => $this->attributes,
+            ] + $this->renderWith());
+    }
+
+    /**
+     * @param string $page
+     * @param string $field
+     *
+     * @return string
+     */
+    protected function template(): string
+    {
+        return sprintf(
+            'administrator::filters.%s',
+            $this->component
+        );
+    }
+
+    protected function renderWith(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param $model
+     *
+     * @return bool
+     */
+    protected function shouldSearchInTranslations($model): bool
+    {
+        return $model instanceof Translatable
+            && \in_array($this->name(), $model->getTranslatedAttributes(), true);
     }
 
     /**
@@ -83,81 +161,16 @@ abstract class Filter implements Queryable
             return implode('', array_merge([$first], $other));
         }
 
-        return $this->id();
+        return $this->id().($this->isArray ?? false ? '[]' : '');
     }
 
     /**
-     * Return Element title.
+     * Return Element ID.
      *
      * @return string
      */
-    public function title(): string
+    public function id(): string
     {
-        return $this->title;
-    }
-
-    /**
-     * Set Filter value.
-     *
-     * @param $value
-     *
-     * @return self
-     */
-    public function setValue($value): self
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function value()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function render()
-    {
-        return View::make($this->template(), [
-                'field' => $this,
-            ] + $this->renderWith());
-    }
-
-    /**
-     * @return array
-     */
-    protected function renderWith()
-    {
-        return [];
-    }
-
-    /**
-     * @param string $page
-     * @param string $field
-     *
-     * @return string
-     */
-    protected function template(): string
-    {
-        return sprintf(
-            'administrator::filters.%s',
-            $this->component
-        );
-    }
-
-    /**
-     * @param $model
-     *
-     * @return bool
-     */
-    protected function shouldSearchInTranslations($model): bool
-    {
-        return $model instanceof Translatable
-            && \in_array($this->name(), $model->getTranslatedAttributes(), true);
+        return $this->id;
     }
 }

@@ -7,19 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
+use Terranet\Administrator\Field\Traits\HasEmptyValue;
 
 class BelongsTo extends Field
 {
-    use HandlesRelation;
+    use HandlesRelation, HasEmptyValue;
 
     /** @var string */
-    protected $column = 'name';
+    public $column = 'name';
 
     /** @var bool */
-    protected $searchable = true;
+    public $searchable = true;
+
+    /** @var string */
+    public $searchUrl;
 
     /**
-     * @param  string  $column
+     * @param string $column
      * @return self
      */
     public function useForTitle(string $column): self
@@ -30,15 +34,7 @@ class BelongsTo extends Field
     }
 
     /**
-     * @return string
-     */
-    public function getColumn()
-    {
-        return $this->column;
-    }
-
-    /**
-     * @param  bool  $flag
+     * @param bool $flag
      * @return $this
      */
     public function searchable(bool $flag = false)
@@ -60,9 +56,9 @@ class BelongsTo extends Field
     }
 
     /**
-     * @param  Builder  $query
-     * @param  Model  $model
-     * @param  string  $direction
+     * @param Builder $query
+     * @param Model $model
+     * @param string $direction
      * @return Builder
      * @throws \Exception
      */
@@ -82,6 +78,29 @@ class BelongsTo extends Field
     }
 
     /**
+     * @return string
+     */
+    public function getColumn()
+    {
+        return $this->column;
+    }
+
+    public function dataUrl($url)
+    {
+        $this->searchUrl = $url;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function onView(): array
+    {
+        return $this->onIndex();
+    }
+
+    /**
      * @return array
      */
     protected function onIndex(): array
@@ -96,14 +115,6 @@ class BelongsTo extends Field
             'related' => $related ?? null,
             'module' => $module ?? null,
         ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function onView(): array
-    {
-        return $this->onIndex();
     }
 
     /**
@@ -128,12 +139,26 @@ class BelongsTo extends Field
             }
         }
 
+        if ($this->allowEmpty) {
+            $options = ['' => '---'] + $options;
+        }
+
         return [
             'options' => $options ?? [],
             'related' => $related ?? null,
-            'searchIn' => isset($related) ? get_class($related) : null,
+            'searchIn' => $searchIn = isset($related) ? get_class($related) : null,
             'searchable' => $this->searchable,
-            'searchBy' => $this->column,
+            'searchBy' => $searchBy = $this->column,
+            'searchUrl' => $this->searchUrl($searchIn, $searchBy),
         ];
+    }
+
+    protected function searchUrl(string $searchIn, string $searchBy)
+    {
+        return $this->searchUrl ?? strtr('/{path}/search/?searchable={searchIn}&field={searchBy}', [
+                '{path}' => \Terranet\Administrator\Architect::path(),
+                '{searchIn}' => $searchIn,
+                '{searchBy}' => $searchBy,
+            ]);
     }
 }

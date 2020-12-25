@@ -40,13 +40,13 @@ class Resources
      */
     public function handle(Request $request, Closure $next)
     {
-        $this->collectModules(function ($fileInfo) {
-            $this->resolveClass($fileInfo, function ($module) {
+        $this->collectModules(function ($fileInfo) use ($request) {
+            $this->resolveClass($fileInfo, function ($module) use ($request) {
                 if ($module instanceof Module) {
                     $this->registerModule($module);
                 }
 
-                if ($this->navigableResource($module)
+                if ($this->navigableResource($module, $request)
                     && ($navigation = $this->application->make('scaffold.navigation'))
                 ) {
                     $this->makeNavigation($module, $navigation);
@@ -55,18 +55,6 @@ class Resources
         });
 
         return $next($request);
-    }
-
-    /**
-     * Make sure the resource is Navigable && Should be visible.
-     *
-     * @param $module
-     *
-     * @return bool
-     */
-    protected function navigableResource($module)
-    {
-        return $module instanceof Navigable && $module->showIf();
     }
 
     protected function collectModules(Closure $callback)
@@ -100,6 +88,19 @@ class Resources
     }
 
     /**
+     * Make sure the resource is Navigable && Should be visible.
+     *
+     * @param $module
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function navigableResource($module, Request $request)
+    {
+        return $module instanceof Navigable && $module->showIf($request);
+    }
+
+    /**
      * @param Module $module
      * @param $navigation
      */
@@ -114,7 +115,6 @@ class Resources
 
         if ($group = $module->group()) {
             $navigation = $this->findOrCreateGroup($module, $navigation, $group);
-
             $order = $module->order() ?: \count($navigation->getChilds()) + 1;
         }
 

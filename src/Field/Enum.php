@@ -5,25 +5,28 @@ namespace Terranet\Administrator\Field;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Terranet\Administrator\Exception;
+use Terranet\Administrator\Traits\Form\SupportsListTypes;
 
 class Enum extends Field
 {
-    /** @var array */
-    protected $options = [];
+    use SupportsListTypes;
 
     /** @var array */
-    protected $colors = ['#777777', '#2574ab', '#259dab', '#5bc0de', '#e6ad5c', '#d9534f'];
+    public $options = [];
 
     /** @var array */
-    protected $palette = [];
+    public $colors = ['#777777', '#2574ab', '#259dab', '#5bc0de', '#e6ad5c', '#d9534f'];
+
+    /** @var array */
+    public $palette = [];
 
     /** @var bool */
-    protected $useColors = true;
+    public $useColors = true;
 
     /**
      * @return $this
      */
-    public function disableColors()
+    public function disableColors(): self
     {
         $this->useColors = false;
 
@@ -31,7 +34,7 @@ class Enum extends Field
     }
 
     /**
-     * @param  iterable  $options
+     * @param iterable $options
      * @return self
      */
     public function setOptions(iterable $options): self
@@ -55,8 +58,8 @@ class Enum extends Field
     /**
      * Set colors palette.
      *
-     * @param  mixed  $color
-     * @param  null|string  $value
+     * @param mixed $color
+     * @param null|string $value
      * @return Enum
      * @throws Exception
      */
@@ -82,18 +85,7 @@ class Enum extends Field
     /**
      * @return array
      */
-    protected function onEdit()
-    {
-        return [
-            'options' => $this->options ?: [],
-            'color' => $this->useColors && $this->value() ? \Illuminate\Support\Arr::get($this->palette, $this->value()) : null,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function onIndex()
+    protected function onIndex(): array
     {
         return $this->onEdit();
     }
@@ -101,7 +93,17 @@ class Enum extends Field
     /**
      * @return array
      */
-    protected function onView()
+    protected function onEdit(): array
+    {
+        $color = $this->useColors && $this->value() ? Arr::get($this->palette, $this->value()) : null;
+
+        return compact('color');
+    }
+
+    /**
+     * @return array
+     */
+    protected function onView(): array
     {
         return $this->onEdit();
     }

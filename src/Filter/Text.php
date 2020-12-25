@@ -10,15 +10,15 @@ use function localizer\locale;
 
 class Text extends Filter implements Searchable
 {
-    /** @var string */
-    protected $component = 'text';
-
     /**
      * Whether to enable search modes or not.
      *
      * @var bool
      */
-    protected $withModes = false;
+    public $withModes = false;
+
+    /** @var string */
+    protected $component = 'text';
 
     /**
      * @return $this
@@ -65,13 +65,10 @@ class Text extends Filter implements Searchable
         return $query->where("{$model->getTable()}.{$this->id()}", $operator, $value);
     }
 
-    /**
-     * @return array
-     */
     protected function renderWith(): array
     {
-        return [
-            'modes' => $this->withModes ? trans('administrator::buttons.search_modes') : [],
-        ];
+        $mods = $this->withModes ? trans('administrator::buttons.search_modes') : [];
+
+        return compact('mods');
     }
 }

@@ -4,14 +4,9 @@ namespace Terranet\Administrator\Field;
 
 class Radio extends Field
 {
-    /**
-     * @var array
-     */
-    protected $options = [];
+    /** @var array */
+    public $options = [];
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return (array) $this->options;
@@ -27,31 +22,5 @@ class Radio extends Field
         $this->options = $options;
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function onIndex()
-    {
-        return [
-            'options' => $this->getOptions(),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function onView()
-    {
-        return $this->onIndex();
-    }
-
-    /**
-     * @return array
-     */
-    public function onEdit()
-    {
-        return $this->onIndex();
     }
 }

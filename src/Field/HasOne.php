@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Terranet\Administrator\Collection\Mutable;
 use Terranet\Administrator\Traits\Module\HasColumns;
@@ -16,7 +17,7 @@ class HasOne extends BelongsTo
     /** @var null|array */
     protected $except;
 
-    /** @var null|\Closure */
+    /** @var null|Closure */
     protected $withColumnsCallback;
 
     /**
@@ -103,7 +104,7 @@ class HasOne extends BelongsTo
 
     /**
      * @param $related
-     * @return \Terranet\Administrator\Collection\Mutable
+     * @return Mutable
      */
     protected function relatedColumns($related): Mutable
     {
@@ -113,10 +114,10 @@ class HasOne extends BelongsTo
     }
 
     /**
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
      * @return $this
      */
-    public function withColumns(\Closure $callback): self
+    public function withColumns(Closure $callback): self
     {
         $this->withColumnsCallback = $callback;
 

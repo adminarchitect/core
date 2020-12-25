@@ -12,21 +12,149 @@ use Terranet\Administrator\Field\Text;
 class Mutable extends BaseCollection
 {
     /**
-     * Add an element to the collection.
+     * Retrieve only visible items.
      *
-     * @param mixed $element
-     * @param Closure $callback
-     * @return $this
+     * @param string $page
+     * @return Mutable
      */
-    public function add($element, Closure $callback = null)
+    public function visibleOnPage(string $page)
     {
-        $element = $this->createElement($element);
+        return $this->filter(function ($item) use ($page) {
+            // @var Generic|Translatable $item
+            return (($item instanceof Group) || $item->isVisibleOnPage($page)) && $item->visibleWhen();
+        });
+    }
 
-        if ($callback) {
-            $callback($element);
+    /**
+     * Replace the field.
+     *
+     * @param mixed $id
+     * @param $value
+     * @return $this|BaseCollection
+     * @throws Exception
+     */
+    public function switch($id, $value)
+    {
+        if ($position = $this->position($id)) {
+            $this->offsetSet($position, $value);
         }
 
-        parent::add($element);
+        return $this;
+    }
+
+    /**
+     * Find an element position.
+     *
+     * @param string $id
+     * @return null|int|string
+     * @throws Exception
+     */
+    public function position(string $id): int
+    {
+        $i = 0;
+        foreach ($this->all() as $item) {
+            if ($item->id() === $id) {
+                return $i;
+            }
+
+            ++$i;
+        }
+
+        return $this->notFound($id);
+    }
+
+    /**
+     * @param string $id
+     * @throws Exception
+     */
+    protected function notFound(string $id)
+    {
+        throw new Exception(sprintf('Element [%s] does not exist.', $id));
+    }
+
+    /**
+     * Update many elements at once.
+     *
+     * @param array $ids
+     * @return $this
+     * @throws Exception
+     */
+    public function updateMany(array $ids = []): self
+    {
+        foreach ($ids as $id => $callback) {
+            $this->update($id, $callback);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update elements behaviour.
+     *
+     * @param string $id
+     * @param Closure $callback
+     * @return $this
+     * @throws Exception
+     */
+    public function update(string $id, Closure $callback): self
+    {
+        if (Str::contains($id, ',')) {
+            collect(explode(',', $id))
+                ->map('trim')
+                ->each(function ($element) use ($callback) {
+                    $this->update($element, $callback);
+                });
+
+            return $this;
+        }
+
+        $element = $this->find($id);
+
+        if ($element && $callback) {
+            $newElement = $callback($element);
+            if ($newElement !== $element) {
+                $position = $this->position($id);
+                $this->except($id);
+                $this->insert($newElement, $position);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Find an element.
+     *
+     * @param string $id
+     * @return mixed
+     * @throws Exception
+     */
+    public function find(string $id)
+    {
+        return $this->first(function ($element) use ($id) {
+            return $element && $element->id() === $id;
+        });
+    }
+
+    /**
+     * Get all items except for those with the specified keys.
+     *
+     * @param array|mixed|string $keys
+     * @return static
+     */
+    public function except($keys)
+    {
+        if ($keys instanceof self) {
+            $keys = $keys->all();
+        } elseif (!\is_array($keys)) {
+            $keys = \func_get_args();
+        }
+
+        $items = $this->filter(function ($element) use ($keys) {
+            return !\in_array($element->id(), $keys, true);
+        })->all();
+
+        $this->items = array_values($items);
 
         return $this;
     }
@@ -36,7 +164,7 @@ class Mutable extends BaseCollection
      *
      * @param $element
      * @param $position
-     * @param  null|Closure  $callback
+     * @param null|Closure $callback
      * @return $this
      * @throws Exception
      */
@@ -76,105 +204,36 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * Get all items except for those with the specified keys.
+     * Create element object from string.
      *
-     * @param  array|mixed|string  $keys
-     * @return static
+     * @param $element
+     * @return mixed
      */
-    public function except($keys)
+    protected function createElement($element)
     {
-        if ($keys instanceof self) {
-            $keys = $keys->all();
-        } elseif (!\is_array($keys)) {
-            $keys = \func_get_args();
+        if (\is_string($element)) {
+            $element = Text::make($element, $element);
         }
 
-        $items = $this->filter(function ($element) use ($keys) {
-            return !\in_array($element->id(), $keys, true);
-        })->all();
-
-        $this->items = array_values($items);
-
-        return $this;
+        return $element;
     }
 
     /**
-     * Retrieve only visible items.
+     * Add an element to the collection.
      *
-     * @param  string  $page
-     * @return Mutable
-     */
-    public function visibleOnPage(string $page)
-    {
-        return $this->filter(function ($item) use ($page) {
-            // @var Generic|Translatable $item
-            return (($item instanceof Group) || $item->isVisibleOnPage($page)) && $item->visibleWhen();
-        });
-    }
-
-    /**
-     * Update elements behaviour.
-     *
-     * @param  string  $id
-     * @param  Closure  $callback
+     * @param mixed $element
+     * @param Closure $callback
      * @return $this
-     * @throws Exception
      */
-    public function update(string $id, Closure $callback): self
+    public function add($element, Closure $callback = null)
     {
-        if (Str::contains($id, ',')) {
-            collect(explode(',', $id))
-                ->map('trim')
-                ->each(function ($element) use ($callback) {
-                    $this->update($element, $callback);
-                });
+        $element = $this->createElement($element);
 
-            return $this;
+        if ($callback) {
+            $callback($element);
         }
 
-        $element = $this->find($id);
-
-        if ($element && $callback) {
-            $newElement = $callback($element);
-            if ($newElement !== $element) {
-                $position = $this->position($id);
-                $this->except($id);
-                $this->insert($newElement, $position);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Replace the field.
-     *
-     * @param  mixed  $id
-     * @param $value
-     * @return $this|BaseCollection
-     * @throws Exception
-     */
-    public function switch($id, $value)
-    {
-        if ($position = $this->position($id)) {
-            $this->offsetSet($position, $value);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Update many elements at once.
-     *
-     * @param  array  $ids
-     * @return $this
-     * @throws Exception
-     */
-    public function updateMany(array $ids = []): self
-    {
-        foreach ($ids as $id => $callback) {
-            $this->update($id, $callback);
-        }
+        parent::add($element);
 
         return $this;
     }
@@ -183,7 +242,7 @@ class Mutable extends BaseCollection
      * Move element.
      *
      * @param $id
-     * @param  int|mixed|string  $position
+     * @param int|mixed|string $position
      * @return static
      * @throws Exception
      * @example: move('user_id', 4);
@@ -208,9 +267,26 @@ class Mutable extends BaseCollection
     }
 
     /**
+     * Move an element to a position.
+     *
+     * @param string $id
+     * @param int|string $position
+     * @return static
+     * @throws Exception
+     */
+    protected function toPosition(string $id, $position): self
+    {
+        $element = $this->find($id);
+
+        return $this
+            ->except($id)
+            ->insert($element, $position);
+    }
+
+    /**
      * Move element before another one.
      *
-     * @param  string  $id
+     * @param string $id
      * @param $target
      * @return $this
      * @throws Exception
@@ -232,7 +308,7 @@ class Mutable extends BaseCollection
     /**
      * Move element after another one.
      *
-     * @param  string  $id
+     * @param string $id
      * @param $target
      * @return $this
      * @throws Exception
@@ -253,10 +329,31 @@ class Mutable extends BaseCollection
     }
 
     /**
+     * @param $elements
+     * @example: [1 => 'name', 'gender', 'age' => 'after:gender', 'other' => 3]
+     */
+    public function setOrder(array $elements = []): self
+    {
+        foreach ($elements as $key => $value) {
+            if (is_numeric($key)) {
+                $position = $key;
+                $field = $value;
+            } else {
+                $position = $value;
+                $field = $key;
+            }
+
+            $this->move($field, $position);
+        }
+
+        return $this;
+    }
+
+    /**
      * Add a new elements group.
      *
-     * @param  string  $id
-     * @param  Closure  $callback
+     * @param string $id
+     * @param Closure $callback
      * @return $this
      */
     public function group(string $id, Closure $callback): self
@@ -273,9 +370,9 @@ class Mutable extends BaseCollection
     /**
      * Join existing elements to a group.
      *
-     * @param  array  $elements
-     * @param  string  $groupId
-     * @param  null|int|string  $position
+     * @param array $elements
+     * @param string $groupId
+     * @param null|int|string $position
      * @return $this
      * @throws Exception
      */
@@ -283,11 +380,9 @@ class Mutable extends BaseCollection
     {
         $group = new Group($groupId);
 
-        $this->filter(function ($element) use ($elements) {
-            return \in_array($element->id(), $elements, true);
-        })->each(function ($element) use ($group) {
-            $group->push($element);
-            $this->items = $this->except($element->id())->all();
+        collect($elements)->each(function ($id) use ($group) {
+            $group->push($this->find($id));
+            $this->items = $this->except($id)->all();
         });
 
         if ($position) {
@@ -321,45 +416,10 @@ class Mutable extends BaseCollection
     }
 
     /**
-     * Find an element.
-     *
-     * @param  string  $id
-     * @return mixed
-     * @throws Exception
-     */
-    public function find(string $id)
-    {
-        return $this->first(function ($element) use ($id) {
-            return $element && $element->id() === $id;
-        });
-    }
-
-    /**
-     * Find an element position.
-     *
-     * @param  string  $id
-     * @return null|int|string
-     * @throws Exception
-     */
-    public function position(string $id): int
-    {
-        $i = 0;
-        foreach ($this->all() as $item) {
-            if ($item->id() === $id) {
-                return $i;
-            }
-
-            ++$i;
-        }
-
-        return $this->notFound($id);
-    }
-
-    /**
      * Make elements sortable.
      *
-     * @param  mixed string|array $keys
-     * @param  \Closure  $callback
+     * @param mixed string|array $keys
+     * @param \Closure $callback
      * @return Mutable
      * @example: sortable(['title' => function($query) {  }])
      * @example: sortable(['title'])
@@ -389,7 +449,7 @@ class Mutable extends BaseCollection
     /**
      * Remove column from Sortable collection.
      *
-     * @param  array|string  $keys
+     * @param array|string $keys
      * @return self
      */
     public function disableSorting($keys): self
@@ -406,46 +466,5 @@ class Mutable extends BaseCollection
         }
 
         return $this;
-    }
-
-    /**
-     * Move an element to a position.
-     *
-     * @param  string  $id
-     * @param  int|string  $position
-     * @return static
-     * @throws Exception
-     */
-    protected function toPosition(string $id, $position): self
-    {
-        $element = $this->find($id);
-
-        return $this
-            ->except($id)
-            ->insert($element, $position);
-    }
-
-    /**
-     * @param  string  $id
-     * @throws Exception
-     */
-    protected function notFound(string $id)
-    {
-        throw new Exception(sprintf('Element [%s] does not exist.', $id));
-    }
-
-    /**
-     * Create element object from string.
-     *
-     * @param $element
-     * @return mixed
-     */
-    protected function createElement($element)
-    {
-        if (\is_string($element)) {
-            $element = Text::make($element, $element);
-        }
-
-        return $element;
     }
 }

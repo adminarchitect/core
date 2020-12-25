@@ -7,10 +7,8 @@ class Email extends Field
     /**
      * @return array
      */
-    public function getAattributes(): array
+    public function getAttributes(): array
     {
-        return parent::getAttributes() + [
-                'style' => 'width: 250px',
-            ];
+        return ['style' => 'width: 250px'] + parent::getAttributes();
     }
 }

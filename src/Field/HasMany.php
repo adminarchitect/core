@@ -2,9 +2,12 @@
 
 namespace Terranet\Administrator\Field;
 
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Architect;
+use Terranet\Administrator\Exception;
 use Terranet\Administrator\Field\Traits\HandlesRelation;
 use Terranet\Administrator\Modules\Faked;
 
@@ -13,17 +16,17 @@ class HasMany extends Field
     use HandlesRelation;
 
     /** @var string */
-    protected $icon = 'list-ul';
+    public $icon = 'list-ul';
 
-    /** @var null|\Closure */
+    /** @var null|Closure */
     protected $query;
 
     /**
-     * @param \Closure $query
+     * @param Closure $query
      *
      * @return $this
      */
-    public function withQuery(\Closure $query)
+    public function withQuery(Closure $query)
     {
         $this->query = $query;
 
@@ -43,17 +46,14 @@ class HasMany extends Field
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param Model $model
      * @param string $direction
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
-    public function sortBy(
-        \Illuminate\Database\Eloquent\Builder $query,
-        Model $model,
-        string $direction
-    ): \Illuminate\Database\Eloquent\Builder {
+    public function sortBy(Builder $query, Model $model, string $direction): Builder
+    {
         return $query->withCount($this->id())->orderBy("{$this->id()}_count", $direction);
     }
 
@@ -66,7 +66,7 @@ class HasMany extends Field
         $related = $relation->getRelated();
 
         // apply a query
-        if ($this->query instanceof \Closure) {
+        if ($this->query instanceof Closure) {
             $relation = \call_user_func_array($this->query, [$relation]);
         }
 
@@ -82,7 +82,6 @@ class HasMany extends Field
         }
 
         return [
-            'icon' => $this->icon,
             'module' => $module,
             'count' => $relation->count(),
             'url' => $url ?? null,
@@ -91,7 +90,7 @@ class HasMany extends Field
 
     /**
      * @return array
-     * @throws \Terranet\Administrator\Exception
+     * @throws Exception
      *
      */
     protected function onView(): array
@@ -100,7 +99,7 @@ class HasMany extends Field
         $related = $relation->getRelated();
 
         // apply a query
-        if ($this->query instanceof \Closure) {
+        if ($this->query instanceof Closure) {
             $relation = \call_user_func_array($this->query, [$relation]);
         }
 

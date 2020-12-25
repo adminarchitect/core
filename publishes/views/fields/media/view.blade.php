@@ -5,6 +5,6 @@
 
 <media-library
         id="{{ $field->id() }}"
-        collection="{{ ($collection ?? 'default') }}"
+        collection="{{ ($field->collection ?? 'default') }}"
         endpoint="{{ $endpoint }}"
 ></media-library>

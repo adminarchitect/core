@@ -2,7 +2,7 @@
 
 namespace Terranet\Administrator\Tests\Actions;
 
-use App\User;
+use App\Models\User;
 use Terranet\Administrator\Actions\Collection;
 use Terranet\Administrator\Actions\RemoveSelected;
 use Terranet\Administrator\Actions\SaveOrder;

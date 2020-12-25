@@ -2,6 +2,7 @@
 
 namespace Terranet\Administrator\Field;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
@@ -13,51 +14,54 @@ use Terranet\Administrator\Field\Traits\AcceptsCustomFormat;
 use Terranet\Administrator\Field\Traits\AppliesSorting;
 use Terranet\Administrator\Field\Traits\HandlesVisibility;
 use Terranet\Administrator\Field\Traits\HasValuePresenter;
+use Terranet\Administrator\Field\Traits\SupportsMultipleValues;
 use Terranet\Administrator\Scaffolding;
 use Terranet\Administrator\Traits\AutoTranslatesInstances;
+use Terranet\Administrator\Traits\Form\HasHtmlAttributes;
 
 abstract class Field implements Sortable, AutoTranslatable
 {
-    use AcceptsCustomFormat, AppliesSorting, AutoTranslatesInstances, HasValuePresenter, HandlesVisibility;
+    use AcceptsCustomFormat,
+        AppliesSorting,
+        AutoTranslatesInstances,
+        HasValuePresenter,
+        HandlesVisibility,
+        HasHtmlAttributes,
+        SupportsMultipleValues;
 
     /** @var string */
-    protected $id;
+    public $id;
 
     /** @var string */
-    protected $title;
+    public $title;
 
     /** @var string */
-    protected $name;
+    public $name;
 
     /** @var mixed */
-    protected $value;
+    public $value;
 
     /** @var string */
-    protected $description;
+    public $description;
 
     /** @var Model */
-    protected $model;
+    public $model;
 
     /** @var bool */
-    protected $showLabel = true;
+    public $showLabel = true;
 
     /** @var array */
-    protected $visibility = [
+    public $visibility = [
         Scaffolding::PAGE_INDEX => true,
         Scaffolding::PAGE_EDIT => true,
         Scaffolding::PAGE_VIEW => true,
     ];
 
-    /** @var array */
-    protected $attributes = [
-        'class' => 'form-control',
-    ];
-
     /**
      * Field constructor.
      *
-     * @param  string  $title
-     * @param  null|string  $id
+     * @param string $title
+     * @param null|string $id
      */
     private function __construct(string $title, string $id = null)
     {
@@ -77,12 +81,73 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param $title
-     * @param  null  $id
-     * @param  \Closure  $callback
+     * @param string $id
      * @return static
      */
-    public static function make($title, $id = null, \Closure $callback = null): self
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function translationKey(): string
+    {
+        $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!trans()->has($key)) {
+            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
+    }
+
+    /**
+     * @param string $title
+     * @return static
+     */
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function descriptionKey(): string
+    {
+        $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
+
+        if (!trans()->has($key)) {
+            $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
+        }
+
+        return $key;
+    }
+
+    /**
+     * Create new element from another.
+     *
+     * @param Field $element
+     * @return static
+     */
+    public static function makeFrom(self $element): self
+    {
+        return static::make($element->title(), $element->id());
+    }
+
+    /**
+     * @param $title
+     * @param null $id
+     * @param Closure|null $callback
+     * @return static
+     */
+    public static function make($title, $id = null, Closure $callback = null): self
     {
         $instance = new static($title, $id);
 
@@ -94,20 +159,29 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * Create new element from another.
+     * Return Element title.
      *
-     * @param  Field  $element
-     * @return static
+     * @return string
      */
-    public static function makeFrom(self $element): self
+    public function title(): string
     {
-        return static::make($element->title(), $element->id());
+        return $this->title;
+    }
+
+    /**
+     * Return Element ID.
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
     }
 
     /**
      * Switch to a new element type.
      *
-     * @param  string  $className
+     * @param string $className
      * @return mixed
      */
     public function switchTo(string $className)
@@ -116,7 +190,15 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param  Model  $model
+     * @return Model
+     */
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param Model $model
      * @return static
      */
     public function setModel(Model $model): self
@@ -127,22 +209,14 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @return Model
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
      * Render Element.
      *
-     * @param  string  $page
+     * @param string $page
      * @return mixed
      */
     final public function render(string $page = 'index')
     {
-        if (\in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
+        if (in_array($page, [Scaffolding::PAGE_INDEX, Scaffolding::PAGE_VIEW], true)) {
             if ($this->hasCustomFormat()) {
                 return $this->callFormatter($this->model, $page);
             }
@@ -159,7 +233,7 @@ abstract class Field implements Sortable, AutoTranslatable
         ];
 
         if (method_exists($this, $dataGetter = 'on'.Str::title($page))) {
-            $data += \call_user_func([$this, $dataGetter]);
+            $data += call_user_func([$this, $dataGetter]);
         }
 
         if (View::exists($view = $this->template($page))) {
@@ -170,13 +244,25 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * Return Element ID.
-     *
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param string $page
+     * @param string|null $field
      * @return string
      */
-    public function id(): string
+    protected function template(string $page, string $field = null): string
     {
-        return $this->id;
+        return sprintf(
+            'administrator::fields.%s.%s',
+            Str::snake($field ?? class_basename($this)),
+            $page
+        );
     }
 
     /**
@@ -189,9 +275,9 @@ abstract class Field implements Sortable, AutoTranslatable
         if (null === $this->name) {
             $parts = explode('.', $this->id());
 
-            if (\count($parts) > 1) {
+            if (count($parts) > 1) {
                 $first = Arr::first($parts);
-                $other = \array_slice($parts, 1);
+                $other = array_slice($parts, 1);
 
                 $other = array_map(function ($part) {
                     return "[$part]";
@@ -200,14 +286,14 @@ abstract class Field implements Sortable, AutoTranslatable
                 return $this->name = implode('', array_merge([$first], $other));
             }
 
-            return $this->name = $this->id();
+            return $this->name = $this->id().($this->isArray ?? false ? '[]' : '');
         }
 
         return $this->name;
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      * @return Field
      */
     public function setName(string $name): self
@@ -215,27 +301,6 @@ abstract class Field implements Sortable, AutoTranslatable
         $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * @param  string  $id
-     * @return static
-     */
-    public function setId(string $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Return Element title.
-     *
-     * @return string
-     */
-    public function title(): string
-    {
-        return $this->title;
     }
 
     /**
@@ -247,18 +312,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param  string  $title
-     * @return static
-     */
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @param  null|string  $description
+     * @param null|string $description
      * @return static
      */
     public function setDescription(?string $description): self
@@ -273,13 +327,13 @@ abstract class Field implements Sortable, AutoTranslatable
      *
      * @return Translatable
      */
-    public function translatable()
+    public function translatable(): Translatable
     {
         return Translatable::make($this);
     }
 
     /**
-     * @param  bool  $hideLabel
+     * @param bool $hideLabel
      * @return static
      */
     public function hideLabel(bool $hideLabel): self
@@ -300,7 +354,7 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * string $page.
      *
-     * @param  string  $page
+     * @param string $page
      * @return bool
      */
     public function isVisibleOnPage(string $page): bool
@@ -309,7 +363,7 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param  array|string  $pages
+     * @param array|string $pages
      * @return static
      */
     public function hideOnPages($pages): self
@@ -318,7 +372,23 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @param  array|string  $pages
+     * @param mixed $pages
+     * @param bool $visibility
+     * @return $this
+     */
+    protected function setPagesVisibility($pages, bool $visibility): self
+    {
+        $pages = array_intersect($pages, array_keys($this->visibility));
+
+        foreach ($pages as $page) {
+            $this->visibility[$page] = $visibility;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array|string $pages
      * @return static
      */
     public function showOnPages($pages): self
@@ -329,10 +399,10 @@ abstract class Field implements Sortable, AutoTranslatable
     /**
      * Make column sortable.
      *
-     * @param  null|\Closure  $callback
+     * @param null|Closure $callback
      * @return static
      */
-    public function sortable(\Closure $callback = null): self
+    public function sortable(Closure $callback = null): self
     {
         app('scaffold.module')->addSortable(
             $this->id(),
@@ -383,24 +453,24 @@ abstract class Field implements Sortable, AutoTranslatable
         }
 
         $property = last(explode('.', $this->id));
+
         $val = $this->model->getAttribute($property);
 
         if ($val instanceof \BenSampo\Enum\Enum) {
             $val = $val->value;
         }
 
-        return $val;
+        return $val ?? request($this->id);
     }
 
     /**
-     * @param $key
-     * @param  null  $value
-     * @param  mixed  $attribute
+     * @param mixed $attribute
+     * @param null $value
      * @return static
      */
     public function setAttribute($attribute, $value = null): self
     {
-        if (\is_array($attribute)) {
+        if (is_array($attribute)) {
             foreach ($attribute as $key => $value) {
                 $this->setAttribute($key, $value);
             }
@@ -412,79 +482,13 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @return string
-     */
-    public function translationKey()
-    {
-        $key = sprintf('administrator::columns.%s.%s', $this->translatableModule()->url(), $this->id);
-
-        if (!trans()->has($key)) {
-            $key = sprintf('administrator::columns.%s.%s', 'global', $this->id);
-        }
-
-        return $key;
-    }
-
-    /**
-     * @return string
-     */
-    public function descriptionKey()
-    {
-        $key = sprintf('administrator::hints.%s.%s', $this->translatableModule()->url(), $this->id);
-
-        if (!trans()->has($key)) {
-            $key = sprintf('administrator::hints.%s.%s', 'global', $this->id);
-        }
-
-        return $key;
-    }
-
-    /**
-     * @param  \Closure  $condition
+     * @param Closure $condition
      * @return self
      */
-    public function when(\Closure $condition): self
+    public function when(Closure $condition): self
     {
         $this->when = $condition;
 
         return $this;
-    }
-
-    /**
-     * @param  mixed  $pages
-     * @param  bool  $visibility
-     * @return $this
-     */
-    protected function setPagesVisibility($pages, bool $visibility): self
-    {
-        $pages = array_intersect($pages, array_keys($this->visibility));
-
-        foreach ($pages as $page) {
-            $this->visibility[$page] = $visibility;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $page
-     * @param  string  $field
-     * @return string
-     */
-    protected function template(string $page, string $field = null): string
-    {
-        return sprintf(
-            'administrator::fields.%s.%s',
-            Str::snake($field ?? class_basename($this)),
-            $page
-        );
     }
 }

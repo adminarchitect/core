@@ -30,7 +30,9 @@ $elements = $resource->viewColumns()->each->setModel($item);
             {!! $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW) !!}
         @else
             @component('administrator::components.table.row')
-                @slot('label', Form::label($element->id(), $element->title()))
+                @if(!$element->isHiddenLabel())
+                    @slot('label', Form::label($element->id(), $element->title()))
+                @endif
                 @slot('description', $element->getDescription())
                 @slot('input', $element->render(\Terranet\Administrator\Scaffolding::PAGE_VIEW))
             @endcomponent

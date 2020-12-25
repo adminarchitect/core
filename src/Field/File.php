@@ -6,31 +6,22 @@ use Terranet\Administrator\Scaffolding;
 
 class File extends Field
 {
-    protected $visibility = [
+    public $visibility = [
         Scaffolding::PAGE_INDEX => true,
         Scaffolding::PAGE_EDIT => true,
         Scaffolding::PAGE_VIEW => true,
     ];
 
-    /**
-     * @return array
-     */
     public function onEdit(): array
     {
         return $this->onIndex();
     }
 
-    /**
-     * @return array
-     */
     public function onView(): array
     {
         return $this->onIndex();
     }
 
-    /**
-     * @return array
-     */
     protected function onIndex(): array
     {
         return [
