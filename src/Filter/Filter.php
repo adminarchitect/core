@@ -107,7 +107,7 @@ abstract class Filter implements Queryable
     {
         return View::make($this->template(), [
                 'field' => $this,
-                'attributes' => $this->attributes,
+                'attributes' => $this->getAttributes(),
             ] + $this->renderWith());
     }
 

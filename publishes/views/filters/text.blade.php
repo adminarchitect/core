@@ -4,8 +4,8 @@
         <div class="input-group-addon" style="padding: 0 8px;">
             {!! Form::select($modeName, $modes, request($modeName)) !!}
         </div>
-        {{ Form::text($field->name(), $field->value(), ['class' => 'form-control']) }}
+        {{ Form::text($field->name(), $field->value(), $attributes) }}
     </div>
 @else
-    {{ Form::text($field->name(), $field->value(), ['class' => 'form-control']) }}
+    {{ Form::text($field->name(), $field->value(), $attributes) }}
 @endif
