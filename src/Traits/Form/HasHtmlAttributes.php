@@ -18,6 +18,14 @@ trait HasHtmlAttributes
     }
 
     /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
      * @param float $min
      * @return static
      */

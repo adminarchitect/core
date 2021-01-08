@@ -1,1 +1,1 @@
-{{ Form::number($field->name(), $field->value(), ['class' => 'form-control'] + $attributes) }}
+{{ Form::number($field->name(), $field->value(), $attributes) }}

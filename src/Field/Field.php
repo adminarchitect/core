@@ -244,14 +244,6 @@ abstract class Field implements Sortable, AutoTranslatable
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    /**
      * @param string $page
      * @param string|null $field
      * @return string
