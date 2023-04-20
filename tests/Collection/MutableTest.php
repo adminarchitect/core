@@ -18,7 +18,7 @@ class MutableTest extends CoreTestCase
      */
     protected $collection;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -11,7 +11,7 @@ class FormCollectionMutableTest extends \PHPUnit\Framework\TestCase
 {
     use MocksObjects;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

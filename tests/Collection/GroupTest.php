@@ -4,6 +4,7 @@ namespace Terranet\Administrator\Tests\Collection;
 
 use PHPUnit\Framework\TestCase;
 use Terranet\Administrator\Collection\Group;
+use Terranet\Administrator\Field\Field;
 use Terranet\Administrator\Tests\CreatesElement;
 use Terranet\Administrator\Tests\MocksObjects;
 
@@ -11,7 +12,7 @@ class GroupTest extends TestCase
 {
     use CreatesElement, MocksObjects;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

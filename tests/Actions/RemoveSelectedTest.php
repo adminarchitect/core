@@ -9,20 +9,22 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Terranet\Administrator\Actions\RemoveSelected;
-use Terranet\Administrator\Contracts\Module;
-use Terranet\Administrator\Services\CrudActions;
+use Terranet\Administrator\Contracts\ActionsManager;
 use Terranet\Administrator\Tests\CoreTestCase;
+use Terranet\Administrator\Tests\MocksObjects;
 
 class RemoveSelectedTest extends CoreTestCase
 {
+    use MocksObjects;
+
     /** @test */
     public function it_authorizes_delete_action()
     {
-        $actions = $this->createMock(CrudActions::class);
+        $actions = $this->createMock(ActionsManager::class);
         $actions->expects($this->once())->method('authorize')->with('delete', $user = new User());
 
-        $module = $this->createMock(Module::class);
-        $module->method('actions')->willReturn($actions);
+        $module = $this->mockModule();
+        $module->shouldReceive('actions')->andReturn($actions);
 
         $action = $this->createMock(RemoveSelected::class);
         $this->invokeMethod($action, 'canDelete', [$user]);
