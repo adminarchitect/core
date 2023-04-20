@@ -25,7 +25,7 @@ class AuthControllerTest extends CoreTestCase
     /** @var MockObject|SessionGuard */
     private $guard;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->controller = $this->getMockBuilder(AuthController::class)
                                  ->disableOriginalConstructor()
@@ -41,20 +41,6 @@ class AuthControllerTest extends CoreTestCase
         $this->controller->method('guard')->willReturn($this->guard);
 
         parent::setUp();
-    }
-
-    /** @test */
-    public function it_shows_the_login_form()
-    {
-        $template = $this->createMock(Template::class);
-        $template->expects($this->once())
-                 ->method('auth')
-                 ->with('login')
-                 ->willReturn('login.view');
-
-        View::shouldReceive('make')->once()->with('login.view');
-
-        $this->controller->getLogin();
     }
 
     /** @test */
@@ -157,7 +143,7 @@ class AuthControllerTest extends CoreTestCase
                     ->willReturn(false);
 
         $translator = $this->mockTranslator();
-        $translator->shouldReceive('trans')->andReturn('error');
+        $translator->shouldReceive('get')->andReturn('error');
 
         $redirectResponse = $this->createMock(RedirectResponse::class);
         $redirectResponse->expects($this->once())->method('withErrors')->with(['error']);

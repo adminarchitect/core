@@ -54,8 +54,8 @@ class AdminControllerTest extends CoreTestCase
                 ->with($ability = 'users.create', null)
                 ->willReturn(true);
 
-        $module = $this->createMock(Module::class);
-        $module->method('actions')->willReturn($actions);
+        $module = $this->mockModule();
+        $module->shouldReceive('actions')->andReturn($actions);
 
         $controller->authorize($ability, null);
     }
@@ -64,8 +64,8 @@ class AdminControllerTest extends CoreTestCase
     public function it_throw_unauthorized_exception()
     {
         $translator = $this->mockTranslator();
-        $translator->shouldReceive('trans')
-                   ->with('administrator::errors.unauthorized')
+        $translator->shouldReceive('get')
+                   ->with('administrator::errors.unauthorized', [], null)
                    ->andReturn('Unauthorized');
 
         /** @var AdminController|MockObject $controller */
@@ -82,8 +82,8 @@ class AdminControllerTest extends CoreTestCase
                 ->with($ability, null)
                 ->willReturn(false);
 
-        $module = $this->createMock(Module::class);
-        $module->method('actions')->willReturn($actions);
+        $module = $this->mockModule();
+        $module->shouldReceive('actions')->andReturn($actions);
 
         $this->expectException(HttpException::class);
         $controller->authorize($ability, null);
