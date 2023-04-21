@@ -28,15 +28,15 @@ class AuthControllerTest extends CoreTestCase
     public function setUp(): void
     {
         $this->controller = $this->getMockBuilder(AuthController::class)
-                                 ->disableOriginalConstructor()
-                                 ->disableOriginalClone()
-                                 ->setMethods(['guard'])
-                                 ->getMock();
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods(['guard'])
+            ->getMock();
 
         $this->guard = $this->getMockBuilder(SessionGuard::class)
-                            ->disableOriginalConstructor()
-                            ->setMethods(['attempt', 'logout'])
-                            ->getMock();
+            ->disableOriginalConstructor()
+            ->onlyMethods(['attempt', 'logout'])
+            ->getMock();
 
         $this->controller->method('guard')->willReturn($this->guard);
 
@@ -59,21 +59,15 @@ class AuthControllerTest extends CoreTestCase
     {
         $config = $this->createMock(Repository::class);
         $config->expects($this->exactly(4))
-               ->method('get')
-               ->withConsecutive(
-                   ['auth.identity', 'username'],
-                   ['auth.credential', 'password'],
-                   ['auth.conditions', []],
-                   ['home_page']
-               )
-               ->willReturn(
-                   'username',
-                   'password',
-                   ['active' => true],
-                   function () {
-                       return '/home';
-                   }
-               );
+            ->method('get')
+            ->willReturnCallback(fn($key, $default) => match ([$key, $default]) {
+                ['auth.identity', 'username'] => 'username',
+                ['auth.credential', 'password'] => 'password',
+                ['auth.conditions', []] => ['active' => true],
+                ['home_page', null] => function () {
+                    return '/home';
+                }
+            });
 
         /** @var LoginRequest|MockObject $request */
         $request = $this->createMock(LoginRequest::class);
@@ -83,18 +77,18 @@ class AuthControllerTest extends CoreTestCase
         ];
 
         $request->expects($this->once())
-                ->method('only')
-                ->with(['username', 'password'])
-                ->willReturn($credentials);
+            ->method('only')
+            ->with(['username', 'password'])
+            ->willReturn($credentials);
         $request->expects($this->once())
-                ->method('get')
-                ->with('remember_me', 0)
-                ->willReturn(1);
+            ->method('get')
+            ->with('remember_me', 0)
+            ->willReturn(1);
 
         $this->guard->expects($this->once())
-                    ->method('attempt')
-                    ->with($credentials + ['active' => true], 1, true)
-                    ->willReturn(true);
+            ->method('attempt')
+            ->with($credentials + ['active' => true], 1, true)
+            ->willReturn(true);
 
         URL::shouldReceive('to')->with('/home')->andReturn(null);
         Redirect::shouldReceive('to')->with(null);
@@ -109,17 +103,12 @@ class AuthControllerTest extends CoreTestCase
     {
         $config = $this->createMock(Repository::class);
         $config->expects($this->exactly(3))
-               ->method('get')
-               ->withConsecutive(
-                   ['auth.identity', 'username'],
-                   ['auth.credential', 'password'],
-                   ['auth.conditions', []]
-               )
-               ->willReturn(
-                   'username',
-                   'password',
-                   ['active' => true]
-               );
+            ->method('get')
+            ->willReturnCallback(fn($key, $default) => match ([$key, $default]) {
+                ['auth.identity', 'username'] => 'username',
+                ['auth.credential', 'password'] => 'password',
+                ['auth.conditions', []] => ['active' => true],
+            });
 
         /** @var LoginRequest|MockObject $request */
         $request = $this->createMock(LoginRequest::class);
@@ -129,18 +118,18 @@ class AuthControllerTest extends CoreTestCase
         ];
 
         $request->expects($this->once())
-                ->method('only')
-                ->with(['username', 'password'])
-                ->willReturn($credentials);
+            ->method('only')
+            ->with(['username', 'password'])
+            ->willReturn($credentials);
         $request->expects($this->once())
-                ->method('get')
-                ->with('remember_me', 0)
-                ->willReturn(1);
+            ->method('get')
+            ->with('remember_me', 0)
+            ->willReturn(1);
 
         $this->guard->expects($this->once())
-                    ->method('attempt')
-                    ->with($credentials + ['active' => true], 1, true)
-                    ->willReturn(false);
+            ->method('attempt')
+            ->with($credentials + ['active' => true], 1, true)
+            ->willReturn(false);
 
         $translator = $this->mockTranslator();
         $translator->shouldReceive('get')->andReturn('error');

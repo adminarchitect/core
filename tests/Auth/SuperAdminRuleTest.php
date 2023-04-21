@@ -20,7 +20,12 @@ class SuperAdminRuleTest extends CoreTestCase
         $guard = $this->createMock(SessionGuard::class);
         $guard->expects($this->once())->method('user');
 
-        $auth = $this->createPartialMock(Factory::class, ['user', 'guard', 'shouldUse']);
+        $auth = $this->getMockBuilder(Factory::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['guard', 'shouldUse'])
+            ->addMethods(['user'])
+            ->getMock();
+
         $auth->expects($this->once())->method('guard')->with('admin')->willReturn($guard);
 
         app()->instance('Illuminate\Contracts\Auth\Factory', $auth);
@@ -42,7 +47,11 @@ class SuperAdminRuleTest extends CoreTestCase
     public function it_calls_a_model_super_admin_method()
     {
         /** @var Authenticatable|MockObject $user */
-        $user = $this->createPartialMock(User::class, ['isSuperAdmin']);
+        $user = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['isSuperAdmin'])
+            ->getMock();
+
         $user->expects($this->once())
              ->method('isSuperAdmin')
              ->willReturn(true);
