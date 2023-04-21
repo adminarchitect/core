@@ -7,7 +7,6 @@ use Illuminate\Routing\Redirector;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Terranet\Administrator\ActionsManager;
-use Terranet\Administrator\Contracts\Module;
 use Terranet\Administrator\Controllers\AdminController;
 use Terranet\Administrator\Middleware\Authenticate;
 use Terranet\Administrator\Middleware\AuthProvider;
@@ -23,7 +22,7 @@ class AdminControllerTest extends CoreTestCase
     public function it_sets_required_middleware()
     {
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(['middleware'])
+                           ->onlyMethods(['middleware'])
                            ->disableOriginalConstructor()
                            ->getMock();
 
@@ -43,7 +42,7 @@ class AdminControllerTest extends CoreTestCase
     {
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(null)
+                           ->onlyMethods([])
                            ->setConstructorArgs([$this->mockTranslator()])
                            ->getMock();
 
@@ -70,7 +69,7 @@ class AdminControllerTest extends CoreTestCase
 
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(null)
+                           ->onlyMethods([])
                            ->setConstructorArgs([$translator])
                            ->getMock();
 
@@ -94,13 +93,13 @@ class AdminControllerTest extends CoreTestCase
     {
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods(null)
+                           ->onlyMethods([])
                            ->setConstructorArgs([$this->mockTranslator()])
                            ->getMock();
 
         $request = $this->getMockBuilder(Request::class)
                         ->disableOriginalConstructor()
-                        ->setMethods(['get'])
+                        ->onlyMethods(['get'])
                         ->disableAutoload()
                         ->getMock();
 
@@ -124,13 +123,13 @@ class AdminControllerTest extends CoreTestCase
     {
         /** @var AdminController|MockObject $controller */
         $controller = $this->getMockBuilder(AdminController::class)
-                           ->setMethods([])
+                           ->onlyMethods([])
                            ->setConstructorArgs([$this->mockTranslator()])
                            ->getMock();
 
         $request = $this->getMockBuilder(Request::class)
                         ->disableOriginalConstructor()
-                        ->setMethods(['get', 'exists'])
+                        ->onlyMethods(['get', 'exists'])
                         ->disableAutoload()
                         ->getMock();
 
@@ -164,24 +163,21 @@ class AdminControllerTest extends CoreTestCase
 
         $request = $this->getMockBuilder(Request::class)
                         ->disableOriginalConstructor()
-                        ->setMethods(['get', 'exists'])
+                        ->onlyMethods(['get', 'exists'])
                         ->disableAutoload()
                         ->getMock();
 
-        $request->expects($this->at(0))
+        $request->expects($this->exactly(1))
                 ->method('get')
                 ->with('back_to')
                 ->willReturn(null);
 
-        $request->expects($this->at(1))
-                ->method('exists')
-                ->with('save')
-                ->willReturn(false);
-
-        $request->expects($this->at(2))
-                ->method('exists')
-                ->with('save_return')
-                ->willReturn(true);
+        $request->expects($this->exactly(2))
+            ->method('exists')
+            ->willReturnCallback(fn($param) => match ($param) {
+                'save' => false,
+                'save_return' => true,
+            });
 
         $redirector = $this->createMock(Redirector::class);
         $redirector->expects($this->once())

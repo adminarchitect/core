@@ -17,7 +17,11 @@ class SaveOrderTest extends CoreTestCase
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('get')->with('rank')->willReturn([]);
 
-        $eloquent = $this->createPartialMock(User::class, ['syncRanking', 'getRankableColumn']);
+        $eloquent = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['syncRanking', 'getRankableColumn'])
+            ->getMock();
+
         $eloquent->expects($this->once())->method('syncRanking')->with([]);
         $eloquent->expects($this->once())->method('getRankableColumn')->willReturn('rank');
 
