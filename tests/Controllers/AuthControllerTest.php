@@ -25,7 +25,7 @@ class AuthControllerTest extends CoreTestCase
     /** @var MockObject|SessionGuard */
     private $guard;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->controller = $this->getMockBuilder(AuthController::class)
                                  ->disableOriginalConstructor()

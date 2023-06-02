@@ -20,7 +20,7 @@ class ElementTest extends CoreTestCase
     /** @var MockObject|Scaffolding */
     private $module;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

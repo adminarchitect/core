@@ -11,7 +11,7 @@ class GroupTest extends TestCase
 {
     use CreatesElement, MocksObjects;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
